@@ -111,7 +111,6 @@ INSTRUCCIONES PARA COLABORAR
 - Confirmar con "Create Pull Request", comentar lo que se ha cambiado
 - "Merge Pull Request" para confirmar los cambios y pasarlo a la principal, "Confirm Merge"
 
-
 INTRUCCIONES PARA ELIMINAR EL REPOSITORIO AL QUE APUNTA Y CAMBIARLO POR OTRO
 
 - git remote set-url [--push] <name> <newurl> [<oldurl>]
