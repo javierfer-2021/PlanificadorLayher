@@ -117,8 +117,8 @@ INTRUCCIONES PARA ELIMINAR EL REPOSITORIO AL QUE APUNTA Y CAMBIARLO POR OTRO
 - git remote set-url --add <name> <newurl>
 - git remote set-url --delete <name> <url>
 
-  // Cambiar el origin
-  git remote set-url origin https://github.com/Alejandro-Rubio/TerminalAngular.git
+- Cambiar el origin
+  $ git remote set-url origin https://github.com/Alejandro-Rubio/TerminalAngular.git
 
 - Eliminar repositorio que no se va a usar
   $ git remote set-url --delete upstream https://github.com/jhontivan/TerminalAngular.git
