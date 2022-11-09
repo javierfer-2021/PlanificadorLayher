@@ -1,0 +1,53 @@
+<div class="container p-0" [ngStyle]="{'height': altoMinBotonesXS}" [ngStyle]="{'min-height': altoMinBotonesXS}">
+    <div class="row h-100 p-0 m-0">
+
+        <div class="col col-sm h-100 p-1 m-0" *ngIf="mostrar(1)">
+            <button id="btn1" class="w-100 h-100 btn btn-{{btn1.tipo}} p-0 px-1 m-0" [ngClass]="!btn1.activo ? 'eDisabled': ''" (click)="ejecutarClick_1()">
+                <div class="container p-0 m-0 w-100 h-100">
+                    <div class="row p-0 m-0 w-100 h-100">
+                        <div class="col-12 m-0 p-0 text-truncate h-100 d-flex align-items-center">
+                            <span class="fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15 m-0 p-0 mx-auto text-truncate">{{btn1.texto}}</span>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+        <div class="col col-sm h-100 p-1 m-0" *ngIf="mostrar(2) && VisibleBtn(2)">
+            <button id="btn2" class="w-100 h-100 btn btn-{{btn2.tipo}} p-0 px-1 m-0" [ngClass]="!btn2.activo ? 'eDisabled': ''" (click)="ejecutarClick_2()">
+                <div class="container p-0 m-0 w-100 h-100">
+                    <div class="row p-0 m-0 w-100 h-100">
+                        <div class="col-12 m-0 p-0 text-truncate h-100 d-flex align-items-center">
+                            <span class="fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15 m-0 p-0 mx-auto text-truncate">{{btn2.texto}}</span>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </div>
+        <div class="col col-sm h-100 p-1 m-0" *ngIf="mostrar(3) && VisibleBtn(3)">
+            <button id="btn3" class="w-100 h-100 btn btn-{{btn3.tipo}} p-0 px-1 m-0" [ngClass]="!btn3.activo ? 'eDisabled': ''" (click)="ejecutarClick_3()">
+                <div class="container p-0 m-0 w-100 h-100">
+                    <div class="row p-0 m-0 w-100 h-100">
+                        <div class="col-12 m-0 p-0 text-truncate h-100 d-flex align-items-center">
+                            <span class="fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15 m-0 p-0 mx-auto text-truncate">{{btn3.texto}}</span>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+        <div class="col-12 col-sm h-100 px-1 pb-1 py-sm-1 m-0" *ngIf="mostrar(4) && VisibleBtn(4)">
+            <button id="btn4" class="w-100 h-100 btn btn-{{btn4.tipo}} p-0 px-1 m-0" [ngClass]="!btn4.activo ? 'eDisabled': ''" (click)="ejecutarClick_4()">
+                <div class="container p-0 m-0 w-100 h-100">
+                    <div class="row p-0 m-0 w-100 h-100">
+                        <div class="col-12 m-0 p-0 text-truncate h-100 d-flex align-items-center">
+                            <span class="fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15 m-0 p-0 mx-auto text-truncate">{{btn4.texto}}</span>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+    </div>
+
+</div>

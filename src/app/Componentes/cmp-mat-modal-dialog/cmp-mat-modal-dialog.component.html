@@ -1,0 +1,10 @@
+<div class="border-bottom border-danger p-0 m-0">
+    <p class="font-weight-bold m-0">{{data?.titulo}}.</p>
+</div>
+<div mat-dialog-content class="pt-3" style="font-size: 0.9em;">
+    <p>{{data?.mensaje}}</p>
+</div>
+<div mat-dialog-actions class="float-right">
+    <button *ngIf="tipoModal==1" mat-button class="btn btn-cancel" (click)="cerrarDialog_NO()">{{data?.cancelarText}}</button>
+    <button mat-button class="btn" (click)="cerrarDialog_YES()" cdkFocusInitial>{{data?.confirmarText}}</button>
+</div>

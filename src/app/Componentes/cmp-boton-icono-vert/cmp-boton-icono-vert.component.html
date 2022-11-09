@@ -1,0 +1,13 @@
+<div #botonIcono class="botonIcono h-100 w-100 btn btn-primary" (window:resize)="onResize($event)" style="position: relative; padding-bottom: 2px; padding-top: 2px;" (click)="ejecutar()">
+    <div #icono class="row justify-content-center">
+        <div class="icono">
+            <i height="22px" width="22px" class="{{btnIconoVert.icono}}" *ngIf="!btnIconoVert.icono.includes('/')"></i>
+            <img height="22px" width="22px" *ngIf="btnIconoVert.icono.includes('/')" src="{{btnIconoVert.icono}}">
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div #texto *ngIf="divTextoVisible" class="texto">
+            <div class="text-truncate fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15 m-0 p-0">{{btnIconoVert.texto}}</div>
+        </div>
+    </div>
+</div>

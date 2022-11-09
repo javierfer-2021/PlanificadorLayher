@@ -1,0 +1,30 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSEnvioCsv_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <div class="row">
+            <div class="col-9 px-1 pt-1">
+                <span class="pr-1">{{traducir('frm-planificador.lblImportarOrden', 'Importar Orden: ')}}</span>
+                <input type="file" accept="*" (change)="guardarCsv($event.target.files)">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-9 px-1 pt-1">
+                <button class="btn btn-primary" (click)="cargarDatos()" type="submit" class="btn-large btn-submit">Enviar Csv</button>
+            </div>
+        </div>
+
+        <div class="row pt-1">
+            <div class="col px-1">
+                <app-cmp-data-grid #dgArticulos [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>

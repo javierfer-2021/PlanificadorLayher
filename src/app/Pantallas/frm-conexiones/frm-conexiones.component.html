@@ -1,0 +1,42 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSEchoPing_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+
+    <div #pantalla>
+        <div class="row">
+            <div class="col px-2 pt-3">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-conexiones.lblIP', 'IP')}}</div>
+                <dx-text-box #txtIP class="w-100 fs-11 fs-sm-13 fs-md-13 fs-lg-13 fs-xl-13" [showClearButton]="false" [height]="30" [(ngModel)]="str_txtIP" [ngStyle]="{'background-color': color_txtIP}" (onEnterKey)="onEnterKey_txtIP()" (onFocusOut)="onFocusOut_txtIP()"
+                    (onFocusIn)="onFocusIn_txtIP()" placeholder="{{traducir('frm-conexiones.txtIP', 'Introduce la IP')}}">
+                </dx-text-box>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col px-2 pt-3">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-conexiones.lblPuerto', 'Puerto')}}</div>
+                <dx-number-box #txtPuerto class="w-100 fs-11 fs-sm-13 fs-md-13 fs-lg-13 fs-xl-13" [showClearButton]="false" [height]="30" [(ngModel)]="str_txtPuerto" [ngStyle]="{'background-color': color_txtPuerto}" (onEnterKey)="onEnterKey_txtPuerto()" (onFocusOut)="onFocusOut_txtPuerto()"
+                    (onFocusIn)="onFocusIn_txtPuerto()" placeholder="{{traducir('frm-conexiones.txtPuerto', 'Introduce el puerto')}}">
+                </dx-number-box>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col px-2 pt-3">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-conexiones.lblTiposConexion', 'Tipo de conexión')}}</div>
+                <dx-radio-group #radioTiposConexion [items]="tiposConexion" [(value)]="tipoConexion" layout="horizontal">
+                </dx-radio-group>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col px-2 pt-3">
+                <button (click)="echoPing()" class="btn btn-primary w-100">{{traducir('frm-conexiones.btnTest', 'Probar Conexión')}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAcciones"></app-cmp-botones-pantallas>
+</div>

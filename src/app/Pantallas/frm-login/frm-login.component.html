@@ -1,0 +1,104 @@
+<div class="col mt-1" *ngIf="mostrarProgressBar">
+    <div class="row">
+        <div class="col">
+            <dx-progress-bar #progressBar id="progress-bar-status" width="100%" [min]="0" [max]="maxValue" [statusFormat]="format" [value]="loaded">
+            </dx-progress-bar>
+        </div>
+    </div>
+</div>
+
+<div class="container p-0" #container style="overflow-y: auto; height: 100%; display: flex; align-items: center; justify-content: center;">
+    <div #pantalla>
+
+        <div class="col">
+            <img style="display: block; margin-left: auto; margin-right: auto;" width="200" height="70" src="./assets/icons/Vstock.svg">
+        </div>
+
+        <div class="col mt-1">
+            <label style="display:block; text-align: center; font-size: 0.8em; color: rgba(67, 67, 67);">{{version}}</label>
+        </div>
+
+        <div class="col mt-1">
+            <div class="row px-2">
+                <label class="error fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15">{{ mensajeError }}</label>
+            </div>
+        </div>
+
+        <h2 id="status"></h2>
+        <div class="col mt-1">
+            <!-- login -->
+            <div class="row px-2">
+                <div class="fs-14 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-login.lblUsuario', 'Usuario')}}</div>
+            </div>
+            <div class="row px-2">
+                <app-cmp-text-box class="w-100" #txtUsuario [dgConfigTxt]="dgConfigTxtUsuario" (onValueChanged_TextBox)="onValueChanged_txtUsuario()" (onFocusIn_TextBox)="onFocusIn_txtUsuario()" (onFocusOut_TextBox)="onFocusOut_txtUsuario()" (onEnterKey_TextBox)="onEnterKey_txtUsuario()"></app-cmp-text-box>
+            </div>
+
+            <!-- password -->
+            <div class="row px-2 pt-3">
+                <div class="fs-14 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-login.lblContrasenia', 'Contraseña')}}</div>
+            </div>
+            <div class="row px-2">
+                <app-cmp-text-box class="w-100" #txtPassword [dgConfigTxt]="dgConfigTxtPassword" (onValueChanged_TextBox)="onValueChanged_txtPassword()" (onFocusIn_TextBox)="onFocusIn_txtPassword()" (onFocusOut_TextBox)="onFocusOut_txtPassword()" (onEnterKey_TextBox)="onEnterKey_txtPassword()"></app-cmp-text-box>
+            </div>
+
+            <div class="row px-2 pt-1 dx-field-value" style="display: block;">
+                <dx-check-box #checkBoxRecuerdame [(value)]="checkRecuerdame" text="Recuérdame"></dx-check-box>
+            </div>
+
+            <!-- botones -->
+            <div class="row mt-5">
+                <div class="col-6">
+                    <button (click)="validarLogin()" class="btn btn-primary w-100">{{traducir('frm-login.btnEntrar', 'Entrar')}}</button>
+                </div>
+                <div class="col-6">
+                    <button (click)="cerrarApp()" class="btn btn-danger w-100">{{traducir('frm-login.btnSalir', 'Salir')}}</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col mt-3" *ngIf="mostrarBtnActualizar">
+            <!-- *ngIf="permitirActualizar" -->
+            <div class="row">
+                <div class="col">
+                    <button (click)="actualizarApk()" class="btn btn-primary w-100">{{ str_botonActualizar }}</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container pt-2" *ngIf="verDebug">
+
+            <div class="col mt-1">
+                <div class="row px-2">
+                    <label class="fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15">{{fechaHoy}}</label>
+                </div>
+            </div>
+
+            <div class="row pt-1 pb-1">
+                <div class="col-9 px-1">
+                    <dx-select-box [items]="conexiones" placeholder="Elige la Conexión" [showClearButton]="true" [(ngModel)]="str_txtConexion">
+                    </dx-select-box>
+                </div>
+                <div class="col-3 px-1">
+                    <button (click)="guardarURL()" class="btn btn-primary w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"><i class="fas fa-wifi"></i></button>
+                </div>
+            </div>
+
+            <div class="row py-1">
+                <div class="col-9 px-1">
+                    <dx-text-box #txtPeticion [height]="30" placeholder="Petición" class="w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">
+                    </dx-text-box>
+                </div>
+                <div class="col-3 px-1">
+                    <button (click)="saludar(txtPeticion.value)" class="btn btn-primary w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">E</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<dx-popup *ngIf="popUpVisibleConexiones" #popUpConexiones [fullScreen]="true" [showTitle]="true" [dragEnabled]="false" [showCloseButton]="true" [closeOnOutsideClick]="false" [(visible)]="popUpVisibleConexiones" title="{{traducir('frm-login.titleConexiones', 'Conexión')}}">
+    <app-frm-conexiones *ngIf="popUpVisibleConexiones" (cerrarPopUpConexion)="getCerrarPopUpConexion($event)"></app-frm-conexiones>
+</dx-popup>

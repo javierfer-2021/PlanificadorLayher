@@ -1,0 +1,35 @@
+<!-- ASI NO DEJA METER URL DE ICONO <div #botonIcono class="botonIcono w-100 btn btn-primary col" [ngClass]="desactivarBoton ? 'eDisabled': ''" (window:resize)="onResize($event)" style="position: relative;" (click)="ejecutar()">
+    <span class="row justify-content-center">
+        <i #icono style="display:flex;align-items: center;" class="m-0 p-0 px-1" height="22px" width="22px" class="{{btnIconoHrz.icono}}"></i>
+        <span #texto *ngIf="divTextoVisible"  style="font-size: 11px; font-weight: bold;" class="m-0 p-0 px-1 text-truncate">{{btnIconoHrz.texto}}</span>
+    </span>
+</div> -->
+
+<div #botonIcono class="botonIcono h-100 w-100 btn btn-primary" [ngClass]="desactivarBoton ? 'eDisabled': ''" (window:resize)="onResize($event)" style="position: relative; padding-bottom: 2px; padding-top: 2px;" (click)="ejecutar()">
+    <div class="row justify-content-center">
+        <div #icono class="icono px-1">
+            <i height="22px" width="22px" class="{{btnIconoHrz.icono}}" *ngIf="!btnIconoHrz.icono.includes('/')"></i>
+            <img height="22px" width="22px" *ngIf="btnIconoHrz.icono.includes('/')" src="{{btnIconoHrz.icono}}">
+        </div>
+        <span #texto *ngIf="divTextoVisible" style="font-size: 11px; font-weight: bold;" class="m-0 pt-1 px-1 text-truncate">{{btnIconoHrz.texto}}</span>
+    </div>
+</div>
+
+
+<!-- <div #botonIcono class="botonIcono w-100 btn btn-primary" [ngClass]="desactivarBoton ? 'eDisabled': ''" (window:resize)="onResize($event)" style="position: relative; padding-bottom: 2px; padding-top: 2px;" (click)="ejecutar()">
+    <div class="row justify-content-center">
+        <div #icono class="icono col">
+            <i height="22px" width="22px" class="{{btnIconoHrz.icono}}"></i>
+        </div>
+        <div #texto *ngIf="divTextoVisible" class="texto col">
+            <div class="text-truncate fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15 m-0 p-0">{{btnIconoHrz.texto}}</div>
+        </div>
+    </div>
+</div> -->
+
+
+<!-- Con font awesome: -->
+<!-- <button type="button" class="btn btn-secondary"><i class="fas fa-eye left"></i>Observar</button> -->
+
+<!-- Con bootstrap icons: -->
+<!-- <button type="button" class="btn btn-secondary"><i class="bi bi-eye-fill left"></i>Observar</button> -->

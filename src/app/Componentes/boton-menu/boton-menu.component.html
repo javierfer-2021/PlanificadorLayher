@@ -1,0 +1,20 @@
+<div class="h-100 w-100 btn btn-primary eEfectoBtn" [ngClass]="btnMenu.desactivado ? 'eDisabled': ''" style="position: relative;" (click)="ejecutar()">
+    <div class="container p-0 m-0 w-100 h-100">
+        <div class="row p-0 m-0 h-75 w-100">
+            <div class="col-12 p-0 m-auto">
+                <span class=""><img width="40" height="40" src="{{btnMenu.icono}}" /></span>
+            </div>
+        </div>
+        <div class="row h-25 p-0 m-0 w-100">
+            <div class="col-12 m-0 p-0">
+                <div class="text-truncate fs-11 fs-sm-12 fs-md-13 fs-lg-15 fs-xl-15 m-0 p-0">{{btnMenu.texto}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="btnMenu.notificacion !== 0" class="d-flex align-items-center" style="font-size: 10px;width: 22px; height: 22px; position:absolute; top: -8px; right: -5px;
+    border-radius: 50%; z-index: 99; background-color: red;
+    "><span class="mx-auto font-weight-bold">{{btnMenu.notificacion}}</span>
+    </div>
+
+</div>
