@@ -63,6 +63,28 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
   - fs.writeFile(fileName, data)
   - fs.readString(fileName)
   https://github.com/matthewp/fs
+  
+
+INSTRUCCIONES PARA CREAR UN NUEVO PROYECTO, SUBIRLO A LA CUENTA DE VILETEL Y SER COLABORADOR DE ELLA
+- Crear proyecto en tu cuenta
+  · Se crea un nuevo proyecto de Angular y se sube a tu propia cuenta de GitHub
+  · Se habrá creado un nuevo repositorio en tu cuenta de GitHub, y hay que marcarlo como público (en la web de GitHub)
+- En la cuenta de Viletel:
+  · Una vez subido, en el navegador, entrar en la cuenta de Viletel y ahí crear un nuevo repositorio vacío. No marcar ninguna de las opciones que aparece, tan solo se le da el nombre al repositorio
+  · Una vez creado, en pantalla aparecerán 3 maneras de importar el código. Se selecciona la última que es un botón para importar el código
+  · Aparecerá que tienes que introducir un enlace del repositorio antiguo del que partes y ahí introduces el enlace de tu repositorio donde tienes el proyecto
+  · Se importará el código y ya estaría en la cuenta de Viletel
+  · Tienes que añadirte como colaborador en Ajustes -> Colaboradores tu cuenta
+  · Te llegará un correo con invitación a colaborar. Lo aceptas y ya serás colaborador
+- Desde tu cuenta:
+  · Eliminar el repositorio creado en tu cuenta anteriormente del proyecto
+  · Ahora hay que abrir el enlace del repositorio de Viletel y pulsar el botón de "Fork" para clonar el repositorio
+  · Se creará un nuevo repositorio en tu cuenta que está conectado y clonado del de Viletel
+- En Visual Studio Code:
+  · Hay que añadir el origin y el upstream para poder subir los cambios. En el de origin irá tu repositorio y en el de upstream el de Viletel
+  $ git remote set-url origin https://github.com/Alejandro-Rubio/...
+  $ git remote add upstream https://github.com/Vstock-Desarrollo-00/...
+
 
 INSTRUCCIONES PARA COLABORAR
 
