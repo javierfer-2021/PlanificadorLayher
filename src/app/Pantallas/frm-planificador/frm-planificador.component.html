@@ -4,21 +4,33 @@
     <div #pantalla>
 
         <div class="row">
-            <div class="col-9 px-1 pt-1">
+            <div class="col px-1 pt-1">
                 <span class="pr-1">{{traducir('frm-planificador.lblImportarOrden', 'Importar Orden: ')}}</span>
                 <input type="file" accept="*" (change)="guardarCsv($event.target.files)">
             </div>
         </div>
 
         <div class="row">
-            <div class="col-9 px-1 pt-1">
-                <button class="btn btn-primary" (click)="cargarDatos()" type="submit" class="btn-large btn-submit">Enviar Csv</button>
+            <div class="col px-1 pt-1">
+                <button class="btn btn-primary" (click)="cargarDatos()" type="submit">Enviar Csv</button>
+            </div>
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-3 pt-1 px-1">
+                <app-cmp-boton-icono-hrz [btnIconoHrz]="btnIconoEnviar"></app-cmp-boton-icono-hrz>
+            </div>
+        </div> -->
+
+        <div class="row pt-1">
+            <div class="col px-1">
+                <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGrid()" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
             </div>
         </div>
 
         <div class="row pt-1">
             <div class="col px-1">
-                <app-cmp-data-grid #dgArticulos [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+                <app-cmp-data-grid #dgArticulos2 (onContentReady_DataGrid)="onContentReady_DataGrid2()" [dgConfig]="dgConfigArticulos2"></app-cmp-data-grid>
             </div>
         </div>
 

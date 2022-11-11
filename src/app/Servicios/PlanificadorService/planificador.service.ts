@@ -11,7 +11,7 @@ export class PlanificadorService {
   
   headers = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + ConfiGlobal.Token
     })
   };
@@ -22,6 +22,7 @@ export class PlanificadorService {
     const url =  ConfiGlobal.URL + '/api/planificador/cargarDatos';
     const formData = new FormData();
     formData.append('fichero', fileToUpload, fileToUpload.name);
+    formData.append('usuario', ConfiGlobal.Usuario.toString());
 
     // const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: formData };
 

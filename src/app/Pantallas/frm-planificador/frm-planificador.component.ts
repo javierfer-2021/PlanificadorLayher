@@ -11,6 +11,7 @@ import { DataGridConfig } from '../../Clases/DataGridConfig';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { BotonPantalla } from '../../Clases/BotonPantalla';
+import { BotonIcono } from '../../Clases/BotonIcono';
 
 @Component({
   selector: 'app-frm-planificador',
@@ -23,6 +24,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
   @ViewChild('dgArticulos', { static: false }) dgArticulos: CmpDataGridComponent;
+  @ViewChild('dgArticulos2', { static: false }) dgArticulos2: CmpDataGridComponent;
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: 'Salir', posicion: 1, accion: () => { }, tipo: TipoBoton.danger, activo: true, visible: true },
@@ -61,6 +63,12 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   ];
 
   dgConfigArticulos: DataGridConfig = new DataGridConfig(this.arrayArts, this.colsArts, 0, ConfiGlobal.lbl_NoHayDatos);
+  dgConfigArticulos2: DataGridConfig = new DataGridConfig(this.arrayArts, this.colsArts, 0, ConfiGlobal.lbl_NoHayDatos);
+
+  btnIconoEnviar: BotonIcono = 
+  {
+    icono: 'bi bi-arrow-bar-up', texto: 'Enviar Csv', accion: () => { }
+  }
 
   // str_txtUbiOrigen = '';
 
@@ -97,6 +105,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       }
     });
 
+    this.btnIconoEnviar.accion = () => {
+      this.cargarDatos();
+    }
+
     this.ConstructorPantalla();
   }
 
@@ -108,8 +120,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer, true, true);
 
     // Actualizar altura del grid
-    let altura: number = Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima);
+    let altura: number = Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima,2);
     this.dgArticulos.actualizarAltura(altura);
+    this.dgArticulos2.actualizarAltura(altura);
   }
 
   // añadir los nombres traducidos a los botones
@@ -125,6 +138,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }
 
   onResize(event) {
+    this.dgArticulos.actualizarAltura(0);
+    this.dgArticulos2.actualizarAltura(0);
+
     Utilidades.BtnFooterUpdate(
       this.pantalla,
       this.container,
@@ -134,8 +150,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     );
 
     // Actualizar altura del grid
-    let altura: number = Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima);
+    let altura: number = Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima, 2);
     this.dgArticulos.actualizarAltura(altura);
+    this.dgArticulos2.actualizarAltura(altura);
   }
 
   guardarCsv(file: FileList) {
@@ -151,6 +168,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     if(this.WSEnvioCsv_Validando) return;
     if(Utilidades.isEmpty(this.ficheroCsv)) return;
 
+    this.limpiarControles();
+
     this.WSEnvioCsv_Validando = true;
     (await this.planificadorService.cargarDatos(this.ficheroCsv)).subscribe(
       datos => {
@@ -163,6 +182,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           // Se configura el grid
           this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigArticulos.actualizarConfig(true,true,'standard');
+
+          // Se configura el grid 2
+          this.dgConfigArticulos2 = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos2.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigArticulos2.actualizarConfig(true,true,'standard');
         } else {
           this.WSEnvioCsv_Valido = false;
         }
@@ -173,6 +196,20 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       }
     );
   }
+
+  public onContentReady_DataGrid(): void {
+    let scroll = this.dgArticulos.getScrollable();
+    scroll.on("scroll", () => {
+      this.dgArticulos2.setScroll(this.dgArticulos.getScroll());
+    });
+  }
+
+  public onContentReady_DataGrid2(): void {
+    let scroll = this.dgArticulos2.getScrollable();
+    scroll.on("scroll", () => {
+      this.dgArticulos.setScroll(this.dgArticulos2.getScroll());
+    });
+  } 
 
   public limpiarControles() {
     // this.str_txtUbiOrigen = '';
@@ -185,6 +222,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     // this.vCambiado_txtUbiOrigen = false;
 
     // this.txtUbiOrigen.instance.focus();
+
+    this.arrayArts = null;
+
+    this.dgConfigArticulos = new DataGridConfig(null, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    this.dgConfigArticulos2 = new DataGridConfig(null, this.colsArts, this.dgConfigArticulos2.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
   }
 
   LPGen(value : boolean) {

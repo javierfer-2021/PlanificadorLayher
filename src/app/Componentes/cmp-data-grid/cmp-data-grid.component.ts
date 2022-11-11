@@ -78,8 +78,16 @@ export class CmpDataGridComponent implements OnInit {
     this.dgConfig.alturaMaxima = altura;
   }
 
+  public getScrollable() {
+    return this.DataGrid.instance.getScrollable();
+  }
+
   public getScroll(): number {
     return this.DataGrid.instance.getScrollable().scrollOffset().top;
+  }
+
+  public setScroll(scrollValue: number) {
+    this.DataGrid.instance.getScrollable().scrollTo(scrollValue);
   }
 
 
