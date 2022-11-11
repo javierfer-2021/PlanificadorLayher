@@ -11,7 +11,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { DataTextBoxConfig } from '../../Clases/DataTextBoxConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
 import { PeticionesGeneralesService } from '../../Servicios/PeticionesGeneralesService/peticiones-generales.service';
 import { WebsocketService } from '../../Servicios/WebSocketService/websocket.service';

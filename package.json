@@ -28,6 +28,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "bootstrap": "^5.2.2",
+    "bootstrap-icons": "^1.9.1",
     "devextreme": "20.1.4",
     "devextreme-angular": "20.1.4",
     "fs-web": "^1.0.1",

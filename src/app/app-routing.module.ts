@@ -9,7 +9,7 @@ import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-plani
 
 const routes: Routes = [
   { path: '', component: FrmLoginComponent },
-  { path: 'planificador', component: FrmPlanificadorComponent/* , canActivate: [AuthGuard] */  },
+  { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard]  },
 ];
 
 @NgModule({

@@ -2,8 +2,8 @@ import { Component, ComponentFactoryResolver, ElementRef, Renderer2, ViewChild }
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { DxLoadPanelComponent } from 'devextreme-angular';
-import { environment } from '../environments/environment.prod';
 import { Utilidades } from './Utilidades/Utilidades';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
