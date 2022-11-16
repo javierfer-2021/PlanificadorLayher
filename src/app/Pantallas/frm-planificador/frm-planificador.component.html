@@ -24,15 +24,18 @@
 
         <div class="row pt-1">
             <div class="col px-1">
-                <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGrid()" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+                <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+            </div>
+            <div class="col px-1">
+                <app-cmp-data-grid #dgUnidades (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" [dgConfig]="dgConfigUnidades"></app-cmp-data-grid>
             </div>
         </div>
 
-        <div class="row pt-1">
+        <!-- <div class="row pt-1">
             <div class="col px-1">
                 <app-cmp-data-grid #dgArticulos2 (onContentReady_DataGrid)="onContentReady_DataGrid2()" [dgConfig]="dgConfigArticulos2"></app-cmp-data-grid>
             </div>
-        </div>
+        </div> -->
 
     </div>
 
