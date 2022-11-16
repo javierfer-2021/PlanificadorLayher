@@ -30,6 +30,8 @@ import { CmpDataGridComponent } from './Componentes/cmp-data-grid/cmp-data-grid.
 import { FormsModule } from '@angular/forms';
 import { FrmConexionesComponent } from './Pantallas/frm-conexiones/frm-conexiones.component';
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
+import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
+import { FrmPruebasComponent } from './Pantallas/frm-pruebas/frm-pruebas.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -48,7 +50,9 @@ export function HttpLoaderFactory(httpClient: HttpClient) { }
     CmpTextBoxComponent,
     CmpDataGridComponent,
     FrmConexionesComponent,
-    FrmPlanificadorComponent
+    FrmPlanificadorComponent,
+    FrmPrincipalComponent,
+    FrmPruebasComponent
 
   ],
   imports: [

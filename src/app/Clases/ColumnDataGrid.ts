@@ -1,3 +1,4 @@
+import { dxDataGridColumn } from 'devextreme/ui/data_grid';
 
 
 export class ColumnDataGrid {
@@ -13,4 +14,6 @@ export class ColumnDataGrid {
     fixed?: boolean;
     fixedPosition?: string;
     allowEditing?: boolean = false;
+    columns?: Array<dxDataGridColumn | string>;
+    cssClass?: string;
   }
