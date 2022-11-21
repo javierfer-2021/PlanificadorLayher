@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: '', component: FrmLoginComponent },
   { path: 'inicio', component: FrmPrincipalComponent, canActivate: [AuthGuard] },
   { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard] },
-  { path: 'pruebas', component: FrmPruebasComponent/* , canActivate: [AuthGuard] */ },
+  { path: 'pruebas', component: FrmPruebasComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

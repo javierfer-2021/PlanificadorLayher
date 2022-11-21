@@ -1,182 +1,609 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { DxDataGridComponent } from 'devextreme-angular/ui/data-grid';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { AfterContentChecked } from '@angular/core';
+import { CmpDataGridComponent } from '../../Componentes/cmp-data-grid/cmp-data-grid.component';
+import { TipoBoton } from '../../Enumeraciones/TipoBoton';
 import { ColumnDataGrid } from '../../Clases/ColumnDataGrid';
-
+import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
+import { DataGridConfig } from '../../Clases/DataGridConfig';
+import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
+import { Utilidades } from '../../Utilidades/Utilidades';
+import { BotonPantalla } from '../../Clases/BotonPantalla';
+import { BotonIcono } from '../../Clases/BotonIcono';
+import { DxDataGridComponent } from 'devextreme-angular';
+import { element } from 'protractor';
 @Component({
   selector: 'app-frm-pruebas',
   templateUrl: './frm-pruebas.component.html',
   styleUrls: ['./frm-pruebas.component.css']
 })
-export class FrmPruebasComponent implements OnInit, AfterViewInit {
+export class FrmPruebasComponent implements OnInit, AfterViewInit, AfterContentChecked {
+  altoBtnFooter = '45px';
+  @ViewChild('container') container: ElementRef;
+  @ViewChild('btnFooter') btnFooter: ElementRef;
+  @ViewChild('pantalla') pantalla: ElementRef;
+  @ViewChild('dgArticulos', { static: false }) dgArticulos: CmpDataGridComponent;
+  @ViewChild('dgUnidades', { static: false }) dgUnidades: CmpDataGridComponent;
 
-  @ViewChild('dg', { static: false }) dg: DxDataGridComponent;
+  btnAciones: BotonPantalla[] = [
+    { icono: '', texto: 'Salir', posicion: 1, accion: () => { }, tipo: TipoBoton.danger, activo: true, visible: true },
+    { icono: '', texto: 'Limpiar', posicion: 2, accion: () => { }, tipo: TipoBoton.secondary, activo: true, visible: true },
+  ];
 
-  // countries: Country[] = [{
-  //   "ID": 1,
-  //   "Country": "Brazil",
-  //   "Area": 8515767,
-  //   "Population_Urban": 0.85,
-  //   "Population_Rural": 0.15,
-  //   "Population_Total": 205809000,
-  //   "GDP_Agriculture": 0.054,
-  //   "GDP_Industry": 0.274,
-  //   "GDP_Services": 0.672,
-  //   "GDP_Total": 2353025
-  // }, {
-  //     "ID": 2,
-  //     "Country": "China",
-  //     "Area": 9388211,
-  //     "Population_Urban": 0.54,
-  //     "Population_Rural": 0.46,
-  //     "Population_Total": 1375530000,
-  //     "GDP_Agriculture": 0.091,
-  //     "GDP_Industry": 0.426,
-  //     "GDP_Services": 0.483,
-  //     "GDP_Total": 10380380
-  // }, {
-  //     "ID": 3,
-  //     "Country": "France",
-  //     "Area": 675417,
-  //     "Population_Urban": 0.79,
-  //     "Population_Rural": 0.21,
-  //     "Population_Total": 64529000,
-  //     "GDP_Agriculture": 0.019,
-  //     "GDP_Industry": 0.183,
-  //     "GDP_Services": 0.798,
-  //     "GDP_Total": 2846889
-  // }, {
-  //     "ID": 4,
-  //     "Country": "Germany",
-  //     "Area": 357021,
-  //     "Population_Urban": 0.75,
-  //     "Population_Rural": 0.25,
-  //     "Population_Total": 81459000,
-  //     "GDP_Agriculture": 0.008,
-  //     "GDP_Industry": 0.281,
-  //     "GDP_Services": 0.711,
-  //     "GDP_Total": 3859547
-  // }, {
-  //     "ID": 5,
-  //     "Country": "India",
-  //     "Area": 3287590,
-  //     "Population_Urban": 0.32,
-  //     "Population_Rural": 0.68,
-  //     "Population_Total": 1286260000,
-  //     "GDP_Agriculture": 0.174,
-  //     "GDP_Industry": 0.258,
-  //     "GDP_Services": 0.569,
-  //     "GDP_Total": 2047811
-  // }, {
-  //     "ID": 6,
-  //     "Country": "Italy",
-  //     "Area": 301230,
-  //     "Population_Urban": 0.69,
-  //     "Population_Rural": 0.31,
-  //     "Population_Total": 60676361,
-  //     "GDP_Agriculture": 0.02,
-  //     "GDP_Industry": 0.242,
-  //     "GDP_Services": 0.738,
-  //     "GDP_Total": 2147952
-  // }, {
-  //     "ID": 7,
-  //     "Country": "Japan",
-  //     "Area": 377835,
-  //     "Population_Urban": 0.93,
-  //     "Population_Rural": 0.07,
-  //     "Population_Total": 126920000,
-  //     "GDP_Agriculture": 0.012,
-  //     "GDP_Industry": 0.275,
-  //     "GDP_Services": 0.714,
-  //     "GDP_Total": 4616335
-  // }, {
-  //     "ID": 8,
-  //     "Country": "Russia",
-  //     "Area": 17098242,
-  //     "Population_Urban": 0.74,
-  //     "Population_Rural": 0.26,
-  //     "Population_Total": 146544710,
-  //     "GDP_Agriculture": 0.039,
-  //     "GDP_Industry": 0.36,
-  //     "GDP_Services": 0.601,
-  //     "GDP_Total": 1857461
-  // }, {
-  //     "ID": 9,
-  //     "Country": "United States",
-  //     "Area": 9147420,
-  //     "Population_Urban": 0.81,
-  //     "Population_Rural": 0.19,
-  //     "Population_Total": 323097000,
-  //     "GDP_Agriculture": 0.0112,
-  //     "GDP_Industry": 0.191,
-  //     "GDP_Services": 0.797,
-  //     "GDP_Total": 17418925
-  // }, {
-  //     "ID": 10,
-  //     "Country": "United Kingdom",
-  //     "Area": 244820,
-  //     "Population_Urban": 0.82,
-  //     "Population_Rural": 0.18,
-  //     "Population_Total": 65097000,
-  //     "GDP_Agriculture": 0.007,
-  //     "GDP_Industry": 0.21,
-  //     "GDP_Services": 0.783,
-  //     "GDP_Total": 2945146
-  // }];
+  ficheroCsv: File = null;
 
-  cols: Array<ColumnDataGrid> = [
+  arrayArts: Array<oArticulo> = [];
+  arrayUnidadesMostrar: Array<oUnidMostrar> = [];
+
+  alturaDiv: string = '0px';
+
+  colsArts: Array<ColumnDataGrid> = [
     {
       dataField: 'Articulo',
       caption: 'Articulo',
-      columns: [{
-        dataField: 'ArtHijo1',
-        caption: 'ArtHijo1',
-        cssClass: 'gris'
-      },
-      {
-        dataField: 'ArtHijo2',
-        caption: 'ArtHijo2'
-      }]
+      cssClass: 'blanco'
     },
     {
       dataField: 'Referencia',
       caption: 'Referencia',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Unidades',
       caption: 'Unidades',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Cliente',
       caption: 'Cliente',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Fecha_Inicial',
       caption: 'Fecha Inicial',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Fecha_Devolucion',
       caption: 'Fecha Devolución',
+      cssClass: 'blanco'
     }
   ];
 
-  constructor() {
+  colsUnidades: Array<ColumnDataGrid> = [
+    {
+      dataField: 'ESCORANDA',
+      caption: 'ESCORANDA',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '003/AP22040179',
+        caption: '003/AP22040179',
+        cssClass: 'grisClaro',
+        columns: [{
+          dataField: '',
+          caption: '',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: '',
+            caption: '',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '04/05/2022',
+              caption: '04/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '10/06/2022',
+                caption: '10/06/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris'
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'PROD. MULTIPLE',
+      caption: 'PROD. MULTIPLE',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040061',
+        caption: '001/AP22040061',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '',
+          caption: '',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: '',
+            caption: '',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '26/04/2022',
+              caption: '26/04/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '22/05/2022',
+                caption: '22/05/2022',
+                cssClass: 'fechaRoja',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    }
+  ];
+
+  dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
+  dgConfigUnidades: DataGridConfig = new DataGridConfig(null, this.colsUnidades, 100, '');
+
+  btnIconoEnviar: BotonIcono = 
+  {
+    icono: 'bi bi-arrow-bar-up', texto: 'Enviar Csv', accion: () => { }
   }
-  
-  ngOnInit(): void { }
 
-  ngAfterViewInit(): void {  }
+  // str_txtUbiOrigen = '';
 
+  // WSUbiOrigen_Validando: boolean = false;
+  // WSUbiOrigen_Valido: boolean = false;
+
+  WSEnvioCsv_Validando: boolean = false;
+  WSEnvioCsv_Valido: boolean = false;
+
+  // color_txtUbiOrigen: string = ConfiGlobal.colorFoco;
+
+  // vCambiado_txtUbiOrigen: boolean = false;
+
+  // @ViewChild('txtUbiOrigen', { static: false }) txtUbiOrigen: DxTextBoxComponent;
+
+  constructor(
+    private renderer: Renderer2,
+    private location: Location,
+    private router: Router,
+    public translate: TranslateService,
+    public planificadorService: PlanificadorService,
+  ) {
+    // se añaden las acciones a lo botones
+    this.btnAciones.forEach((a, b, c) => {
+      if (a.posicion === 1) {
+        a.accion = () => {
+          this.location.back();
+        };
+      }
+      if (a.posicion === 2) {
+        a.accion = () => {
+          this.limpiarControles();
+        };
+      }
+    });
+
+    this.btnIconoEnviar.accion = () => {
+      this.cargarDatos();
+    }
+
+    this.ConstructorPantalla();
+  }
+
+  ngOnInit(): void {
+  }
+
+  // para actualizar la altura de btnFooter
+  ngAfterViewInit(): void {
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
+
+    // Actualizar altura del grid
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 180);
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
+    
+    this.alturaDiv = '180px';
+  }
+
+  // añadir los nombres traducidos a los botones
+  ngAfterContentChecked(): void {
+    this.btnAciones.forEach((a, b, c) => {
+      if (a.posicion === 1) {
+        a.texto = this.traducir('frm-reubicacion.btnSalir', 'Salir');
+      }
+    });
+  }
+
+  ConstructorPantalla() {
+  }
+
+  onResize(event) {
+    this.alturaDiv = '0px';
+    // this.mostrarEspacio = false;
+
+    Utilidades.BtnFooterUpdate(
+      this.pantalla,
+      this.container,
+      this.btnFooter,
+      this.btnAciones,
+      this.renderer
+    );
+
+    // Actualizar altura del grid
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima));
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
+    
+    this.alturaDiv = '180px';
+  }
+
+  guardarCsv(file: FileList) {
+    this.ficheroCsv = file.item(0);
+
+    const reader = new FileReader();
+    // reader.onload = (event: any) => {
+    // };
+    reader.readAsDataURL(this.ficheroCsv);
+  }
+
+  async cargarDatos(){
+    if(this.WSEnvioCsv_Validando) return;
+    if(Utilidades.isEmpty(this.ficheroCsv)) return;
+
+    this.limpiarControles();
+
+    this.WSEnvioCsv_Validando = true;
+    (await this.planificadorService.cargarDatos(this.ficheroCsv)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.WSEnvioCsv_Valido = true;
+          console.log(datos);
+
+          this.arrayArts = datos.datos.Articulos;
+          // this.arrayUnidadesMostrar = datos.datos.UnidadesMostrar;
+
+          this.arrayUnidadesMostrar = new Array<oUnidMostrar>();
+          this.arrayArts.forEach(element => {
+            let unidMostrar: oUnidMostrar = new oUnidMostrar();
+            unidMostrar.UnidadesMostrar = element.UnidadesMostrar;
+            this.arrayUnidadesMostrar.push(unidMostrar);
+          });
+
+          // Se configura el grid
+          this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigArticulos.actualizarConfig(true,false,'standard');
+
+          // Se configura el grid 2
+          let newCol: ColumnDataGrid = {
+            dataField: 'PROD. MULTIPLE',
+            caption: 'PROD. MULTIPLE',
+            cssClass: 'grisClaro',
+            columns: [{
+              dataField: '001/AP22040061',
+              caption: '001/AP22040061',
+              cssClass: 'gris',
+              columns: [{
+                dataField: '',
+                caption: '',
+                cssClass: 'blanco',
+                columns: [{
+                  dataField: '',
+                  caption: '',
+                  cssClass: 'blanco',
+                  columns: [{
+                    dataField: '26/04/2022',
+                    caption: '26/04/2022',
+                    cssClass: 'fecha',
+                    columns: [{
+                      dataField: '22/05/2022',
+                      caption: '22/05/2022',
+                      cssClass: 'fechaRoja',
+                      columns: [{
+                        dataField: 'UnidadesMostrar',
+                        caption: 'Unidades',
+                        cssClass: 'gris',
+                      }]
+                    }]
+                  }]
+                }]
+              }]
+            }]
+          }
+          this.colsUnidades.push(newCol);
+          this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesMostrar, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigUnidades.actualizarConfig(true,false,'standard');
+        } else {
+          this.WSEnvioCsv_Valido = false;
+        }
+        this.WSEnvioCsv_Validando = false;
+      }, error => {
+        this.WSEnvioCsv_Validando = false;
+        console.log(error);
+      }
+    );
+  }
+
+  public async onContentReady_DataGridArticulos(): Promise<void> {
+    let scrollable = this.dgArticulos.getScrollable();
+    scrollable.on("scroll", () => {
+      let scrollArticulos = this.dgArticulos.getScroll();
+      // MIRAR QUE PASA ERROR InternalError: too much recursion
+      // NO HACE SCROLL NI SE SINCRONIZA CON EL OTRO GRID
+      // CREO QUE HA SIDO AL AÑADIR MAS COLUMNAS AL DGUNIDADES
+      if(scrollArticulos !== this.dgUnidades.getScroll())
+        this.dgUnidades.setScroll(scrollArticulos);
+    });
+    console.log('onContentReady');
+
+  }
+
+  public async onContentReady_DataGridUnidades(): Promise<void> {
+    let scrollable = this.dgUnidades.getScrollable();
+    scrollable.on("scroll", () => {
+      let scrollUnidades = this.dgUnidades.getScroll();
+      if(scrollUnidades !== this.dgArticulos.getScroll())
+        this.dgArticulos.setScroll(scrollUnidades);
+    });
+    console.log('onContentReady');
+  }
+
+  public limpiarControles() {
+    // this.str_txtUbiOrigen = '';
+
+    // this.color_txtUbiOrigen = ConfiGlobal.colorFoco;
+
+    // this.WSUbiOrigen_Validando = false;
+    // this.WSUbiOrigen_Valido = false;
+
+    // this.vCambiado_txtUbiOrigen = false;
+
+    // this.txtUbiOrigen.instance.focus();
+
+    this.arrayArts = null;
+    this.arrayUnidadesMostrar = null;
+
+    this.dgConfigArticulos = new DataGridConfig(null, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    this.dgConfigUnidades = new DataGridConfig(null, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+  }
+
+  LPGen(value : boolean) {
+    Utilidades.VerLPGenerico(value);
+    return value;
+  }
+
+  traducir(key: string, def: string): string {
+    let traduccion: string = this.translate.instant(key);
+    if (traduccion !== key) {
+      return traduccion;
+    } else {
+      return def;
+    }
+  }
 }
 
-// export class Country {
-//   ID: number;
-//   Country: string;
-//   Area: number;
-//   Population_Urban: number;
-//   Population_Rural: number;
-//   Population_Total: number;
-//   GDP_Agriculture: number;
-//   GDP_Industry: number;
-//   GDP_Services: number;
-//   GDP_Total: number;
-// }
+export class oArticulo {
+  Articulo: string;
+  Referencia: string;
+  Unidades: number;
+  Cliente: string;
+  UnidadesMostrar: number;
+  Fecha_Inicial: Date;
+  Fecha_Devolucion: Date;
+}
+
+export class oUnidMostrar {
+  UnidadesMostrar: number;
+}

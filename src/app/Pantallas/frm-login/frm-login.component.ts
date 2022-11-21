@@ -110,7 +110,6 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
 
     // Leer archivo "login.json" para mostrar el usuario y la contraseña en caso de que exista
     var login = await Utilidades.leerFicheroLogin(false);
-    console.log(login);
     if((!Utilidades.isEmpty(login.Usuario) || !Utilidades.isEmpty(login.Password)) && login.Recuerdame) {
       this.dgConfigTxtUsuario.stringTxt = login.Usuario;
       this.dgConfigTxtPassword.stringTxt = login.Password;
