@@ -1,29 +1,33 @@
-::ng-deep .dx-header-row .escoranda {
+::ng-deep .dx-header-row {
+    font-size: 10px;
+    height: 30px;
+}
+
+::ng-deep .dx-header-row .grisClaro,
+::ng-deep .dx-header-row .verde,
+::ng-deep .dx-header-row .gris,
+::ng-deep .dx-header-row .blanco,
+::ng-deep .dx-header-row .fecha {
     color: black;
-    /* font-style: italic; */
+}
+
+::ng-deep .dx-header-row .grisClaro {
     background-color: #f2f2f2;
 }
 
 ::ng-deep .dx-header-row .verde {
-    color: black;
-    /* font-style: italic; */
     background-color: rgb(0, 118, 4);
 }
 
 ::ng-deep .dx-header-row .gris {
-    color: black;
-    /* font-style: italic; */
     background-color: rgb(227, 227, 227);
 }
 
 ::ng-deep .dx-header-row .fecha {
-    color: black;
-    /* font-style: italic; */
     background-color: yellow;
 }
 
 ::ng-deep .dx-header-row .fechaRoja {
-    /* font-style: italic; */
     background-color: yellow;
     color: red;
 }

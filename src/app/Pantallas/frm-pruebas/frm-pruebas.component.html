@@ -1,182 +1,74 @@
-<dx-data-grid #dg [paging]="{enabled: false}" [showBorders]="true" [columns]="cols">
-    <dxi-column cssClass="escoranda" dataField="ESCORANDA" caption="ESCORANDA" [isBand]="true">
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSEnvioCsv_Validando)"></mat-progress-bar>
 
-        <dxi-column cssClass="escoranda" dataField="numero" caption="003/AP22040179" [isBand]="true">
-            <dxi-column dataField="blanco" caption="" [isBand]="true">
-                <dxi-column dataField="blanco" caption="" [isBand]="true">
-                    <dxi-column cssClass="fecha" dataField="fecha" caption="04/05/2022">
-                        <dxi-column cssClass="fecha" dataField="fecha" caption="10/06/2022">
-                            <dxi-column cssClass="gris" dataField="unidades" caption="Unidades" [isBand]="false" [ownerBand]="3">
-                            </dxi-column>
-                        </dxi-column>
-                    </dxi-column>
-                    <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        </dxi-column>
-                    </dxi-column>
-                </dxi-column>
-            </dxi-column>
-        </dxi-column>
-    </dxi-column>
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
 
-    <div *dxTemplate="let info of 'escorandaHeaderTemplate'">
+        <div class="row">
+            <div class="col px-1 pt-1">
+                <span class="pr-1">{{traducir('frm-planificador.lblImportarOrden', 'Importar Orden: ')}}</span>
+                <input type="file" accept="*" (change)="guardarCsv($event.target.files)">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col px-1 pt-1">
+                <button class="btn btn-primary" (click)="cargarDatos()" type="submit">Enviar Csv</button>
+            </div>
+        </div>
+
+        <!-- <div class="row">
+            <div class="col-3 pt-1 px-1">
+                <app-cmp-boton-icono-hrz [btnIconoHrz]="btnIconoEnviar"></app-cmp-boton-icono-hrz>
+            </div>
+        </div> -->
+
+        <div class="row pt-3">
+            <div class="col-5 px-0">
+                <div class="row" [ngStyle]="{'height': alturaDiv}">
+                    <div class="col-2 ml-3">
+                        <div class="row" style="height: 30px;"></div>
+                        <div class="row mt-2" style="font-size: 11px; height: 25px;"><b>DESDE</b></div>
+                        <div class="row mt-1" style="font-size: 11px; height: 25px;"><b>HASTA</b></div>
+                    </div>
+                    <div class="col-4 ml-1">
+                        <div class="row" style="background-color: #00B0F0; border: solid; height: 30px; font-size: 20px;">EV 103+PODIUM</div>
+                        <div class="row mt-2" style="color: white; background-color: #808080; border: solid; height: 25px; font-size: 11px;">08/08/2019</div>
+                        <div class="row mt-1" style="color: white; background-color: black; border: solid; height: 25px; font-size: 11px;">25/08/2019</div>
+                    </div>
+                    <div class="col-3 ml-1">
+                        <div class="row mt-1" style="height: 25px; font-size: 11px;">01/01/2019</div>
+                        <div class="row mt-2" style="color: white; background-color: red; height: 25px; font-size: 14px;">WURTH</div>
+                        <div class="row mt-2" style="background-color: #D9D9D9; border: solid; height: 25px;"></div>
+                        <div class="row pt-1">
+                            <div class="col-8" style="background-color: yellow; border: solid; height: 25px; font-size: 11px;">MADRID</div>
+                            <div class="col-4" style="background-color: yellow; border: solid; height: 25px; font-size: 11px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-3 ml-1">
+                        <div class="row" style="font-size: 11px;"><u>CLIENTE</u></div>
+                        <div class="row" style="font-size: 11px;"><u>CONTRATO</u></div>
+                        <div class="row mt-1" style="font-size: 11px;"><u>OBRA</u></div>
+                        <div class="row mt-1" style="font-size: 11px;"><u>OBSERVACIONES</u></div>
+                        <div class="row" style="font-size: 11px;"><b>SALIDA</b></div>
+                        <div class="row mt-1" style="font-size: 11px;"><b>ENTRADA</b></div>
+                    </div>
+                </div>
+                <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+            </div>
+            <div class="col-7 px-0">
+                <app-cmp-data-grid #dgUnidades (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" [dgConfig]="dgConfigUnidades"></app-cmp-data-grid>
+            </div>
+        </div>
+
+        <!-- <div class="row pt-1">
+            <div class="col px-1">
+                <app-cmp-data-grid #dgArticulos2 (onContentReady_DataGrid)="onContentReady_DataGrid2()" [dgConfig]="dgConfigArticulos2"></app-cmp-data-grid>
+            </div>
+        </div> -->
 
     </div>
 
-</dx-data-grid>
-
-
-<!--<dx-data-grid #dgUnidades [paging]="{enabled: false}" [showBorders]="true" [height]="heightDgUnidades" [dataSource]="arrayUnidadesMostrar" (onContentReady)="onContentReady_DataGridUnidades()">
-    <dxi-column cssClass="escoranda" dataField="escoranda" caption="ESCORANDA">
-        <dxi-column cssClass="escoranda" dataField="numero" caption="003/AP22040179">
-            <dxi-column dataField="blanco" caption="">
-                <dxi-column dataField="blanco" caption="">
-                    <dxi-column cssClass="fecha" dataField="fecha" caption="04/05/2022" headerCellTemplate="fechaHeaderTemplate">
-                        <dxi-column cssClass="fecha" dataField="fecha" caption="10/06/2022">
-                        </dxi-column>
-                    </dxi-column>
-                    <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        </dxi-column>
-                    </dxi-column>
-                </dxi-column>
-            </dxi-column>
-        </dxi-column>
-    </dxi-column>
-
-    <dxi-column cssClass="escoranda" dataField="escoranda" caption="">
-        <!--  headerCellTemplate="escorandaHeaderTemplate" --
-        <dxi-column cssClass="gris" dataField="numero" caption="">
-            <!-- headerCellTemplate="numeroHeaderTemplate" --
-            <dxi-column dataField="blanco" caption="">
-                <dxi-column dataField="verde" caption="">
-                    <dxi-column cssClass="fecha" dataField="fecha" caption="">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fecha" dataField="fecha" caption="">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                    <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                </dxi-column>
-            </dxi-column>
-        </dxi-column>
-    </dxi-column>
-
-    <dxi-column cssClass="escoranda" dataField="escoranda" caption="PROD. MULTIPLE">
-        <!--  headerCellTemplate="escorandaHeaderTemplate" --
-        <dxi-column cssClass="gris" dataField="numero" caption="001/AP22040061">
-            <!-- headerCellTemplate="numeroHeaderTemplate" --
-            <dxi-column dataField="blanco" caption="">
-                <dxi-column dataField="blanco" caption="">
-                    <dxi-column cssClass="fecha" dataField="fecha" caption="26/04/2022">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fecha" dataField="fecha" caption="28/05/2022">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                    <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                </dxi-column>
-            </dxi-column>
-        </dxi-column>
-    </dxi-column>
-
-    <dxi-column cssClass="escoranda" dataField="escoranda" caption="PROD. MULTIPLE">
-        <!--  headerCellTemplate="escorandaHeaderTemplate" --
-        <dxi-column cssClass="escoranda" dataField="numero" caption="001/AP22030202">
-            <!-- headerCellTemplate="numeroHeaderTemplate" --
-            <dxi-column dataField="blanco" caption="">
-                <dxi-column dataField="blanco" caption="">
-                    <dxi-column cssClass="fecha" dataField="fecha" caption="26/04/2022">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fechaRoja" dataField="fecha" caption="22/05/2022">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                    <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                </dxi-column>
-            </dxi-column>
-        </dxi-column>
-    </dxi-column>
-
-    <dxi-column cssClass="escoranda" dataField="escoranda" caption="TMT ESCENARIOS">
-        <!--  headerCellTemplate="escorandaHeaderTemplate" --
-        <dxi-column cssClass="gris" dataField="numero" caption="001/AP22040058">
-            <!-- headerCellTemplate="numeroHeaderTemplate" --
-            <dxi-column dataField="blanco" caption="001/AP22040114">
-                <dxi-column dataField="blanco" caption="PODIUM">
-                    <dxi-column cssClass="fecha" dataField="fecha" caption="12/05/2022">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fechaRoja" dataField="fecha" caption="22/05/2022">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                    <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                        <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        <dxi-column cssClass="fecha" dataField="letra" caption="M">
-                            <!-- headerCellTemplate="fechaHeaderTemplate" --
-                        </dxi-column>
-                    </dxi-column>
-                </dxi-column>
-            </dxi-column>
-        </dxi-column>
-    </dxi-column>
-
-    <div *dxTemplate="let info of 'escorandaHeaderTemplate'">
-        <p style="background-color: #e0e0e0; height: 100%;">ESCORANDA</p>
-    </div>
-    <!--<div *dxTemplate="let info of 'numeroHeaderTemplate'">
-        <p style="background-color: #e0e0e0; height: 100%;">003/AP22040179</p>
-    </div>
-    <div *dxTemplate="let info of 'fechaHeaderTemplate'">
-        <p style="background-color: yellow;">{{info.column.caption}}</p>
-    </div> --
-
-</dx-data-grid>
-
-
-<!-- <dx-data-grid id="gridContainer" [dataSource]="countries" keyExpr="ID" [columnAutoWidth]="true" [showBorders]="true" [allowColumnReordering]="true">
-    <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
-    <dxi-column dataField="Country"> </dxi-column>
-    <dxi-column dataField="Area" headerCellTemplate="headerTemplate">
-    </dxi-column>
-    <dxi-column caption="Population">
-        <dxi-column caption="Total" dataField="Population_Total" format="fixedPoint">
-        </dxi-column>
-        <dxi-column caption="Urban" dataField="Population_Urban" format="percent">
-        </dxi-column>
-    </dxi-column>
-    <dxi-column caption="Nominal GDP">
-        <dxi-column caption="Total, mln $" dataField="GDP_Total" format="fixedPoint" sortOrder="desc">
-        </dxi-column>
-        <dxi-column caption="By Sector">
-            <dxi-column caption="Agriculture" [width]="95" dataField="GDP_Agriculture">
-                <dxo-format type="percent" [precision]="1"> </dxo-format>
-            </dxi-column>
-            <dxi-column caption="Industry" [width]="80" dataField="GDP_Industry">
-                <dxo-format type="percent" [precision]="1"> </dxo-format>
-            </dxi-column>
-            <dxi-column caption="Services" [width]="85" dataField="GDP_Services">
-                <dxo-format type="percent" [precision]="1"> </dxo-format>
-            </dxi-column>
-        </dxi-column>
-    </dxi-column>
-    <div *dxTemplate="let data of 'headerTemplate'">
-        <div>Area, km<sup>2</sup></div>
-    </div>
-</dx-data-grid> -->
+</div>
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>

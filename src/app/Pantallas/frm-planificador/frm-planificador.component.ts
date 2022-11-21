@@ -12,7 +12,7 @@ import { PlanificadorService } from '../../Servicios/PlanificadorService/planifi
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { BotonPantalla } from '../../Clases/BotonPantalla';
 import { BotonIcono } from '../../Clases/BotonIcono';
-import { DxDataGridComponent } from 'devextreme-angular';
+
 @Component({
   selector: 'app-frm-planificador',
   templateUrl: './frm-planificador.component.html',
@@ -34,32 +34,40 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   ficheroCsv: File = null;
 
   arrayArts: Array<oArticulo> = [];
-  arrayUnidadesMostrar: Array<number> = [];
+  arrayUnidadesMostrar: Array<oUnidMostrar> = [];
+
+  alturaDiv: string = '0px';
 
   colsArts: Array<ColumnDataGrid> = [
     {
       dataField: 'Articulo',
       caption: 'Articulo',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Referencia',
       caption: 'Referencia',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Unidades',
       caption: 'Unidades',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Cliente',
       caption: 'Cliente',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Fecha_Inicial',
       caption: 'Fecha Inicial',
+      cssClass: 'blanco'
     },
     {
       dataField: 'Fecha_Devolucion',
-      caption: 'Fecha Devolución',
+      caption: 'Fecha Devolucion',
+      cssClass: 'blanco'
     }
   ];
 
@@ -67,17 +75,19 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     {
       dataField: 'ESCORANDA',
       caption: 'ESCORANDA',
-      cssClass: 'escoranda',
+      cssClass: 'grisClaro',
       columns: [{
         dataField: '003/AP22040179',
         caption: '003/AP22040179',
-        cssClass: 'escoranda',
+        cssClass: 'grisClaro',
         columns: [{
           dataField: '',
           caption: '',
+          cssClass: 'blanco',
           columns: [{
             dataField: '',
             caption: '',
+            cssClass: 'blanco',
             columns: [{
               dataField: '04/05/2022',
               caption: '04/05/2022',
@@ -87,7 +97,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                 caption: '10/06/2022',
                 cssClass: 'fecha',
                 columns: [{
-                  dataField: 'Unidades',
+                  dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris'
                 }]
@@ -100,7 +110,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     {
       dataField: 'PROD. MULTIPLE',
       caption: 'PROD. MULTIPLE',
-      cssClass: 'escoranda',
+      cssClass: 'grisClaro',
       columns: [{
         dataField: '001/AP22040061',
         caption: '001/AP22040061',
@@ -108,9 +118,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
         columns: [{
           dataField: '',
           caption: '',
+          cssClass: 'blanco',
           columns: [{
             dataField: '',
             caption: '',
+            cssClass: 'blanco',
             columns: [{
               dataField: '26/04/2022',
               caption: '26/04/2022',
@@ -120,9 +132,219 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                 caption: '22/05/2022',
                 cssClass: 'fechaRoja',
                 columns: [{
-                  dataField: 'Unidades',
+                  dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
-                  cssClass: 'gris'
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    },
+    {
+      dataField: 'TMT ESCENARIOS',
+      caption: 'TMT ESCENARIOS',
+      cssClass: 'grisClaro',
+      columns: [{
+        dataField: '001/AP22040058',
+        caption: '001/AP22040058',
+        cssClass: 'gris',
+        columns: [{
+          dataField: '001/AP22040114',
+          caption: '001/AP22040114',
+          cssClass: 'blanco',
+          columns: [{
+            dataField: 'PODIUM',
+            caption: 'PODIUM',
+            cssClass: 'blanco',
+            columns: [{
+              dataField: '12/05/2022',
+              caption: '12/05/2022',
+              cssClass: 'fecha',
+              columns: [{
+                dataField: '29/07/2022',
+                caption: '29/07/2022',
+                cssClass: 'fecha',
+                columns: [{
+                  dataField: 'UnidadesMostrar',
+                  caption: 'Unidades',
+                  cssClass: 'gris',
                 }]
               }]
             }]
@@ -132,8 +354,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     }
   ];
 
-  dgConfigArticulos: DataGridConfig = new DataGridConfig(this.arrayArts, this.colsArts, 0, ConfiGlobal.lbl_NoHayDatos);
-  dgConfigUnidades: DataGridConfig = new DataGridConfig(this.arrayUnidadesMostrar, this.colsUnidades, 0, ConfiGlobal.lbl_NoHayDatos);
+  dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
+  dgConfigUnidades: DataGridConfig = new DataGridConfig(null, this.colsUnidades, 100, '');
 
   btnIconoEnviar: BotonIcono = 
   {
@@ -187,12 +409,13 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   // para actualizar la altura de btnFooter
   ngAfterViewInit(): void {
-    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer, true, true);
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // Actualizar altura del grid
-    let altura: number = Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima);
-    this.dgArticulos.actualizarAltura(altura);
-    this.dgUnidades.actualizarAltura(altura);
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 180);
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
+    
+    this.alturaDiv = '180px';
   }
 
   // añadir los nombres traducidos a los botones
@@ -208,8 +431,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }
 
   onResize(event) {
-    this.dgArticulos.actualizarAltura(0);
-    this.dgUnidades.actualizarAltura(0);
+    this.alturaDiv = '0px';
+    // this.mostrarEspacio = false;
 
     Utilidades.BtnFooterUpdate(
       this.pantalla,
@@ -220,9 +443,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     );
 
     // Actualizar altura del grid
-    let altura: number = Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima);
-    this.dgArticulos.actualizarAltura(altura);
-    this.dgUnidades.actualizarAltura(altura);
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima));
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
+    
+    this.alturaDiv = '180px';
   }
 
   guardarCsv(file: FileList) {
@@ -248,14 +472,58 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           console.log(datos);
 
           this.arrayArts = datos.datos.Articulos;
-          this.arrayUnidadesMostrar = datos.datos.UnidadesMostrar;
+
+          this.arrayUnidadesMostrar = new Array<oUnidMostrar>();
+          this.arrayArts.forEach(element => {
+            let unidMostrar: oUnidMostrar = new oUnidMostrar();
+            unidMostrar.UnidadesMostrar = element.UnidadesMostrar;
+            this.arrayUnidadesMostrar.push(unidMostrar);
+          });
+
           // Se configura el grid
           this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          this.dgConfigArticulos.actualizarConfig(true,true,'standard');
+          this.dgConfigArticulos.actualizarConfig(true,false,'standard');
 
           // Se configura el grid 2
+          let newCol: ColumnDataGrid = {
+            dataField: 'PROD. MULTIPLE',
+            caption: 'PROD. MULTIPLE',
+            cssClass: 'grisClaro',
+            columns: [{
+              dataField: '001/AP22040061',
+              caption: '001/AP22040061',
+              cssClass: 'gris',
+              columns: [{
+                dataField: '',
+                caption: '',
+                cssClass: 'blanco',
+                columns: [{
+                  dataField: '',
+                  caption: '',
+                  cssClass: 'blanco',
+                  columns: [{
+                    dataField: '26/04/2022',
+                    caption: '26/04/2022',
+                    cssClass: 'fecha',
+                    columns: [{
+                      dataField: '22/05/2022',
+                      caption: '22/05/2022',
+                      cssClass: 'fechaRoja',
+                      columns: [{
+                        dataField: 'UnidadesMostrar',
+                        caption: 'Unidades',
+                        cssClass: 'gris',
+                      }]
+                    }]
+                  }]
+                }]
+              }]
+            }]
+          }
+
+          this.colsUnidades.push(newCol);
           this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesMostrar, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          this.dgConfigUnidades.actualizarConfig(true,true,'standard');
+          this.dgConfigUnidades.actualizarConfig(true,false,'standard');
         } else {
           this.WSEnvioCsv_Valido = false;
         }
@@ -267,18 +535,120 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     );
   }
 
-  public onContentReady_DataGridArticulos(): void {
-    let scroll = this.dgArticulos.getScrollable();
-    scroll.on("scroll", () => {
-      this.dgUnidades.setScroll(this.dgArticulos.getScroll());
+  public async onContentReady_DataGridArticulos(): Promise<void> {
+    await Utilidades.delay(100);
+
+    let scrollable = this.dgArticulos.getScrollable();
+    scrollable.on("scroll", () => {
+      let scrollArticulos = this.dgArticulos.getScroll();
+      if(scrollArticulos !== this.dgUnidades.getScroll())
+        this.dgUnidades.setScroll(scrollArticulos);
     });
+
+    // Se obtienen todos los optionColumn de cada columna
+    const allColumns = Array.from(Array(this.dgArticulos.DataGrid.instance.columnCount()).keys()).map(index => this.dgArticulos.DataGrid.instance.columnOption(index));
+    let columnOptionSorted = allColumns.find(col => !Utilidades.isEmpty(col.sortIndex));
+
+    if(Utilidades.isEmpty(columnOptionSorted)) return;
+
+    switch (columnOptionSorted.caption) {
+      case 'Articulo':
+        if(columnOptionSorted.sortOrder === 'asc') {
+          this.arrayArts.sort((a, b) => 
+            a.Articulo.localeCompare(b.Articulo, 'en', { numeric: true })
+          );
+        } else {
+          this.arrayArts.sort((a, b) => 
+            b.Articulo.localeCompare(a.Articulo, 'en', { numeric: true })
+          );
+        }
+
+        break;
+      case 'Referencia':
+        if(columnOptionSorted.sortOrder === 'asc') {
+          this.arrayArts.sort((a, b) => 
+            a.Referencia.localeCompare(b.Referencia, 'en', { numeric: true })
+          );
+        } else {
+          this.arrayArts.sort((a, b) => 
+            b.Referencia.localeCompare(a.Referencia, 'en', { numeric: true })
+          );
+        }
+
+        break;
+      case 'Unidades':
+        if(columnOptionSorted.sortOrder === 'asc') {
+          this.arrayArts.sort((a, b) => 
+            a.Unidades - b.Unidades
+          );
+        } else {
+          this.arrayArts.sort((a, b) => 
+            b.Unidades - a.Unidades
+          );
+        }
+
+        break;
+      case 'Cliente':
+        if(columnOptionSorted.sortOrder === 'asc') {
+          this.arrayArts.sort((a, b) => 
+            a.Cliente.localeCompare(b.Cliente, 'en', { numeric: true })
+          );
+        } else {
+          this.arrayArts.sort((a, b) => 
+            b.Cliente.localeCompare(a.Cliente, 'en', { numeric: true })
+          );
+        }
+
+        break;
+      case 'Fecha Inicial':
+        if(columnOptionSorted.sortOrder === 'asc') {
+          this.arrayArts.sort((a, b) => 
+            new Date(a.Fecha_Inicial).getTime() - new Date(b.Fecha_Inicial).getTime()
+          );
+        } else {
+          this.arrayArts.sort((a, b) => 
+            new Date(b.Fecha_Inicial).getTime() - new Date(a.Fecha_Inicial).getTime()
+          );
+        }
+
+        break;
+      case 'Fecha Devolucion':
+        if(columnOptionSorted.sortOrder === 'asc') {
+          this.arrayArts.sort((a, b) => 
+            new Date(a.Fecha_Devolucion).getTime() - new Date(b.Fecha_Devolucion).getTime()
+          );
+        } else {
+          this.arrayArts.sort((a, b) =>
+            new Date(b.Fecha_Devolucion).getTime() - new Date(a.Fecha_Devolucion).getTime()
+          );
+        }
+
+        break;
+      default:
+        break;
+    }
+
+    this.arrayUnidadesMostrar = new Array<oUnidMostrar>();
+    this.arrayArts.forEach(element => {
+      let unidMostrar: oUnidMostrar = new oUnidMostrar();
+      unidMostrar.UnidadesMostrar = element.UnidadesMostrar;
+      this.arrayUnidadesMostrar.push(unidMostrar);
+    });
+
+    this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesMostrar, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    this.dgConfigUnidades.actualizarConfig(true,false,'standard');
   }
 
-  public onContentReady_DataGridUnidades(): void {
-    let scroll = this.dgUnidades.getScrollable();
-    scroll.on("scroll", () => {
-      this.dgArticulos.setScroll(this.dgUnidades.getScroll());
+  public async onContentReady_DataGridUnidades(): Promise<void> {
+    await Utilidades.delay(100);
+
+    let scrollable = this.dgUnidades.getScrollable();
+    scrollable.on("scroll", () => {
+      let scrollUnidades = this.dgUnidades.getScroll();
+      if(scrollUnidades !== this.dgArticulos.getScroll())
+        this.dgArticulos.setScroll(scrollUnidades);
     });
+    console.log('onContentReady');
   }
 
   public limpiarControles() {
@@ -320,6 +690,11 @@ export class oArticulo {
   Referencia: string;
   Unidades: number;
   Cliente: string;
+  UnidadesMostrar: number;
   Fecha_Inicial: Date;
   Fecha_Devolucion: Date;
+}
+
+export class oUnidMostrar {
+  UnidadesMostrar: number;
 }

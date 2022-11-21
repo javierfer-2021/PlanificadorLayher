@@ -88,8 +88,6 @@ export class CmpDataGridComponent implements OnInit {
   }
 
   public setScroll(scrollValue: number) {
-    this.DataGrid.instance.getScrollable().scrollTo(scrollValue);
+    this.DataGrid.instance.getScrollable().scrollTo({top: scrollValue, left: 0});
   }
-
-
 }
