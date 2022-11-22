@@ -99,7 +99,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                 columns: [{
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
-                  cssClass: 'gris'
+                  cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -135,6 +136,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -170,6 +172,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -205,6 +208,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -240,6 +244,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -275,6 +280,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -310,6 +316,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -345,6 +352,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                   dataField: 'UnidadesMostrar',
                   caption: 'Unidades',
                   cssClass: 'gris',
+                  allowSorting: false
                 }]
               }]
             }]
@@ -375,6 +383,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   // vCambiado_txtUbiOrigen: boolean = false;
 
   // @ViewChild('txtUbiOrigen', { static: false }) txtUbiOrigen: DxTextBoxComponent;
+
+  // Indica si está entrando de 0 en la pantalla
+  primeraVez: boolean = true;
 
   constructor(
     private renderer: Renderer2,
@@ -513,6 +524,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                         dataField: 'UnidadesMostrar',
                         caption: 'Unidades',
                         cssClass: 'gris',
+                        allowSorting: false
                       }]
                     }]
                   }]
@@ -536,7 +548,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }
 
   public async onContentReady_DataGridArticulos(): Promise<void> {
-    await Utilidades.delay(100);
+    if(this.primeraVez) {
+      await Utilidades.delay(100);
+      this.primeraVez = false;
+    }
 
     let scrollable = this.dgArticulos.getScrollable();
     scrollable.on("scroll", () => {
@@ -551,6 +566,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
     if(Utilidades.isEmpty(columnOptionSorted)) return;
 
+    // Dependiendo de la columna en la que se ha ordenado se aplica al arrayArts
     switch (columnOptionSorted.caption) {
       case 'Articulo':
         if(columnOptionSorted.sortOrder === 'asc') {
@@ -640,7 +656,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }
 
   public async onContentReady_DataGridUnidades(): Promise<void> {
-    await Utilidades.delay(100);
+    if(this.primeraVez) {
+      await Utilidades.delay(100);
+      this.primeraVez = false;
+    }
 
     let scrollable = this.dgUnidades.getScrollable();
     scrollable.on("scroll", () => {
@@ -648,7 +667,22 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       if(scrollUnidades !== this.dgArticulos.getScroll())
         this.dgArticulos.setScroll(scrollUnidades);
     });
-    console.log('onContentReady');
+  }
+
+  public async onFocusedRowChanged_DataGridArticulos(e): Promise<void> {
+    // await Utilidades.delay(100);
+    let selectedRowIndex = e.row.rowIndex;
+    // Se selecciona y se le pasa el foco a la misma línea seleccionada pero en dgUnidades
+    this.dgUnidades.DataGrid.instance.selectRowsByIndexes(selectedRowIndex);
+    this.dgUnidades.DataGrid.focusedRowIndex = selectedRowIndex;
+  }
+
+  public async onFocusedRowChanged_DataGridUnidades(e): Promise<void>{
+    // await Utilidades.delay(100);
+    let selectedRowIndex = e.row.rowIndex
+    // Se selecciona y se le pasa el foco a la misma línea seleccionada pero en dgArticulos
+    this.dgArticulos.DataGrid.instance.selectRowsByIndexes(selectedRowIndex);
+    this.dgArticulos.DataGrid.focusedRowIndex = selectedRowIndex;
   }
 
   public limpiarControles() {

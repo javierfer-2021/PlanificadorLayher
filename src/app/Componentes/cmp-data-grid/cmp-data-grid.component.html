@@ -1,8 +1,8 @@
 <div style="width: 100%; overflow: hidden;">
     <dx-data-grid #DataGrid class="dg-p-1 dg-p-sm-2 fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [focusedRowEnabled]="dgConfig.focusedRowEnabled" [noDataText]="dgConfig.txtDatosVacios" [errorRowEnabled]="false" [columnAutoWidth]="dgConfig.ColumnaAjustable"
         [allowColumnResizing]="false" [showBorders]="true" [dataSource]="dgConfig.dataSource" [sorting]="{showSortIndexes:false}" [filterRow]="{visible: dgConfig.filterRowVisible}" [columns]="dgConfig.columnas" [height]="dgConfig.alturaMaxima" (onRowClick)="onClick_DataGrid.emit($event)"
-        (onRowDblClick)="onDoubleClick_DataGrid.emit($event)" (onContentReady)="onContentReady_DataGrid.emit($event)" (onRowPrepared)="onRowPrepared_DataGrid.emit($event)" (onRowUpdated)="onRowUpdated_DataGrid.emit($event)" [filterValue]="filtro" [selection]="{mode: dgConfig.modoSeleccion}"
-        [disabled]="dgConfig.disabled" [loadPanel]="{enabled: false}" [paging]="{enabled: false}" [wordWrapEnabled]=dgConfig.ColumnaWrap [scrolling]="{mode: dgConfig.modoScrolling}" [editing]="{confirmDelete : false, allowUpdating: dgConfig.editable, mode: 'cell'}">
+        (onRowDblClick)="onDoubleClick_DataGrid.emit($event)" (onContentReady)="onContentReady_DataGrid.emit($event)" (onRowPrepared)="onRowPrepared_DataGrid.emit($event)" (onRowUpdated)="onRowUpdated_DataGrid.emit($event)" (onFocusedRowChanged)="onFocusedRowChanged_DataGrid.emit($event)"
+        [filterValue]="filtro" [selection]="{mode: dgConfig.modoSeleccion}" [disabled]="dgConfig.disabled" [loadPanel]="{enabled: false}" [paging]="{enabled: false}" [wordWrapEnabled]=dgConfig.ColumnaWrap [scrolling]="{mode: dgConfig.modoScrolling}" [editing]="{confirmDelete : false, allowUpdating: dgConfig.editable, mode: 'cell'}">
 
         <dxo-filter-row [visible]="dgConfig.filterRowVisible">
             <dxo-operation-descriptions between="Entre" contains="Contiene" endsWith="Termina con" equal="Igua a" greaterThan="Mayor que" greaterThanOrEqual="Mayor o igual a" lessThan="Menor que" lessThanOrEqual="Menor o igual a" notContains="No contiene" notEqual="Distinto a"
