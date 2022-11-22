@@ -53,10 +53,10 @@
                         <div class="row mt-1" style="font-size: 11px;"><b>ENTRADA</b></div>
                     </div>
                 </div>
-                <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+                <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
             </div>
             <div class="col-7 px-0">
-                <app-cmp-data-grid #dgUnidades (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" [dgConfig]="dgConfigUnidades"></app-cmp-data-grid>
+                <app-cmp-data-grid #dgUnidades (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)" [dgConfig]="dgConfigUnidades"></app-cmp-data-grid>
             </div>
         </div>
 
