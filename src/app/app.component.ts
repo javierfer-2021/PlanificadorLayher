@@ -20,7 +20,7 @@ export class AppComponent {
 
   indicatorUrl = "../assets/gifs/wifi.gif";
 
-
+  // JAVI 01-02-2023
 
   constructor(private renderer: Renderer2, public translate: TranslateService, public resolver: ComponentFactoryResolver, private titleServicio: Title) {
     titleServicio.setTitle(environment.titulo);
