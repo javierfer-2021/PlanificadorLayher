@@ -14,14 +14,14 @@ export const environment = {
   //dominio: "http://192.168.10.129", // IP Jhon
   // dominio: "http://192.168.10.221", // IP Diego
   //dominio: "http://192.168.10.48", // IP Javi    
-  dominio: "http://192.168.10.25", // IP Alejandro
-  //  dominio: "http://localhost", // localhost
+  // dominio: "http://192.168.10.25", // IP Alejandro
+   dominio: "http://localhost", // localhost
   
   // puerto: "8081", // Puerto Viletel
   // puerto: "49221", // Puerto Jhon
   // puerto: "49221", // Puerto Diego
-  puerto: "49221", // Puerto Alejandro
-  // puerto: "49220" , // Puerto javi
+  // puerto: "49221", // Puerto Alejandro
+  puerto: "49220" , // Puerto javi
 
   // disRecepcion: false,
   // disPicking: false,
