@@ -316,30 +316,32 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
 
 
 
-          if (datos.datos.Idiomas.length > 0) {
+          if(!Utilidades.isEmpty(datos.datos.Idiomas)) {
+            if (datos.datos.Idiomas.length > 0) {
+    
+              let array: string[] = [];
+              let defecto: string = '';
+              datos.datos.Idiomas.forEach(element => {
+                array.push(element.ISO);
+                if(element.DEFECTO)
+                {
+                  defecto = element.ISO;
+                }
+              });
+              this.translate.addLangs(array);
+              this.translate.setDefaultLang(defecto);
+              this.translate.use(defecto);
   
-            let array: string[] = [];
-            let defecto: string = '';
-            datos.datos.Idiomas.forEach(element => {
-              array.push(element.ISO);
-              if(element.DEFECTO)
-              {
-                defecto = element.ISO;
-              }
-            });
-            this.translate.addLangs(array);
-            this.translate.setDefaultLang(defecto);
-            this.translate.use(defecto);
-
-            this.translate.reloadLang(defecto);
-            new Utilidades(this.translate, this.resolver, this.http, this.router);
-
-
-            // Arrancar el websocket
-            if(ConfiGlobal.WebSocket_Enabled)
-              Utilidades.set_WS(new WebsocketService());
-            
-            // const browserLang = this.translate.getBrowserLang();
+              this.translate.reloadLang(defecto);
+              new Utilidades(this.translate, this.resolver, this.http, this.router);
+  
+  
+              // Arrancar el websocket
+              if(ConfiGlobal.WebSocket_Enabled)
+                Utilidades.set_WS(new WebsocketService());
+              
+              // const browserLang = this.translate.getBrowserLang();
+            }
           }
 
           // Guardado de datos del login en un fichero para poder recuperarlo
