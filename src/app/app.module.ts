@@ -32,8 +32,8 @@ import { FrmConexionesComponent } from './Pantallas/frm-conexiones/frm-conexione
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
 import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
 import { FrmPruebasComponent } from './Pantallas/frm-pruebas/frm-pruebas.component';
-import { FrmOfertaImportarComponent } from './pantallas/frm-oferta-importar/frm-oferta-importar.component';
-import { FrmOfertaBuscarComponent } from './pantallas/frm-oferta-buscar/frm-oferta-buscar.component';
+import { FrmOfertaImportarComponent } from './Pantallas/frm-oferta-importar/frm-oferta-importar.component';
+import { FrmOfertaBuscarComponent } from './Pantallas/frm-oferta-buscar/frm-oferta-buscar.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
