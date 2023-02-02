@@ -19,11 +19,12 @@ export class CmpDataGridComponent implements OnInit {
   @Output() onKeyDown_DataGrid = new EventEmitter<any>();
   @Output() onRowUpdated_DataGrid = new EventEmitter<any>();
   @Output() onFocusedRowChanged_DataGrid = new EventEmitter<any>();
+  @Output() onRowUpdating_DataGrid = new EventEmitter<any>();
 
-  
   @ViewChild('DataGrid', { static: false }) DataGrid: DxDataGridComponent;
 
   filtro: any;
+  mostrarPanelBusqueda:boolean = false;
 
   constructor() { }
 
@@ -90,5 +91,25 @@ export class CmpDataGridComponent implements OnInit {
 
   public setScroll(scrollValue: number) {
     this.DataGrid.instance.getScrollable().scrollTo({top: scrollValue, left: 0});
+  }
+
+  public panelBusqueda(visible:boolean){
+    this.mostrarPanelBusqueda = visible;
+  }
+
+  public mostrarFilaSumaryTotal(colSumary:string,colPosicion:string,text:string, tipo?:string){
+    if ( (tipo===null) || (tipo===undefined) ) {
+      tipo='count';
+    }
+    text = text+'{0}';
+    this.DataGrid.summary = {            
+      totalItems: [{
+        column: colSumary,
+        summaryType: tipo,
+        type: tipo,
+        showInColumn: colPosicion,
+        displayFormat: text,
+      }]
+    }
   }
 }
