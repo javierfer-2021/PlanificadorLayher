@@ -27,3 +27,14 @@
     FechaActualizacion: Date;
   }
 
+  export class EstadoOferta {
+    IdEstado: number;
+    NombreEstado: string;
+  }
+
+  export class LineasCSV {
+    IdArticulo: string;
+    NombreArticulo: string;
+    Unidades: number;
+    Mensaje: string;
+  }

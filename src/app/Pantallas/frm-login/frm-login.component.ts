@@ -256,52 +256,14 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           this.dgConfigTxtPassword.validationStatus = 'valid';
   
           try { ConfiGlobal.SeparadorGrid = datos.datos.Configuracion.SeparadorGrid; } catch { }
-  
-          try { ConfiGlobal.Ubi_Palet = datos.datos.Configuracion.Ubi_Palet; } catch { }
-          // try { ConfiGlobal.Reu_Palet = datos.datos.Configuracion.Reu_Palet; } catch { }
-          try { ConfiGlobal.Rep_Palet = datos.datos.Configuracion.Rep_Palet; } catch { }
-          try { ConfiGlobal.Rep_Intermedia = datos.datos.Configuracion.Rep_Intermedia; } catch { }
-
-          try { ConfiGlobal.Consolidacion = datos.datos.Configuracion.Consolidacion; } catch { }
-          try { ConfiGlobal.Descargas = datos.datos.Configuracion.Descargas; } catch { }
-          try { ConfiGlobal.Devoluciones = datos.datos.Configuracion.Devoluciones; } catch { }
-          
+           
           try { ConfiGlobal.CharEAN128 = datos.datos.Configuracion.CharEAN128; } catch { }
           try { ConfiGlobal.PrefijosEAN128 = datos.datos.Configuracion.PrefijosEAN128; } catch { }
           try { ConfiGlobal.CharQR = datos.datos.Configuracion.CharQR; } catch { }
           try { ConfiGlobal.PrefijosQR = datos.datos.Configuracion.PrefijosQR; } catch { }
 
-          try { ConfiGlobal.impDoc_configBotonLimpiar = datos.datos.ConfigImpDoc[0].VerBotonLimpiar; } catch { }
-          try { ConfiGlobal.impDoc_configEtiquetasCero = datos.datos.ConfigImpDoc[0].PermitirEtiquetasCero; } catch { }
-          try { ConfiGlobal.impDoc_configPesoVolumenCero = datos.datos.ConfigImpDoc[0].PermitirPesoVolCero; } catch { }
-          try { ConfiGlobal.impDoc_configConfirmarImprimir = datos.datos.ConfigImpDoc[0].ConfirmarImprimir; } catch { }
-          try { ConfiGlobal.impDoc_configAutoCerrarContenedores = datos.datos.ConfigImpDoc[0].AutoCerrarContenedores; } catch { }
-          try { ConfiGlobal.impDoc_configWarningNumeroPalet = datos.datos.ConfigImpDoc[0].WarningNumeroPalets; } catch { }
-          try { ConfiGlobal.impDoc_configWarningAlturaPalet = datos.datos.ConfigImpDoc[0].WarningAlturaPalets; } catch { }
-          try { ConfiGlobal.impDoc_configTipoPaletDefecto = datos.datos.ConfigImpDoc[0].TipoPaletDefecto; } catch { }
-
           try { ConfiGlobal.HttpTimeWait = datos.datos.Configuracion.HttpTimeWait; } catch { }
           try { ConfiGlobal.Rec_GenerarPaletPorLinea = datos.datos.Configuracion.Rec_GenerarPaletPorLinea; } catch { }
-
-          if(environment.titulo !== 'debug') {
-            try { ConfiGlobal.disRecepcion = !datos.datos.Configuracion.EnableRecepcion; } catch { }
-            try { ConfiGlobal.disPicking = !datos.datos.Configuracion.EnablePicking; } catch { }
-            try { ConfiGlobal.disUbicacion = !datos.datos.Configuracion.EnableUbicacion; } catch { }
-            try { ConfiGlobal.disReubicacion = !datos.datos.Configuracion.EnableReubicacion; } catch { }
-            try { ConfiGlobal.disImpDocument = !datos.datos.Configuracion.EnableImpDocument; } catch { }
-            try { ConfiGlobal.disReposicion = !datos.datos.Configuracion.EnableReposicion; } catch { }
-            try { ConfiGlobal.disInventario = !datos.datos.Configuracion.EnableInventario; } catch { }
-            try { ConfiGlobal.disAsigPicking = !datos.datos.Configuracion.EnableAsigPicking; } catch { }
-            try { ConfiGlobal.disBuscarArt = !datos.datos.Configuracion.EnableBuscarArt; } catch { }
-            try { ConfiGlobal.disBuscarUbi = !datos.datos.Configuracion.EnableBuscarUbi; } catch { }
-            try { ConfiGlobal.disBuscarPalet = !datos.datos.Configuracion.EnableBuscarPalet; } catch { }
-            try { ConfiGlobal.disImpEtiq = !datos.datos.Configuracion.EnableImpEtiq; } catch { }
-            try { ConfiGlobal.disBuscarDesc = !datos.datos.Configuracion.EnableBuscarDesc; } catch { }
-            try { ConfiGlobal.disAsignarEAN14 = !datos.datos.Configuracion.EnableAsignarEAN14; } catch { }
-            try { ConfiGlobal.disComprobarEAN = !datos.datos.Configuracion.EnableComprobarEAN; } catch { }
-            try { ConfiGlobal.disAnalizarLectura = !datos.datos.Configuracion.EnableTest; } catch { }
-            try { ConfiGlobal.disVerLog = !datos.datos.Configuracion.EnableVerLog; } catch { }
-          }
 
           try { ConfiGlobal.Permisos = datos.datos.Permisos; } catch {}
 
@@ -309,12 +271,11 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           try { ConfiGlobal.WebSocket_IP = datos.datos.Configuracion.WebSocket_IP; } catch {}
           try { ConfiGlobal.WebSocket_PORT = datos.datos.Configuracion.WebSocket_PORT; } catch {}
           try { ConfiGlobal.WebSocket_Enabled = datos.datos.Configuracion.WebSocket_Enabled; } catch {} // JAVI TEMP PRUEBAS <- datos.datos.Configuracion.WebSocket_Enabled; } catch {}
+
           // si no viene la configuracion false por defecto
           if(Utilidades.isEmpty(ConfiGlobal.WebSocket_IP) || ConfiGlobal.WebSocket_PORT === 0){
             ConfiGlobal.WebSocket_Enabled = false;
           }
-
-
 
           if(!Utilidades.isEmpty(datos.datos.Idiomas)) {
             if (datos.datos.Idiomas.length > 0) {

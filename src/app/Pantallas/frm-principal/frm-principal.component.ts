@@ -23,14 +23,15 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
 
   WSGetInci_Validando: boolean = false;
   WSGetInci_Valido: boolean = false;
-
   
   botonBuscarOfertas: BotonMenu =  { icono: './assets/icons/Buscar Art A_B.svg', texto: 'Ver Ofertas', ruta: '', nombre: 'botonBuscarOfertas', notificacion: 0, desactivado: false, accion: () => { } };
   botonImportarOferta: BotonMenu =  { icono: './assets/icons/Log A_B.svg', texto: 'Importar Oferta', ruta: '', nombre: 'botonImportarOferta', notificacion: 0, desactivado: false, accion: () => { } };
   botonPlanificador: BotonMenu = { icono: './assets/icons/Picking A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } };
   botonPruebas: BotonMenu =  { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
   
-  btnAciones: BotonPantalla[] =  [{ icono: '', texto: 'Salir', posicion: 1, accion: () => {this.cerrarSesion();}, tipo: TipoBoton.danger, activo: true, visible: true } ];
+  btnAciones: BotonPantalla[] =  [
+    { icono :'', texto: this.traducir('frm-principal.btnSalir', 'Salir'), posicion: 1, accion: () => {this.cerrarSesion();}, tipo: TipoBoton.danger, activo: true, visible: true } 
+  ];
 
   constructor(private router: Router,
               public peticionesService: PeticionesGeneralesService,
@@ -47,49 +48,14 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonPlanificador.accion = () => { this.router.navigate(['planificador']); };
     this.botonPruebas.accion = () => { this.router.navigate(['pruebas']); };
 
-    // this.btnAciones.forEach((a, b, c) => {
-    //   if (a.posicion === 1) {
-    //     a.accion = () => {
-    //       this.cerrarSesion();
-    //     };
-    //   }
-    // });
-
     this.loadingPrincipalVisible = Utilidades.VarStatic.LoadPrincipal;
   }
 
   async ngOnInit(): Promise<void> {    
-    // if (this.WSGetInci_Validando) return;
-    // if(this.WSGetInci_Valido) return;
-
-    // this.WSGetInci_Validando = true;
-    // ConfiGlobal.principalValidando = true;
-    // (await this.peticionesService.getTareasPendientes()).subscribe(
-    //   datos => {
-    //     if (Utilidades.DatosWSCorrectos(datos)) {
-    //       // Solo muestra las tareas pendientes si tiene y si el boton esta habilitado
-    //       if (!(datos.datos.PLANIFICADOR === '0') && !this.botonPlanificador.desactivado){
-    //         this.botonPlanificador.notificacion = datos.datos.RECEPCION;
-    //       }
-    //       this.WSGetInci_Validando = false;
-    //       ConfiGlobal.principalValidando = false;
-    //     }
-    //   },
-    //   error => {
-    //     this.WSGetInci_Validando = false;
-    //     Utilidades.compError(error, this.router, 'frm-principal');
-    //   }
-    // );
   }
 
   ngAfterContentChecked(): void {
     //Called after every check of the component's or directive's content.
-    //Add 'implements AfterContentChecked' to the class.
-    this.btnAciones.forEach((a, b, c) => {
-      if (a.posicion === 1) {
-        a.texto = this.traducir('frm-principal.btnSalir', 'Salir');
-      }
-    });
   }
 
   ngAfterViewInit(): void {
