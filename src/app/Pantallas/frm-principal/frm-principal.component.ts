@@ -16,29 +16,21 @@ import { TiposGruposWS } from '../../Enumeraciones/TiposGruposWS';
   styleUrls: ['./frm-principal.component.css']
 })
 export class FrmPrincipalComponent implements OnInit, AfterViewInit {
-  // botonPlanificador: BotonMenu =
-  //   { icono: './assets/icons/Analizar_Lectura A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: ConfiGlobal.disRecepcion, accion: () => { } };
-  // botonPruebas: BotonMenu =
-  //   { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: ConfiGlobal.disPicking, accion: () => { } };
   
-  botonPlanificador: BotonMenu =
-    { icono: './assets/icons/Analizar_Lectura A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } };
-  botonPruebas: BotonMenu =
-    { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
-  
-
   version: string = ConfiGlobal.version;
   nombreUsuario: string = ConfiGlobal.NombreUsuario;
+  loadingPrincipalVisible: boolean = false;
 
   WSGetInci_Validando: boolean = false;
   WSGetInci_Valido: boolean = false;
 
-  loadingPrincipalVisible: boolean = false;
-
-  btnAciones: BotonPantalla[] =
-  [
-    { icono: '', texto: 'Salir', posicion: 1, accion: () => { }, tipo: TipoBoton.danger, activo: true, visible: true }
-  ];
+  
+  botonBuscarOfertas: BotonMenu =  { icono: './assets/icons/Buscar Art A_B.svg', texto: 'Ver Ofertas', ruta: '', nombre: 'botonBuscarOfertas', notificacion: 0, desactivado: false, accion: () => { } };
+  botonImportarOferta: BotonMenu =  { icono: './assets/icons/Log A_B.svg', texto: 'Importar Oferta', ruta: '', nombre: 'botonImportarOferta', notificacion: 0, desactivado: false, accion: () => { } };
+  botonPlanificador: BotonMenu = { icono: './assets/icons/Picking A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } };
+  botonPruebas: BotonMenu =  { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
+  
+  btnAciones: BotonPantalla[] =  [{ icono: '', texto: 'Salir', posicion: 1, accion: () => {this.cerrarSesion();}, tipo: TipoBoton.danger, activo: true, visible: true } ];
 
   constructor(private router: Router,
               public peticionesService: PeticionesGeneralesService,
@@ -50,20 +42,18 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
 
     this.Reconectar();
 
-    this.botonPlanificador.accion = () => {
-      this.router.navigate(['planificador']);
-    };
-    this.botonPruebas.accion = () => {
-      this.router.navigate(['pruebas']);
-    };
+    this.botonBuscarOfertas.accion = () => { this.router.navigate(['lista_ofertas']); };
+    this.botonImportarOferta.accion = () => { this.router.navigate(['importar_oferta']); };
+    this.botonPlanificador.accion = () => { this.router.navigate(['planificador']); };
+    this.botonPruebas.accion = () => { this.router.navigate(['pruebas']); };
 
-    this.btnAciones.forEach((a, b, c) => {
-      if (a.posicion === 1) {
-        a.accion = () => {
-          this.cerrarSesion();
-        };
-      }
-    });
+    // this.btnAciones.forEach((a, b, c) => {
+    //   if (a.posicion === 1) {
+    //     a.accion = () => {
+    //       this.cerrarSesion();
+    //     };
+    //   }
+    // });
 
     this.loadingPrincipalVisible = Utilidades.VarStatic.LoadPrincipal;
   }
