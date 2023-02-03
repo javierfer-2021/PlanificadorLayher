@@ -1,1 +1,138 @@
-<p>frm-oferta-importar works!</p>
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+            <!-- Titulo -->
+            <div class="row px-1 py-2 bg-secondary">
+                <div class="col pt-1 px-1 text-white text-center">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblTitulo', 'Importar Oferta')}} </div>
+                </div>   
+            </div>  
+
+            <!-- Campos de la oferta -->    
+            <div class="row pt-1">
+                <div class="col-4 px-1">    
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblReferencia', 'Ref. Oferta')}} </div>
+                </div>
+                <div class="col-8 px-1">    
+                    <dx-text-box #txtReferencia class="w-100 fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [showClearButton]="false" [height]="30"
+                        [(ngModel)]="this._oferta.Referencia"                                        
+                        placeholder="{{traducir('frm-oferta-importar.str_txtReferencia', 'Referencia oferta')}}"
+                        [disabled]="false">    
+                    </dx-text-box>                    
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-4 px-1">    
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblCliente', 'Cliente')}} </div>
+                </div>
+                <div class="col-8 px-1">    
+                    <dx-text-box #txtCliente class="w-100 fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [showClearButton]="false" [height]="30"
+                        [(ngModel)]="this._oferta.Cliente"                                        
+                        placeholder="{{traducir('frm-oferta-importar.str_txtCliente', 'Cliente')}}"
+                        [disabled]="false"> 
+                    </dx-text-box>                    
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-4 px-1">    
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblEstado', 'Estado')}} </div>
+                </div>
+                <div class="col-8 px-1">                       
+                    <dx-select-box  #comboEstadoOferta class="w-100 fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [height]="30"
+                        [(ngModel)]="this._oferta.Estado"                        
+                        [dataSource]="arrayTiposEstadoOferta"                     
+                        displayExpr="NombreEstado"
+                        valueExpr="IdEstado"           
+                        placeholder="{{traducir('frm-oferta-importar.str_txtEstadoOferta', 'Seleccionar Estado oferta')}}"
+                        [disabled]="false" [readOnly]="false">
+                    </dx-select-box>                    
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-4 px-1">    
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblContrato', 'Contrato')}} </div>
+                </div>
+                <div class="col-8 px-1">    
+                    <dx-text-box #txtContrato class="w-100 fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [showClearButton]="false" [height]="30"
+                        [(ngModel)]="this._oferta.Contrato"                                        
+                        placeholder="{{traducir('frm-oferta-importar.str_txtContrato', 'Contrato')}}"
+                        [disabled]="false"> 
+                    </dx-text-box>                    
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-4 px-1">    
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblObra', 'Obra')}} </div>
+                </div>
+                <div class="col-8 px-1">    
+                    <dx-text-box #txtObra class="w-100 fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [showClearButton]="false" [height]="30"
+                        [(ngModel)]="this._oferta.Obra"                                        
+                        placeholder="{{traducir('frm-oferta-importar.str_txtObra', 'Obra')}}"
+                        [disabled]="false"> 
+                    </dx-text-box>                    
+                </div>
+            </div>   
+
+            <div class="row pt-1">
+                <div class="col-6 px-2">    
+                    <div class="row">
+                        <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblFechaInicio', 'Fecha Inicio')}} </div>
+                    </div>
+                    <div class="row">
+                        <dx-text-box #txtContrato class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [showClearButton]="false" [height]="30"
+                            [(ngModel)]="this._oferta.Contrato"                                        
+                            placeholder="{{traducir('frm-oferta-importar.str_txtContrato', 'Contrato')}}"
+                            [disabled]="false"> 
+                        </dx-text-box>   
+                    </div>                 
+                </div>
+                <div class="col-6 px-2">    
+                    <div class="row">
+                        <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-oferta-importar.lblFechaFin', 'Fecha Fin')}} </div>
+                    </div>
+                    <div class="row">
+                        <dx-text-box #txtContrato class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [showClearButton]="false" [height]="30"
+                            [(ngModel)]="this._oferta.Contrato"                                        
+                            placeholder="{{traducir('frm-oferta-importar.str_txtContrato', 'Contrato')}}"
+                            [disabled]="false"> 
+                        </dx-text-box>   
+                    </div>                 
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col px-1 pt-1">
+                    <button class="btn btn-primary" (click)="cargarDatos()" type="submit">Cargar CSV</button>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- grid lineas cargadas del CSVs -->    
+            <div class="row">
+                <div class="col pt-1 px-1">    
+                    <app-cmp-data-grid #dg [dgConfig]="dgConfig"></app-cmp-data-grid>
+                </div>
+            </div>            
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+<!-- <dx-popup *ngIf="popUpVisibleDireccion" 
+    #popUpDireccion (window:resize)="onResize($event)" [fullScreen]="true"
+    [(visible)]="popUpVisibleDireccion" [dragEnabled]="false" [showTitle]="false" [showCloseButton]="true" [closeOnOutsideClick]="false"
+    title="{{traducir('frm-envio-lista.popUpTituloDatosEntrega', 'Direccion Entrega')}}">
+    <app-frm-envio-direccion [idEnvio]="ver_info_envio" (cerrarPopUp)="cerrarPopUpDireccion()"></app-frm-envio-direccion>
+</dx-popup> -->

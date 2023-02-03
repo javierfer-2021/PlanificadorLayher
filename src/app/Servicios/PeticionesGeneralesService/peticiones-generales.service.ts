@@ -40,14 +40,12 @@ export class PeticionesGeneralesService {
     const body = { 
       LogData: Utilidades.RecuperarLog(),
       SessionID: ConfiGlobal.sessionId,
-      usuario : ConfiGlobal.Usuario, datos: { Recepcion: ConfiGlobal.disRecepcion,
-                                                           Picking: ConfiGlobal.disPicking,
-                                                           Ubicacion: ConfiGlobal.disUbicacion,
-                                                           Reubicacion: ConfiGlobal.disReubicacion,
-                                                           Reposicion: ConfiGlobal.disReposicion,
-                                                           Inventario: ConfiGlobal.disInventario } };
-
-
+      usuario : ConfiGlobal.Usuario, datos: { Recepcion: false,
+                                              Picking: false,
+                                              Ubicacion: false,
+                                              Reubicacion: false,
+                                              Reposicion: false,
+                                              Inventario: false } };
     this.headers = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
