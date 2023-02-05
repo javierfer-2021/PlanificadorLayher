@@ -1,12 +1,12 @@
 // Tipos y clases referentes a la gestión de ofertas para el planificador
   export class Oferta {
-    IdOferta: number;
+    IdOferta: string;
     Referencia: string;
     Cliente: string;
     Contrato: string;
     IdEstado: number;
     Estado: string;
-    FechaAlta: Date;
+    FechaAlta: string;
     FechaInicio: Date;
     FechaFin: Date;
     Obra: string;
@@ -17,7 +17,7 @@
   }
 
   export class OfertaLinea {
-    IdOferta: number;
+    IdOferta: string;
     IdLinea: number;
     IdArticulo: string;
     ArticuloNombre: string;
@@ -30,6 +30,11 @@
   export class EstadoOferta {
     IdEstado: number;
     NombreEstado: string;
+  }
+
+  export class Almacen {
+    IdAlmacen: number;
+    NombreAlmacen: string;
   }
 
   export class LineasCSV {
