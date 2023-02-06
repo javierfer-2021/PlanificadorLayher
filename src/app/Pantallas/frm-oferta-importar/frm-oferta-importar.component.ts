@@ -10,7 +10,7 @@ import { BotonPantalla } from '../../Clases/BotonPantalla';
 import { ColumnDataGrid } from '../../Clases/ColumnDataGrid';
 import { DataGridConfig } from '../../Clases/DataGridConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { Oferta, OfertaLinea, EstadoOferta, LineasCSV, Almacen} from '../../Clases/Oferta';
+import { Oferta, OfertaLinea, EstadoOferta, LineasCSV, LineasCSV_Validadas, Almacen} from '../../Clases/Oferta';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -45,8 +45,8 @@ export class FrmOfertaImportarComponent implements OnInit {
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-oferta-importar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-oferta-importar.btnImportar', 'Importar'), posicion: 2, accion: () => {this.salir()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-oferta-importar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-oferta-importar.btnImportar', 'Importar'), posicion: 2, accion: () => {this.btnImportarOferta()}, tipo: TipoBoton.success },
   ];
   
   WSDatos_Validando: boolean = false;
@@ -65,7 +65,7 @@ export class FrmOfertaImportarComponent implements OnInit {
 
   // grid lista articulos cargados csv
   // [IdArticulo, NombreArticulo, Unidades, Mensaje]
-  arrayLineasOferta: Array<LineasCSV>;
+  arrayLineasOferta: Array<LineasCSV_Validadas>;
   cols: Array<ColumnDataGrid> = [
     {
       dataField: 'IdArticulo',
@@ -79,10 +79,21 @@ export class FrmOfertaImportarComponent implements OnInit {
     },    
     {
       dataField: 'Unidades',
-      caption: this.traducir('frm-oferta-importar.colUnidades','Unidades'),      
+      caption: this.traducir('frm-oferta-importar.colUndPedidas','Unidades'),      
       visible: true,
       width: 150,
     },
+    {
+      dataField: 'UnidadesDisponibles',
+      caption: this.traducir('frm-oferta-importar.colUndDisponibles','Disponibles'),      
+      visible: true,
+      width: 150,
+    },   
+    {
+      dataField: 'Avisos',
+      caption: this.traducir('frm-oferta-importar.colAvisos','Avisos'),
+      visible: false,
+    },       
     {
       dataField: 'Mensaje',
       caption: this.traducir('frm-oferta-importar.colMensaje','Mensaje'),
@@ -157,7 +168,9 @@ export class FrmOfertaImportarComponent implements OnInit {
 
   //#endregion
 
+
   //#region -- WEB_SERVICES
+
   async cargarDatosCSV(){
     //alert('Cargar fichero lineas');
     if(this.WSDatos_Validando) return;
@@ -168,16 +181,16 @@ export class FrmOfertaImportarComponent implements OnInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.WSEnvioCsv_Valido = true;
-          console.log(datos);
-
-          this.arrayLineasOferta = datos.datos.Articulos;
+          //console.log(datos);
+          this.arrayLineasOferta = datos.datos.ArticulosValidados;
 
           // Se configura el grid
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasOferta, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
 
-        } else {
+        } else {          
           this.WSEnvioCsv_Valido = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSCargarLineas','Error cargando lineas csv')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
@@ -188,6 +201,34 @@ export class FrmOfertaImportarComponent implements OnInit {
   }  
 
   async importarOferta(){
+    //alert('Importar oferta');
+    if(this.WSDatos_Validando) return;
+    if(Utilidades.isEmpty(this.ficheroCsv)) return;
+
+    this.WSDatos_Validando = true;
+
+    (await this.planificadorService.importarOferta(this._oferta.Referencia,this._oferta.Cliente,this._oferta.Contrato,this._oferta.IdEstado
+                                                  ,this._oferta.FechaAlta,this._oferta.FechaInicio,this._oferta.FechaFin
+                                                  ,this._oferta.Obra,this._oferta.Observaciones,this._oferta.IdAlmacen,this.arrayLineasOferta)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.WSEnvioCsv_Valido = true;
+          console.log(datos);
+
+          Utilidades.MostrarExitoStr(this.traducir('frm-ofertas-importar.msgOk_WSImportarOferta','Oferta Importada correctamente'));           
+          // ir a pantalla de planificador
+          alert('ir a pantalla planificador con idoferta'+this._oferta.Referencia);
+          this.limpiarOferta();
+        } else {          
+          this.WSEnvioCsv_Valido = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSImportarOferta','Error WS importando oferta')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        console.log(error);
+      }
+    );
 
   }
 
@@ -201,7 +242,8 @@ export class FrmOfertaImportarComponent implements OnInit {
 
   cargarDatos() {
     if (this.ficheroCsv == null) {
-      alert('Fichero de carga no seleccionado')
+      //alert('Fichero de carga no seleccionado');
+      Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_FicheroNoSeleccionado','Fichero de carga no seleccionado')); 
     }
     else {
       this.cargarDatosCSV();
@@ -216,17 +258,22 @@ export class FrmOfertaImportarComponent implements OnInit {
     return (res.isValid);
   }
 
-  ImportarOfera() {
+  btnImportarOferta() {
     // guardamos info del usuario modificada - insertada
     if (!this.validarDatosFormulario()) return;
     else {
       // llamar a web_service de importacion
+      this.importarOferta();
     }
   }
     
-  salir() {
+  btnSalir() {
     this.location.back();
   }
 
+  limpiarOferta(){
+    // this._oferta = null;
+    // this.arrayLineasOferta = [];
+  }
 
 }

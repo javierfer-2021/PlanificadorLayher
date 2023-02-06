@@ -36,10 +36,10 @@
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo OBRA"></dxi-validation-rule>
                         </dxi-item>
 
-                        <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%'}">
+                        <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%'}">
+                        <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
                         </dxi-item>
                         <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
@@ -58,7 +58,7 @@
                 <div class="row px-2"><input type="file" accept=".csv" (change)="guardarCsv($event.target.files)"></div>               
             </div>
             <div class="col-2 px-1 pt-1">
-                <button class="btn btn-primary float-right" (click)="cargarDatos()" type="submit">Enviar Csv</button>
+                <button class="btn btn-primary" style="float: right;" (click)="cargarDatos()" type="submit">Enviar Csv</button>
             </div>
         </div>
         <hr>

@@ -46,14 +46,14 @@ export class FrmOfertaBuscarComponent implements OnInit {
     {
       dataField: '',
       caption: '',
-      visible: true,
+      visible: false,
       type: "buttons",
-      width: 35,
+      width: 40,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
       buttons: [ 
-        { icon: "home",
+        { icon: "info",
           hint: "Ver direccion entrega",
           onClick: (e) => { 
             this.btnMostrarOferta(e.row.rowIndex); 
@@ -133,7 +133,7 @@ export class FrmOfertaBuscarComponent implements OnInit {
       visible: true,
     },                
   ];
-  dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
+  dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
 
   selectedRowsData = [];
 
@@ -211,7 +211,8 @@ export class FrmOfertaBuscarComponent implements OnInit {
           // asignar valores devuletos
           this.arrayOfertas = datos.datos;
           this.dgConfig = new DataGridConfig(this.arrayOfertas, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          this.dgConfig.actualizarConfig(true,false, 'standard'); 
+          if (this.arrayOfertas.length>0) { this.dgConfig.actualizarConfig(true,false, 'standard',false, true);}
+          else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
         }
         else {
           Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-buscar.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
@@ -258,8 +259,17 @@ export class FrmOfertaBuscarComponent implements OnInit {
   }
 
   verPlanificador(){
-    //alert("ir a pantalla del planificador")    
-    this.prueba_obtenerDatosPlanificador('EV_103+PODIUM')
+    // comprobar registro seleecionado
+    this.selectedRowsData = this.dg.DataGrid.instance.getSelectedRowsData();
+    if ((this.selectedRowsData === null) || (this.selectedRowsData.length === 0)) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-oferta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
+      this.dg.DataGrid.instance.focus(); 
+      return;
+    } 
+    else {
+      this.prueba_obtenerDatosPlanificador(this.selectedRowsData[0].IdOferta)
+    }
+
   }
 
   //#endregion
