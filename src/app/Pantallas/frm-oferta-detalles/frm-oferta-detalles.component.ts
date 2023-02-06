@@ -10,19 +10,17 @@ import { BotonPantalla } from '../../Clases/BotonPantalla';
 import { ColumnDataGrid } from '../../Clases/ColumnDataGrid';
 import { DataGridConfig } from '../../Clases/DataGridConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { Oferta, OfertaLinea, EstadoOferta, LineasCSV, LineasCSV_Validadas, Almacen} from '../../Clases/Oferta';
+import { Oferta, OfertaLinea, EstadoOferta, Almacen} from '../../Clases/Oferta';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
-
 @Component({
-  selector: 'app-frm-oferta-importar',
-  templateUrl: './frm-oferta-importar.component.html',
-  styleUrls: ['./frm-oferta-importar.component.css']
+  selector: 'app-frm-oferta-detalles',
+  templateUrl: './frm-oferta-detalles.component.html',
+  styleUrls: ['./frm-oferta-detalles.component.css']
 })
-export class FrmOfertaImportarComponent implements OnInit {
-
+export class FrmOfertaDetallesComponent implements OnInit, AfterViewInit {
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
   clickNoPeticion: boolean = false;
@@ -38,8 +36,8 @@ export class FrmOfertaImportarComponent implements OnInit {
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-oferta-importar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-oferta-importar.btnImportar', 'Importar'), posicion: 2, accion: () => {this.btnImportarOferta()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-oferta-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    //{ icono: '', texto: this.traducir('frm-oferta-detalles.btnImportar', 'Importar'), posicion: 2, accion: () => {this.btnImportarOferta()}, tipo: TipoBoton.success },
   ];
   
   WSDatos_Validando: boolean = false;
@@ -51,47 +49,59 @@ export class FrmOfertaImportarComponent implements OnInit {
 
   ficheroCsv: File = null;
 
-  // grid lista articulos cargados csv
-  // [IdArticulo, NombreArticulo, Unidades, UnidadesDisponibles, Avisos, Mensaje]
-  arrayLineasOferta: Array<LineasCSV_Validadas>;
+  // grid lineas oferta
+  // [IdOferta,  IdLinea, IdArticulo, ArticuloNombre, CantidadPedida, CantidadReservada, CantidadDisponible, FechaActualizacion ]
+  arrayLineasOferta: Array<OfertaLinea>;
   cols: Array<ColumnDataGrid> = [
     {
+      dataField: 'IdOferta',
+      caption: this.traducir('frm-oferta-detalles.colIdOferta','Oferta'),
+      visible: false,
+    }, 
+    {
+      dataField: 'IdLinea',
+      caption: this.traducir('frm-oferta-detalles.colIdLinea','Linea'),
+      visible: false,
+    },     
+    {
       dataField: 'IdArticulo',
-      caption: this.traducir('frm-oferta-importar.colIdArticulo','Articulo'),
+      caption: this.traducir('frm-oferta-detalles.colIdArticulo','Articulo'),
       visible: true,
     },      
     {
-      dataField: 'NombreArticulo',
-      caption: this.traducir('frm-oferta-importar.colNombreArticulo','Descripción'),
+      dataField: 'ArticuloNombre',
+      caption: this.traducir('frm-oferta-detalles.colNombreArticulo','Descripción'),
       visible: true,
     },    
     {
-      dataField: 'Unidades',
-      caption: this.traducir('frm-oferta-importar.colUndPedidas','Unidades'),      
+      dataField: 'CantidadPedida',
+      caption: this.traducir('frm-oferta-detalles.colUndPedidas','Und.Pedidas'),      
       visible: true,
       width: 150,
     },
     {
-      dataField: 'UnidadesDisponibles',
-      caption: this.traducir('frm-oferta-importar.colUndDisponibles','Disponibles'),      
+      dataField: 'CantidadReservada',
+      caption: this.traducir('frm-oferta-detalles.colUndPedidas','Und.Reservadas'),      
+      visible: true,
+      width: 150,
+    },    
+    {
+      dataField: 'CantidadDisponible',
+      caption: this.traducir('frm-oferta-detalles.colUndDisponibles','Disponibles'),      
       visible: true,
       width: 150,
     },   
     {
-      dataField: 'Avisos',
-      caption: this.traducir('frm-oferta-importar.colAvisos','Avisos'),
+      dataField: 'FechaActualizacion',
+      caption: this.traducir('frm-oferta-detalles.colAvisos','Fec.Actualización'),
       visible: false,
     },       
-    {
-      dataField: 'Mensaje',
-      caption: this.traducir('frm-oferta-importar.colMensaje','Mensaje'),
-      visible: true,      
-    },
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
   //#endregion
 
+  
   //#region - constructores y eventos inicialización
   constructor(private cdref: ChangeDetectorRef,
               private renderer: Renderer2,
@@ -99,25 +109,20 @@ export class FrmOfertaImportarComponent implements OnInit {
               private router: Router,
               public translate: TranslateService,
               public planificadorService: PlanificadorService
-              ) 
-  { 
-    //cargar combos almacenes y estados ofertas
-    // let _almacen = new(Almacen)
-    // _almacen.IdAlmacen=1;
-    // _almacen.NombreAlmacen='MADRID';
-    // this.arrayAlmacenes.push(_almacen);
+              )  
+    { 
+      // obtenemos dato identificacion de envio del routing
+      const nav = this.router.getCurrentNavigation().extras.state;      
+      if (( nav.oferta !== null) && ( nav.oferta !== undefined)) {
+        this._oferta= nav.oferta;
+      }
+    }
 
-    // this.arrayTiposEstadoOferta.push({IdEstado:0,NombreEstado:'PROPUESTA'});
-    // this.arrayTiposEstadoOferta.push({IdEstado:1,NombreEstado:'CONFIRMADA'});
-    // // asignar valores por defecto
-    // this._oferta.FechaAlta = new Date().toLocaleDateString();
-    // this._oferta.IdAlmacen = 1;
-  }
 
   ngOnInit(): void {
     this.cargarCombos();
+    setTimeout(() => {this.cargarLineasOferta();},1000);
   }
-
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
@@ -157,7 +162,6 @@ export class FrmOfertaImportarComponent implements OnInit {
 
   //#endregion
 
-
   //#region -- WEB_SERVICES
 
   async cargarCombos(){
@@ -169,9 +173,8 @@ export class FrmOfertaImportarComponent implements OnInit {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoOferta = datos.datos.ListaEstados;
           this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
-          this._oferta.IdAlmacen = 1;
         } else {          
-          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-detalles.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
@@ -181,26 +184,20 @@ export class FrmOfertaImportarComponent implements OnInit {
     );
   }  
 
-  async cargarDatosCSV(){
-    //alert('Cargar fichero lineas');
+  async cargarLineasOferta(){
     if(this.WSDatos_Validando) return;
-    if(Utilidades.isEmpty(this.ficheroCsv)) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.cargarDatosCSV_LineasOferta(this.ficheroCsv)).subscribe(
+    (await this.planificadorService.getLineasOferta(this._oferta.IdOferta)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          this.WSEnvioCsv_Valido = true;
-          //console.log(datos);
-          this.arrayLineasOferta = datos.datos.ArticulosValidados;
-
+          this.arrayLineasOferta = datos.datos;
           // Se configura el grid
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasOferta, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
-
         } else {          
           this.WSEnvioCsv_Valido = false;
-          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSCargarLineas','Error cargando lineas csv')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-detalles.msgError_WSCargarLineas','Error cargando lineas de la oferta')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
@@ -208,82 +205,12 @@ export class FrmOfertaImportarComponent implements OnInit {
         console.log(error);
       }
     );
-  }  
-
-  async importarOferta(){
-    //alert('Importar oferta');
-    if(this.WSDatos_Validando) return;
-    if(Utilidades.isEmpty(this.ficheroCsv)) return;
-
-    this.WSDatos_Validando = true;
-
-    (await this.planificadorService.importarOferta(this._oferta.Referencia,this._oferta.Cliente,this._oferta.Contrato,this._oferta.IdEstado
-                                                  ,this._oferta.FechaAlta,this._oferta.FechaInicio,this._oferta.FechaFin
-                                                  ,this._oferta.Obra,this._oferta.Observaciones,this._oferta.IdAlmacen,this.arrayLineasOferta)).subscribe(
-      datos => {
-        if(Utilidades.DatosWSCorrectos(datos)) {
-          this.WSEnvioCsv_Valido = true;
-          console.log(datos);
-
-          Utilidades.MostrarExitoStr(this.traducir('frm-ofertas-importar.msgOk_WSImportarOferta','Oferta Importada correctamente'));           
-          // ir a pantalla de planificador
-          alert('ir a pantalla planificador con idoferta'+this._oferta.Referencia);
-          this.limpiarOferta();
-        } else {          
-          this.WSEnvioCsv_Valido = false;
-          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSImportarOferta','Error WS importando oferta')); 
-        }
-        this.WSDatos_Validando = false;
-      }, error => {
-        this.WSDatos_Validando = false;
-        console.log(error);
-      }
-    );
-
-  }
+  } 
 
   //#endregion
-
-  guardarCsv(file: FileList) {
-    this.ficheroCsv = file.item(0);
-    const reader = new FileReader();
-    reader.readAsDataURL(this.ficheroCsv);
-  }
-
-  cargarDatos() {
-    if (this.ficheroCsv == null) {
-      //alert('Fichero de carga no seleccionado');
-      Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_FicheroNoSeleccionado','Fichero de carga no seleccionado')); 
-    }
-    else {
-      this.cargarDatosCSV();
-    }
-  }
-
-  validarDatosFormulario():boolean{
-    const res = this.formOferta.instance.validate();
-    // res.status === "pending" && res.complete.then((r) => {
-    //   console.log(r.status);
-    // });
-    return (res.isValid);
-  }
-
-  btnImportarOferta() {
-    // guardamos info del usuario modificada - insertada
-    if (!this.validarDatosFormulario()) return;
-    else {
-      // llamar a web_service de importacion
-      this.importarOferta();
-    }
-  }
-    
+  
   btnSalir() {
     this.location.back();
-  }
-
-  limpiarOferta(){
-    // this._oferta = null;
-    // this.arrayLineasOferta = [];
   }
 
 }
