@@ -15,7 +15,9 @@ export class BotonMenuComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    let dtBoton: Array<Permiso> = ConfiGlobal.Permisos.filter(permiso => permiso.Habilitado === false && this.btnMenu.nombre === permiso.Control);
+    //let dtBoton: Array<Permiso> = ConfiGlobal.Permisos.filter(permiso => permiso.Habilitado === false && this.btnMenu.nombre === permiso.Control);
+    let dtBoton: Array<Permiso> = []
+
     if(dtBoton != null && dtBoton.length == 1){
       this.btnMenu.desactivado = true;
     }

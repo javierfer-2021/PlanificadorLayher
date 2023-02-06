@@ -224,8 +224,28 @@ export class FrmOfertaBuscarComponent implements OnInit {
     );
   }
 
-  //#endregion 
+  // prueba obtener datos planificador
+  async prueba_obtenerDatosPlanificador(oferta: string){
+    //alert('Cargar fichero lineas');
+    if(this.WSDatos_Validando) return;
 
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.getPlanificacion(oferta)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          console.log(datos);
+        } else {
+          alert('Error procedimiento almacenado')
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        console.log(error);
+      }
+    );
+  }  
+
+  //#endregion 
 
   //#region -- botones de opciones principales
 
@@ -238,7 +258,8 @@ export class FrmOfertaBuscarComponent implements OnInit {
   }
 
   verPlanificador(){
-    alert("ir a pantalla del planificador")    
+    //alert("ir a pantalla del planificador")    
+    this.prueba_obtenerDatosPlanificador('EV_103+PODIUM')
   }
 
   //#endregion

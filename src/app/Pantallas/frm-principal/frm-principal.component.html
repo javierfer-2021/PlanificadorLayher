@@ -1,92 +1,18 @@
 <div class="contenedor" style="padding-bottom:50px">
-    <div class="eDisabled">
-        <!-- <div class="collapse" id="navbarToggleExternalContent">
-            <div class="bg-light p-0">
-                <div class="container">
-                    <div class="row " style="height: 20%; max-height: 90px; min-height: 64px;">
-                        <div class="container h-100">
-                            <div class="row h-50">
-                                <div class="col-6">
-                                    <div class="h-100 fs-10 fs-sm-11 fs-md-12 fs-lg-12 fs-xl-12">
-                                        <span class="d-block h-50">AvxMobile</span>
-                                        <span class="d-block text-truncate h-50">Version: 2.1..1.82.1.8</span>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="h-100 fs-10 fs-sm-11 fs-md-12 fs-lg-12 fs-xl-12">
-                                        <span class="d-block text-right h-50">C-2020</span>
-                                        <span class="d-block text-truncate text-right h-50">192.168.10.49</span>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div class="row h-50">
-                                <div class="col-1 col-md-4 col-lg-6 d-none d-md-block">
-                                </div>
-                                <div class="col-5 col-md-4 col-lg-3 m-auto p-1 text-right">
-                                    <span class="fs-13 fs-sm-13">Operativa:</span>
-                                </div>
-                                <div class="col-7 col-md-4 col-lg-3 m-auto p-1">
-                                    <select class="form-control form-control-sm fs-10 f-sm-10 w-100">
-                                        <option>FMS_EMP_1</option>
-                                        <option>FMS_EMP_2</option>
-                                        <option>FMS_EMP_3</option>
-                                        <option>FMS_EMP_4</option>
-                                        <option>FMS_EMP_5</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div> -->
-
-        <nav class="navbar navbar-light bg-light p-0" style="  height: 40px;">
-            <div class="container p-0 h-100" style="">
-                <div style="" class="h-100 row w-100 m-0">
-
-                    <div class="col-2 m-auto px-1 text-left p-0" style="">
-                        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-expanded="false" style="width: 30px; height: 30px; padding: 0px;">
-                            <span class="navbar-toggler-icon" style="width: 25px; height: 25px;"></span>
-                        </button>
-                    </div>
-
-                    <div class="col-10 m-0 p-0 ">
-                        <div class="container  h-100 p-0">
-                            <div class="row h-100 w-100 m-0">
-                                <!-- <div class="col-2 h-100 text-left">
-                                    <span *ngIf="!wsComprobando()" [ngClass]="(wsConectado()) ? 'green' : 'red'" style="top: 35%; position: absolute; height: 15px; width: 15px; border-radius: 50px; display: block;"></span>
-                                    <span *ngIf="wsComprobando()" style="top: 35%; position: absolute; height: 15px; width: 15px; background: rgb(163, 163, 163); border-radius: 50px; display: block;"></span>
-                                </div> -->
-                                <div class="col-6 h-100 text-left">
-                                    <span class="fs-10 d-inline-block px-1">Vstock PLANIFICADOR: {{ version }}</span>
-                                </div>
-                                <div class="col-6 m-0 p-0 h-100 text-left">
-                                    <span class="fs-10 d-inline-block px-1">Usuario: {{ nombreUsuario }}</span>
-                                    <span class="fs-12 fs-sm-13 fs-md-16 fs-lg-16 fs-xl-16 d-block d-sm-inline  p-0 m-0 mx-1"></span>
-                                    <span class="fs-13 fs-sm-14 fs-md-16 fs-lg-16 fs-xl-16  d-block d-sm-inline p-0 m-0 mx-1"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-        </nav>
+    <div class="row w-100 p-2 m-0" style="padding-bottom:50px; border-bottom: 2px #3B71CA solid; background-color: #5bc0de;">
+        <div class="col-6">
+            <p class="fs-9 px-1 m-0 float-start"><b>Vstock PLANIFICADOR</b> ({{ version }})</p>
+        </div>
+        <div class="col-6">
+            <p class="fs-9 px-1 m-0" style="float: right;"><b>Usuario:</b> {{ nombreUsuario }}</p>
+        </div>
     </div>
 
     <!-- botones menu -->
     <mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSGetInci_Validando)"></mat-progress-bar>
     <div class="container">
 
-        <div class="row">
+        <div class="row pt-2">
             <div class="container">
                 <div class="row">
                     <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">

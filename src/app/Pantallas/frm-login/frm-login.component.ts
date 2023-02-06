@@ -263,7 +263,6 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           try { ConfiGlobal.PrefijosQR = datos.datos.Configuracion.PrefijosQR; } catch { }
 
           try { ConfiGlobal.HttpTimeWait = datos.datos.Configuracion.HttpTimeWait; } catch { }
-          try { ConfiGlobal.Rec_GenerarPaletPorLinea = datos.datos.Configuracion.Rec_GenerarPaletPorLinea; } catch { }
 
           try { ConfiGlobal.Permisos = datos.datos.Permisos; } catch {}
 

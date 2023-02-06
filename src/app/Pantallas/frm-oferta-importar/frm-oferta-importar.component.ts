@@ -10,9 +10,10 @@ import { BotonPantalla } from '../../Clases/BotonPantalla';
 import { ColumnDataGrid } from '../../Clases/ColumnDataGrid';
 import { DataGridConfig } from '../../Clases/DataGridConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { Oferta, OfertaLinea, EstadoOferta, LineasCSV} from '../../Clases/Oferta';
+import { Oferta, OfertaLinea, EstadoOferta, LineasCSV, Almacen} from '../../Clases/Oferta';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
-import { DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
+import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -33,11 +34,13 @@ export class FrmOfertaImportarComponent implements OnInit {
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
   
-  @ViewChild('txtReferencia', { static: false }) txtReferencia: DxTextBoxComponent;
-  @ViewChild('txtCliente', { static: false }) txtCliente: DxTextBoxComponent;
-  @ViewChild('comboEstadoOferta', { static: false }) comboEstadoOferta: DxSelectBoxComponent;
-  @ViewChild('txtContrato', { static: false }) txtContrato: DxTextBoxComponent;
-  @ViewChild('txtObra', { static: false }) txtObra: DxTextBoxComponent;
+  @ViewChild('formOferta', { static: false }) formOferta: DxFormComponent;
+
+  // @ViewChild('txtReferencia', { static: false }) txtReferencia: DxTextBoxComponent;
+  // @ViewChild('txtCliente', { static: false }) txtCliente: DxTextBoxComponent;
+  // @ViewChild('comboEstadoOferta', { static: false }) comboEstadoOferta: DxSelectBoxComponent;
+  // @ViewChild('txtContrato', { static: false }) txtContrato: DxTextBoxComponent;
+  // @ViewChild('txtObra', { static: false }) txtObra: DxTextBoxComponent;
 
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
@@ -47,18 +50,22 @@ export class FrmOfertaImportarComponent implements OnInit {
   ];
   
   WSDatos_Validando: boolean = false;
+  WSEnvioCsv_Valido: boolean = false;
 
   _oferta: Oferta = new(Oferta);
   arrayTiposEstadoOferta: Array<EstadoOferta> = [];  
+  arrayAlmacenes: Array<Almacen> = [];  
 
-  str_txtReferencia: string = '';
-  str_txtCliente: string = '';
-  str_txtEstado: string = '';
-  str_txtContrato: string = '';
+  ficheroCsv: File = null;
+
+  // str_txtReferencia: string = '';
+  // str_txtCliente: string = '';
+  // str_txtEstado: string = '';
+  // str_txtContrato: string = '';
 
   // grid lista articulos cargados csv
   // [IdArticulo, NombreArticulo, Unidades, Mensaje]
-  arrayOfertas: Array<LineasCSV>;
+  arrayLineasOferta: Array<LineasCSV>;
   cols: Array<ColumnDataGrid> = [
     {
       dataField: 'IdArticulo',
@@ -82,7 +89,7 @@ export class FrmOfertaImportarComponent implements OnInit {
       visible: true,      
     },
   ];
-  dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
+  dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
   //#endregion
 
@@ -93,7 +100,20 @@ export class FrmOfertaImportarComponent implements OnInit {
               private router: Router,
               public translate: TranslateService,
               public planificadorService: PlanificadorService
-              ) { }
+              ) 
+  { 
+    //cargar combos almacenes y estados ofertas
+    let _almacen = new(Almacen)
+    _almacen.IdAlmacen=1;
+    _almacen.NombreAlmacen='MADRID';
+    this.arrayAlmacenes.push(_almacen);
+
+    this.arrayTiposEstadoOferta.push({IdEstado:0,NombreEstado:'PROPUESTA'});
+    this.arrayTiposEstadoOferta.push({IdEstado:1,NombreEstado:'CONFIRMADA'});
+    // asignar valores por defecto
+    this._oferta.FechaAlta = new Date().toLocaleDateString();
+    this._oferta.IdAlmacen = 1;
+  }
 
   ngOnInit(): void {
   }
@@ -103,10 +123,10 @@ export class FrmOfertaImportarComponent implements OnInit {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // redimensionar grid, popUp
     setTimeout(() => {
-      this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfig.alturaMaxima));
+      this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
     }, 200);    
     // foco 
-    this.txtReferencia.instance.focus();    
+    this.formOferta.instance.getEditor('Referencia').focus();
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -118,7 +138,7 @@ export class FrmOfertaImportarComponent implements OnInit {
 
   onResize(event) {
     Utilidades.BtnFooterUpdate(this.pantalla,this.container,this.btnFooter,this.btnAciones,this.renderer);
-    this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfig.alturaMaxima));
+    this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
   }
 
   LPGen(value : boolean) {
@@ -138,87 +158,72 @@ export class FrmOfertaImportarComponent implements OnInit {
   //#endregion
 
   //#region -- WEB_SERVICES
-  async cargarDatos(){
-    alert('Cargar fichero lineas');
-    // if(this.WSEnvioCsv_Validando) return;
-    // if(Utilidades.isEmpty(this.ficheroCsv)) return;
+  async cargarDatosCSV(){
+    //alert('Cargar fichero lineas');
+    if(this.WSDatos_Validando) return;
+    if(Utilidades.isEmpty(this.ficheroCsv)) return;
 
-    // this.limpiarControles();
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.cargarDatosCSV_LineasOferta(this.ficheroCsv)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.WSEnvioCsv_Valido = true;
+          console.log(datos);
 
-    // this.WSEnvioCsv_Validando = true;
-    // (await this.planificadorService.cargarDatos(this.ficheroCsv)).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       this.WSEnvioCsv_Valido = true;
-    //       console.log(datos);
+          this.arrayLineasOferta = datos.datos.Articulos;
 
-    //       this.arrayArts = datos.datos.Articulos;
+          // Se configura el grid
+          this.dgConfigLineas = new DataGridConfig(this.arrayLineasOferta, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigLineas.actualizarConfig(true,false,'standard');
 
-    //       this.arrayUnidadesMostrar = new Array<oUnidMostrar>();
-    //       this.arrayArts.forEach(element => {
-    //         let unidMostrar: oUnidMostrar = new oUnidMostrar();
-    //         unidMostrar.UnidadesMostrar = element.UnidadesMostrar;
-    //         this.arrayUnidadesMostrar.push(unidMostrar);
-    //       });
-
-    //       // Se configura el grid
-    //       this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-    //       this.dgConfigArticulos.actualizarConfig(true,false,'standard');
-
-    //       // Se configura el grid 2
-    //       let newCol: ColumnDataGrid = {
-    //         dataField: 'PROD. MULTIPLE',
-    //         caption: 'PROD. MULTIPLE',
-    //         cssClass: 'grisClaro',
-    //         columns: [{
-    //           dataField: '001/AP22040061',
-    //           caption: '001/AP22040061',
-    //           cssClass: 'gris',
-    //           columns: [{
-    //             dataField: '',
-    //             caption: '',
-    //             cssClass: 'blanco',
-    //             columns: [{
-    //               dataField: '',
-    //               caption: '',
-    //               cssClass: 'blanco',
-    //               columns: [{
-    //                 dataField: '26/04/2022',
-    //                 caption: '26/04/2022',
-    //                 cssClass: 'fecha',
-    //                 columns: [{
-    //                   dataField: '22/05/2022',
-    //                   caption: '22/05/2022',
-    //                   cssClass: 'fechaRoja',
-    //                   columns: [{
-    //                     dataField: 'UnidadesMostrar',
-    //                     caption: 'Unidades',
-    //                     cssClass: 'gris',
-    //                     allowSorting: false
-    //                   }]
-    //                 }]
-    //               }]
-    //             }]
-    //           }]
-    //         }]
-    //       }
-
-    //       this.colsUnidades.push(newCol);
-    //       this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesMostrar, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-    //       this.dgConfigUnidades.actualizarConfig(true,false,'standard');
-    //     } else {
-    //       this.WSEnvioCsv_Valido = false;
-    //     }
-    //     this.WSEnvioCsv_Validando = false;
-    //   }, error => {
-    //     this.WSEnvioCsv_Validando = false;
-    //     console.log(error);
-    //   }
-    // );
+        } else {
+          this.WSEnvioCsv_Valido = false;
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        console.log(error);
+      }
+    );
   }  
+
+  async importarOferta(){
+
+  }
+
   //#endregion
 
+  guardarCsv(file: FileList) {
+    this.ficheroCsv = file.item(0);
+    const reader = new FileReader();
+    reader.readAsDataURL(this.ficheroCsv);
+  }
 
+  cargarDatos() {
+    if (this.ficheroCsv == null) {
+      alert('Fichero de carga no seleccionado')
+    }
+    else {
+      this.cargarDatosCSV();
+    }
+  }
+
+  validarDatosFormulario():boolean{
+    const res = this.formOferta.instance.validate();
+    // res.status === "pending" && res.complete.then((r) => {
+    //   console.log(r.status);
+    // });
+    return (res.isValid);
+  }
+
+  ImportarOfera() {
+    // guardamos info del usuario modificada - insertada
+    if (!this.validarDatosFormulario()) return;
+    else {
+      // llamar a web_service de importacion
+    }
+  }
+    
   salir() {
     this.location.back();
   }
