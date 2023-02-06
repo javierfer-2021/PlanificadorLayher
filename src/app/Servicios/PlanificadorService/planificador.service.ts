@@ -29,6 +29,12 @@ export class PlanificadorService {
     return this.http.post<any>(url, formData, this.headers);
   }
 
+  async getPlanificacion(idOferta: string): Promise<Observable<any>> {
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: idOferta };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacion', body, this.headers);
+  }
+
 
   //#region -- Buscar && ver OFERTAS, OFERTAS_LINEAS
   
@@ -102,19 +108,5 @@ export class PlanificadorService {
   
   //#endregion
 
-
-  //#region -- Prueba obtener datos del planificador
-
-  async getPlanificacion(oferta): Promise<Observable<any>>{ // Promise<Observable<any>>
-    //await Utilidades.establecerConexion();
-    while (ConfiGlobal.principalValidando) {
-      await Utilidades.delay(500);
-    }
-  
-    const body = { usuario : ConfiGlobal.Usuario, datos: { IdOferta:oferta } };    
-    return this.http.post(ConfiGlobal.URL + '/api/ofertas/getPlanificacion', body, Utilidades.getHeaders());
-  } 
-
-  //#endregion
 
 }

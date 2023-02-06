@@ -1,0 +1,63 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSEnvioCsv_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <div class="row pt-3">
+            <div class="col-5 px-0">
+                <div class="row" [ngStyle]="{'height': alturaDiv}">
+                    <div class="col-2 ml-3">
+                        <div class="row" style="height: 30px;"></div>
+                        <div class="row mt-2" style="font-size: 11px; height: 25px;"><b>DESDE</b></div>
+                        <div class="row mt-1" style="font-size: 11px; height: 25px;"><b>HASTA</b></div>
+                    </div>
+                    <div class="col-4">
+                        <!-- <div class="row" style="background-color: #00B0F0; border: solid; height: 30px; font-size: 20px;">{{ idOferta_mostrar }}</div> -->
+                        <dx-text-box class="" style="background-color: #00B0F0; height: 35px; font-size: 15px; border: 2px solid;" [showClearButton]="false" [(ngModel)]="idOferta_mostrar" [disabled]="true">
+                        </dx-text-box>
+                        <div class="row mt-2" style="color: white; background-color: #808080; border: solid; height: 25px; font-size: 11px;">{{ fechaInicio_mostrar }}</div>
+                        <!-- <dx-text-box class="fechaAlta" style="background-color: #808080; height: 25px; font-size: 11px; border: 2px solid;" [showClearButton]="false" [(ngModel)]="fechaInicio_mostrar" [disabled]="true">
+                        </dx-text-box> -->
+                        <div class="row mt-1" style="color: white; background-color: black; border: solid; height: 25px; font-size: 11px;">{{ fechaFin_mostrar }}</div>
+                        <!-- <dx-text-box class="fechaFin" style="background-color: black; height: 25px; font-size: 11px; border: 2px solid;" [showClearButton]="false" [(ngModel)]="fechaFin_mostrar" [disabled]="true">
+                        </dx-text-box> -->
+                        <div class="row mt-1 mr-1" style="background-color: rgb(255, 183, 183); height: 25px; font-size: 11px;">{{ estado_mostrar }}</div>
+                    </div>
+                    <div class="col-3 ml-1">
+                        <div class="row mt-1" style="height: 25px; font-size: 11px;">{{ fechaAlta_mostrar }}</div>
+                        <div class="row mt-2" style="color: white; background-color: red; height: 25px; font-size: 14px;" ngVa>{{ cliente_mostrar }}</div>
+                        <div class="row mt-2" style="background-color: #D9D9D9; border: solid; height: 25px;"></div>
+                        <div class="row pt-1">
+                            <div class="col-8" style="background-color: yellow; border: solid; height: 25px; font-size: 11px;">MADRID</div>
+                            <div class="col-4" style="background-color: yellow; border: solid; height: 25px; font-size: 11px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-3 ml-1 mt-2">
+                        <div class="row mt-1" style="font-size: 11px;"><u>CLIENTE</u></div>
+                        <div class="row mt-2" style="font-size: 11px;"><u>CONTRATO</u></div>
+                        <div class="row mt-3" style="font-size: 11px;"><u>OBRA</u></div>
+                        <div class="row mt-3" style="font-size: 11px;"><u>OBSERVACIONES</u></div>
+                        <div class="row mt-3" style="font-size: 11px;"><b>SALIDA</b></div>
+                        <div class="row mt-2" style="font-size: 11px;"><b>ENTRADA</b></div>
+                        <div class="row mt-3" style="font-size: 11px;"><b>ESTADO</b></div>
+                    </div>
+                </div>
+                <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+            </div>
+            <div class="col-7 px-0">
+                <app-cmp-data-grid #dgUnidades (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)" [dgConfig]="dgConfigUnidades"></app-cmp-data-grid>
+            </div>
+        </div>
+
+        <!-- <div class="row pt-1">
+            <div class="col px-1">
+                <app-cmp-data-grid #dgArticulos2 (onContentReady_DataGrid)="onContentReady_DataGrid2()" [dgConfig]="dgConfigArticulos2"></app-cmp-data-grid>
+            </div>
+        </div> -->
+
+    </div>
+
+</div>
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
