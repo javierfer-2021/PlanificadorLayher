@@ -10,7 +10,7 @@ import { BotonPantalla } from '../../Clases/BotonPantalla';
 import { ColumnDataGrid } from '../../Clases/ColumnDataGrid';
 import { DataGridConfig } from '../../Clases/DataGridConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { Oferta, OfertaLinea} from '../../Clases/Oferta';
+import { Oferta} from '../../Clases/Oferta';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 
 @Component({
@@ -211,7 +211,7 @@ export class FrmOfertaBuscarComponent implements OnInit {
           // asignar valores devuletos
           this.arrayOfertas = datos.datos;
           this.dgConfig = new DataGridConfig(this.arrayOfertas, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          if (this.arrayOfertas.length>0) { this.dgConfig.actualizarConfig(true,false, 'standard',false, true);}
+          if (this.arrayOfertas.length>0) { this.dgConfig.actualizarConfig(true,false, 'standard',true, true);}
           else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
         }
         else {
@@ -226,6 +226,8 @@ export class FrmOfertaBuscarComponent implements OnInit {
   }
 
   // prueba obtener datos planificador
+  //TODO - ELIMINAR
+  /*
   async prueba_obtenerDatosPlanificador(oferta: string){
     //alert('Cargar fichero lineas');
     if(this.WSDatos_Validando) return;
@@ -245,6 +247,7 @@ export class FrmOfertaBuscarComponent implements OnInit {
       }
     );
   }  
+  */
 
   //#endregion 
 
@@ -255,7 +258,16 @@ export class FrmOfertaBuscarComponent implements OnInit {
   }
 
   verDetallesOferta(){
-    alert("Mostrar pop-up detalles oferta")
+    if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-oferta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
+      return;
+    }
+    let vOferta : Oferta =  this.dg.objSeleccionado();    
+    const navigationExtras: NavigationExtras = {
+      state: { PantallaAnterior: 'frm-oferta-buscar', oferta: vOferta }
+    };
+    this.router.navigate(['detalles_oferta'], navigationExtras);
+
   }
 
   verPlanificador(){
@@ -267,7 +279,8 @@ export class FrmOfertaBuscarComponent implements OnInit {
       return;
     } 
     else {
-      this.prueba_obtenerDatosPlanificador(this.selectedRowsData[0].IdOferta)
+      //TODO - ELIMINAR -> this.prueba_obtenerDatosPlanificador(this.selectedRowsData[0].IdOferta)
+      alert('Ir pantalla planificador ID_OFERTA: '+this.selectedRowsData[0].IdOferta);
     }
 
   }

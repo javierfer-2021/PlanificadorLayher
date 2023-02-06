@@ -35,6 +35,7 @@ import { FrmPruebasComponent } from './Pantallas/frm-pruebas/frm-pruebas.compone
 import { FrmOfertaImportarComponent } from './Pantallas/frm-oferta-importar/frm-oferta-importar.component';
 import { FrmOfertaBuscarComponent } from './Pantallas/frm-oferta-buscar/frm-oferta-buscar.component';
 import { FrmCargarOfertaComponent } from './Pantallas/frm-cargar-oferta/frm-cargar-oferta.component';
+import { FrmOfertaDetallesComponent } from './Pantallas/frm-oferta-detalles/frm-oferta-detalles.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -58,7 +59,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) { }
     FrmPruebasComponent,
     FrmOfertaImportarComponent,
     FrmOfertaBuscarComponent,
-    FrmCargarOfertaComponent
+    FrmCargarOfertaComponent,
+    FrmOfertaDetallesComponent
 
   ],
   imports: [
