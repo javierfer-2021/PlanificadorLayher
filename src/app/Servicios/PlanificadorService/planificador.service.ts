@@ -77,6 +77,28 @@ export class PlanificadorService {
     // const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: formData };
     return this.http.post<any>(url, formData, this.headers);
   }  
+
+  async importarOferta(oferta,cliente,contrato,idEstado,fechaAlta,fechaInicio,fechaFin,obra,observaciones,idAlmacen,lineas ): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdOferta:oferta
+                                                          ,Cliente:cliente
+                                                          ,Contrato:contrato
+                                                          ,IdEstado:idEstado
+                                                          ,FechaAlta:fechaAlta
+                                                          ,FechaInicio:fechaInicio
+                                                          ,FechaFin:fechaFin
+                                                          ,Obra:obra
+                                                          ,Observaciones:observaciones
+                                                          ,IdAlmacen:idAlmacen
+                                                          ,LineasImportacion:lineas
+
+    } };    
+    return this.http.post(ConfiGlobal.URL + '/api/ofertas/importarOferta', body, Utilidades.getHeaders());
+  }   
   
   //#endregion
 

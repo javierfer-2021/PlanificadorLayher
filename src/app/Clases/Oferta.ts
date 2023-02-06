@@ -41,5 +41,13 @@
     IdArticulo: string;
     NombreArticulo: string;
     Unidades: number;
+  }
+
+  export class LineasCSV_Validadas {
+    IdArticulo: string;
+    NombreArticulo: string;
+    Unidades: number;
+    UnidadesDisponibles: number;
+    Avisos: number;
     Mensaje: string;
   }
