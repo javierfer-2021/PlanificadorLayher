@@ -74,13 +74,15 @@ export class PlanificadorService {
 
   //#region -- Importar Ofertas
 
-  async cargarDatosCSV_LineasOferta(fileToUpload: File): Promise<Observable<any>> {
+  async cargarDatosCSV_LineasOferta(fileToUpload: File, fechaInicio,almacen): Promise<Observable<any>> {
     const url =  ConfiGlobal.URL + '/api/ofertas/cargarDatosCSV_LineasOferta';
     const formData = new FormData();
     formData.append('fichero', fileToUpload, fileToUpload.name);
     formData.append('usuario', ConfiGlobal.Usuario.toString());
+    // formData.append('FechaInicio', fechaInicio.toString());
+    // formData.append('IdAlmacen', almacen.toString());
 
-    // const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: formData };
+    //const body = { usuario : ConfiGlobal.Usuario, datos: {FechaInicio:fechaInicio,IdAlmacen: almacen }};
     return this.http.post<any>(url, formData, this.headers);
   }  
 
