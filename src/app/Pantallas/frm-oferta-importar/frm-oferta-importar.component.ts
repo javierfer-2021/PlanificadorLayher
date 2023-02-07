@@ -14,6 +14,7 @@ import { Oferta, OfertaLinea, EstadoOferta, LineasCSV, LineasCSV_Validadas, Alma
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { locale } from 'devextreme/localization';
 
 
 @Component({
@@ -101,21 +102,29 @@ export class FrmOfertaImportarComponent implements OnInit {
               public planificadorService: PlanificadorService
               ) 
   { 
-    //cargar combos almacenes y estados ofertas
-    // let _almacen = new(Almacen)
-    // _almacen.IdAlmacen=1;
-    // _almacen.NombreAlmacen='MADRID';
-    // this.arrayAlmacenes.push(_almacen);
+    //TODO - Eliminar
+    /*
+    cargar combos almacenes y estados ofertas
+    let _almacen = new(Almacen)
+    _almacen.IdAlmacen=1;
+    _almacen.NombreAlmacen='MADRID';
+    this.arrayAlmacenes.push(_almacen);
 
-    // this.arrayTiposEstadoOferta.push({IdEstado:0,NombreEstado:'PROPUESTA'});
-    // this.arrayTiposEstadoOferta.push({IdEstado:1,NombreEstado:'CONFIRMADA'});
-    // // asignar valores por defecto
-    // this._oferta.FechaAlta = new Date().toLocaleDateString();
-    // this._oferta.IdAlmacen = 1;
+    this.arrayTiposEstadoOferta.push({IdEstado:0,NombreEstado:'PROPUESTA'});
+    this.arrayTiposEstadoOferta.push({IdEstado:1,NombreEstado:'CONFIRMADA'});
+    // asignar valores por defecto
+    this._oferta.FechaAlta = new Date().toLocaleDateString();
+    this._oferta.IdAlmacen = 1;
+    */
+    // Asignar localizacion ESPAÑA
+    locale('es');
   }
 
   ngOnInit(): void {
     this.cargarCombos();
+    // asignar valores por defecto
+    this._oferta.FechaAlta = new Date().toLocaleDateString();
+    this._oferta.IdAlmacen = 1;
   }
 
 
@@ -187,7 +196,7 @@ export class FrmOfertaImportarComponent implements OnInit {
     if(Utilidades.isEmpty(this.ficheroCsv)) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.cargarDatosCSV_LineasOferta(this.ficheroCsv)).subscribe(
+    (await this.planificadorService.cargarDatosCSV_LineasOferta(this.ficheroCsv,this._oferta.FechaAlta,this._oferta.IdAlmacen)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.WSEnvioCsv_Valido = true;
