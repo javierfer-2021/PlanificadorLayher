@@ -46,7 +46,12 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonBuscarOfertas.accion = () => { this.router.navigate(['lista_ofertas']); };
     this.botonImportarOferta.accion = () => { this.router.navigate(['importar_oferta']); };
     this.botonPlanificador.accion = () => { this.router.navigate(['planificador']); };
-    this.botonPruebas.accion = () => { this.router.navigate(['pruebas']); };
+
+    const navigationExtras: NavigationExtras = {
+      state: { PantallaAnterior: 'frm-principal', oferta: 'EV_103+PODIUM' }
+    };
+    this.botonPruebas.accion = () => { this.router.navigate(['pruebas'], navigationExtras); };
+    
 
     this.loadingPrincipalVisible = Utilidades.VarStatic.LoadPrincipal;
   }

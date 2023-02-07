@@ -239,7 +239,8 @@ export class FrmOfertaImportarComponent implements OnInit {
           //alert('ir a pantalla planificador con idoferta'+this._oferta.Referencia);
           
           const navigationExtras: NavigationExtras = {
-            state: { PantallaAnterior: 'frm-oferta-buscar', oferta: this._oferta.Referencia }
+            state: { PantallaAnterior: 'frm-oferta-buscar', oferta: this._oferta.Referencia },
+            replaceUrl: true
           };
           this.router.navigate(['pruebas'], navigationExtras);
 

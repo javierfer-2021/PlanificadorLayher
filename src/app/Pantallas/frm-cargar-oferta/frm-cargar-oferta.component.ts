@@ -73,9 +73,9 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
     },
     {
       dataField: 'CantidadDisponible',
-      caption: 'Stock',
+      caption: 'Cantidad Disponible',
       cssClass: 'blanco',
-      visible: true
+      visible: false
     },
     {
       dataField: 'CantidadPedida',
@@ -94,6 +94,11 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
       caption: 'Fecha Actualización',
       cssClass: 'blanco',
       visible: false
+    },
+    {
+      dataField: 'Stock',
+      caption: 'Stock',
+      cssClass: 'blanco'
     }
   ];
 
@@ -158,10 +163,10 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
 
   ConstructorPantalla() {
       // obtenemos dato identificacion de envio del routing
-      const nav = this.router.getCurrentNavigation().extras.state;      
-      if (( nav.oferta !== null) && ( nav.oferta !== undefined)) {
-        this._oferta = nav.oferta;
-      }    
+      const nav = this.router.getCurrentNavigation().extras.state;
+      if(Utilidades.isEmpty(nav)) return;
+
+      this._oferta = nav.oferta;
   }
 
   onResize(event) {

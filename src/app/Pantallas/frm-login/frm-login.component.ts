@@ -314,7 +314,7 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           // const fsWeb = require('fs-web');
           fs.writeFile('archivos/login2.json', login);
 
-          this.router.navigate(['/inicio']);
+          this.router.navigate(['/lista_ofertas']);
 
           ConfiGlobal.autorizacion = true;
         }
