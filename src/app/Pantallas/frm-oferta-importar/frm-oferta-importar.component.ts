@@ -236,7 +236,13 @@ export class FrmOfertaImportarComponent implements OnInit {
 
           Utilidades.MostrarExitoStr(this.traducir('frm-ofertas-importar.msgOk_WSImportarOferta','Oferta Importada correctamente'));           
           // ir a pantalla de planificador
-          alert('ir a pantalla planificador con idoferta'+this._oferta.Referencia);
+          //alert('ir a pantalla planificador con idoferta'+this._oferta.Referencia);
+          
+          const navigationExtras: NavigationExtras = {
+            state: { PantallaAnterior: 'frm-oferta-buscar', oferta: this._oferta.Referencia }
+          };
+          this.router.navigate(['pruebas'], navigationExtras);
+
           this.limpiarOferta();
         } else {          
           this.WSEnvioCsv_Valido = false;
