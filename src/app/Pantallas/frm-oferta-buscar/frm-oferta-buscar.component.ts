@@ -35,6 +35,7 @@ export class FrmOfertaBuscarComponent implements OnInit {
     { icono: '', texto: this.traducir('frm-oferta-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-oferta-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesOferta()}, tipo: TipoBoton.secondary },
     { icono: '', texto: this.traducir('frm-oferta-buscar.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.verPlanificador()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-oferta-buscar.btnImportar', 'Importar'), posicion: 4, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.secondary },
   ];
 
   WSDatos_Validando: boolean = false;
@@ -289,6 +290,10 @@ export class FrmOfertaBuscarComponent implements OnInit {
 
     }
 
+  }
+
+  verPantallaImportar() {
+    this.router.navigate(['importar_oferta']);
   }
 
   //#endregion
