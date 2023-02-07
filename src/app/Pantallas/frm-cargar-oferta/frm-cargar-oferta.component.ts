@@ -31,18 +31,14 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
     { icono: '', texto: 'Limpiar', posicion: 2, accion: () => { }, tipo: TipoBoton.secondary, activo: true, visible: true },
   ];
 
-  idOferta_mostrar: string = null;
-  fechaAlta_mostrar: string;
-  hasta_mostrar: string;
-  fechaFin_mostrar: string;
-  fechaInicio_mostrar: string;
-  cliente_mostrar: string;
-  estado_mostrar: string;
-
   oOfertaSeleccionada: oOferta;
   arrayArts: Array<oArticulo> = [];
   arrayCabeceras: Array<oOferta> = [];
   arrayUnidadesOfertas = [];
+
+  fechaAlta_mostrar: string;
+  fechaInicio_mostrar: string;
+  fechaFin_mostrar: string;
 
   alturaDiv: string = '0px';
 
@@ -131,10 +127,10 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
   }
 
   // para actualizar la altura de btnFooter
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
-    // Actualizar altura del grid
+    // Actualizar altura de los grids
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 210);
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
     
@@ -175,22 +171,18 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
   async getPlanificacion(){
     if(this.WSEnvioCsv_Validando) return;
 
-    this.limpiarControles();
+    this.limpiarControles(false);
 
     this.WSEnvioCsv_Validando = true;
     (await this.planificadorService.getPlanificacion('EV_103+PODIUM')).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.WSEnvioCsv_Valido = true;
-          console.log(datos);
 
           this.oOfertaSeleccionada = datos.datos.Oferta[0];
-          this.idOferta_mostrar = this.oOfertaSeleccionada.IdOferta;
-          this.fechaAlta_mostrar = this.oOfertaSeleccionada.FechaAlta;
-          this.fechaFin_mostrar = this.oOfertaSeleccionada.FechaFin;
-          this.fechaInicio_mostrar = this.oOfertaSeleccionada.FechaInicio;
-          this.cliente_mostrar = this.oOfertaSeleccionada.Cliente;
-          this.estado_mostrar = this.oOfertaSeleccionada.Estado;
+          this.fechaAlta_mostrar = this.oOfertaSeleccionada.FechaAlta.toString().substring(0, this.oOfertaSeleccionada.FechaAlta.toString().indexOf('T'));
+          this.fechaInicio_mostrar = this.oOfertaSeleccionada.FechaInicio.toString().substring(0, this.oOfertaSeleccionada.FechaInicio.toString().indexOf('T'));
+          this.fechaFin_mostrar = this.oOfertaSeleccionada.FechaFin.toString().substring(0, this.oOfertaSeleccionada.FechaFin.toString().indexOf('T'));
 
           this.arrayArts = datos.datos.LineasOferta;
           this.arrayCabeceras = datos.datos.OfertasRel;
@@ -220,12 +212,12 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
                     caption: c.Observaciones,
                     cssClass: 'blanco',
                     columns: [{
-                      dataField: c.FechaInicio,
-                      caption: c.FechaInicio,
+                      dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
+                      caption: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
                       cssClass: 'fecha',
                       columns: [{
-                        dataField: c.FechaFin,
-                        caption: c.FechaFin,
+                        dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
+                        caption: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                         cssClass: 'fechaRoja',
                         columns: [{
                           dataField: c.Estado,
@@ -381,16 +373,20 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
     this.dgArticulos.DataGrid.focusedRowIndex = selectedRowIndex;
   }
 
-  public limpiarControles() {
+  public limpiarControles(recargar: boolean = true) {
     this.arrayArts = null;
     this.arrayUnidadesOfertas = null;
     this.arrayCabeceras = null;
     this.oOfertaSeleccionada = null;
+    this.fechaAlta_mostrar = null;
 
     this.colsUnidades = [];
 
     this.dgConfigArticulos = new DataGridConfig(null, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
     this.dgConfigUnidades = new DataGridConfig(null, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+
+    if(recargar)
+      this.getPlanificacion();
   }
 
   LPGen(value : boolean) {
@@ -409,20 +405,20 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
 }
 
 export class oOferta {
-  IdOferta: string;
-  IdAlmacen: number;
-  IdEstado: number;
-  Almacen: string;
-  Cliente: string;
-  Contrato: string;
-  Estado: string;
-  FechaAlta: string;
-  FechaFin: string;
-  FechaInicio: string;
-  NumLineas: number;
-  Obra: string;
-  Observaciones: string;
-  Referencia: string;
+  IdOferta: string = '';
+  IdAlmacen: number = 0;
+  IdEstado: number = 0;
+  Almacen: string = '';
+  Cliente: string = '';
+  Contrato: string = '';
+  Estado: string = '';
+  FechaAlta: Date = new Date();
+  FechaFin: Date = new Date();
+  FechaInicio: Date = new Date();
+  NumLineas: number = 0;
+  Obra: string = '';
+  Observaciones: string = '';
+  Referencia: string = '';
 }
 
 export class oArticulo {
@@ -434,8 +430,4 @@ export class oArticulo {
   CantidadPedida: number;
   CantidadReservada: number;
   FechaActualizacion: Date;
-}
-
-export class oUnidadesOferta {
-
 }

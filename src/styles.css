@@ -15,3 +15,7 @@ body {
 .dx-state-disabled.dx-widget {
     opacity: .9 !important;
 }
+
+.dx-texteditor-container {
+    align-items: center;
+}
