@@ -36,9 +36,15 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
   arrayCabeceras: Array<oOferta> = [];
   arrayUnidadesOfertas = [];
 
+  _oferta: string;
+
+  idOferta_mostrar: string;
   fechaAlta_mostrar: string;
   fechaInicio_mostrar: string;
   fechaFin_mostrar: string;
+  estado_mostrar: string;
+  cliente_mostrar: string;
+  almacen_mostrar: string;
 
   alturaDiv: string = '0px';
 
@@ -67,18 +73,21 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
     },
     {
       dataField: 'CantidadDisponible',
-      caption: 'Cantidad Disponible',
-      cssClass: 'blanco'
+      caption: 'Stock',
+      cssClass: 'blanco',
+      visible: true
     },
     {
       dataField: 'CantidadPedida',
       caption: 'Cantidad Pedida',
-      cssClass: 'blanco'
+      cssClass: 'blanco' ,
+      visible: false     
     },
     {
       dataField: 'CantidadReservada',
       caption: 'Cantidad Reservada',
-      cssClass: 'blanco'
+      cssClass: 'blanco',
+      visible: false
     },
     {
       dataField: 'FechaActualizacion',
@@ -102,6 +111,7 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
   constructor(
     private renderer: Renderer2,
     private location: Location,
+    private router: Router,
     public translate: TranslateService,
     public planificadorService: PlanificadorService,
   ) {
@@ -147,6 +157,11 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
   }
 
   ConstructorPantalla() {
+      // obtenemos dato identificacion de envio del routing
+      const nav = this.router.getCurrentNavigation().extras.state;      
+      if (( nav.oferta !== null) && ( nav.oferta !== undefined)) {
+        this._oferta = nav.oferta;
+      }    
   }
 
   onResize(event) {
@@ -174,15 +189,19 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
     this.limpiarControles(false);
 
     this.WSEnvioCsv_Validando = true;
-    (await this.planificadorService.getPlanificacion('EV_103+PODIUM')).subscribe(
+    (await this.planificadorService.getPlanificacion(this._oferta)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.WSEnvioCsv_Valido = true;
 
           this.oOfertaSeleccionada = datos.datos.Oferta[0];
+          this.idOferta_mostrar = this.oOfertaSeleccionada.IdOferta;
           this.fechaAlta_mostrar = this.oOfertaSeleccionada.FechaAlta.toString().substring(0, this.oOfertaSeleccionada.FechaAlta.toString().indexOf('T'));
           this.fechaInicio_mostrar = this.oOfertaSeleccionada.FechaInicio.toString().substring(0, this.oOfertaSeleccionada.FechaInicio.toString().indexOf('T'));
           this.fechaFin_mostrar = this.oOfertaSeleccionada.FechaFin.toString().substring(0, this.oOfertaSeleccionada.FechaFin.toString().indexOf('T'));
+          this.estado_mostrar = this.oOfertaSeleccionada.Estado;
+          this.cliente_mostrar = this.oOfertaSeleccionada.Cliente;
+          this.almacen_mostrar = this.oOfertaSeleccionada.Almacen;
 
           this.arrayArts = datos.datos.LineasOferta;
           this.arrayCabeceras = datos.datos.OfertasRel;

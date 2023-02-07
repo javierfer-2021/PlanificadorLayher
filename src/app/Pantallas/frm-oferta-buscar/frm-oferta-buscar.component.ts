@@ -280,14 +280,22 @@ export class FrmOfertaBuscarComponent implements OnInit {
     } 
     else {
       //TODO - ELIMINAR -> this.prueba_obtenerDatosPlanificador(this.selectedRowsData[0].IdOferta)
-      alert('Ir pantalla planificador ID_OFERTA: '+this.selectedRowsData[0].IdOferta);
+      //alert('Ir pantalla planificador ID_OFERTA: '+this.selectedRowsData[0].IdOferta);
+      let vOferta : Oferta =  this.dg.objSeleccionado();    
+      const navigationExtras: NavigationExtras = {
+        state: { PantallaAnterior: 'frm-oferta-buscar', oferta: vOferta.Referencia }
+      };
+      this.router.navigate(['pruebas'], navigationExtras);
+
     }
 
   }
 
   //#endregion
 
-  onDoubleClick_DataGrid(){}
+  onDoubleClick_DataGrid(){
+    this.verPlanificador();
+  }
 
   btnMostrarOferta(index:number){}
 
