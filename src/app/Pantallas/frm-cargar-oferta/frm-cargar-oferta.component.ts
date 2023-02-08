@@ -338,7 +338,7 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
       case 'CantidadPedida':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            b.CantidadPedida - a.CantidadPedida
+            a.CantidadPedida - b.CantidadPedida
           );
         } else {
           this.arrayArts.sort((a, b) => 
@@ -350,7 +350,7 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
       case 'CantidadReservada':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            b.CantidadReservada - a.CantidadReservada
+            a.CantidadReservada - b.CantidadReservada
           );
         } else {
           this.arrayArts.sort((a, b) => 
@@ -359,11 +359,43 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
         }
 
         break;
+      case 'CantidadReservada':
+          if(columnOptionSorted.sortOrder === 'asc') {
+            this.arrayArts.sort((a, b) => 
+              a.CantidadReservada - b.CantidadReservada
+            );
+          } else {
+            this.arrayArts.sort((a, b) => 
+              b.CantidadReservada - a.CantidadReservada
+            );
+          }
+  
+          break;
+      case 'Stock':
+        if(columnOptionSorted.sortOrder === 'asc') {
+          this.arrayArts.sort((a, b) => 
+            a.Stock - b.Stock
+          );
+        } else {
+          this.arrayArts.sort((a, b) => 
+            b.Stock - a.Stock
+          );
+        }
+
+        break;
       default:
         break;
     }
 
-    this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesOfertas, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    let arrayReordenadoUnidades = [];
+    this.arrayArts.forEach(art => {
+      this.arrayUnidadesOfertas.forEach(unid => {
+        if(art.IdArticulo === unid.IdArticulo)
+          arrayReordenadoUnidades.push(unid);
+      });
+    });
+
+    this.dgConfigUnidades = new DataGridConfig(arrayReordenadoUnidades, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
     this.dgConfigUnidades.actualizarConfig(true,false,'standard');
   }
 
@@ -454,4 +486,5 @@ export class oArticulo {
   CantidadPedida: number;
   CantidadReservada: number;
   FechaActualizacion: Date;
+  Stock: number;
 }
