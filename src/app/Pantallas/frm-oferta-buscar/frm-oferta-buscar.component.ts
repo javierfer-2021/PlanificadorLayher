@@ -280,14 +280,11 @@ export class FrmOfertaBuscarComponent implements OnInit {
       return;
     } 
     else {
-      //TODO - ELIMINAR -> this.prueba_obtenerDatosPlanificador(this.selectedRowsData[0].IdOferta)
-      //alert('Ir pantalla planificador ID_OFERTA: '+this.selectedRowsData[0].IdOferta);
       let vOferta : Oferta =  this.dg.objSeleccionado();    
       const navigationExtras: NavigationExtras = {
         state: { PantallaAnterior: 'frm-oferta-buscar', oferta: vOferta.Referencia }
       };
       this.router.navigate(['pruebas'], navigationExtras);
-
     }
 
   }
@@ -302,7 +299,9 @@ export class FrmOfertaBuscarComponent implements OnInit {
     this.verPlanificador();
   }
 
-  btnMostrarOferta(index:number){}
+  btnMostrarOferta(index:number){
+    // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles Oefrta
+  }
 
 
 }

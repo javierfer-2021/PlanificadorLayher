@@ -1,0 +1,6 @@
+{
+    "env": "development",
+    "nombre": "Vstock Planificador (Dev)",
+    "dominio": "http://localhost",
+    "puerto": "49220"
+}

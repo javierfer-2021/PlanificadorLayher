@@ -12,6 +12,10 @@ import { FrmLoginComponent } from './Pantallas/frm-login/frm-login.component';
 import { DevextremeModule } from './modulos/devextreme/devextreme.module';
 import { MaterialModule } from './modulos/AngularMaterial/material.module';
 
+// carga parametros dominio:puerto desde fichero config.json
+import { APP_INITIALIZER } from '@angular/core';
+import { ConfigService } from './Servicios/ConfiguracionService/config.service'
+
 // Translate
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -39,6 +43,9 @@ import { FrmOfertaDetallesComponent } from './Pantallas/frm-oferta-detalles/frm-
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
+function initializeApp(appConfig: ConfigService) {
+  return () => appConfig.loadConfig();
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -79,7 +86,14 @@ export function HttpLoaderFactory(httpClient: HttpClient) { }
     }),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [ConfigService],
+      multi: true
+    },    
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

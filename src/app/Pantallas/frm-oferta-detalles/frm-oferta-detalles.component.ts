@@ -37,7 +37,7 @@ export class FrmOfertaDetallesComponent implements OnInit, AfterViewInit {
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-oferta-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    //{ icono: '', texto: this.traducir('frm-oferta-detalles.btnImportar', 'Importar'), posicion: 2, accion: () => {this.btnImportarOferta()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-oferta-detalles.btnCancelar', 'Cancelar'), posicion: 2, accion: () => {this.btnCancelarOferta()}, tipo: TipoBoton.secondary },
   ];
   
   WSDatos_Validando: boolean = false;
@@ -213,4 +213,7 @@ export class FrmOfertaDetallesComponent implements OnInit, AfterViewInit {
     this.location.back();
   }
 
+  btnCancelarOferta(){
+    alert('Función no implementada')
+  }
 }
