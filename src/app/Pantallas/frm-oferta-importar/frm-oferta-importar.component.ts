@@ -12,7 +12,7 @@ import { DataGridConfig } from '../../Clases/DataGridConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { Oferta, OfertaLinea, EstadoOferta, LineasCSV, LineasCSV_Validadas, Almacen} from '../../Clases/Oferta';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
+import { DxFormComponent } from 'devextreme-angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { locale } from 'devextreme/localization';
 
