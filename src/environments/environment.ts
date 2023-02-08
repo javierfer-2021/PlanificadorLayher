@@ -4,11 +4,10 @@
 
 export const environment = {
   production: false,
+  name:"dev",
   apk: false,
-  titulo: "debug",
+  titulo: "Debaug - VS Planificador",
   
-  //prueba git 6
-  //prueba git 6
   
   // dominio: "http://192.168.10.158", // IP Viletel
   // dominio: "http://192.168.10.221", // IP Diego

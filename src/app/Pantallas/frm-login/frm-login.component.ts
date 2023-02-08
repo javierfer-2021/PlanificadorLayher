@@ -45,6 +45,7 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
 
   popUpVisibleConexiones: boolean = false;
 
+  //TODO eliminar
   conexiones = [ 'http://192.168.10.158:8081', 'http://192.168.10.222:49221', 'http://192.168.10.48:49220', 'http://192.168.2.74:49221', 'http://192.168.1.49:49221' ];
 
   WSLogin_Validando: boolean = false;
@@ -98,10 +99,11 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit(): Promise<void> {
-    try {
-      // Si en el fichero de Conexion existe una conexión guardada, que pise las variables de ConfiGlobal y se pruebe
-      await this.comprobarFicheroConexion();
-    } catch { }
+    //TODO -revisar para eliminera fichero configuracion
+    // try {
+    //   // Si en el fichero de Conexion existe una conexión guardada, que pise las variables de ConfiGlobal y se pruebe
+    //   await this.comprobarFicheroConexion();
+    // } catch { }
 
     this.txtUsuario.onFocusIn();
 
@@ -199,13 +201,14 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
     if(this.WSConexion_Validando) return;
     
     this.WSConexion_Validando = true;
+    //TODO - revisar quitar fichero configuracion
     // Si ya se ha leido el fichero de conexión y contenía datos se salta lo siguiente
-    if(Utilidades.isEmpty(this.str_conexionFichero)) {
-      try {
-        // Si en el fichero de Conexion existe una conexión guardada, que pise las variables de ConfiGlobal y se pruebe
-        await this.comprobarFicheroConexion();
-      } catch { }
-    }
+    // if(Utilidades.isEmpty(this.str_conexionFichero)) {
+    //   try {
+    //     // Si en el fichero de Conexion existe una conexión guardada, que pise las variables de ConfiGlobal y se pruebe
+    //     await this.comprobarFicheroConexion();
+    //   } catch { }
+    // }
 
     var echoPing: any;
     try {
@@ -255,27 +258,31 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           this.dgConfigTxtUsuario.validationStatus = 'valid';
           this.dgConfigTxtPassword.validationStatus = 'valid';
   
-          try { ConfiGlobal.SeparadorGrid = datos.datos.Configuracion.SeparadorGrid; } catch { }
-           
-          try { ConfiGlobal.CharEAN128 = datos.datos.Configuracion.CharEAN128; } catch { }
-          try { ConfiGlobal.PrefijosEAN128 = datos.datos.Configuracion.PrefijosEAN128; } catch { }
-          try { ConfiGlobal.CharQR = datos.datos.Configuracion.CharQR; } catch { }
-          try { ConfiGlobal.PrefijosQR = datos.datos.Configuracion.PrefijosQR; } catch { }
-
-          try { ConfiGlobal.HttpTimeWait = datos.datos.Configuracion.HttpTimeWait; } catch { }
-
-          try { ConfiGlobal.Permisos = datos.datos.Permisos; } catch {}
+          //#region  -> CONFIGURACION-PROGRAMA_COMP
+          // valores generales
+          try { ConfiGlobal.SeparadorGrid = datos.datos.Configuracion.SeparadorGrid; } catch { }          
+          try { ConfiGlobal.HttpTimeWait = datos.datos.Configuracion.HttpTimeWait; } catch { }        
+          //try { ConfiGlobal.VersionAPK = datos.datos.Configuracion.VersionAPK; } catch { }        
 
           // WebSocket config
-          try { ConfiGlobal.WebSocket_IP = datos.datos.Configuracion.WebSocket_IP; } catch {}
-          try { ConfiGlobal.WebSocket_PORT = datos.datos.Configuracion.WebSocket_PORT; } catch {}
-          try { ConfiGlobal.WebSocket_Enabled = datos.datos.Configuracion.WebSocket_Enabled; } catch {} // JAVI TEMP PRUEBAS <- datos.datos.Configuracion.WebSocket_Enabled; } catch {}
-
-          // si no viene la configuracion false por defecto
+          try { ConfiGlobal.WebSocket_IP = datos.datos.Configuracion.WebSocket_IP; } catch { }
+          try { ConfiGlobal.WebSocket_PORT = datos.datos.Configuracion.WebSocket_PORT; } catch { }
+          try { ConfiGlobal.WebSocket_Enabled = datos.datos.Configuracion.WebSocket_Enabled; } catch {} 
           if(Utilidades.isEmpty(ConfiGlobal.WebSocket_IP) || ConfiGlobal.WebSocket_PORT === 0){
             ConfiGlobal.WebSocket_Enabled = false;
           }
+          // log
+          try { ConfiGlobal.SaveLog = datos.datos.Configuracion.SaveLog; } catch { }
+          try { ConfiGlobal.RutaLog = datos.datos.Configuracion.RutaLog; } catch { }
+          // botones opciones habilitados
+          try { ConfiGlobal.EnableTest = datos.datos.Configuracion.EnableTest; } catch {} 
+          try { ConfiGlobal.EnableVerLog = datos.datos.Configuracion.EnableVerLog; } catch {} 
+          //#endregion
 
+          // PERMISOS
+          //try { ConfiGlobal.Permisos = datos.datos.Permisos; } catch {}
+          
+          // IDIOMAS
           if(!Utilidades.isEmpty(datos.datos.Idiomas)) {
             if (datos.datos.Idiomas.length > 0) {
     
@@ -296,11 +303,10 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
               new Utilidades(this.translate, this.resolver, this.http, this.router);
   
   
-              // Arrancar el websocket
+              // Arrancar el websocket en caso necesario
               if(ConfiGlobal.WebSocket_Enabled)
-                Utilidades.set_WS(new WebsocketService());
-              
-              // const browserLang = this.translate.getBrowserLang();
+                Utilidades.set_WS(new WebsocketService());              
+                // const browserLang = this.translate.getBrowserLang();
             }
           }
 
@@ -347,7 +353,9 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
     this.color_txtPassword = '';
   }
 
-  async comprobarFicheroConexion(): Promise<boolean> {
+  //TODO - Eliminar
+  /*
+  async comprobarFicheroConexion(): Promise<boolean> {    
     // Recupera los datos leídos del fichero de conexión
     const conex = await Utilidades.leerFicheroConexion(false);
 
@@ -362,9 +370,10 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
       // Se guarda la conexión leída en memoria
       this.str_conexionFichero = conex.Conexion;
 
-      return true;
-    }
+      return true;      
+    }    
   }
+  */
 
   async cerrarApp() {
     if(this.dgConfigTxtPassword.stringTxt === 'qwerty') {

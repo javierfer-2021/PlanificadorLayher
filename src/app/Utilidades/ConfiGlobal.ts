@@ -3,8 +3,9 @@ import { environment } from '../../environments/environment';
 
 export class ConfiGlobal {
   
-  // version 
-  public static version : string ='1.23.5.1';
+  // aplicacion && version 
+  public static appName : string = 'Vstock Planificador'
+  public static version : string = '1.23.5.1';
   
   // traducion label generales 
   public static lbl_NoHayDatos : string = 'No hay datos';
@@ -28,14 +29,27 @@ export class ConfiGlobal {
   public static NombreUsuario: string;
   public static sessionId: string;
 
+  //#region  - VARIABLES CONFIGURACION -> Obtenidas BD.Tabla [CONFIGURACION_PROG_COMPL]
   public static HttpTimeWait: number;
-  public static Rec_GenerarPaletPorLinea: boolean = false;
-
-
+  public static SeparadorGrid: string; // '%;&_'
+  public static VersionAPK:string = '';
+  // web_socket
+  public static WebSocket_IP: string;
+  public static WebSocket_PORT: number;
+  public static WebSocket_Enabled: boolean = false;
+  // log
+  public static SaveLog: boolean = false;
+  public static RutaLog:string = '';
+  // botones activos pantalla principal
+  public static EnableTest: boolean = false;
+  public static EnableVerLog: boolean = false;
+  //#endregion
+  
   // frm-login y errores
   public static mensajeError: string;
   public static errorGuardado: number;
 
+  //#region - DEFINICION DE DOMINIO, PUERTO -> URL conexion webApi
   // ==================== Conexión WebApi ====================
   // local
   // private static dominio = 'http://localhost';
@@ -63,24 +77,19 @@ export class ConfiGlobal {
   public static puerto: string = environment.puerto;
 
   public static URL: string = ConfiGlobal.dominio + ':' + ConfiGlobal.puerto;
-
-  // EAN 128
-  public static CharEAN128; // '%'
-  public static PrefijosEAN128: Array<string> = [];
-
-  // QR
-  public static CharQR; // '@'
-  public static PrefijosQR: Array<string> = [];
-
-  // ConfiGrid
-  public static SeparadorGrid: string; // '%;&_'
+//#endregion
 
   // Array de Permisos para los botones
   public static Permisos: Array<Permiso> = new Array<Permiso>();
 
-  public static WebSocket_IP: string;
-  public static WebSocket_PORT: number;
-  public static WebSocket_Enabled: boolean = false;
-
   public static LOG: Array<string> = new Array<string>();
+
+  //TODO - Revisar -> No utilizado: Se mantiene para evitar errores en clases complementarias que usan estos variables
+    // EAN 128
+    public static CharEAN128 ='%'; // '%'
+    public static PrefijosEAN128: Array<string> = [];
+  
+    // QR
+    public static CharQR = '@'; // '@'
+    public static PrefijosQR: Array<string> = [];
 }

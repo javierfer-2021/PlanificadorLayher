@@ -102,20 +102,6 @@ export class FrmOfertaImportarComponent implements OnInit {
               public planificadorService: PlanificadorService
               ) 
   { 
-    //TODO - Eliminar
-    /*
-    cargar combos almacenes y estados ofertas
-    let _almacen = new(Almacen)
-    _almacen.IdAlmacen=1;
-    _almacen.NombreAlmacen='MADRID';
-    this.arrayAlmacenes.push(_almacen);
-
-    this.arrayTiposEstadoOferta.push({IdEstado:0,NombreEstado:'PROPUESTA'});
-    this.arrayTiposEstadoOferta.push({IdEstado:1,NombreEstado:'CONFIRMADA'});
-    // asignar valores por defecto
-    this._oferta.FechaAlta = new Date().toLocaleDateString();
-    this._oferta.IdAlmacen = 1;
-    */
     // Asignar localizacion ESPAÑA
     locale('es');
   }
