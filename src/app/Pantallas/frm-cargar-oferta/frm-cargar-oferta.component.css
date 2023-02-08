@@ -37,11 +37,6 @@
     background-color: rgb(255, 183, 183);
 }
 
-::ng-deep .dx-texteditor-input {
-    font-weight: bold;
-    text-align: center;
-}
-
 .fechaInicio ::ng-deep .dx-texteditor-input,
 .fechaFin ::ng-deep .dx-texteditor-input {
     color: white;

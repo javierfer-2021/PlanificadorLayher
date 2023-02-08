@@ -19,3 +19,8 @@ body {
 .dx-texteditor-container {
     align-items: center;
 }
+
+.centerBold .dx-texteditor-input {
+    font-weight: bold;
+    text-align: center;
+}
