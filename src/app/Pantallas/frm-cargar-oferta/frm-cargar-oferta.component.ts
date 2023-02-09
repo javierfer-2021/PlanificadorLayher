@@ -222,35 +222,35 @@ export class FrmCargarOfertaComponent implements OnInit, AfterViewInit, AfterCon
             let newCol: ColumnDataGrid = {
               dataField: c.Cliente,
               caption: c.Cliente,
-              cssClass: 'grisClaro',
+              cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisClaroBold' : 'grisClaro',
               columns: [{
                 dataField: c.Contrato,
                 caption: c.Contrato,
-                cssClass: 'gris',
+                cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisBold' : 'gris',
                 columns: [{
                   dataField: c.Obra,
                   caption: c.Obra,
-                  cssClass: 'blanco',
+                  cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'blancoBold' : 'blanco',
                   columns: [{
                     dataField: c.Observaciones,
                     caption: c.Observaciones,
-                    cssClass: 'blanco',
+                    cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'blancoBold' : 'blanco',
                     columns: [{
                       dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
                       caption: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
-                      cssClass: 'fecha',
+                      cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'fechaBold' : 'fecha',
                       columns: [{
                         dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                         caption: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                        cssClass: 'fechaRoja',
+                        cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'fechaRojaBold' : 'fechaRoja',
                         columns: [{
                           dataField: c.Estado,
                           caption: c.Estado,
-                          cssClass: 'rojoClaro',
+                          cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'rojoClaroBold' : 'rojoClaro',
                           columns: [{
                             dataField: 'C' + nroCol.toString(),
                             caption: 'Unidades',
-                            cssClass: 'gris',
+                            cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisBold' : 'gris',
                             allowSorting: false
                           }]
                         }]
