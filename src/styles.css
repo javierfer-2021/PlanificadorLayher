@@ -11,6 +11,18 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+/* redefinicion tamaño maximo .container de bootstrap -> ajustar o comentar segun proyectos 
+default:
+    Extra small (<576px) -> 100%
+    Small (≥576px) -> 540px
+    Medium (≥768px) -> 720px
+    Large (≥992px) -> 960px
+    X-Large (≥1200px) -> 1140px
+    XX-Large (≥1400px) -> 1320px
+*/
+.container {max-width: 96% !important;} 
+.ancho {max-width: 96% !important;} 
+
 .dx-state-disabled .dx-widget,
 .dx-state-disabled.dx-widget {
     opacity: .9 !important;
@@ -22,5 +34,13 @@ body {
 
 .centerBold .dx-texteditor-input {
     font-weight: bold;
+    text-align: center;
+}
+
+.dxbold .dx-texteditor-input {
+    font-weight: bold;
+}
+
+.dxcenter .dx-texteditor-input {
     text-align: center;
 }
