@@ -24,3 +24,11 @@ body {
     font-weight: bold;
     text-align: center;
 }
+
+.dxbold .dx-texteditor-input {
+    font-weight: bold;
+}
+
+.dxcenter .dx-texteditor-input {
+    text-align: center;
+}
