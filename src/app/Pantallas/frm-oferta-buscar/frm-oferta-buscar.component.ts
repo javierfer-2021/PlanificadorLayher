@@ -12,6 +12,7 @@ import { DataGridConfig } from '../../Clases/DataGridConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { Oferta} from '../../Clases/Oferta';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
+import { locale } from 'devextreme/localization';
 
 @Component({
   selector: 'app-frm-oferta-buscar',
@@ -97,16 +98,19 @@ export class FrmOfertaBuscarComponent implements OnInit {
       dataField: 'FechaAlta',
       caption: this.traducir('frm-oferta-buscar.colFechaAlta','Fecha Alta'),
       visible: false,
+      dataType: 'date',
     },
     {
       dataField: 'FechaInicio',
       caption: this.traducir('frm-oferta-buscar.colFechaInicio','Fecha Inicio'),
       visible: true,
+      dataType: 'date',
     },
     {
       dataField: 'FechaFin',
       caption: this.traducir('frm-oferta-buscar.colFechaFin','Fecha Fin'),
       visible: true,
+      dataType: 'date',
     },
     {
       dataField: 'Obra',
@@ -147,8 +151,11 @@ export class FrmOfertaBuscarComponent implements OnInit {
               private location: Location,
               private router: Router,
               public translate: TranslateService,
-              public planificadorService: PlanificadorService
-              ) { }
+              public planificadorService: PlanificadorService) 
+  { 
+    // Asignar localizacion ESPAÑA
+    locale('es');
+  }
 
   ngOnInit(): void {
     this.cargarOfertas();
@@ -158,8 +165,8 @@ export class FrmOfertaBuscarComponent implements OnInit {
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
-    // configuracion extra del grid
-    this.dg.mostrarFilaSumaryTotal('idEnvio','fechaEntrega',this.traducir('frm-oferta-buscar.TotalRegistros','Total Envios: '),'count');
+    // configuracion extra del grid -> mostrar fila total registros
+    this.dg.mostrarFilaSumaryTotal('Referencia','Referencia',this.traducir('frm-oferta-buscar.TotalRegistros','Total Ofertas: '),'count');
 
     // redimensionar grid, popUp
     setTimeout(() => {

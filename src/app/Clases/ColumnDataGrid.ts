@@ -16,4 +16,6 @@ export class ColumnDataGrid {
     allowEditing?: boolean = false;
     columns?: Array<dxDataGridColumn | string>;
     cssClass?: string;
+    dataType?: string;
+
   }
