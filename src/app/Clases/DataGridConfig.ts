@@ -80,4 +80,5 @@ export class DataGridConfig {
     modoSeleccion: string = 'single';
     filterRowVisible: boolean = false;
     editable: boolean = false;
+    mostrarTotales: boolean = false;
   }

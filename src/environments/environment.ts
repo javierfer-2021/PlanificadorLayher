@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   name:"dev",
   apk: false,
-  titulo: "Debaug - VS Planificador",
+  titulo: "(Debug) VS Planificador",
   
   
   // dominio: "http://192.168.10.158", // IP Viletel
