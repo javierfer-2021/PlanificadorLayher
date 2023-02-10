@@ -40,6 +40,13 @@ import { FrmOfertaImportarComponent } from './Pantallas/frm-oferta-importar/frm-
 import { FrmOfertaBuscarComponent } from './Pantallas/frm-oferta-buscar/frm-oferta-buscar.component';
 import { FrmCargarOfertaComponent } from './Pantallas/frm-cargar-oferta/frm-cargar-oferta.component';
 import { FrmOfertaDetallesComponent } from './Pantallas/frm-oferta-detalles/frm-oferta-detalles.component';
+import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-buscar/frm-usuario-buscar.component';
+import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
+import { FrmCompraBuscarComponent } from './Pantallas/Compras/frm-compra-buscar/frm-compra-buscar.component';
+import { FrmCompraImportarComponent } from './Pantallas/Compras/frm-compra-importar/frm-compra-importar.component';
+import { FrmArticulosStockComponent } from './Pantallas/frm-articulos-stock/frm-articulos-stock.component';
+import { FrmIncidenciaComponent } from './Pantallas/frm-incidencia/frm-incidencia.component';
+import { FrmVentasImportarComponent } from './Pantallas/Ventas/frm-ventas-importar/frm-ventas-importar.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -67,7 +74,14 @@ function initializeApp(appConfig: ConfigService) {
     FrmOfertaImportarComponent,
     FrmOfertaBuscarComponent,
     FrmCargarOfertaComponent,
-    FrmOfertaDetallesComponent
+    FrmOfertaDetallesComponent,
+    FrmUsuarioBuscarComponent,
+    FrmUsuarioComponent,
+    FrmCompraBuscarComponent,
+    FrmCompraImportarComponent,
+    FrmArticulosStockComponent,
+    FrmIncidenciaComponent,
+    FrmVentasImportarComponent
 
   ],
   imports: [

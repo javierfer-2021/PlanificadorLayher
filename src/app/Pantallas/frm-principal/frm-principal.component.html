@@ -11,7 +11,7 @@
     <!-- botones menu -->
     <mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSGetInci_Validando)"></mat-progress-bar>
     <div class="container">
-
+        <p>Botones prototipo Inicial</p>
         <div class="row pt-2">
             <div class="container">
                 <div class="row">
@@ -37,6 +37,72 @@
                 </div>
             </div>
         </div>
+        
+        <hr>
+        <p>Botones beta 1</p>
+
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonVentaBuscar"></app-boton-menu>
+                    </div>
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonVentaImportar"></app-boton-menu>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonComprasBuscar"></app-boton-menu>
+                    </div>
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonComprasImportar"></app-boton-menu>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        
+
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonIncidencias"></app-boton-menu>
+                    </div>
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">                        
+                    </div>
+                </div>
+            </div>
+        </div>         
+        
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonStock"></app-boton-menu>
+                    </div>
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                    </div>
+                </div>
+            </div>
+        </div>   
+
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonUsuarios"></app-boton-menu>                        
+                    </div>
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">                        
+                    </div>
+                </div>
+            </div>
+        </div>           
 
     </div>
 </div>
