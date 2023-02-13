@@ -1,1 +1,84 @@
-<p>frm-compra-importar works!</p>
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 bg-secondary">
+            <div class="col pt-1 px-1 text-white text-center">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-compra-importar.lblTitulo', 'Importar Compra')}} </div>
+            </div>   
+        </div>  
+
+        <!-- textBosx Referencia compra a importar -->
+
+        <div *ngif="true">       
+            <!-- Formulario Datos Compra -->
+            <div class="row pt-2">
+                <div id="form-container" class="formulario">
+                    <dx-form id="formOferta" #formOferta [colCount]="3" [formData]="_Compra" labelMode="static">
+
+                        <dxi-item itemType="group" caption="Datos Oferta" [colCount]="3" [colSpan]="3">
+                            <dxi-item dataField="Referencia" [editorOptions]="{disabled: false}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo REFERENCIA"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="IdEstado" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoOferta, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO OFERTA"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="FechaAlta" [editorOptions]="{disabled: true}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ALTA"></dxi-validation-rule>
+                            </dxi-item>
+
+                            <dxi-item dataField="Cliente" [editorOptions]="{disabled: false}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CLIENTE"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="Contrato" [editorOptions]="{disabled: false}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="Obra" [editorOptions]="{disabled: false}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo OBRA"></dxi-validation-rule>
+                            </dxi-item>
+
+                            <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
+                            </dxi-item>
+
+                            <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="3"></dxi-item>
+
+                        </dxi-item>                   
+                    </dx-form>
+                </div>
+            </div>
+        
+            <!-- <div class="row px-1">
+                <div class="col-10 px-1 pt-1">
+                    <div class="row px-2"><input type="file" accept=".csv" (change)="guardarCsv($event.target.files)"></div>               
+                </div>
+                <div class="col-2 px-1 pt-1">
+                    <button class="btn btn-primary" style="float: right;" (click)="cargarDatos()" type="submit">Cargar Fichero</button>
+                </div>
+            </div> -->
+            
+            <!-- grid lineas cargadas del CSVs/ERP -->    
+            <div class="row">
+                <div class="col pt-1 px-1">    
+                    <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+                </div>
+            </div>            
+            
+        </div>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+

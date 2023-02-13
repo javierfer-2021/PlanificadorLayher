@@ -35,8 +35,8 @@ export class FrmCompraBuscarComponent implements OnInit {
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-oferta-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-oferta-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesOferta()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-oferta-buscar.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.verPlanificador()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-oferta-buscar.btnImportar', 'Importar'), posicion: 4, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-oferta-buscar.btnImportar', 'Importar'), posicion: 3, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-oferta-buscar.btnPlanificador', 'Ver Planificador'), posicion: 4, accion: () => {this.verPlanificador()}, tipo: TipoBoton.secondary },
   ];
 
   WSDatos_Validando: boolean = false;
@@ -297,7 +297,7 @@ export class FrmCompraBuscarComponent implements OnInit {
   }
 
   verPantallaImportar() {
-    this.router.navigate(['importar_oferta']);
+    this.router.navigate(['compra_importar']);
   }
 
   //#endregion

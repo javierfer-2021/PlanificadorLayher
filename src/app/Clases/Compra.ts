@@ -16,7 +16,7 @@ export class Compra {
     NumLineas: number;
   }
 
-  export class LineaLinea {
+  export class LineaCompra {
     IdOferta: string;
     IdLinea: number;
     IdArticulo: string;

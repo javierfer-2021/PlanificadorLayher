@@ -10,8 +10,11 @@
         <div #icono class="icono px-1">
             <i height="22px" width="22px" class="{{btnIconoHrz.icono}}" *ngIf="!btnIconoHrz.icono.includes('/')"></i>
             <img height="22px" width="22px" *ngIf="btnIconoHrz.icono.includes('/')" src="{{btnIconoHrz.icono}}">
+        
+            <span #texto *ngIf="divTextoVisible" style="font-size: 11px; font-weight: bold;" class="m-0 pt-1 px-2 text-truncate">{{btnIconoHrz.texto}}</span>
         </div>
-        <span #texto *ngIf="divTextoVisible" style="font-size: 11px; font-weight: bold;" class="m-0 pt-1 px-1 text-truncate">{{btnIconoHrz.texto}}</span>
+        <!-- JN : unificar en 1 linea
+        <span #texto *ngIf="divTextoVisible" style="font-size: 11px; font-weight: bold;" class="m-0 pt-1 px-1 text-truncate">{{btnIconoHrz.texto}}</span> -->
     </div>
 </div>
 
