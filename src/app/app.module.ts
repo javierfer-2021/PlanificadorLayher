@@ -47,6 +47,8 @@ import { FrmCompraImportarComponent } from './Pantallas/Compras/frm-compra-impor
 import { FrmArticulosStockComponent } from './Pantallas/frm-articulos-stock/frm-articulos-stock.component';
 import { FrmIncidenciaComponent } from './Pantallas/frm-incidencia/frm-incidencia.component';
 import { FrmVentasImportarComponent } from './Pantallas/Ventas/frm-ventas-importar/frm-ventas-importar.component';
+import { FrmVentaBuscarComponent } from './Pantallas/Ventas/frm-venta-buscar/frm-venta-buscar.component';
+import { FrmVentaDetallesComponent } from './Pantallas/Ventas/frm-venta-detalles/frm-venta-detalles.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -81,7 +83,9 @@ function initializeApp(appConfig: ConfigService) {
     FrmCompraImportarComponent,
     FrmArticulosStockComponent,
     FrmIncidenciaComponent,
-    FrmVentasImportarComponent
+    FrmVentasImportarComponent,
+    FrmVentaBuscarComponent,
+    FrmVentaDetallesComponent
 
   ],
   imports: [

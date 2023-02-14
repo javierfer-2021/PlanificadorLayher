@@ -86,12 +86,22 @@ export class PlanificadorService {
     return this.http.post<any>(url, formData, this.headers);
   }  
 
+
+  async cargarVenta_from_ERP(oferta ): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdOferta:oferta } };    
+    return this.http.post(ConfiGlobal.URL + '/api/ofertas/cargarVenta_from_ERP', body, Utilidades.getHeaders());
+  } 
+
+
   async importarOferta(oferta,cliente,contrato,idEstado,fechaAlta,fechaInicio,fechaFin,obra,observaciones,idAlmacen,lineas ): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
-    }
-    
+    }    
     const body = { usuario : ConfiGlobal.Usuario, datos: { IdOferta:oferta
                                                           ,Cliente:cliente
                                                           ,Contrato:contrato

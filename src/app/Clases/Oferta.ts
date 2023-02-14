@@ -13,7 +13,9 @@
     Observaciones: string;
     IdAlmacen: number;
     Almacen: string;
-    NumLineas: number;
+    NumLineas?: number;
+    TipoDocumento?: string;
+    Aviso?: string;
   }
 
   export class OfertaLinea {
@@ -44,6 +46,17 @@
   }
 
   export class LineasCSV_Validadas {
+    IdArticulo: string;
+    NombreArticulo: string;
+    Unidades: number;
+    UnidadesDisponibles: number;
+    Avisos: number;
+    Mensaje: string;
+  }
+
+  export class LineaOferta_ERP {
+    IdOferta: string;
+    IdLinea: number;
     IdArticulo: string;
     NombreArticulo: string;
     Unidades: number;

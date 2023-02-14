@@ -6,14 +6,14 @@
         <!-- Titulo -->
         <div class="row px-1 py-2 bg-secondary">
             <div class="col pt-1 px-1 text-white text-center">
-                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-importar.lblTitulo', 'Importar Ventas-Ofertas')}} </div>
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-ventas-importar.lblTitulo', 'Importar Ventas-Ofertas')}} </div>
             </div>   
         </div>  
 
-        <!-- textBosx Referencia venta a importar -->
+        <!-- TextBox Referencia venta a importar + botones Buscar | limpiar -->
         <div class="row px-1 pt-1">
-            <div class="col-2 px-1 pt-1">
-                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-importar.lblNumDocumento', 'Num.Documento')}} </div>    
+            <div class="col-2 px-2 pt-1 text-right">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-ventas-importar.lblNumDocumento', 'Num.Documento')}} </div>    
             </div>
             <div class="col-6 px-1 pt-1">
                 <dx-text-box #txtDocumento class="w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [height]="30" [showClearButton]="false" 
@@ -22,23 +22,25 @@
                 (onEnterKey)="onEnterKey_campo()" 
                 (onValueChanged)="onValueChanged_campo()"  
                 format="text"  
-                [readOnly]="false">
+                [readOnly]="documentoValido">
             </dx-text-box>
-            </div>            
-            <div class="col-2 px-1"><app-cmp-boton-icono-hrz [btnIconoHrz]="btnIconoLimpiar"></app-cmp-boton-icono-hrz></div>
+            </div>                        
             <div class="col-2 px-1"><app-cmp-boton-icono-hrz [btnIconoHrz]="btnIconoBuscar"></app-cmp-boton-icono-hrz></div>
+            <div class="col-2 px-1"><app-cmp-boton-icono-hrz [btnIconoHrz]="btnIconoLimpiar"></app-cmp-boton-icono-hrz></div>
         </div>
 
-        <hr>
-        
-        <!-- Datos de la venta -->
-        <div *ngIf="documentoValido">       
+        <!-- Datos de la venta  obtenidos del ERP-->
+        <div *ngIf="documentoValido">  
+            <hr class="my-1">
+            <div *ngIf="aviso" class="row p-0 px-1" style="background-color: #e37f1873;">
+                <div class="col text-center">Aviso! Documento ya importado en el planificador.</div>
+            </div>     
             <!-- Formulario Datos Compra -->
-            <div class="row pt-2">
+            <div class="row pt-0">
                 <div id="form-container" class="formulario">
                     <dx-form id="formOferta" #formOferta [colCount]="3" [formData]="_oferta" labelMode="static">
 
-                        <dxi-item itemType="group" caption="Datos Oferta" [colCount]="3" [colSpan]="3">
+                        <dxi-item itemType="group" caption="Datos {{str_txtTipoDocumento}}" [colCount]="3" [colSpan]="3">
                             <dxi-item dataField="Referencia" [editorOptions]="{disabled: false}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo REFERENCIA"></dxi-validation-rule>
                             </dxi-item>
@@ -77,7 +79,7 @@
             </div>
                   
             <!-- grid lineas venta cargadas del CSVs/ERP -->    
-            <div class="row">
+            <div class="row px-1">
                 <div class="col pt-1 px-1">    
                     <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
                 </div>
