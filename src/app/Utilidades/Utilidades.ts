@@ -1048,19 +1048,31 @@ export class Utilidades {
         let icono : string;
         switch (tipo) {
             case TipoDialogo.confirmacion : {
-                icono = '<i class="fas fa-question-circle fa-3x"></i>';
+                // uso fontawesome
+                //icono = '<i class="fas fa-question-circle fa-3x"></i>';
+                // uso bootstrap
+                icono = '<i class="bi bi-question-circle" style="font-size:3rem;"></i>';
                 break;
             }
             case TipoDialogo.error : {
-                icono = '<i class="fas fa-times-circle fa-3x" style="color:red"></i>'
+                // uso fontawesome
+                //icono = '<i class="fas fa-times-circle fa-3x" style="color:red"></i>'
+                // uso bootstrap
+                icono = '<i class="bi bi-x-circle" style="font-size:3rem; color:red;"></i>';
                 break;
             }            
             case TipoDialogo.aviso : {
-                icono = '<i class="fas fa-exclamation-circle fa-3x"></i>'
+                // uso fontawesome
+                //icono = '<i class="fas fa-exclamation-circle fa-3x"></i>'
+                // uso bootstrap
+                icono = '<i class="bi bi-exclamation-circle" style="font-size:3rem;"></i>';
                 break;
             }
             case TipoDialogo.info : {
-                icono = '<i class="fas fa-info-circle fa-3x"></i>'
+                // uso fontawesome
+                //icono = '<i class="fas fa-info-circle fa-3x"></i>'
+                // uso bootstrap
+                icono = '<i class="bi bi-info-circle" style="font-size:3rem;"></i>';
                 break;
             }
             default : {
