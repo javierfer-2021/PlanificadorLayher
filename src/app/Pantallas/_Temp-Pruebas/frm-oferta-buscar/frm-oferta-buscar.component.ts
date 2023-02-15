@@ -4,14 +4,14 @@ import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
-import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { TipoBoton } from '../../Enumeraciones/TipoBoton';
-import { BotonPantalla } from '../../Clases/BotonPantalla';
-import { ColumnDataGrid } from '../../Clases/ColumnDataGrid';
-import { DataGridConfig } from '../../Clases/DataGridConfig';
-import { Utilidades } from '../../Utilidades/Utilidades';
-import { Oferta} from '../../Clases/Oferta';
-import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
+import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
+import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
+import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
+import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
+import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
+import { Utilidades } from '../../../Utilidades/Utilidades';
+import { Oferta} from '../../../Clases/Oferta';
+import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 
 @Component({

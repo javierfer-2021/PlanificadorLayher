@@ -1,5 +1,5 @@
-import { Pantalla } from "../Enumeraciones/Pantalla";
-import { TiposTamPantalla } from "../Enumeraciones/TiposTamPantalla";
+import { Pantalla } from "../../Enumeraciones/Pantalla";
+import { TiposTamPantalla } from "../../Enumeraciones/TiposTamPantalla";
 import { ElementRef } from "@angular/core";
 
 export class DataScrollAreaConfig {

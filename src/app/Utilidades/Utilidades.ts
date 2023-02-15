@@ -1,8 +1,8 @@
 import { Login } from './../Clases/Login';
 import { Conexion } from './../Clases/Conexion';
-import { ColumnDataGrid } from './../Clases/ColumnDataGrid';
+import { ColumnDataGrid } from './../Clases/Componentes/ColumnDataGrid';
 import { RespuestaWebApi } from './../Clases/RespuestaWebApi';
-import { BotonPantalla } from './../Clases/BotonPantalla';
+import { BotonPantalla } from './../Clases/Componentes/BotonPantalla';
 import { WebsocketService } from './../Servicios/WebSocketService/websocket.service';
 import { CmpDataGridComponent } from './../Componentes/cmp-data-grid/cmp-data-grid.component';
 import { ComponentFactoryResolver, ElementRef, Renderer2 } from '@angular/core';

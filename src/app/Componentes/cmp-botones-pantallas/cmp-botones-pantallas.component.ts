@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { BotonPantalla } from '../../Clases/BotonPantalla';
+import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
 
 @Component({
   selector: 'app-cmp-botones-pantallas',

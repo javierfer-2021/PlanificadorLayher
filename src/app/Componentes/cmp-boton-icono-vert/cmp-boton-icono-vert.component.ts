@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { BotonIcono } from '../../Clases/BotonIcono';
+import { BotonIcono } from '../../Clases/Componentes/BotonIcono';
 
 @Component({
   selector: 'app-cmp-boton-icono-vert',

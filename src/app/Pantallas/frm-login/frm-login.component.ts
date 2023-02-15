@@ -9,7 +9,7 @@ import { DxPopupComponent } from 'devextreme-angular';
 import { timeout } from 'rxjs/operators';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { Directory, Filesystem } from '@capacitor/filesystem';
-import { DataTextBoxConfig } from '../../Clases/DataTextBoxConfig';
+import { DataTextBoxConfig } from '../../Clases/Componentes/DataTextBoxConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { environment } from '../../../environments/environment';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';

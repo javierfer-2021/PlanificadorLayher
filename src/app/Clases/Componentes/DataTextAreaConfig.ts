@@ -1,6 +1,6 @@
 import { ElementRef } from '@angular/core';
-import { Pantalla } from '../Enumeraciones/Pantalla';
-import { TiposTamPantalla } from '../Enumeraciones/TiposTamPantalla';
+import { Pantalla } from '../../Enumeraciones/Pantalla';
+import { TiposTamPantalla } from '../../Enumeraciones/TiposTamPantalla';
 
 export class DataTextAreaConfig {
     constructor(_height: number, _texto: string, _pantalla?: ElementRef,_contenedor?: ElementRef) {

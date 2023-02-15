@@ -1,0 +1,3 @@
+Directorio que contiene pantallas de pruebas y/o descatalogadas y cambiadas por otras.
+
+1. frm-oferta-importar -> Rellenar manualmente datos oferta + carga CSV

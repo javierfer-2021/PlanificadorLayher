@@ -36,17 +36,17 @@ import { FrmConexionesComponent } from './Pantallas/frm-conexiones/frm-conexione
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
 import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
 import { FrmPruebasComponent } from './Pantallas/frm-pruebas/frm-pruebas.component';
-import { FrmOfertaImportarComponent } from './Pantallas/frm-oferta-importar/frm-oferta-importar.component';
-import { FrmOfertaBuscarComponent } from './Pantallas/frm-oferta-buscar/frm-oferta-buscar.component';
+import { FrmOfertaImportarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-importar/frm-oferta-importar.component';
+import { FrmOfertaBuscarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-buscar/frm-oferta-buscar.component';
 import { FrmCargarOfertaComponent } from './Pantallas/frm-cargar-oferta/frm-cargar-oferta.component';
-import { FrmOfertaDetallesComponent } from './Pantallas/frm-oferta-detalles/frm-oferta-detalles.component';
+import { FrmOfertaDetallesComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-detalles/frm-oferta-detalles.component';
 import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-buscar/frm-usuario-buscar.component';
 import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
 import { FrmCompraBuscarComponent } from './Pantallas/Compras/frm-compra-buscar/frm-compra-buscar.component';
 import { FrmCompraImportarComponent } from './Pantallas/Compras/frm-compra-importar/frm-compra-importar.component';
 import { FrmArticulosStockComponent } from './Pantallas/frm-articulos-stock/frm-articulos-stock.component';
 import { FrmIncidenciaComponent } from './Pantallas/frm-incidencia/frm-incidencia.component';
-import { FrmVentasImportarComponent } from './Pantallas/Ventas/frm-ventas-importar/frm-ventas-importar.component';
+import { FrmVentaImportarComponent } from './Pantallas/Ventas/frm-venta-importar/frm-venta-importar.component';
 import { FrmVentaBuscarComponent } from './Pantallas/Ventas/frm-venta-buscar/frm-venta-buscar.component';
 import { FrmVentaDetallesComponent } from './Pantallas/Ventas/frm-venta-detalles/frm-venta-detalles.component';
 
@@ -83,7 +83,7 @@ function initializeApp(appConfig: ConfigService) {
     FrmCompraImportarComponent,
     FrmArticulosStockComponent,
     FrmIncidenciaComponent,
-    FrmVentasImportarComponent,
+    FrmVentaImportarComponent,
     FrmVentaBuscarComponent,
     FrmVentaDetallesComponent
 

@@ -1,1 +1,35 @@
-<p>frm-venta-buscar works!</p>
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+            <!-- Titulo -->
+            <div class="row px-1 py-2 bg-secondary">
+                <div class="col pt-1 px-1 text-white text-center">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-buscar.lblTitulo', 'Lista Salidas (Ventas-Ofertas) incluidas en el Palnificador')}} </div>
+                </div>   
+            </div>  
+
+            <!-- grid lista ofertas -->    
+            <div class="row">
+                <div class="col pt-1 px-1">    
+                    <app-cmp-data-grid #dg [dgConfig]="dgConfig" 
+                        (onDoubleClick_DataGrid)="onDoubleClick_DataGrid()">
+                    </app-cmp-data-grid>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+<!-- <dx-popup *ngIf="popUpVisibleDireccion" 
+    #popUpDireccion (window:resize)="onResize($event)" [fullScreen]="true"
+    [(visible)]="popUpVisibleDireccion" [dragEnabled]="false" [showTitle]="false" [showCloseButton]="true" [closeOnOutsideClick]="false"
+    title="{{traducir('frm-envio-lista.popUpTituloDatosEntrega', 'Direccion Entrega')}}">
+    <app-frm-envio-direccion [idEnvio]="ver_info_envio" (cerrarPopUp)="cerrarPopUpDireccion()"></app-frm-envio-direccion>
+</dx-popup> -->
+

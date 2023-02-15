@@ -6,13 +6,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../Enumeraciones/TipoBoton';
-import { BotonPantalla } from '../../Clases/BotonPantalla';
-import { ColumnDataGrid } from '../../Clases/ColumnDataGrid';
-import { DataGridConfig } from '../../Clases/DataGridConfig';
+import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
+import { ColumnDataGrid } from '../../Clases/Componentes/ColumnDataGrid';
+import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { ArticuloStock } from '../../Clases/Articulo';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
+//import { DxLoadIndicatorModule, DxLoadIndicatorComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-frm-articulos-stock',
@@ -39,6 +40,7 @@ export class FrmArticulosStockComponent implements OnInit {
   ];
 
   WSDatos_Validando: boolean = false;
+  loadIndicatorVisible: boolean = true;
 
   // grid lista de artciculos-stock
   // [IdArticulo, ArticuloNombre, IdAlmacen, NombreAlmacen, Unidades, IdCualidad, NombreCualidad]
@@ -68,7 +70,7 @@ export class FrmArticulosStockComponent implements OnInit {
       visible: true,
     },      
     {
-      dataField: 'ArticuloNombre',
+      dataField: 'NombreArticulo',
       caption: this.traducir('frm-articulos-stock.colNombreArticulo','Descripcion'),
       visible: true,
     },    
@@ -176,27 +178,28 @@ export class FrmArticulosStockComponent implements OnInit {
   
   async cargarStock(){
     if (this.WSDatos_Validando) return;
-    /*
+    
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getOfertas()).subscribe(
+    (await this.planificadorService.getStockArticulos()).subscribe(
       (datos) => {
         if (Utilidades.DatosWSCorrectos(datos)) {
+          this.loadIndicatorVisible = true;
           // asignar valores devuletos
           this.arrayStockArticulos = datos.datos;
           this.dgConfig = new DataGridConfig(this.arrayStockArticulos, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           if (this.arrayStockArticulos.length>0) { this.dgConfig.actualizarConfig(true,false, 'standard',true, true);}
           else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
+          this.loadIndicatorVisible = false;
         }
         else {
-          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-buscar.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
         }
         this.WSDatos_Validando = false;
       }, (error) => {
         this.WSDatos_Validando = false;
-        Utilidades.compError(error, this.router,'frm-ofertas-buscar');
+        Utilidades.compError(error, this.router,'frm-articulos-stock');
       }
     );
-    */
   }
 
   //#endregion 

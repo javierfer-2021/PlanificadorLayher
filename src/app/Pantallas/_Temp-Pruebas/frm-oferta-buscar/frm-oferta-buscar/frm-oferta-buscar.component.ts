@@ -4,23 +4,22 @@ import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
-import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
-import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
-import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
-import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
-import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
-import { Utilidades } from '../../../Utilidades/Utilidades';
-import { Oferta} from '../../../Clases/Oferta';
-import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
+import { ConfiGlobal } from '../../../../Utilidades/ConfiGlobal';
+import { TipoBoton } from '../../../../Enumeraciones/TipoBoton';
+import { BotonPantalla } from '../../../../Clases/Componentes/BotonPantalla';
+import { ColumnDataGrid } from '../../../../Clases/Componentes/ColumnDataGrid';
+import { DataGridConfig } from '../../../../Clases/Componentes/DataGridConfig';
+import { Utilidades } from '../../../../Utilidades/Utilidades';
+import { Oferta} from '../../../../Clases/Oferta';
+import { PlanificadorService } from '../../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 
 @Component({
-  selector: 'app-frm-venta-buscar',
-  templateUrl: './frm-venta-buscar.component.html',
-  styleUrls: ['./frm-venta-buscar.component.css']
+  selector: 'app-frm-oferta-buscar',
+  templateUrl: './frm-oferta-buscar.component.html',
+  styleUrls: ['./frm-oferta-buscar.component.css']
 })
-export class FrmVentaBuscarComponent implements OnInit {
-
+export class FrmOfertaBuscarComponent implements OnInit {
 
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
@@ -34,10 +33,10 @@ export class FrmVentaBuscarComponent implements OnInit {
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-venta-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-venta-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesOferta()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-venta-buscar.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.verPlanificador()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-venta-buscar.btnImportar', 'Importar'), posicion: 4, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-oferta-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-oferta-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesOferta()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-oferta-buscar.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.verPlanificador()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-oferta-buscar.btnImportar', 'Importar'), posicion: 4, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.secondary },
   ];
 
   WSDatos_Validando: boolean = false;
@@ -66,76 +65,76 @@ export class FrmVentaBuscarComponent implements OnInit {
     },
     {
       dataField: 'IdOferta',
-      caption: this.traducir('frm-venta-buscar.colOferta','Oferta'),
+      caption: this.traducir('frm-oferta-buscar.colOferta','Oferta'),
       visible: false,
     },      
     {
       dataField: 'Referencia',
-      caption: this.traducir('frm-venta-buscar.colReferencia','Referencia'),
+      caption: this.traducir('frm-oferta-buscar.colReferencia','Referencia'),
       visible: true,
       //width: 150,
     },    
     {
       dataField: 'Cliente',
-      caption: this.traducir('frm-venta-buscar.colCliente','Cliente'),      
+      caption: this.traducir('frm-oferta-buscar.colCliente','Cliente'),      
       visible: true,
     },
     {
       dataField: 'Contrato',
-      caption: this.traducir('frm-venta-buscar.colContrato','Contrato'),
+      caption: this.traducir('frm-oferta-buscar.colContrato','Contrato'),
       visible: true,      
     },
     {
       dataField: 'IdEstado',
-      caption: this.traducir('frm-venta-buscar.colIdEstado','IdEstado'),
+      caption: this.traducir('frm-oferta-buscar.colIdEstado','IdEstado'),
       visible: false,
     },
     {
       dataField: 'Estado',
-      caption: this.traducir('frm-venta-buscar.colEstado','Estado'),
+      caption: this.traducir('frm-oferta-buscar.colEstado','Estado'),
       visible: true,
     },
     {
       dataField: 'FechaAlta',
-      caption: this.traducir('frm-venta-buscar.colFechaAlta','Fecha Alta'),
+      caption: this.traducir('frm-oferta-buscar.colFechaAlta','Fecha Alta'),
       visible: false,
       dataType: 'date',
     },
     {
       dataField: 'FechaInicio',
-      caption: this.traducir('frm-venta-buscar.colFechaInicio','Fecha Inicio'),
+      caption: this.traducir('frm-oferta-buscar.colFechaInicio','Fecha Inicio'),
       visible: true,
       dataType: 'date',
     },
     {
       dataField: 'FechaFin',
-      caption: this.traducir('frm-venta-buscar.colFechaFin','Fecha Fin'),
+      caption: this.traducir('frm-oferta-buscar.colFechaFin','Fecha Fin'),
       visible: true,
       dataType: 'date',
     },
     {
       dataField: 'Obra',
-      caption: this.traducir('frm-venta-buscar.colObra','Obra'),
+      caption: this.traducir('frm-oferta-buscar.colObra','Obra'),
       visible: true,
     },
     {
       dataField: 'Observaciones',
-      caption: this.traducir('frm-venta-buscar.colObservaciones','Observaciones'),
+      caption: this.traducir('frm-oferta-buscar.colObservaciones','Observaciones'),
       visible: false,
     },
     {
       dataField: 'IdAlmacen',
-      caption: this.traducir('frm-venta-buscar.colIdAlmacen','IdAlmacen'),
+      caption: this.traducir('frm-oferta-buscar.colIdAlmacen','IdAlmacen'),
       visible: false,
     },
     {
       dataField: 'Almacen',
-      caption: this.traducir('frm-venta-buscar.colAlmacen','Almacen'),
+      caption: this.traducir('frm-oferta-buscar.colAlmacen','Almacen'),
       visible: false,
     },   
     {
       dataField: 'NumLineas',
-      caption: this.traducir('frm-venta-buscar.colNumLineas','Num.Lineas'),
+      caption: this.traducir('frm-oferta-buscar.colNumLineas','Num.Lineas'),
       visible: true,
     },                
   ];
@@ -167,7 +166,7 @@ export class FrmVentaBuscarComponent implements OnInit {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // configuracion extra del grid -> mostrar fila total registros
-    this.dg.mostrarFilaSumaryTotal('Referencia','Referencia',this.traducir('frm-venta-buscar.TotalRegistros','Total Ofertas: '),'count');
+    this.dg.mostrarFilaSumaryTotal('Referencia','Referencia',this.traducir('frm-oferta-buscar.TotalRegistros','Total Ofertas: '),'count');
 
     // redimensionar grid, popUp
     setTimeout(() => {
@@ -224,12 +223,12 @@ export class FrmVentaBuscarComponent implements OnInit {
           else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
         }
         else {
-          Utilidades.MostrarErrorStr(this.traducir('frm-ventas-buscar.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-buscar.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
         }
         this.WSDatos_Validando = false;
       }, (error) => {
         this.WSDatos_Validando = false;
-        Utilidades.compError(error, this.router,'frm-ventas-buscar');
+        Utilidades.compError(error, this.router,'frm-ofertas-buscar');
       }
     );
   }
@@ -268,35 +267,37 @@ export class FrmVentaBuscarComponent implements OnInit {
 
   verDetallesOferta(){
     if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
-      Utilidades.MostrarErrorStr(this.traducir('frm-venta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
+      Utilidades.MostrarErrorStr(this.traducir('frm-oferta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
       return;
     }
     let vOferta : Oferta =  this.dg.objSeleccionado();    
     const navigationExtras: NavigationExtras = {
-      state: { PantallaAnterior: 'frm-venta-buscar', oferta: vOferta }
+      state: { PantallaAnterior: 'frm-oferta-buscar', oferta: vOferta }
     };
-    this.router.navigate(['venta_detalle'], navigationExtras);
+    this.router.navigate(['detalles_oferta'], navigationExtras);
+
   }
 
   verPlanificador(){
     // comprobar registro seleecionado
     this.selectedRowsData = this.dg.DataGrid.instance.getSelectedRowsData();
     if ((this.selectedRowsData === null) || (this.selectedRowsData.length === 0)) {
-      Utilidades.MostrarErrorStr(this.traducir('frm-venta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
+      Utilidades.MostrarErrorStr(this.traducir('frm-oferta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
       this.dg.DataGrid.instance.focus(); 
       return;
     } 
     else {
       let vOferta : Oferta =  this.dg.objSeleccionado();    
       const navigationExtras: NavigationExtras = {
-        state: { PantallaAnterior: 'frm-venta-buscar', oferta: vOferta.Referencia }
+        state: { PantallaAnterior: 'frm-oferta-buscar', oferta: vOferta.Referencia }
       };
       this.router.navigate(['pruebas'], navigationExtras);
     }
+
   }
 
   verPantallaImportar() {
-    this.router.navigate(['venta_importar']);
+    this.router.navigate(['importar_oferta']);
   }
 
   //#endregion
@@ -308,5 +309,6 @@ export class FrmVentaBuscarComponent implements OnInit {
   btnMostrarOferta(index:number){
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles Oefrta
   }
+
 
 }

@@ -2,7 +2,7 @@ import { ViewChild } from '@angular/core';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { DxDataGridComponent } from 'devextreme-angular';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { DataGridConfig } from '../../Clases/DataGridConfig';
+import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
 
 @Component({
   selector: 'app-cmp-data-grid',

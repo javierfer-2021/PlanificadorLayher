@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Utilidades } from '../../Utilidades/Utilidades';
-import { BotonIcono } from '../../Clases/BotonIcono';
+import { BotonIcono } from '../../Clases/Componentes/BotonIcono';
 
 @Component({
   selector: 'app-cmp-boton-icono-hrz',

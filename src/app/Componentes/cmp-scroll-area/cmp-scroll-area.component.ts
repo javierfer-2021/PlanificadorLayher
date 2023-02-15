@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DataScrollAreaConfig } from '../../Clases/DataScrollAreaConfig';
+import { DataScrollAreaConfig } from '../../Clases/Componentes/DataScrollAreaConfig';
 
 @Component({
   selector: 'app-cmp-scroll-area',

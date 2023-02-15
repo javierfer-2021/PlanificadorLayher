@@ -1,4 +1,4 @@
-import { TipoBoton } from "../Enumeraciones/TipoBoton";
+import { TipoBoton } from "../../Enumeraciones/TipoBoton";
 
 export class BotonPantalla {
 

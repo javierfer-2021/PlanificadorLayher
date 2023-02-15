@@ -1,1 +1,60 @@
-<p>frm-usuario works!</p>
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 bg-secondary">
+            <div class="col pt-1 px-1 text-white text-center">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-usuario.lblTitulo', 'Detalles Usuario')}} </div>
+            </div>   
+        </div>  
+
+        <!-- Formulario cliente -->
+        <div class="row pt-2">
+            <div id="form-container" class="formulario">
+                <dx-form id="formUsuario" #formOferta [colCount]="3" [formData]="_usuario" labelMode="static">
+                    <dxi-item itemType="group" caption="Datos Oferta" [colCount]="3" [colSpan]="3">
+                        <dxi-item dataField="IdUsuario" [editorOptions]="{disabled: true}">
+                        </dxi-item>
+                        <dxi-item dataField="NombreUsuario" [editorOptions]="{disabled: true}">
+                        </dxi-item>                        
+                        <dxi-item dataField="FechaAlta" [editorOptions]="{disabled: true}">
+                        </dxi-item>
+
+                        <dxi-item dataField="NombrePerfil" [editorOptions]="{disabled: true}">
+                        </dxi-item>
+                        <dxi-item dataField="NombreIdioma" [editorOptions]="{disabled: true}">
+                        </dxi-item>
+                        <dxi-item dataField="Activo" [editorOptions]="{disabled: true}">
+                        </dxi-item>
+
+                        <dxi-item dataField="Email" [editorOptions]="{disabled: true}" [colSpan]="2">
+                        </dxi-item>
+                        <dxi-item dataField="Conectado" [editorOptions]="{disabled: true}">
+                        </dxi-item>
+                    </dxi-item>                   
+                </dx-form>
+            </div>
+        </div>
+
+        <hr>
+        <p>GRID CON PERMISOS - ALMACENES ASOCIADOS</p>
+        <!-- grid lineas cargadas del CSVs -->    
+        <!-- <div class="row">
+            <div class="col pt-1 px-1">    
+                <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+            </div>
+        </div>             -->
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+
+
+
+

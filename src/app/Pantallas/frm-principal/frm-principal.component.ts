@@ -2,10 +2,10 @@ import { Component, OnInit, ComponentFactoryResolver, AfterViewInit, Renderer2 }
 import { NavigationExtras, Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
-import { BotonMenu } from '../../Clases/BotonMenu';
+import { BotonMenu } from '../../Clases/Componentes/BotonMenu';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../Enumeraciones/TipoBoton';
-import { BotonPantalla } from '../../Clases/BotonPantalla';
+import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
 import { PeticionesGeneralesService } from 'src/app/Servicios/PeticionesGeneralesService/peticiones-generales.service';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { TiposGruposWS } from '../../Enumeraciones/TiposGruposWS';
@@ -57,13 +57,12 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonImportarOferta.accion = () => { this.router.navigate(['importar_oferta']); };
     this.botonPlanificador.accion = () => { this.router.navigate(['planificador']); };
 
-    this.botonVentaBuscar.accion = () => { this.router.navigate(['lista_ofertas']); };
+    this.botonVentaBuscar.accion = () => { this.router.navigate(['venta_buscar']); };
     this.botonVentaImportar.accion = () => { this.router.navigate(['venta_importar']); };
-  
     this.botonComprasBuscar.accion = () => { this.router.navigate(['compra_buscar']); };
     this.botonComprasImportar.accion = () => { this.router.navigate(['compra_importar']); };
     this.botonIncidencias.accion = () => { this.router.navigate(['incidencia']); };
-    this.botonStock.accion = () => { this.router.navigate(['ariculos_stock']); };
+    this.botonStock.accion = () => { this.router.navigate(['articulos_stock']); };
     this.botonUsuarios.accion = () => { this.router.navigate(['usuario_buscar']); };
   
 

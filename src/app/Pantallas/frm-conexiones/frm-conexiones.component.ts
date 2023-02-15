@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import * as fs from 'fs-web';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { BotonPantalla } from '../../Clases/BotonPantalla';
+import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
 import { TipoBoton } from '../../Enumeraciones/TipoBoton';
 
 @Component({

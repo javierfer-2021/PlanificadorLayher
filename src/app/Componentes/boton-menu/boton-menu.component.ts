@@ -1,7 +1,7 @@
 import { Component, OnInit, Input} from '@angular/core';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
 import { Permiso } from '../../Clases/Permiso';
-import { BotonMenu } from '../../Clases/BotonMenu';
+import { BotonMenu } from '../../Clases/Componentes/BotonMenu';
 
 @Component({
   selector: 'app-boton-menu',

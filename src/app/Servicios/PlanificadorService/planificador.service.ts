@@ -146,7 +146,7 @@ export class PlanificadorService {
     }
   
     const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
-    return this.http.post(ConfiGlobal.URL + '/api/usuarios/getListaUsuarios', body, Utilidades.getHeaders());
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/getStock', body, Utilidades.getHeaders());
   }  
 
   //#endregion

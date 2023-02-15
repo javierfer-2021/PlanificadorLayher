@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DataTextAreaConfig } from '../../Clases/DataTextAreaConfig';
+import { DataTextAreaConfig } from '../../Clases/Componentes/DataTextAreaConfig';
 
 @Component({
   selector: 'app-cmp-text-area',

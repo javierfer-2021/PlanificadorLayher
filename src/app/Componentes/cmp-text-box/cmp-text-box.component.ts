@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { DxTextBoxComponent } from 'devextreme-angular';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { DataTextBoxConfig } from '../../Clases/DataTextBoxConfig';
+import { DataTextBoxConfig } from '../../Clases/Componentes/DataTextBoxConfig';
 
 @Component({
   selector: 'app-cmp-text-box',
