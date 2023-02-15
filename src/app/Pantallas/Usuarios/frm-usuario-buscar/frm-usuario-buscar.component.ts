@@ -41,15 +41,15 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
   WSDatos_Validando: boolean = false;
 
   // grid lista usuarios
-  // [IdUsuario, Nombre, Apellidos, IdPerfil, NombrePerfil, Login, Password, Activo, FechaAlta]
+  // [IdUsuario, NombreUsuario, IdPerfil, NombrePerfil, Login, Password, IdIdioma, NombreIdioma, Email, Activo, Conectado, FechaAlta]
   arrayUsuarios: Array<Usuario>;
   cols: Array<ColumnDataGrid> = [
     {
       dataField: '',
       caption: '',
-      visible: false,
+      visible: true,
       type: "buttons",
-      width: 40,
+      width: 120,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
@@ -60,25 +60,32 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
             this.btnMostrarUsuario(e.row.rowIndex); 
           }
         },
+        { icon: "edit",
+          hint: "Editar usuario",
+          onClick: (e) => { 
+            this.btnMostrarUsuario(e.row.rowIndex); 
+          }
+        },   
+        { icon: "trash",
+          hint: "Eliminar usuario",
+          onClick: (e) => { 
+            this.btnMostrarUsuario(e.row.rowIndex); 
+          }
+        },                
       ]
     },
     {
       dataField: 'IdUsuario',
-      caption: this.traducir('frm-usuario-buscar.colIdUsuario','Usuario'),
+      caption: this.traducir('frm-usuario-buscar.colIdUsuario','Id.Usuario'),
       visible: false,
     },      
     {
-      dataField: 'Nombre',
+      dataField: 'NombreUsuario',
       caption: this.traducir('frm-usuario-buscar.colNombre','Nombre'),
       visible: true,
     },    
     {
-      dataField: 'Apellidos',
-      caption: this.traducir('frm-usuario-buscar.colApellidos','Apellidos'),      
-      visible: true,
-    },
-    {
-      dataField: 'IdPerfel',
+      dataField: 'IdPerfil',
       caption: this.traducir('frm-usuario-buscar.colIdPerfil','Id.Perfil'),
       visible: false,      
     },
@@ -98,10 +105,32 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       visible: false,
     },
     {
+      dataField: 'IdIdioma',
+      caption: this.traducir('frm-usuario-buscar.colIdIdioma','Id.Idioma'),
+      visible: false,      
+    },
+    {
+      dataField: 'NombreIdioma',
+      caption: this.traducir('frm-usuario-buscar.colNombreIdioma','Idioma'),
+      visible: true,
+    }, 
+    {
+      dataField: 'Email',
+      caption: this.traducir('frm-usuario-buscar.colEmail','Email'),
+      visible: true,
+    },        
+    {
+      dataField: 'Conectado',
+      caption: this.traducir('frm-usuario-buscar.colConectado','Conectado'),
+      visible: false,
+      dataType: 'boolean',
+    },
+    {
       dataField: 'Activo',
       caption: this.traducir('frm-usuario-buscar.colActivo','Activo'),
       visible: true,
-    },                
+      dataType: 'boolean',
+    },                    
     {
       dataField: 'FechaAlta',
       caption: this.traducir('frm-usuario-buscar.colFechaAlta','Fecha Alta'),
@@ -180,9 +209,9 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
 
   async cargarUsuarios(){
     if (this.WSDatos_Validando) return;
-    /*
+
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getOfertas()).subscribe(
+    (await this.planificadorService.getListaUsuarios()).subscribe(
       (datos) => 
       {
         if (Utilidades.DatosWSCorrectos(datos)) 
@@ -195,15 +224,14 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
         }
         else 
         {
-          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-buscar.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-usuario-buscar.msgErrorWS_CargarOfertas','Error web-service obtener usuarios')); 
         }
       this.WSDatos_Validando = false;
       }, (error) => {
         this.WSDatos_Validando = false;
-        Utilidades.compError(error, this.router,'frm-ofertas-buscar');
+        Utilidades.compError(error, this.router,'frm-usuario-buscar');
       }
     );
-    */
   }
 
 

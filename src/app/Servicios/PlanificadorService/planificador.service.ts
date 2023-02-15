@@ -121,4 +121,34 @@ export class PlanificadorService {
   //#endregion
 
 
+  //#region - USUARIOS
+
+  async getListaUsuarios(): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    return this.http.post(ConfiGlobal.URL + '/api/usuarios/getListaUsuarios', body, Utilidades.getHeaders());
+  }  
+
+  //#endregion
+
+
+
+  //#region - STOCK - ARTICULOS
+
+  async getStockArticulos(): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    return this.http.post(ConfiGlobal.URL + '/api/usuarios/getListaUsuarios', body, Utilidades.getHeaders());
+  }  
+
+  //#endregion
+
 }
