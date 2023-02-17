@@ -14,6 +14,7 @@ import { ArticuloStock } from '../../Clases/Articulo';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 //import { DxLoadIndicatorModule, DxLoadIndicatorComponent } from 'devextreme-angular';
+//import {  } from 'devextreme/ui/load_indicator';
 
 @Component({
   selector: 'app-frm-articulos-stock',
