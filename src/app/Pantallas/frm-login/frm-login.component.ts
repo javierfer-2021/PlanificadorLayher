@@ -251,10 +251,21 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
 
           // Se borran los filtros al volver al login
           Utilidades.VarStatic.Filtros = null;
+          
           ConfiGlobal.NombreUsuario = this.dgConfigTxtUsuario.stringTxt;
 
+          // Guardar todos los datos del usuario en varGlobal
+          ConfiGlobal.DatosUsuario = datos.datos.Usuario[0];
+          
+          // Valores tablas de referencia a varGolbal -> reducir llamadas webservice sobre tablas referencia
+          ConfiGlobal.arrayAlmacenesFiltrosBusqueda = datos.datos.Almacenes;
+          ConfiGlobal.arrayAlmacenesActivos = ConfiGlobal.arrayAlmacenesFiltrosBusqueda.slice(1);
+          ConfiGlobal.arrayIdiomas.push({'IdIdioma':1, 'NombreIdioma':'Español', 'iso':'es', 'Activo':1})
+          console.log(ConfiGlobal.arrayAlmacenesActivos)
+          console.log(ConfiGlobal.arrayIdiomas)
+
+
           this.WSLogin_Valido = true;
-  
           this.dgConfigTxtUsuario.validationStatus = 'valid';
           this.dgConfigTxtPassword.validationStatus = 'valid';
   

@@ -4,14 +4,14 @@
     <div #pantalla>
 
             <!-- Titulo -->
-            <div class="row px-1 py-2 bg-secondary">
-                <div class="col pt-1 px-1 text-white text-center">
+            <div class="row px-1 py-2 titulo">
+                <div class="col pt-1 px-1">                    
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-usuario-buscar.lblTitulo', 'Lista de Usuarios de la aplicación')}} </div>
                 </div>   
             </div>  
 
             <!-- grid lista ofertas -->    
-            <div class="row">
+            <div class="row pt-1">
                 <div class="col pt-1 px-1">    
                     <app-cmp-data-grid #dg [dgConfig]="dgConfig" 
                         (onDoubleClick_DataGrid)="onDoubleClick_DataGrid()">

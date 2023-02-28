@@ -1,5 +1,6 @@
 import { Permiso } from "../Clases/Permiso";
 import { environment } from '../../environments/environment';
+import { Usuario } from "../Clases/Usuario";
 
 export class ConfiGlobal {
   
@@ -28,6 +29,7 @@ export class ConfiGlobal {
   public static Usuario: number;
   public static NombreUsuario: string;
   public static sessionId: string;
+  public static DatosUsuario: Usuario;
 
   //#region  - VARIABLES CONFIGURACION -> Obtenidas BD.Tabla [CONFIGURACION_PROG_COMPL]
   public static HttpTimeWait: number;
@@ -92,4 +94,15 @@ export class ConfiGlobal {
     // QR
     public static CharQR = '@'; // '@'
     public static PrefijosQR: Array<string> = [];
+
+
+  //#region -- variables globales para reducir el uso de llamadas en run-time a web-services
+  // Carga de tablas de referencia
+  public static arrayAlmacenesFiltrosBusqueda =[];
+  public static arrayAlmacenesActivos =[];
+  public static arrayIdiomas =[];
+  public static arrayEstadosDocumentos =[];
+  public static arrayTiposDocumentos =[];
+
+  //#endregion -- variables globales para reducir el uso de llamadas en run-time a web-services
 }

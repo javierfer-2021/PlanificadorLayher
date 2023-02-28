@@ -1,16 +1,20 @@
 export class Usuario {
     IdUsuario: number;
     NombreUsuario: string;
-    IdPerfil: number;
-    NombrePerfil: string;
+    Email: string;   
     Login: string;
-    Password: number;
+    Password: string;
     IdIdioma: number;
     NombreIdioma: string;
-    Email: string;
-    Activo: boolean;
-    Conectado: boolean;
     FechaAlta: Date;
+    FechaBaja: Date;
+    Baja: boolean;    
+    Conectado: boolean;
+    Administrador: boolean;
+    VerAlmacenes : boolean;
+    idAlmacenDefecto: number;
+    NombreAlmacenDefecto: String;
+    Skin: string;
   }
   
 

@@ -36,7 +36,7 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   botonStock: BotonMenu =  { icono: './assets/icons/stock.svg', texto: 'Articulos-Stock', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false, accion: () => { } };
   botonUsuarios: BotonMenu =  { icono: './assets/icons/usuario.svg', texto: 'Usuarios', ruta: '', nombre: 'botonUsuarios', notificacion: 0, desactivado: false, accion: () => { } };
   
-  botonPlanificador: BotonMenu = { icono: './assets/icons/Picking A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } }; 
+  botonPlanificador: BotonMenu = { icono: './assets/icons/Mas A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } }; 
   botonPruebas: BotonMenu =  { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
   
   btnAciones: BotonPantalla[] =  [

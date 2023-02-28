@@ -41,7 +41,7 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
   WSDatos_Validando: boolean = false;
 
   // grid lista usuarios
-  // [IdUsuario, NombreUsuario, IdPerfil, NombrePerfil, Login, Password, IdIdioma, NombreIdioma, Email, Activo, Conectado, FechaAlta]
+  // [IdUsuario,Login,Password,NombreUsuario,FechaAlta,FechaBaja,Baja,Email,Conectado,IdIdioma,NombreIdioma,Skin,Administrador,idAlmacenDefecto,NombreAlmacenDefecto,VerAlmacenes]
   arrayUsuarios: Array<Usuario>;
   cols: Array<ColumnDataGrid> = [
     {
@@ -85,19 +85,9 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       visible: true,
     },    
     {
-      dataField: 'IdPerfil',
-      caption: this.traducir('frm-usuario-buscar.colIdPerfil','Id.Perfil'),
-      visible: false,      
-    },
-    {
-      dataField: 'NombrePerfil',
-      caption: this.traducir('frm-usuario-buscar.colNombrePerfil','Perfil'),
-      visible: true,
-    },
-    {
       dataField: 'Login',
       caption: this.traducir('frm-usuario-buscar.colLogin','Login'),
-      visible: false,
+      visible: true,      
     },
     {
       dataField: 'Password',
@@ -115,15 +105,26 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       visible: true,
     }, 
     {
-      dataField: 'Email',
-      caption: this.traducir('frm-usuario-buscar.colEmail','Email'),
-      visible: true,
-    },        
+      dataField: 'idAlmacenDefecto',
+      caption: this.traducir('frm-usuario-buscar.colIdAlmacenDefecto','Id.Almacen'),
+      visible: false,      
+    },
     {
-      dataField: 'Conectado',
-      caption: this.traducir('frm-usuario-buscar.colConectado','Conectado'),
+      dataField: 'NombreAlmacenDefecto',
+      caption: this.traducir('frm-usuario-buscar.colNombreAlmacenDefecto','Almacen Def.'),
+      visible: true,
+    }, 
+    {
+      dataField: 'FechaAlta',
+      caption: this.traducir('frm-usuario-buscar.colFechaAlta','Fecha Alta'),
       visible: false,
-      dataType: 'boolean',
+      dataType: 'date',
+    },
+    {
+      dataField: 'FechaBaja',
+      caption: this.traducir('frm-usuario-buscar.colFechaBaja','Fecha Baja'),
+      visible: false,
+      dataType: 'date',
     },
     {
       dataField: 'Activo',
@@ -132,11 +133,33 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       dataType: 'boolean',
     },                    
     {
-      dataField: 'FechaAlta',
-      caption: this.traducir('frm-usuario-buscar.colFechaAlta','Fecha Alta'),
+      dataField: 'Administrador',
+      caption: this.traducir('frm-usuario-buscar.colAdministrador','Administrador'),
+      visible: true,
+      dataType: 'boolean',
+    },  
+    {
+      dataField: 'VerAlmacenes',
+      caption: this.traducir('frm-usuario-buscar.colVerAlmacenes','Ver Almacenes'),
+      visible: true,
+      dataType: 'boolean',
+    },  
+    {
+      dataField: 'Email',
+      caption: this.traducir('frm-usuario-buscar.colEmail','Email'),
       visible: false,
-      dataType: 'date',
+    },        
+    {
+      dataField: 'Conectado',
+      caption: this.traducir('frm-usuario-buscar.colConectado','Conectado'),
+      visible: false,
+      dataType: 'boolean',
     },
+    {
+      dataField: 'Skin',
+      caption: this.traducir('frm-usuario-buscar.colSkin','Skin'),
+      visible: false,
+    },                    
   ];
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
 
@@ -265,9 +288,7 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
   //#endregion
 
   onDoubleClick_DataGrid(){
-    // añadir codigo doble-click sobre el grid
-    alert('ir a pantalla datos usuario - edicion');
-    //this.verPlanificador();  
+    this.btnDetallesUsuario(); 
   }
 
   btnMostrarUsuario(index:number){

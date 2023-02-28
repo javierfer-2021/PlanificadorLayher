@@ -29,7 +29,9 @@ import {
   DxTabPanelModule,
   DxSortableModule,
   DxTemplateModule,
-  DxDropDownBoxModule
+  DxDropDownBoxModule,
+  DxListModule
+
 } from 'devextreme-angular';
 
 @NgModule({
@@ -62,7 +64,9 @@ import {
     DxTabPanelModule,
     DxSortableModule,
     DxTemplateModule,
-    DxDropDownBoxModule
+    DxDropDownBoxModule,
+
+    DxListModule,
   ],
   exports: [
     DxButtonModule,
@@ -91,7 +95,9 @@ import {
     DxTabPanelModule,
     DxSortableModule,
     DxTemplateModule,
-    DxDropDownBoxModule
+    DxDropDownBoxModule,
+
+    DxListModule,
   ]
 })
 export class DevextremeModule { }

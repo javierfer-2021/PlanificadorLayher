@@ -11,8 +11,10 @@ import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Usuario } from '../../../Clases/Usuario';
+import { Almacen,Idioma } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
+import { DxFormComponent, DxPopupComponent } from 'devextreme-angular';
+import { DxListModule, DxListComponent } from 'devextreme-angular/ui/list';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
@@ -37,30 +39,35 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-usuario.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Cancelar'), posicion: 2, accion: () => {this.btnCancelarOferta()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-usuario.btnSalir', 'Cancelar'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Guardar'), posicion: 2, accion: () => {this.btnCancelarOferta()}, tipo: TipoBoton.success },
   ];
   
   WSDatos_Validando: boolean = false;
   WSEnvioCsv_Valido: boolean = false;
 
   _usuario: Usuario = new(Usuario);
-  // arrayTiposEstadoOferta: Array<EstadoOferta> = [];  
-  // arrayAlmacenes: Array<Almacen> = [];  
+  arrayIdiomas: Array<Idioma> = ConfiGlobal.arrayIdiomas;  
+  arrayAlmacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesActivos;  
+
+  arrayAlmacenesDisponibles: Array<Almacen> = ConfiGlobal.arrayAlmacenesActivos;  
+  arrayAlmacenesAsignados: Array<Almacen> = [];
+
+  checkBoxBajaOptions: any;
 
   //TODO - Cambiar por permisos
-  // // grid lineas oferta
+  // // grid almacenes asoiados
   // // [IdOferta,  IdLinea, IdArticulo, ArticuloNombre, CantidadPedida, CantidadReservada, CantidadDisponible, FechaActualizacion ]
   // arrayLineasOferta: Array<OfertaLinea>;
   // cols: Array<ColumnDataGrid> = [
   //   {
-  //     dataField: 'IdOferta',
-  //     caption: this.traducir('frm-usuario.colIdOferta','Oferta'),
+  //     dataField: 'IdAlmacen',
+  //     caption: this.traducir('frm-usuario.colIdAlmacen','id.Almacen'),
   //     visible: false,
   //   }, 
   //   {
-  //     dataField: 'IdLinea',
-  //     caption: this.traducir('frm-usuario.colIdLinea','Linea'),
+  //     dataField: 'NombreAlmacen',
+  //     caption: this.traducir('frm-usuario.colNombreAlmacen','Almacen'),
   //     visible: false,
   //   },     
   //   {
@@ -116,6 +123,23 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       if (( nav.usuario !== null) && ( nav.usuario !== undefined)) {
         this._usuario= nav.usuario;
       }
+
+      // gestion dinamica checkBox BAJA del form
+      this.checkBoxBajaOptions = {
+        // text: 'Show Address',
+        // value: true,
+        disabled: false,
+        onValueChanged: (e) => {
+          if ((this._usuario!=null) && (this._usuario!=undefined)) {
+            if (e.component.option('value')) {
+              this._usuario.FechaBaja= new Date();
+            } else {              
+              this._usuario.FechaBaja= null;
+            } 
+          }
+        },
+      };    
+
     }
 
 
@@ -216,6 +240,23 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   btnCancelarOferta(){
     alert('Función no implementada')
   }
+
+
+  onDragStart(e) {
+    e.itemData = e.fromData[e.fromIndex];
+  }
+
+  onAdd(e) {
+    e.toData.splice(e.toIndex, 0, e.itemData);
+  }
+
+  onRemove(e) {
+    e.fromData.splice(e.fromIndex, 1);
+  }
+
 }
+
+
+
 
 

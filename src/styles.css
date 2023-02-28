@@ -44,3 +44,10 @@ default:
 .dxcenter .dx-texteditor-input {
     text-align: center;
 }
+
+.titulo {
+    text-align: center;
+    background-color: lightgray;
+    color: black;
+    border-bottom: 2px #2b2b2c solid;    
+}

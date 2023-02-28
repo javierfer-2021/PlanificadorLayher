@@ -4,8 +4,8 @@
     <div #pantalla>
 
         <!-- Titulo -->
-        <div class="row px-1 py-2 bg-secondary">
-            <div class="col pt-1 px-1 text-white text-center">
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-usuario.lblTitulo', 'Detalles Usuario')}} </div>
             </div>   
         </div>  
@@ -13,33 +13,45 @@
         <!-- Formulario cliente -->
         <div class="row pt-2">
             <div id="form-container" class="formulario">
-                <dx-form id="formUsuario" #formOferta [colCount]="3" [formData]="_usuario" labelMode="static">
-                    <dxi-item itemType="group" caption="Datos Oferta" [colCount]="3" [colSpan]="3">
-                        <dxi-item dataField="IdUsuario" [editorOptions]="{disabled: true}">
-                        </dxi-item>
-                        <dxi-item dataField="NombreUsuario" [editorOptions]="{disabled: true}">
-                        </dxi-item>                        
-                        <dxi-item dataField="FechaAlta" [editorOptions]="{disabled: true}">
-                        </dxi-item>
+                <dx-form id="formUsuario" #formUsuario [colCount]="5" [formData]="_usuario" labelMode="static">
 
-                        <dxi-item dataField="NombrePerfil" [editorOptions]="{disabled: true}">
-                        </dxi-item>
-                        <dxi-item dataField="NombreIdioma" [editorOptions]="{disabled: true}">
-                        </dxi-item>
-                        <dxi-item dataField="Activo" [editorOptions]="{disabled: true}">
-                        </dxi-item>
+                    <dxi-item itemType="group" caption="Datos Usuario" [colCount]="4" [colSpan]="4">
+                        
+                        <dxi-item dataField="IdUsuario" [editorOptions]="{disabled: true}"></dxi-item>
+                        <dxi-item dataField="FechaAlta" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
+                        <dxi-item dataField="FechaBaja" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
+                        <dxi-item dataField="Baja" editorType="dxCheckBox" [editorOptions]="checkBoxBajaOptions"></dxi-item>
 
-                        <dxi-item dataField="Email" [editorOptions]="{disabled: true}" [colSpan]="2">
-                        </dxi-item>
-                        <dxi-item dataField="Conectado" [editorOptions]="{disabled: true}">
-                        </dxi-item>
-                    </dxi-item>                   
+                        <dxi-item dataField="NombreUsuario" [colSpan]="2" [editorOptions]="{disabled: false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE USUARIO"></dxi-validation-rule>
+                        </dxi-item>                           
+                        <dxi-item dataField="Login" [colSpan]="1" [editorOptions]="{disabled: false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo LOGIN"></dxi-validation-rule>
+                        </dxi-item>                          
+                        <dxi-item dataField="Password" [colSpan]="1" [editorOptions]="{disabled: true, mode: 'password'}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo PASSWORD"></dxi-validation-rule>
+                        </dxi-item>  
+
+                        <dxi-item dataField="IdIdioma" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayIdiomas, displayExpr:'NombreIdioma', valueExpr:'IdIdioma', searchEnabled: true }"></dxi-item>
+                        <dxi-item dataField="idAlmacenDefecto" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }"></dxi-item>
+                        <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled: false}" [colSpan]="2"></dxi-item>
+                    </dxi-item>         
+                    
+                    
+                    <dxi-item itemType="group" caption="Permisos" [colCount]="1" [colSpan]="1">
+                        <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="Ver Almacenes" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <!-- <dxi-item itemType="empty" [colSpan]="2 "></dxi-item> -->
+                    </dxi-item>
+
+
                 </dx-form>
             </div>
         </div>
 
         <hr>
-        <p>GRID CON PERMISOS - ALMACENES ASOCIADOS</p>
+
+        <p>{{traducir('frm-usuario.lblAlmacenesAsignados', 'Almacenes asignados para planificación')}} </p>
         <!-- grid lineas cargadas del CSVs -->    
         <!-- <div class="row">
             <div class="col pt-1 px-1">    
@@ -47,6 +59,42 @@
             </div>
         </div>             -->
 
+        <div class="row">
+            <div class="col pt-1 px-2 m-2 border rounded">          
+                <dx-list
+                    [dataSource]="arrayAlmacenesDisponibles"
+                    [repaintChangesOnly]="true"
+                    keyExpr="IdAlmacen"
+                    displayExpr="NombreAlmacen">
+                        <dxo-item-dragging
+                        group="almacenes"
+                        [data]="arrayAlmacenesDisponibles"
+                        [allowReordering]="false"
+                        [onDragStart]="onDragStart"
+                        [onAdd]="onAdd"
+                        [onRemove]="onRemove"
+                    >
+                    </dxo-item-dragging>                    
+                </dx-list>
+            </div>
+            <div class="col pt-1 px-2 m-2 border rounded">
+                <dx-list
+                    [dataSource]="arrayAlmacenesAsignados"
+                    [repaintChangesOnly]="true"
+                    keyExpr="IdAlmacen"
+                    displayExpr="NombreAlmacen">
+                        <dxo-item-dragging
+                        group="almacenes"
+                        [data]="arrayAlmacenesAsignados"
+                        [allowReordering]="false"
+                        [onDragStart]="onDragStart"
+                        [onAdd]="onAdd"
+                        [onRemove]="onRemove"
+                    >
+                    </dxo-item-dragging>                    
+                </dx-list>                
+            </div>
+        </div>
     </div>
 </div>
 
