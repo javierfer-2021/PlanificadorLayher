@@ -1,20 +1,23 @@
 // Tipos y clases referentes a la gestión de entradas (COMPRAS) para el planificador
 export class Entrada {
     IdEntrada: number;
-    IdERP: number;
+    IdEntradaERP: number;
     Contrato: string;
     Referencia: string;
     FechaAlta: string;
     FechaPrevista: Date;
     FechaConfirmada: Date;   
     IdEstado: number;
-    Estado: string;
+    NombreEstado: string;
     IdProveedor: number;
     IdProveedorERP: string;
     NombreProveedor: string;
     Observaciones: string;
     IdAlmacen: number;
-    Almacen: string;
+    NombreAlmacen: string;
+    IdTipoDocumento: number;
+    NombreTipoDocumento: string;
+    Confirmada: boolean;
     NumLineas: number;
   }
 

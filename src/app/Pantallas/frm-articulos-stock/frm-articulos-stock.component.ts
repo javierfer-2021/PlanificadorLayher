@@ -3,18 +3,20 @@ import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
-import { ColumnDataGrid } from '../../Clases/Componentes/ColumnDataGrid';
+import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
 import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
+import { ColumnDataGrid } from '../../Clases/Componentes/ColumnDataGrid';
+import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';
+import { DataSelectBoxConfig } from '../../Clases/Componentes/DataSelectBoxConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { ArticuloStock } from '../../Clases/Articulo';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
-//import { DxLoadIndicatorModule, DxLoadIndicatorComponent } from 'devextreme-angular';
-//import {  } from 'devextreme/ui/load_indicator';
+import { Almacen } from 'src/app/Clases/Maestros';
+
 
 @Component({
   selector: 'app-frm-articulos-stock',
@@ -33,6 +35,7 @@ export class FrmArticulosStockComponent implements OnInit {
   @ViewChild('pantalla') pantalla: ElementRef;
 
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
+  @ViewChild('sbAlmacenes', { static: false }) sbAlmacenes: CmdSelectBoxComponent; 
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-articulos-stock.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
@@ -43,8 +46,9 @@ export class FrmArticulosStockComponent implements OnInit {
   WSDatos_Validando: boolean = false;
   loadIndicatorVisible: boolean = true;
 
-  // grid lista de artciculos-stock
-  // [IdArticulo, ArticuloNombre, IdAlmacen, NombreAlmacen, Unidades, IdCualidad, NombreCualidad]
+  
+  // grid lista de artciculos-stock 
+  // [IdAriculo, NombreArticulo, IdAlmacen, NombreAlmacen, Unidades, IdCualidad, NombreCualidad, Secundario]
   arrayStockArticulos: Array<ArticuloStock>;
   cols: Array<ColumnDataGrid> = [
     {
@@ -90,27 +94,29 @@ export class FrmArticulosStockComponent implements OnInit {
       caption: this.traducir('frm-articulos-stock.colUnidades','Unidades'),
       visible: true,
     },
-    // {
-    //   dataField: 'IdCualidad',
-    //   caption: this.traducir('frm-articulos-stock.colIdCualidad','IdCualidad'),
-    //   visible: false,
-    // },
-    // {
-    //   dataField: 'NombreCualidad',
-    //   caption: this.traducir('frm-articulos-stock.colNombreCualidad','NombreCualidad'),
-    //   visible: false,
-    // },
-    // {
-    //   dataField: 'FechaStock',
-    //   caption: this.traducir('frm-articulos-stock.colFechaStock','Fecha Stock'),
-    //   visible: false,
-    //   dataType: 'date',
-    // },
+    {
+      dataField: 'IdCualidad',
+      caption: this.traducir('frm-articulos-stock.colIdCualidad','IdCualidad'),
+      visible: false,
+    },
+    {
+      dataField: 'NombreCualidad',
+      caption: this.traducir('frm-articulos-stock.colNombreCualidad','Cualidad'),
+      visible: false,
+    },
+    {
+      dataField: 'Secundario',
+      caption: this.traducir('frm-articulos-stock.colFechaStock','Secundario'),
+      visible: true,
+    },
   ];
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
-
   selectedRowsData = [];
 
+  // combo filtro almacenes
+  almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
+  sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
+  
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -127,21 +133,24 @@ export class FrmArticulosStockComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarStock();
+    //this.cargarStock();
   }
 
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-
     // configuracion extra del grid -> mostrar fila total registros
-    this.dg.mostrarFilaSumaryTotal('Referencia','Referencia',this.traducir('frm-articulos-stock.TotalRegistros','Total Ofertas: '),'count');
+    this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-articulos-stock.TotalRegistros','Total Registros: '),'count');
 
     // redimensionar grid, popUp
     setTimeout(() => {
       this.dg.panelBusqueda(true);
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfig.alturaMaxima));
     }, 200);
+
+    // seleccion por defecto Todos los almacenes -> evento cambio carga datos.
+    this.sbAlmacenes.SelectBox.value=this.almacenes[0].IdAlmacen;
+    
     // foco
     this.dg.DataGrid.instance.focus();    
     // eliminar error debug ... expression has changed after it was checked.
@@ -177,23 +186,23 @@ export class FrmArticulosStockComponent implements OnInit {
 
   //#region -- web_services
   
-  async cargarStock(){
+  async cargarStock(almacen:number){
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getStockArticulos()).subscribe(
+    (await this.planificadorService.getStockArticulos(almacen)).subscribe(
       (datos) => {
         if (Utilidades.DatosWSCorrectos(datos)) {
           this.loadIndicatorVisible = true;
           // asignar valores devuletos
           this.arrayStockArticulos = datos.datos;
           this.dgConfig = new DataGridConfig(this.arrayStockArticulos, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          if (this.arrayStockArticulos.length>0) { this.dgConfig.actualizarConfig(true,false, 'standard',true, true);}
+          if (this.arrayStockArticulos.length>0) { this.dgConfig.actualizarConfig(true,false, 'virtual',true, true);}
           else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
           this.loadIndicatorVisible = false;
         }
         else {
-          Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorWS_CargarArticulosStock','Error web-service obtener lista Articulos-Stock')); 
         }
         this.WSDatos_Validando = false;
       }, (error) => {
@@ -240,4 +249,7 @@ export class FrmArticulosStockComponent implements OnInit {
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles 
   }
 
+  onValueChanged_ComboAlmacen(){
+    this.cargarStock(this.sbAlmacenes.SelectBox.value);
+  }
 }

@@ -46,8 +46,9 @@ default:
 }
 
 .titulo {
-    text-align: center;
-    background-color: lightgray;
+    /*text-align: center;*/
+    padding-left: 5px;
+    background-color: rgb(233, 231, 231);
     color: black;
     border-bottom: 2px #2b2b2c solid;    
 }

@@ -1,17 +1,22 @@
 <div class="contenedor" style="padding-bottom:50px">
-    <div class="row w-100 p-2 m-0" style="padding-bottom:50px; border-bottom: 2px #3B71CA solid; background-color: #d5f1f9;">
-        <div class="col-6">
-            <p class="fs-9 px-1 m-0 float-start"><b>Vstock PLANIFICADOR</b> ({{ version }})</p>
+
+    <div class="row w-100 p-1 m-0" style="padding-bottom:50px; border-bottom: 2px #3B71CA solid; background-color: #FFFFFF;">
+        <div class="col-6 px-2" style="padding-top: 5px;">
+            <img src="../../../assets/img/logo_Vstock.svg" width="120" height="30" alt="VStock">
+            &nbsp;Planificador Layher <span style="font-size: 0.8em;">({{ version }})</span>
+            <!-- <p class="fs-9 px-1 m-0 float-start"><b>Vstock PLANIFICADOR</b> ({{ version }})</p> -->
         </div>
-        <div class="col-6">
-            <p class="fs-9 px-1 m-0" style="float: right;"><b>Usuario:</b> {{ nombreUsuario }}</p>
+        <div class="col-6 px-2" style="text-align:end; padding-top: 5px;">
+            <i class="bi bi-person-fill" style="font-size: 1.2rem; color: #3B71CA;"></i>&nbsp;{{ nombreUsuario }}
+            <!-- <p class="fs-9 px-1 m-0" style="float: right;"><b>Usuario:</b> {{ nombreUsuario }}</p> -->
         </div>
     </div>
 
     <!-- botones menu -->
     <mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSGetInci_Validando)"></mat-progress-bar>
     <div class="container">
-        <p>Botones prototipo Inicial</p>
+
+        <!-- <p>Botones prototipo Inicial</p>
         <div class="row pt-2">
             <div class="container">
                 <div class="row">
@@ -39,9 +44,9 @@
         </div>
         
         <hr>
-        <p>Botones beta 1</p>
+        <p>Botones beta 1</p> -->
 
-        <div class="row">
+        <div class="row pt-2">
             <div class="container">
                 <div class="row">
                     <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">

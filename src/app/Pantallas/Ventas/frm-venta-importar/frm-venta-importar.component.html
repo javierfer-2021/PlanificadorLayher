@@ -4,25 +4,25 @@
     <div #pantalla>
 
         <!-- Titulo -->
-        <div class="row px-1 py-2 bg-secondary">
-            <div class="col pt-1 px-1 text-white text-center">
-                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-importar.lblTitulo', 'Importar Ventas-Ofertas')}} </div>
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-importar.lblTitulo', 'Importación contratos SALIDA de material (Ventas,Alquileres,Traspasos)')}} </div>
             </div>   
         </div>  
 
-        <!-- TextBox Referencia venta a importar + botones Buscar | limpiar -->
+        <!-- TextBox contrato venta/alquiler a importar + botones Buscar | limpiar -->
         <div class="row px-1 pt-1">
             <div class="col-2 px-2 pt-1 text-right">
-                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-importar.lblNumDocumento', 'Num.Documento')}} </div>    
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-importar.lblNumContrato', 'Num.Contrato')}} </div>    
             </div>
-            <div class="col-6 px-1 pt-1">
-                <dx-text-box #txtDocumento class="w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [height]="30" [showClearButton]="false" 
-                [(ngModel)]="str_txtDocumento"
-                [ngStyle]="{'background-color': color_txtDocumento}" 
+            <div class="col-6 px-1">
+                <dx-text-box #txtContrato class="w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [height]="30" [showClearButton]="false" 
+                [(ngModel)]="str_txtContrato"
+                [ngStyle]="{'background-color': color_txtContrato}" 
                 (onEnterKey)="onEnterKey_campo()" 
                 (onValueChanged)="onValueChanged_campo()"  
                 format="text"  
-                [readOnly]="documentoValido">
+                [readOnly]="contratoValido">
             </dx-text-box>
             </div>                        
             <div class="col-2 px-1"><app-cmp-boton-icono-hrz [btnIconoHrz]="btnIconoBuscar"></app-cmp-boton-icono-hrz></div>
@@ -30,56 +30,72 @@
         </div>
 
         <!-- Datos de la venta  obtenidos del ERP-->
-        <div *ngIf="documentoValido">  
+        <div *ngIf="contratoValido">  
             <hr class="my-1">
-            <div *ngIf="aviso" class="row p-0 px-1" style="background-color: #e37f1873;">
-                <div class="col text-center">Aviso! Documento ya importado en el planificador.</div>
-            </div>     
-            <!-- Formulario Datos Compra -->
-            <div class="row pt-0">
-                <div id="form-container" class="formulario">
-                    <dx-form id="formOferta" #formOferta [colCount]="3" [formData]="_oferta" labelMode="static">
+            <div class="row pt-1 px-2" style="border-bottom: 1px dotted darkgray">
+                <div class="col px-1">Datos contrato {{str_txtTipoDocumento}} a importar</div>
+                <div *ngIf="aviso" class="col px-1" style="color: red;text-align:end;">                    
+                    <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.2rem; color:red;"></i>&nbsp;Contrato ya importado en el planificador.
+                </div>
+                <!-- <div *ngIf="aviso" class="row p-0 px-1" style="background-color: #e37f1873;">
+                    <div class="col text-center">Aviso! Contrato ya importado en el planificador.</div>
+                </div>    -->
+            </div>
+  
 
-                        <dxi-item itemType="group" caption="Datos {{str_txtTipoDocumento}}" [colCount]="3" [colSpan]="3">
-                            <dxi-item dataField="Referencia" [editorOptions]="{disabled: false}">
-                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo REFERENCIA"></dxi-validation-rule>
+            <!-- Formulario Datos Compra -->
+            <div class="row pt-2">
+                <div id="form-container" class="formulario">
+                    <dx-form id="formSalida" #formSalida [colCount]="3" [formData]="_salida" labelMode='static' labelLocation="left">
+
+                        <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
+
+                            <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
                             </dxi-item>
-                            <dxi-item dataField="IdEstado" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoOferta, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
-                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO OFERTA"></dxi-validation-rule>
+                            <dxi-item dataField="IdEstado" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoSalida, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO"></dxi-validation-rule>
                             </dxi-item>
                             <dxi-item dataField="FechaAlta" [editorOptions]="{disabled: true}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ALTA"></dxi-validation-rule>
                             </dxi-item>
 
-                            <dxi-item dataField="Cliente" [editorOptions]="{disabled: false}">
-                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CLIENTE"></dxi-validation-rule>
-                            </dxi-item>
-                            <dxi-item dataField="Contrato" [editorOptions]="{disabled: false}">
-                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
+                            <dxi-item dataField="IdCliente" [colSpan]="1" [editorOptions]="{disabled: true}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID CLIENTE"></dxi-validation-rule>
+                            </dxi-item>                            
+                            <dxi-item dataField="NombreCliente" [colSpan]="2" [editorOptions]="{disabled: false}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE CLIENTE"></dxi-validation-rule>
+                            </dxi-item>                            
+
+                            <dxi-item dataField="Referencia" [editorOptions]="{disabled: false}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo REFERENCIA"></dxi-validation-rule>
                             </dxi-item>
                             <dxi-item dataField="Obra" [editorOptions]="{disabled: false}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo OBRA"></dxi-validation-rule>
                             </dxi-item>
+                            <dxi-item itemType="empty" [colSpan]="1"></dxi-item>
 
+                            <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
+                            </dxi-item>
                             <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
                             </dxi-item>
                             <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
-                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
-                            </dxi-item>
-                            <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
-                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
+                                <dxi-validation-rule *ngIf="requerirFechaFin" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
                             </dxi-item>
 
-                            <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="3"></dxi-item>
+                            <dxi-item dataField="Planificar" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                            <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
+                            <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
 
-                        </dxi-item>                   
+                        <!-- </dxi-item>                    -->
                     </dx-form>
                 </div>
             </div>
                   
             <!-- grid lineas venta cargadas del CSVs/ERP -->    
-            <div class="row px-1">
+            <div class="row px-2 pt-1">
                 <div class="col pt-1 px-1">    
                     <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
                 </div>

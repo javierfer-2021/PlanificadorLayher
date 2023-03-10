@@ -1,0 +1,20 @@
+<dx-select-box #SelectBox style="width: 100%;" class="fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16 p-0 my-0" [showClearButton]="false" [height]="30"
+    placeholder="{{dgConfigSB.placeholder}}"
+    [ngStyle]="{'background-color': dgConfigSB.color}" 
+    [readOnly]="dgConfigSB.readOnly" 
+    [dataSource]="dgConfigSB.dataSource"
+    [displayExpr]="dgConfigSB.displayExpr"
+    [valueExpr]="dgConfigSB.valueExpr"
+    (click)="$event.target.select()" 
+    (onValueChanged)="onValueChanged()"
+    (onEnterKey)="onEnterKey()" 
+    (onFocusOut)="onFocusOut()" 
+    (onFocusIn)="onFocusIn()">
+</dx-select-box>
+
+<!-- 
+[(ngModel)]="dgConfigSB.stringTxt"    
+[validationStatus]="dgConfigSB.validationStatus"    
+label="{{dgConfigSB.label}}"
+labelMode="dgConfigSB.labelMode" 
+-->

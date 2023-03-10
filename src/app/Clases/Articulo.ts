@@ -43,10 +43,11 @@ export class Almacen {
 
 export class ArticuloStock {
   IdArticulo: string;
-  ArticuloNombre: string;
+  NombreArticulo: string;
   IdAlmacen: number;
   NombreAlmacen: string;
   Unidades: number;
   IdCualidad: number;
   NombreCualidad: string;
+  Secundario: boolean;
 }

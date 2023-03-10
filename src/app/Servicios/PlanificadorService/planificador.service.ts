@@ -139,15 +139,55 @@ export class PlanificadorService {
 
   //#region - STOCK - ARTICULOS
 
-  async getStockArticulos(): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async getStockArticulos(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
     }
   
-    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
-    return this.http.post(ConfiGlobal.URL + '/api/articulostock/getStock', body, Utilidades.getHeaders());
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdAlmacen:almacen } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/getListaArticulosStock', body, Utilidades.getHeaders());
   }  
+
+  //#endregion
+
+  //------------------------------------
+
+  //#region - SALIDAS - Importar del ERP
+
+  async cargarSalida_from_ERP(contrato): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { Contrato:contrato } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/cargarSalida_from_ERP', body, Utilidades.getHeaders());
+  }   
+
+  async importarSalida(idSalidaERP,contrato,referencia,idEstado,fechaAlta,fechaInicio,fechaFin,idCliente,idClienteERP,nombreCliente,obra,observaciones,idAlmacen,idTipoDocumento,planificar,lineasSalida ): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSalidaERP:idSalidaERP
+                                                          ,Contrato:contrato
+                                                          ,Referencia:referencia
+                                                          ,IdEstado:idEstado
+                                                          ,FechaAlta:fechaAlta
+                                                          ,FechaInicio:fechaInicio
+                                                          ,FechaFin:fechaFin
+                                                          ,IdCliente:idCliente
+                                                          ,IdClienteERP:idClienteERP
+                                                          ,NombreCiente:nombreCliente
+                                                          ,Obra:obra
+                                                          ,Observaciones:observaciones
+                                                          ,IdAlmacen:idAlmacen
+                                                          ,IdTipoDocumento:idTipoDocumento
+                                                          ,Planificar:planificar
+                                                          ,LineasSalidaERP:lineasSalida
+    } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/importarSalida_ERP', body, Utilidades.getHeaders());
+  }   
 
   //#endregion
 

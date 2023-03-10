@@ -98,6 +98,7 @@ import {
     DxDropDownBoxModule,
 
     DxListModule,
+    DxFormModule,
   ]
 })
 export class DevextremeModule { }

@@ -1,23 +1,26 @@
 // Tipos y clases referentes a la gestión de salidas (VENTAS, ALQUILER) para el planificador
 export class Salida {
     IdSalida: number;
-    IdERP: number;
+    IdSalidaERP: number;
     Contrato: string;
     Referencia: string;
     FechaAlta: string;
     FechaInicio: Date;
     FechaFin: Date;   
     IdEstado: number;
-    Estado: string;
+    NombreEstado: string;
     IdCliente: number;
     IdClienteERP: string;
-    NombreClienter: string;
+    NombreCliente: string;
     Obra: string;
     Observaciones: string;
     IdAlmacen: number;
-    Almacen: string;
+    NombreAlmacen: string;
+    IdTipoDocumento: number;
+    NombreTipoDocumento: string;
     Planificar: boolean;
     NumLineas: number;
+    Aviso?: string;
   }
 
   export class SalidaLinea {
@@ -29,6 +32,18 @@ export class Salida {
     CantidadReservada: number;
     CantidadDisponible: number;
     FechaActualizacion: Date;
+  }
+
+
+  export class SalidaLineaERP {
+    IdSalidaERP: string;
+    IdLinea: number;
+    IdArticuloERP: string
+    IdArticulo: string;
+    NombreArticulo: string;
+    Cantidad: number;
+    Cualidad: number;
+    Aviso: string;
   }
 
   export class EstadoSalida {
