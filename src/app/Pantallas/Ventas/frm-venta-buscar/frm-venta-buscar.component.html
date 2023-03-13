@@ -2,15 +2,18 @@
 
 <div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
     <div #pantalla>
-
+           
             <!-- Titulo -->
-            <div class="row px-1 py-2 bg-secondary">
-                <div class="col pt-1 px-1 text-white text-center">
-                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-buscar.lblTitulo', 'Lista Salidas (Ventas-Ofertas) incluidas en el Palnificador')}} </div>
+            <div class="row px-1 py-2 titulo">
+                <div class="col pt-1 px-1">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-buscar.lblTitulo', 'Lista Salidas incluidas en el Planificador (Ventas-Alquileres-Traspasos)')}} </div>
+                </div>
+                <div class="col-4 pt-0 px-1">
+                    <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
                 </div>   
             </div>  
 
-            <!-- grid lista ofertas -->    
+            <!-- grid lista salidas -->    
             <div class="row">
                 <div class="col pt-1 px-1">    
                     <app-cmp-data-grid #dg [dgConfig]="dgConfig" 
@@ -26,10 +29,10 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
-<!-- <dx-popup *ngIf="popUpVisibleDireccion" 
-    #popUpDireccion (window:resize)="onResize($event)" [fullScreen]="true"
-    [(visible)]="popUpVisibleDireccion" [dragEnabled]="false" [showTitle]="false" [showCloseButton]="true" [closeOnOutsideClick]="false"
-    title="{{traducir('frm-envio-lista.popUpTituloDatosEntrega', 'Direccion Entrega')}}">
-    <app-frm-envio-direccion [idEnvio]="ver_info_envio" (cerrarPopUp)="cerrarPopUpDireccion()"></app-frm-envio-direccion>
+<!-- <dx-popup *ngIf="popUpVisibleDetallesSalida" #popUpDetallesSalida [fullScreen]="true"
+    (window:resize)="onResize($event)" [dragEnabled]="false" [showTitle]="false" [showCloseButton]="false" [closeOnOutsideClick]="false"
+    [(visible)]="popUpVisibleDetallesSalida"
+    title="{{traducir('frm-venta-detalles.popUpTituloDetallesSalida', 'Detalles Contrato Salida')}}">
+    <app-frm-venta-detalles [salida]="salida_seleccionada" (cerrarPopUp)="cerrarPopUpDetallesSalida()"></app-frm-venta-detalles>
 </dx-popup> -->
 

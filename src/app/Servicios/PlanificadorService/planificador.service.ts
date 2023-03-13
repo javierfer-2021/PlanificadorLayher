@@ -189,6 +189,24 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/salidas/importarSalida_ERP', body, Utilidades.getHeaders());
   }   
 
+  async getSalidasAlmacen(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdAlmacen:almacen } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/getListaSalidasAlmacen', body, Utilidades.getHeaders());
+  }  
+
+  async getLineasSalida(idSalida): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSalida:idSalida } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/getLineasSalida', body, Utilidades.getHeaders());
+  }  
+
   //#endregion
 
 }

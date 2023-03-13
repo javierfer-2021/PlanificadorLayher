@@ -215,6 +215,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
           this.color_txtContrato = ConfiGlobal.colorValido;          
           this.str_txtTipoDocumento = this._salida.NombreTipoDocumento;
           this.aviso = (this._salida.Aviso != '');
+          this.requerirFechaFin = (this._salida.IdTipoDocumento == 20);
           this.asignarValoresDefecto();
           
           //Datos Linea

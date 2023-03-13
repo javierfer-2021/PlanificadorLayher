@@ -4,13 +4,19 @@ import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
+import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
+import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';
+import { DataSelectBoxConfig } from '../../../Clases/Componentes/DataSelectBoxConfig';
+
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
-import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
+
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { Oferta} from '../../../Clases/Oferta';
+import { Salida} from '../../../Clases/Salida';
+import { Almacen } from 'src/app/Clases/Maestros';
+
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 
@@ -32,19 +38,21 @@ export class FrmVentaBuscarComponent implements OnInit {
   @ViewChild('pantalla') pantalla: ElementRef;
 
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
+  @ViewChild('sbAlmacenes', { static: false }) sbAlmacenes: CmdSelectBoxComponent; 
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-venta-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-venta-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesOferta()}, tipo: TipoBoton.secondary },
     { icono: '', texto: this.traducir('frm-venta-buscar.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.verPlanificador()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-venta-buscar.btnImportar', 'Importar'), posicion: 4, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-venta-buscar.btnImportar', 'Importar'), posicion: 4, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.success },
   ];
 
   WSDatos_Validando: boolean = false;
 
   // grid lista ofertas
-  // [IdOferta, Referencia, Cliente, Contrato, IdEstado, Estado, FechaAlta, FechaInicio, FechaFin, Obra, Observaciones, IdAlmacen, Almacen, NumLineas]
-  arrayOfertas: Array<Oferta>;
+  // [IdSalida, IdSalidaERP, Contrato, Referencia, FechaAlta, FechaInicio, FechaFin, IdEstado, NombreEstado, IdCliente, IdClienteERP, NombreCliente,
+  //  Obra, Observaciones, IdAlmacen, NombreAlmacen, IdTipoDocumento, NombreTipoDocumento, Planificar, NumLineas, Aviso]
+  arraySalidas: Array<Salida>;
   cols: Array<ColumnDataGrid> = [
     {
       dataField: '',
@@ -57,7 +65,7 @@ export class FrmVentaBuscarComponent implements OnInit {
       fixedPosition: "right",
       buttons: [ 
         { icon: "info",
-          hint: "Ver direccion entrega",
+          hint: "Ver detalles salida",
           onClick: (e) => { 
             this.btnMostrarOferta(e.row.rowIndex); 
           }
@@ -65,26 +73,65 @@ export class FrmVentaBuscarComponent implements OnInit {
       ]
     },
     {
-      dataField: 'IdOferta',
-      caption: this.traducir('frm-venta-buscar.colOferta','Oferta'),
+      dataField: 'IdSalida',
+      caption: this.traducir('frm-venta-buscar.colIdSalida','Id.Salida'),
       visible: false,
     },      
     {
-      dataField: 'Referencia',
-      caption: this.traducir('frm-venta-buscar.colReferencia','Referencia'),
-      visible: true,
-      //width: 150,
-    },    
-    {
-      dataField: 'Cliente',
-      caption: this.traducir('frm-venta-buscar.colCliente','Cliente'),      
-      visible: true,
-    },
+      dataField: 'IdSalidaERP',
+      caption: this.traducir('frm-venta-buscar.colIdSalidaERP','Id.Salida ERP'),
+      visible: false,
+    },      
     {
       dataField: 'Contrato',
       caption: this.traducir('frm-venta-buscar.colContrato','Contrato'),
       visible: true,      
     },
+    {
+      dataField: 'IdTipoDocumento',
+      caption: this.traducir('frm-venta-buscar.colIdTipoDocumento','IdTipoDocumento'),
+      visible: false,
+    },
+    {
+      dataField: 'NombreTipoDocumento',
+      caption: this.traducir('frm-venta-buscar.colNombreTipoDocumento','Tipo Contrato'),
+      visible: true,
+    },   
+    {
+      dataField: 'Planificar',
+      caption: this.traducir('frm-venta-buscar.colPlanificar','Planificar'),
+      visible: true,
+    },      
+    {
+      dataField: 'IdAlmacen',
+      caption: this.traducir('frm-venta-buscar.colIdAlmacen','IdAlmacen'),
+      visible: false,
+    },
+    {
+      dataField: 'NombreAlmacen',
+      caption: this.traducir('frm-venta-buscar.colAlmacen','Almacen'),
+      visible: true,
+    },   
+    {
+      dataField: 'Referencia',
+      caption: this.traducir('frm-venta-buscar.colReferencia','Referencia'),
+      visible: true,
+    },
+    {
+      dataField: 'IdCliente',
+      caption: this.traducir('frm-venta-buscar.colIdCliente','Id.Cliente'),      
+      visible: false,
+    },
+    {
+      dataField: 'IdClienteERP',
+      caption: this.traducir('frm-venta-buscar.colIdClienteERP','Id.ClienteERP'),      
+      visible: true,
+    },
+    {
+      dataField: 'NombreCliente',
+      caption: this.traducir('frm-venta-buscar.colNombreCliente','Nombre Cliente'),      
+      visible: true,
+    },    
     {
       dataField: 'IdEstado',
       caption: this.traducir('frm-venta-buscar.colIdEstado','IdEstado'),
@@ -124,25 +171,19 @@ export class FrmVentaBuscarComponent implements OnInit {
       visible: false,
     },
     {
-      dataField: 'IdAlmacen',
-      caption: this.traducir('frm-venta-buscar.colIdAlmacen','IdAlmacen'),
-      visible: false,
-    },
-    {
-      dataField: 'Almacen',
-      caption: this.traducir('frm-venta-buscar.colAlmacen','Almacen'),
-      visible: false,
-    },   
-    {
       dataField: 'NumLineas',
       caption: this.traducir('frm-venta-buscar.colNumLineas','Num.Lineas'),
       visible: true,
-    },                
+    },             
   ];
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
 
   selectedRowsData = [];
 
+  // combo filtro almacenes
+  almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
+  sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
+  
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -159,7 +200,7 @@ export class FrmVentaBuscarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarOfertas();
+    //this.cargarSalidas(-1);
   }
 
 
@@ -167,13 +208,17 @@ export class FrmVentaBuscarComponent implements OnInit {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // configuracion extra del grid -> mostrar fila total registros
-    this.dg.mostrarFilaSumaryTotal('Referencia','Referencia',this.traducir('frm-venta-buscar.TotalRegistros','Total Ofertas: '),'count');
+    this.dg.mostrarFilaSumaryTotal('IdSalida','Contrato',this.traducir('frm-venta-buscar.TotalRegistros','Total Salidas: '),'count');
 
     // redimensionar grid, popUp
     setTimeout(() => {
       this.dg.panelBusqueda(true);
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfig.alturaMaxima));
     }, 200);
+
+    // seleccion almacen por defecto -> evento cambio carga datos.
+    this.seleccionarAlmacenDefecto();
+    
     // foco
     this.dg.DataGrid.instance.focus();    
     // eliminar error debug ... expression has changed after it was checked.
@@ -209,22 +254,22 @@ export class FrmVentaBuscarComponent implements OnInit {
 
   //#region -- web_services
   
-  async cargarOfertas(){
+  async cargarSalidas(almacen=-1){
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getOfertas()).subscribe(
+    (await this.planificadorService.getSalidasAlmacen(almacen)).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {
           // asignar valores devuletos
-          this.arrayOfertas = datos.datos;
-          this.dgConfig = new DataGridConfig(this.arrayOfertas, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          if (this.arrayOfertas.length>0) { this.dgConfig.actualizarConfig(true,false, 'standard',true, true);}
+          this.arraySalidas = datos.datos;
+          this.dgConfig = new DataGridConfig(this.arraySalidas, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          if (this.arraySalidas.length>0) { this.dgConfig.actualizarConfig(true,false, 'virtual',true, true);}
           else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
         }
         else {
-          Utilidades.MostrarErrorStr(this.traducir('frm-ventas-buscar.msgErrorWS_CargarOfertas','Error web-service obtener ofertas')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-ventas-buscar.msgErrorWS_CargarSalidas','Error web-service obtener Lista Salidas')); 
         }
         this.WSDatos_Validando = false;
       }, (error) => {
@@ -233,30 +278,6 @@ export class FrmVentaBuscarComponent implements OnInit {
       }
     );
   }
-
-  // prueba obtener datos planificador
-  //TODO - ELIMINAR
-  /*
-  async prueba_obtenerDatosPlanificador(oferta: string){
-    //alert('Cargar fichero lineas');
-    if(this.WSDatos_Validando) return;
-
-    this.WSDatos_Validando = true;
-    (await this.planificadorService.getPlanificacion(oferta)).subscribe(
-      datos => {
-        if(Utilidades.DatosWSCorrectos(datos)) {
-          console.log(datos);
-        } else {
-          alert('Error procedimiento almacenado')
-        }
-        this.WSDatos_Validando = false;
-      }, error => {
-        this.WSDatos_Validando = false;
-        console.log(error);
-      }
-    );
-  }  
-  */
 
   //#endregion 
 
@@ -271,9 +292,10 @@ export class FrmVentaBuscarComponent implements OnInit {
       Utilidades.MostrarErrorStr(this.traducir('frm-venta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
       return;
     }
-    let vOferta : Oferta =  this.dg.objSeleccionado();    
+    //TODO- verificar paso parametro salida
+    let vSalida : Salida =  this.dg.objSeleccionado();    
     const navigationExtras: NavigationExtras = {
-      state: { PantallaAnterior: 'frm-venta-buscar', oferta: vOferta }
+      state: { PantallaAnterior: 'frm-venta-buscar', Salida: vSalida }
     };
     this.router.navigate(['venta_detalle'], navigationExtras);
   }
@@ -287,9 +309,10 @@ export class FrmVentaBuscarComponent implements OnInit {
       return;
     } 
     else {
-      let vOferta : Oferta =  this.dg.objSeleccionado();    
+      //TODO- verificar paso parametro salida
+      let vSalida : Salida =  this.dg.objSeleccionado();    
       const navigationExtras: NavigationExtras = {
-        state: { PantallaAnterior: 'frm-venta-buscar', oferta: vOferta.Referencia }
+        state: { PantallaAnterior: 'frm-venta-buscar', oferta: vSalida.Referencia }
       };
       this.router.navigate(['pruebas'], navigationExtras);
     }
@@ -309,4 +332,16 @@ export class FrmVentaBuscarComponent implements OnInit {
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles Oefrta
   }
 
+  seleccionarAlmacenDefecto(){
+    if ((this.almacenes.findIndex(x => x.IdAlmacen == ConfiGlobal.DatosUsuario.idAlmacenDefecto))<0) {
+      this.sbAlmacenes.SelectBox.value=this.almacenes[0].IdAlmacen;
+    }
+    else {      
+      this.sbAlmacenes.SelectBox.value=ConfiGlobal.DatosUsuario.idAlmacenDefecto;
+    }
+  }
+
+  onValueChanged_ComboAlmacen(){
+    this.cargarSalidas(this.sbAlmacenes.SelectBox.value);
+  }  
 }

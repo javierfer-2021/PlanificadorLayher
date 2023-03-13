@@ -261,9 +261,6 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           ConfiGlobal.arrayAlmacenesFiltrosBusqueda = datos.datos.Almacenes;
           ConfiGlobal.arrayAlmacenesActivos = ConfiGlobal.arrayAlmacenesFiltrosBusqueda.slice(1);
           ConfiGlobal.arrayIdiomas.push({'IdIdioma':1, 'NombreIdioma':'Español', 'iso':'es', 'Activo':1})
-          console.log(ConfiGlobal.arrayAlmacenesActivos)
-          console.log(ConfiGlobal.arrayIdiomas)
-
 
           this.WSLogin_Valido = true;
           this.dgConfigTxtUsuario.validationStatus = 'valid';

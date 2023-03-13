@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
@@ -10,9 +10,10 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { Oferta, OfertaLinea, EstadoOferta, Almacen} from '../../../Clases/Oferta';
+import { Salida, SalidaLinea, EstadoSalida } from '../../../Clases/Salida';
+import { Almacen } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
+import { DxFormComponent } from 'devextreme-angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
@@ -20,7 +21,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   templateUrl: './frm-venta-detalles.component.html',
   styleUrls: ['./frm-venta-detalles.component.css']
 })
-export class FrmVentaDetallesComponent implements OnInit {
+export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
 
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
@@ -33,30 +34,48 @@ export class FrmVentaDetallesComponent implements OnInit {
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
   
-  @ViewChild('formOferta', { static: false }) formOferta: DxFormComponent;  
+  @ViewChild('formSalida', { static: false }) formSalida: DxFormComponent;  
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-venta-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Cancelar'), posicion: 2, accion: () => {this.btnCancelarOferta()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarSalida()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnPlanificar', 'Planificar'), posicion: 3, accion: () => {this.btnPlanificarSalida()}, tipo: TipoBoton.success },
   ];
   
   WSDatos_Validando: boolean = false;
   WSEnvioCsv_Valido: boolean = false;
 
-  _oferta: Oferta = new(Oferta);
-  arrayTiposEstadoOferta: Array<EstadoOferta> = [];  
-  arrayAlmacenes: Array<Almacen> = [];  
+  _salida: Salida = new(Salida);
+  arrayTiposEstadoSalida: Array<EstadoSalida> = [];  
+  arrayAlmacenes: Array<Almacen> = [];
+  requerirFechaFin:boolean = false;  
 
-  ficheroCsv: File = null;
-
-  // grid lineas oferta
-  // [IdOferta,  IdLinea, IdArticulo, ArticuloNombre, CantidadPedida, CantidadReservada, CantidadDisponible, FechaActualizacion ]
-  arrayLineasOferta: Array<OfertaLinea>;
+  // grid lineas Salida
+  // [IdSalida,  IdLinea, IdArticulo, NombreArticulo, CantidadPedida, CantidadReservada, CantidadDisponible, FechaActualizacion ]
+  arrayLineasSalida: Array<SalidaLinea>;
   cols: Array<ColumnDataGrid> = [
     {
-      dataField: 'IdOferta',
-      caption: this.traducir('frm-venta-detalles.colIdOferta','Oferta'),
+      dataField: '',
+      caption: '',
+      visible: true,
+      type: "buttons",
+      width: 40,
+      //alignment: "center",
+      fixed: true,
+      fixedPosition: "right",
+      buttons: [ 
+        { icon: "edit",
+          hint: "Editar Linea",
+          onClick: (e) => { 
+            this.btnEditarLineaSalida(e.row.rowIndex); 
+          }
+        },
+      ]
+    },    
+    {
+      dataField: 'IdSalida',
+      caption: this.traducir('frm-venta-detalles.colIdSalida','Salida'),
       visible: false,
     }, 
     {
@@ -70,7 +89,7 @@ export class FrmVentaDetallesComponent implements OnInit {
       visible: true,
     },      
     {
-      dataField: 'ArticuloNombre',
+      dataField: 'NombreArticulo',
       caption: this.traducir('frm-venta-detalles.colNombreArticulo','Descripción'),
       visible: true,
     },    
@@ -114,15 +133,15 @@ export class FrmVentaDetallesComponent implements OnInit {
     { 
       // obtenemos dato identificacion de envio del routing
       const nav = this.router.getCurrentNavigation().extras.state;      
-      if (( nav.oferta !== null) && ( nav.oferta !== undefined)) {
-        this._oferta= nav.oferta;
+      if (( nav.Salida !== null) && ( nav.Salida !== undefined)) {
+        this._salida= nav.Salida;
       }
     }
 
 
   ngOnInit(): void {
     this.cargarCombos();
-    setTimeout(() => {this.cargarLineasOferta();},1000);
+    setTimeout(() => {this.cargarLineasSalida();},1000);
   }
 
   ngAfterViewInit(): void {
@@ -132,7 +151,7 @@ export class FrmVentaDetallesComponent implements OnInit {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
     }, 200);    
     // foco 
-    this.formOferta.instance.getEditor('Referencia').focus();
+    this.formSalida.instance.getEditor('Contrato').focus();
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -172,7 +191,7 @@ export class FrmVentaDetallesComponent implements OnInit {
     (await this.planificadorService.getCombos_PantallaOfertas()).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          this.arrayTiposEstadoOferta = datos.datos.ListaEstados;
+          this.arrayTiposEstadoSalida = datos.datos.ListaEstados;
           this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-ventas-detalles.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 
@@ -185,20 +204,20 @@ export class FrmVentaDetallesComponent implements OnInit {
     );
   }  
 
-  async cargarLineasOferta(){
+  async cargarLineasSalida(){
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getLineasOferta(this._oferta.IdOferta)).subscribe(
+    (await this.planificadorService.getLineasSalida(this._salida.IdSalida)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          this.arrayLineasOferta = datos.datos;
+          this.arrayLineasSalida = datos.datos;
           // Se configura el grid
-          this.dgConfigLineas = new DataGridConfig(this.arrayLineasOferta, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
         } else {          
           this.WSEnvioCsv_Valido = false;
-          Utilidades.MostrarErrorStr(this.traducir('frm-ventas-detalles.msgError_WSCargarLineas','Error cargando lineas de la oferta')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-ventas-detalles.msgError_WSCargarLineas','Error cargando lineas de la Salida')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
@@ -214,7 +233,15 @@ export class FrmVentaDetallesComponent implements OnInit {
     this.location.back();
   }
 
-  btnCancelarOferta(){
+  btnEditarSalida(){
     alert('Función no implementada')
+  }
+
+  btnPlanificarSalida(){
+    alert('Función no implementada')
+  }
+
+  btnEditarLineaSalida(index:number){    
+    alert('pendiente de implementar');
   }
 }

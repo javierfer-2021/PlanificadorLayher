@@ -4,47 +4,65 @@
     <div #pantalla>
 
         <!-- Titulo -->
-        <div class="row px-1 py-2 bg-secondary">
-            <div class="col pt-1 px-1 text-white text-center">
-                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-detalles.lblTitulo', 'Detalles Oferta-Venta')}} </div>
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
+                    {{traducir('frm-venta-detalles.lblTitulo', 'Detalles contratro Salida Material')}}
+                    &nbsp;({{_salida.NombreTipoDocumento}})
+                </div>
             </div>   
-        </div>  
+        </div>         
 
-        <!-- Formulario cliente -->
+        <!-- Formulario Datos Salida (Venta-Alquiler) -->
         <div class="row pt-2">
             <div id="form-container" class="formulario">
-                <dx-form id="formOferta" #formOferta [colCount]="3" [formData]="_oferta" labelMode="static">
-                    <dxi-item itemType="group" caption="Datos Oferta" [colCount]="3" [colSpan]="3">
-                        <dxi-item dataField="Referencia" [editorOptions]="{disabled: true}">
+                <dx-form id="formSalida" #formSalida [colCount]="3" [formData]="_salida" labelMode='static' labelLocation="left">
+                    <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
+                        <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="IdEstado" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayTiposEstadoOferta, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
+                        <dxi-item dataField="IdEstado" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoSalida, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO"></dxi-validation-rule>
                         </dxi-item>
                         <dxi-item dataField="FechaAlta" [editorOptions]="{disabled: true}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ALTA"></dxi-validation-rule>
                         </dxi-item>
 
-                        <dxi-item dataField="Cliente" [editorOptions]="{disabled: true}">
+                        <dxi-item dataField="IdCliente" [colSpan]="1" [editorOptions]="{disabled: true}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID CLIENTE"></dxi-validation-rule>
+                        </dxi-item>                            
+                        <dxi-item dataField="NombreCliente" [colSpan]="2" [editorOptions]="{disabled: false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE CLIENTE"></dxi-validation-rule>
+                        </dxi-item>                            
+
+                        <dxi-item dataField="Referencia" [editorOptions]="{disabled: false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo REFERENCIA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}">
+                        <dxi-item dataField="Obra" [editorOptions]="{disabled: false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo OBRA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="Obra" [editorOptions]="{disabled: true}">
+                        <dxi-item itemType="empty" [colSpan]="1"></dxi-item>
+
+                        <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                            <dxi-validation-rule *ngIf="requerirFechaFin" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
                         </dxi-item>
 
-                        <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: true, width: '100%', displayFormat: 'dd/MM/yyyy'}">
-                        </dxi-item>
-                        <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: true, width: '100%', displayFormat: 'dd/MM/yyyy'}">
-                        </dxi-item>
-                        <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
-                        </dxi-item>
-
-                        <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{disabled:true, height: 90 }" [colSpan]="3"></dxi-item>
-                    </dxi-item>                   
+                        <dxi-item dataField="Planificar" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
+                        <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
+                    <!-- </dxi-item>                    -->
                 </dx-form>
             </div>
         </div>
-
-
+                  
         <!-- grid lineas cargadas del CSVs -->    
-        <div class="row">
+        <div class="row pt-1 px-1">
             <div class="col pt-1 px-1">    
                 <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
             </div>

@@ -37,13 +37,9 @@
                 <div *ngIf="aviso" class="col px-1" style="color: red;text-align:end;">                    
                     <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.2rem; color:red;"></i>&nbsp;Contrato ya importado en el planificador.
                 </div>
-                <!-- <div *ngIf="aviso" class="row p-0 px-1" style="background-color: #e37f1873;">
-                    <div class="col text-center">Aviso! Contrato ya importado en el planificador.</div>
-                </div>    -->
             </div>
-  
 
-            <!-- Formulario Datos Compra -->
+            <!-- Formulario Datos Salida (Venta-Alquiler) -->
             <div class="row pt-2">
                 <div id="form-container" class="formulario">
                     <dx-form id="formSalida" #formSalida [colCount]="3" [formData]="_salida" labelMode='static' labelLocation="left">

@@ -10,7 +10,7 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { Oferta, OfertaLinea, EstadoOferta, Almacen} from '../../../Clases/Oferta';
+import { Oferta, OfertaLinea, EstadoOferta, Almacen} from '../../../Clases/_Temp-Pruebas/Oferta';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';

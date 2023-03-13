@@ -10,7 +10,7 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { EstadoOferta } from '../../../Clases/Oferta'
+import { EstadoOferta } from '../../../Clases/_Temp-Pruebas/Oferta'
 import { Compra,LineaCompra} from '../../../Clases/Compra';
 import { Almacen} from '../../../Clases/Articulo';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';

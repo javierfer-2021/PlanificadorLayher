@@ -26,18 +26,22 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   
   botonBuscarOfertas: BotonMenu =  { icono: './assets/icons/Buscar Art A_B.svg', texto: 'Ver Ofertas', ruta: '', nombre: 'botonBuscarOfertas', notificacion: 0, desactivado: false, accion: () => { } };
   botonImportarOferta: BotonMenu =  { icono: './assets/icons/Log A_B.svg', texto: 'Importar Oferta', ruta: '', nombre: 'botonImportarOferta', notificacion: 0, desactivado: false, accion: () => { } };
-
-  botonVentaBuscar: BotonMenu =  { icono: './assets/icons/salidas.svg', texto: 'Ver Ofertas-Ventas', ruta: '', nombre: 'botonVentaBuscar', notificacion: 0, desactivado: false, accion: () => { } };
-  botonVentaImportar: BotonMenu =  { icono: './assets/icons/importar.svg', texto: 'Importar Ofertas-Venta', ruta: '', nombre: 'botonVentaImportar', notificacion: 0, desactivado: false, accion: () => { } };
-
-  botonComprasBuscar: BotonMenu =  { icono: './assets/icons/entradas.svg', texto: 'Ver Compras', ruta: '', nombre: 'botonComprasBuscar', notificacion: 0, desactivado: false, accion: () => { } };
-  botonComprasImportar: BotonMenu =  { icono: './assets/icons/importar.svg', texto: 'Importar Compras', ruta: '', nombre: 'botonComprasImportar', notificacion: 0, desactivado: false, accion: () => { } };
-  botonIncidencias: BotonMenu =  { icono: './assets/icons/atencion.svg', texto: 'Incidencias', ruta: '', nombre: 'botonIncidencias', notificacion: 0, desactivado: false, accion: () => { } };
-  botonStock: BotonMenu =  { icono: './assets/icons/stock.svg', texto: 'Articulos-Stock', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false, accion: () => { } };
-  botonUsuarios: BotonMenu =  { icono: './assets/icons/usuario.svg', texto: 'Usuarios', ruta: '', nombre: 'botonUsuarios', notificacion: 0, desactivado: false, accion: () => { } };
-  
   botonPlanificador: BotonMenu = { icono: './assets/icons/Mas A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } }; 
-  botonPruebas: BotonMenu =  { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
+  botonPruebas: BotonMenu = { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
+
+  botonVentaBuscar: BotonMenu = { icono: './assets/icons/salidas.svg', texto: 'Ver Salidas', ruta: '', nombre: 'botonVentaBuscar', notificacion: 0, desactivado: false, accion: () => { } };
+  botonVentaImportar: BotonMenu = { icono: './assets/icons/importar.svg', texto: 'Importar Salida', ruta: '', nombre: 'botonVentaImportar', notificacion: 0, desactivado: false, accion: () => { } };
+
+  botonComprasBuscar: BotonMenu = { icono: './assets/icons/entradas.svg', texto: 'Ver Entradas', ruta: '', nombre: 'botonComprasBuscar', notificacion: 0, desactivado: false, accion: () => { } };
+  botonComprasImportar: BotonMenu = { icono: './assets/icons/importar.svg', texto: 'Importar Entrada', ruta: '', nombre: 'botonComprasImportar', notificacion: 0, desactivado: false, accion: () => { } };
+  
+  botonIncidencias: BotonMenu = { icono: './assets/icons/atencion.svg', texto: 'Gestión Incidencias', ruta: '', nombre: 'botonIncidencias', notificacion: 0, desactivado: false, accion: () => { } };
+  
+  botonStock: BotonMenu = { icono: './assets/icons/stock.svg', texto: 'Ver Articulos-Stock', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false, accion: () => { } };
+  
+  botonUsuarios: BotonMenu = { icono: './assets/icons/usuario.svg', texto: 'Gestión Usuarios', ruta: '', nombre: 'botonUsuarios', notificacion: 0, desactivado: false, accion: () => { } };
+  botonConfiguracion: BotonMenu = { icono: './assets/icons/configuracion.svg', texto: 'Configuración', ruta: '', nombre: 'botonConfiguracion', notificacion: 0, desactivado: false, accion: () => { } };
+  botonInciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Periodo', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, accion: () => { } };
   
   btnAciones: BotonPantalla[] =  [
     { icono :'', texto: this.traducir('frm-principal.btnSalir', 'Salir'), posicion: 1, accion: () => {this.cerrarSesion();}, tipo: TipoBoton.danger, activo: true, visible: true } 
@@ -64,7 +68,6 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonIncidencias.accion = () => { this.router.navigate(['incidencia']); };
     this.botonStock.accion = () => { this.router.navigate(['articulos_stock']); };
     this.botonUsuarios.accion = () => { this.router.navigate(['usuario_buscar']); };
-  
 
     const navigationExtras: NavigationExtras = {
       state: { PantallaAnterior: 'frm-principal', oferta: 'EV_103+PODIUM' }

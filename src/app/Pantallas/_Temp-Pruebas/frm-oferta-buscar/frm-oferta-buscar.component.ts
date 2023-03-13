@@ -10,7 +10,7 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { Oferta} from '../../../Clases/Oferta';
+import { Oferta} from '../../../Clases/_Temp-Pruebas/Oferta';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 

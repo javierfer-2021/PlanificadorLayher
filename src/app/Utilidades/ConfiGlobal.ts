@@ -1,6 +1,7 @@
 import { Permiso } from "../Clases/Permiso";
 import { environment } from '../../environments/environment';
 import { Usuario } from "../Clases/Usuario";
+import { Almacen } from "../Clases/Maestros";
 
 export class ConfiGlobal {
   
@@ -98,9 +99,9 @@ export class ConfiGlobal {
 
   //#region -- variables globales para reducir el uso de llamadas en run-time a web-services
   // Carga de tablas de referencia
-  public static arrayAlmacenesFiltrosBusqueda =[];
-  public static arrayAlmacenesActivos =[];
-  public static arrayIdiomas =[];
+  public static arrayAlmacenesFiltrosBusqueda = new Array<Almacen>();
+  public static arrayAlmacenesActivos = new Array<Almacen>();
+  public static arrayIdiomas = [];
   public static arrayEstadosDocumentos =[];
   public static arrayTiposDocumentos =[];
 
