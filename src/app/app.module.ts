@@ -35,10 +35,10 @@ import { FormsModule } from '@angular/forms';
 import { FrmConexionesComponent } from './Pantallas/frm-conexiones/frm-conexiones.component';
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
 import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
-import { FrmPruebasComponent } from './Pantallas/frm-pruebas/frm-pruebas.component';
+import { FrmPruebasComponent } from './Pantallas/_Temp-Pruebas/frm-pruebas/frm-pruebas.component';
 import { FrmOfertaImportarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-importar/frm-oferta-importar.component';
 import { FrmOfertaBuscarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-buscar/frm-oferta-buscar.component';
-import { FrmCargarOfertaComponent } from './Pantallas/frm-cargar-oferta/frm-cargar-oferta.component';
+import { FrmCargarOfertaComponent } from './Pantallas/_Temp-Pruebas/frm-cargar-oferta/frm-cargar-oferta.component';
 import { FrmOfertaDetallesComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-detalles/frm-oferta-detalles.component';
 import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-buscar/frm-usuario-buscar.component';
 import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
@@ -50,6 +50,7 @@ import { FrmVentaImportarComponent } from './Pantallas/Ventas/frm-venta-importar
 import { FrmVentaBuscarComponent } from './Pantallas/Ventas/frm-venta-buscar/frm-venta-buscar.component';
 import { FrmVentaDetallesComponent } from './Pantallas/Ventas/frm-venta-detalles/frm-venta-detalles.component';
 import { CmdSelectBoxComponent } from './Componentes/cmp-select-box/cmd-select-box.component';
+import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -87,7 +88,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmVentaImportarComponent,
     FrmVentaBuscarComponent,
     FrmVentaDetallesComponent,
-    CmdSelectBoxComponent
+    CmdSelectBoxComponent,
+    FrmConfiguracionComponent
 
   ],
   imports: [

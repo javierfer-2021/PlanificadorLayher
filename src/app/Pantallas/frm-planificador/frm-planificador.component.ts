@@ -11,7 +11,7 @@ import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
-import { BotonIcono } from '../../Clases/Componentes/BotonIcono';
+import { DxContextMenuModule } from 'devextreme-angular';
 
 @Component({
   selector: 'app-frm-planificador',
@@ -19,529 +19,251 @@ import { BotonIcono } from '../../Clases/Componentes/BotonIcono';
   styleUrls: ['./frm-planificador.component.css']
 })
 export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterContentChecked {
+
+//#region - cte y var de la pantalla  
   altoBtnFooter = '45px';
+
   @ViewChild('container') container: ElementRef;
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
+  
   @ViewChild('dgArticulos', { static: false }) dgArticulos: CmpDataGridComponent;
   @ViewChild('dgUnidades', { static: false }) dgUnidades: CmpDataGridComponent;
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: 'Salir', posicion: 1, accion: () => { }, tipo: TipoBoton.danger, activo: true, visible: true },
-    { icono: '', texto: 'Limpiar', posicion: 2, accion: () => { }, tipo: TipoBoton.secondary, activo: true, visible: true },
+    { icono: '', texto: this.traducir('frm-planificacion.btnSalir', 'Salir'), posicion: 1, accion: () => {this.location.back();}, tipo: TipoBoton.danger, activo: true, visible: true },
+    { icono: '', texto: this.traducir('frm-planificacion.btnLimpiar', 'Limpiar'), posicion: 2, accion: () => {this.limpiarControles();}, tipo: TipoBoton.secondary, activo: true, visible: true },
   ];
 
-  ficheroCsv: File = null;
-
+  oOfertaSeleccionada: oOferta;  
   arrayArts: Array<oArticulo> = [];
-  arrayUnidadesMostrar: Array<oUnidMostrar> = [];
+  arrayCabeceras: Array<oOferta> = [];
+  arrayUnidadesOfertas = [];
+
+  _oferta: string;
+
+  idOferta_mostrar: string;
+  fechaAlta_mostrar: string;
+  fechaInicio_mostrar: string;
+  fechaFin_mostrar: string;
+  estado_mostrar: string;
+  cliente_mostrar: string;
+  almacen_mostrar: string;
 
   alturaDiv: string = '0px';
 
   colsArts: Array<ColumnDataGrid> = [
     {
-      dataField: 'Articulo',
-      caption: 'Articulo',
+      dataField: 'IdLinea',
+      caption: 'Id Línea',
+      cssClass: 'blanco',
+      visible: false
+    },
+    {
+      dataField: 'IdOferta',
+      caption: 'Id Oferta',
+      cssClass: 'blanco',
+      visible: false
+    },
+    {
+      dataField: 'IdArticulo',
+      caption: 'Id Artículo',
       cssClass: 'blanco'
     },
     {
-      dataField: 'Referencia',
-      caption: 'Referencia',
+      dataField: 'ArticuloNombre',
+      caption: 'Nombre Artículo',
       cssClass: 'blanco'
     },
     {
-      dataField: 'Unidades',
-      caption: 'Unidades',
-      cssClass: 'blanco'
+      dataField: 'CantidadDisponible',
+      caption: 'Cantidad Disponible',
+      cssClass: 'blanco',
+      visible: false
     },
     {
-      dataField: 'Cliente',
-      caption: 'Cliente',
-      cssClass: 'blanco'
+      dataField: 'CantidadPedida',
+      caption: 'Cantidad Pedida',
+      cssClass: 'blanco' ,
+      visible: false     
     },
     {
-      dataField: 'Fecha_Inicial',
-      caption: 'Fecha Inicial',
-      cssClass: 'blanco'
+      dataField: 'CantidadReservada',
+      caption: 'Cantidad Reservada',
+      cssClass: 'blanco',
+      visible: false
     },
     {
-      dataField: 'Fecha_Devolucion',
-      caption: 'Fecha Devolucion',
+      dataField: 'FechaActualizacion',
+      caption: 'Fecha Actualización',
+      cssClass: 'blanco',
+      visible: false
+    },
+    {
+      dataField: 'Stock',
+      caption: 'Stock',
       cssClass: 'blanco'
     }
   ];
-
-  colsUnidades: Array<ColumnDataGrid> = [
-    {
-      dataField: 'ESCORANDA',
-      caption: 'ESCORANDA',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '003/AP22040179',
-        caption: '003/AP22040179',
-        cssClass: 'grisClaro',
-        columns: [{
-          dataField: '',
-          caption: '',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: '',
-            caption: '',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '04/05/2022',
-              caption: '04/05/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '10/06/2022',
-                caption: '10/06/2022',
-                cssClass: 'fecha',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    },
-    {
-      dataField: 'PROD. MULTIPLE',
-      caption: 'PROD. MULTIPLE',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '001/AP22040061',
-        caption: '001/AP22040061',
-        cssClass: 'gris',
-        columns: [{
-          dataField: '',
-          caption: '',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: '',
-            caption: '',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '26/04/2022',
-              caption: '26/04/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '22/05/2022',
-                caption: '22/05/2022',
-                cssClass: 'fechaRoja',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    },
-    {
-      dataField: 'TMT ESCENARIOS',
-      caption: 'TMT ESCENARIOS',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '001/AP22040058',
-        caption: '001/AP22040058',
-        cssClass: 'gris',
-        columns: [{
-          dataField: '001/AP22040114',
-          caption: '001/AP22040114',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: 'PODIUM',
-            caption: 'PODIUM',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '12/05/2022',
-              caption: '12/05/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '29/07/2022',
-                caption: '29/07/2022',
-                cssClass: 'fecha',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    },
-    {
-      dataField: 'TMT ESCENARIOS',
-      caption: 'TMT ESCENARIOS',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '001/AP22040058',
-        caption: '001/AP22040058',
-        cssClass: 'gris',
-        columns: [{
-          dataField: '001/AP22040114',
-          caption: '001/AP22040114',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: 'PODIUM',
-            caption: 'PODIUM',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '12/05/2022',
-              caption: '12/05/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '29/07/2022',
-                caption: '29/07/2022',
-                cssClass: 'fecha',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    },
-    {
-      dataField: 'TMT ESCENARIOS',
-      caption: 'TMT ESCENARIOS',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '001/AP22040058',
-        caption: '001/AP22040058',
-        cssClass: 'gris',
-        columns: [{
-          dataField: '001/AP22040114',
-          caption: '001/AP22040114',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: 'PODIUM',
-            caption: 'PODIUM',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '12/05/2022',
-              caption: '12/05/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '29/07/2022',
-                caption: '29/07/2022',
-                cssClass: 'fecha',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    },
-    {
-      dataField: 'TMT ESCENARIOS',
-      caption: 'TMT ESCENARIOS',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '001/AP22040058',
-        caption: '001/AP22040058',
-        cssClass: 'gris',
-        columns: [{
-          dataField: '001/AP22040114',
-          caption: '001/AP22040114',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: 'PODIUM',
-            caption: 'PODIUM',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '12/05/2022',
-              caption: '12/05/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '29/07/2022',
-                caption: '29/07/2022',
-                cssClass: 'fecha',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    },
-    {
-      dataField: 'TMT ESCENARIOS',
-      caption: 'TMT ESCENARIOS',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '001/AP22040058',
-        caption: '001/AP22040058',
-        cssClass: 'gris',
-        columns: [{
-          dataField: '001/AP22040114',
-          caption: '001/AP22040114',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: 'PODIUM',
-            caption: 'PODIUM',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '12/05/2022',
-              caption: '12/05/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '29/07/2022',
-                caption: '29/07/2022',
-                cssClass: 'fecha',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    },
-    {
-      dataField: 'TMT ESCENARIOS',
-      caption: 'TMT ESCENARIOS',
-      cssClass: 'grisClaro',
-      columns: [{
-        dataField: '001/AP22040058',
-        caption: '001/AP22040058',
-        cssClass: 'gris',
-        columns: [{
-          dataField: '001/AP22040114',
-          caption: '001/AP22040114',
-          cssClass: 'blanco',
-          columns: [{
-            dataField: 'PODIUM',
-            caption: 'PODIUM',
-            cssClass: 'blanco',
-            columns: [{
-              dataField: '12/05/2022',
-              caption: '12/05/2022',
-              cssClass: 'fecha',
-              columns: [{
-                dataField: '29/07/2022',
-                caption: '29/07/2022',
-                cssClass: 'fecha',
-                columns: [{
-                  dataField: 'UnidadesMostrar',
-                  caption: 'Unidades',
-                  cssClass: 'gris',
-                  allowSorting: false
-                }]
-              }]
-            }]
-          }]
-        }]
-      }]
-    }
-  ];
-
+  
   dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
+  
+  colsUnidades: Array<ColumnDataGrid> = [];
   dgConfigUnidades: DataGridConfig = new DataGridConfig(null, this.colsUnidades, 100, '');
 
-  btnIconoEnviar: BotonIcono = 
-  {
-    icono: 'bi bi-arrow-bar-up', texto: 'Enviar Csv', accion: () => { }
-  }
+  WSDatos_Validando: boolean = false;
+  WSDatos_Valido: boolean = false;
 
-  // str_txtUbiOrigen = '';
+  primeraVez: boolean = true; // Indica si está entrando de 0 en la pantalla
 
-  // WSUbiOrigen_Validando: boolean = false;
-  // WSUbiOrigen_Valido: boolean = false;
+  itemsMenuArticulos: any;
+//#endregion - cte y var de la pantalla
 
-  WSEnvioCsv_Validando: boolean = false;
-  WSEnvioCsv_Valido: boolean = false;
-
-  // color_txtUbiOrigen: string = ConfiGlobal.colorFoco;
-
-  // vCambiado_txtUbiOrigen: boolean = false;
-
-  // @ViewChild('txtUbiOrigen', { static: false }) txtUbiOrigen: DxTextBoxComponent;
-
-  // Indica si está entrando de 0 en la pantalla
-  primeraVez: boolean = true;
-
-  constructor(
-    private renderer: Renderer2,
-    private location: Location,
-    private router: Router,
-    public translate: TranslateService,
-    public planificadorService: PlanificadorService,
-  ) {
-    // se añaden las acciones a lo botones
-    this.btnAciones.forEach((a, b, c) => {
-      if (a.posicion === 1) {
-        a.accion = () => {
-          this.location.back();
-        };
-      }
-      if (a.posicion === 2) {
-        a.accion = () => {
-          this.limpiarControles();
-        };
-      }
-    });
-
-    this.btnIconoEnviar.accion = () => {
-      this.cargarDatos();
-    }
-
+//#region - creación, inicializacion y gestion eventos pantalla
+  constructor(private renderer: Renderer2,
+              private location: Location,
+              private router: Router,
+              public translate: TranslateService,
+              public planificadorService: PlanificadorService,) {
     this.ConstructorPantalla();
   }
 
+  ConstructorPantalla() {
+    // obtenemos dato identificacion de envio del routing
+    const nav = this.router.getCurrentNavigation().extras.state;
+    if(Utilidades.isEmpty(nav)) return;
+    this._oferta = nav.oferta;
+
+    //configuración menu articulos
+    this.itemsMenuArticulos= [{
+      text: 'Share',
+      items: [
+        { text: 'Facebook' },
+        { text: 'Twitter' }],
+    },
+    { text: 'Download' },
+    { text: 'Comment' },
+    { text: 'Favorite' },
+    ];
+  }
+
   ngOnInit(): void {
+    this.getPlanificacion();
   }
 
   // para actualizar la altura de btnFooter
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
-    // Actualizar altura del grid
-    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 180);
+    // Actualizar altura de los grids
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 210);
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
     
-    this.alturaDiv = '180px';
+    this.alturaDiv = '210px';
   }
 
-  // añadir los nombres traducidos a los botones
   ngAfterContentChecked(): void {
-    this.btnAciones.forEach((a, b, c) => {
-      if (a.posicion === 1) {
-        a.texto = this.traducir('frm-reubicacion.btnSalir', 'Salir');
-      }
-    });
-  }
-
-  ConstructorPantalla() {
   }
 
   onResize(event) {
-    this.alturaDiv = '0px';
+    this.alturaDiv = '0px';    
     // this.mostrarEspacio = false;
-
-    Utilidades.BtnFooterUpdate(
-      this.pantalla,
-      this.container,
-      this.btnFooter,
-      this.btnAciones,
-      this.renderer
-    );
-
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // Actualizar altura del grid
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima));
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
     
-    this.alturaDiv = '180px';
+    this.alturaDiv = '210px';
   }
 
-  guardarCsv(file: FileList) {
-    this.ficheroCsv = file.item(0);
+//#endregion - creación, inicializacion y gestion eventos pantalla
 
-    const reader = new FileReader();
-    // reader.onload = (event: any) => {
-    // };
-    reader.readAsDataURL(this.ficheroCsv);
-  }
 
-  async cargarDatos(){
-    if(this.WSEnvioCsv_Validando) return;
-    if(Utilidades.isEmpty(this.ficheroCsv)) return;
+  async getPlanificacion(){
+    if(this.WSDatos_Validando) return;
 
-    this.limpiarControles();
+    this.limpiarControles(false);
 
-    this.WSEnvioCsv_Validando = true;
-    (await this.planificadorService.cargarDatos(this.ficheroCsv)).subscribe(
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.getPlanificacion(this._oferta)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          this.WSEnvioCsv_Valido = true;
-          console.log(datos);
+          this.WSDatos_Valido = true;
 
-          this.arrayArts = datos.datos.Articulos;
+          this.oOfertaSeleccionada = datos.datos.Oferta[0];
+          this.idOferta_mostrar = this.oOfertaSeleccionada.IdOferta;
+          this.fechaAlta_mostrar = this.oOfertaSeleccionada.FechaAlta.toString().substring(0, this.oOfertaSeleccionada.FechaAlta.toString().indexOf('T'));
+          this.fechaInicio_mostrar = this.oOfertaSeleccionada.FechaInicio.toString().substring(0, this.oOfertaSeleccionada.FechaInicio.toString().indexOf('T'));
+          this.fechaFin_mostrar = this.oOfertaSeleccionada.FechaFin.toString().substring(0, this.oOfertaSeleccionada.FechaFin.toString().indexOf('T'));
+          this.estado_mostrar = this.oOfertaSeleccionada.Estado;
+          this.cliente_mostrar = this.oOfertaSeleccionada.Cliente;
+          this.almacen_mostrar = this.oOfertaSeleccionada.Almacen;
 
-          this.arrayUnidadesMostrar = new Array<oUnidMostrar>();
-          this.arrayArts.forEach(element => {
-            let unidMostrar: oUnidMostrar = new oUnidMostrar();
-            unidMostrar.UnidadesMostrar = element.UnidadesMostrar;
-            this.arrayUnidadesMostrar.push(unidMostrar);
-          });
+          this.arrayArts = datos.datos.LineasOferta;
+          this.arrayCabeceras = datos.datos.OfertasRel;
+          this.arrayUnidadesOfertas = datos.datos.LineasOfertasRel;
 
-          // Se configura el grid
+          // Se configura el grid de artículos
           this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigArticulos.actualizarConfig(true,false,'standard');
-
-          // Se configura el grid 2
-          let newCol: ColumnDataGrid = {
-            dataField: 'PROD. MULTIPLE',
-            caption: 'PROD. MULTIPLE',
-            cssClass: 'grisClaro',
-            columns: [{
-              dataField: '001/AP22040061',
-              caption: '001/AP22040061',
-              cssClass: 'gris',
+          
+          // Se configura el grid de las unidades
+          let nroCol: number = 0;
+          this.arrayCabeceras.forEach(c => {
+            let newCol: ColumnDataGrid = {
+              dataField: c.Cliente,
+              caption: c.Cliente,
+              cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisClaroBold' : 'grisClaro',
               columns: [{
-                dataField: '',
-                caption: '',
-                cssClass: 'blanco',
+                dataField: c.Contrato,
+                caption: c.Contrato,
+                cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisBold' : 'gris',
                 columns: [{
-                  dataField: '',
-                  caption: '',
-                  cssClass: 'blanco',
+                  dataField: c.Obra,
+                  caption: c.Obra,
+                  cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'blancoBold' : 'blanco',
                   columns: [{
-                    dataField: '26/04/2022',
-                    caption: '26/04/2022',
-                    cssClass: 'fecha',
+                    dataField: c.Observaciones,
+                    caption: c.Observaciones,
+                    cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'blancoBold' : 'blanco',
                     columns: [{
-                      dataField: '22/05/2022',
-                      caption: '22/05/2022',
-                      cssClass: 'fechaRoja',
+                      dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
+                      caption: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
+                      cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'fechaBold' : 'fecha',
                       columns: [{
-                        dataField: 'UnidadesMostrar',
-                        caption: 'Unidades',
-                        cssClass: 'gris',
-                        allowSorting: false
+                        dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
+                        caption: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
+                        cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'fechaRojaBold' : 'fechaRoja',
+                        columns: [{
+                          dataField: c.Estado,
+                          caption: c.Estado,
+                          cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'rojoClaroBold' : 'rojoClaro',
+                          columns: [{
+                            dataField: 'C' + nroCol.toString(),
+                            caption: 'Unidades',
+                            cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisBold' : 'gris',
+                            allowSorting: false
+                          }]
+                        }]
                       }]
                     }]
                   }]
                 }]
               }]
-            }]
-          }
+            }
+            
+            this.colsUnidades.push(newCol);
 
-          this.colsUnidades.push(newCol);
-          this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesMostrar, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+            nroCol++;
+          });
+          this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesOfertas, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigUnidades.actualizarConfig(true,false,'standard');
         } else {
-          this.WSEnvioCsv_Valido = false;
+          this.WSDatos_Valido = false;
         }
-        this.WSEnvioCsv_Validando = false;
+        this.WSDatos_Validando = false;
       }, error => {
-        this.WSEnvioCsv_Validando = false;
+        this.WSDatos_Validando = false;
         console.log(error);
       }
     );
@@ -567,75 +289,87 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     if(Utilidades.isEmpty(columnOptionSorted)) return;
 
     // Dependiendo de la columna en la que se ha ordenado se aplica al arrayArts
-    switch (columnOptionSorted.caption) {
-      case 'Articulo':
+    switch (columnOptionSorted.dataField) {
+      case 'IdArticulo':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            a.Articulo.localeCompare(b.Articulo, 'en', { numeric: true })
+            a.IdArticulo.localeCompare(b.IdArticulo, 'en', { numeric: true })
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            b.Articulo.localeCompare(a.Articulo, 'en', { numeric: true })
+            b.IdArticulo.localeCompare(a.IdArticulo, 'en', { numeric: true })
           );
         }
 
         break;
-      case 'Referencia':
+      case 'ArticuloNombre':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            a.Referencia.localeCompare(b.Referencia, 'en', { numeric: true })
+            a.ArticuloNombre.localeCompare(b.ArticuloNombre, 'en', { numeric: true })
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            b.Referencia.localeCompare(a.Referencia, 'en', { numeric: true })
+            b.ArticuloNombre.localeCompare(a.ArticuloNombre, 'en', { numeric: true })
           );
         }
 
         break;
-      case 'Unidades':
+      case 'CantidadDisponible':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            a.Unidades - b.Unidades
+            a.CantidadDisponible - b.CantidadDisponible
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            b.Unidades - a.Unidades
+            b.CantidadDisponible - a.CantidadDisponible
           );
         }
 
         break;
-      case 'Cliente':
+      case 'CantidadPedida':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            a.Cliente.localeCompare(b.Cliente, 'en', { numeric: true })
+            a.CantidadPedida - b.CantidadPedida
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            b.Cliente.localeCompare(a.Cliente, 'en', { numeric: true })
+            b.CantidadPedida - a.CantidadPedida
           );
         }
 
         break;
-      case 'Fecha Inicial':
+      case 'CantidadReservada':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            new Date(a.Fecha_Inicial).getTime() - new Date(b.Fecha_Inicial).getTime()
+            a.CantidadReservada - b.CantidadReservada
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            new Date(b.Fecha_Inicial).getTime() - new Date(a.Fecha_Inicial).getTime()
+            b.CantidadReservada - a.CantidadReservada
           );
         }
 
         break;
-      case 'Fecha Devolucion':
+      case 'CantidadReservada':
+          if(columnOptionSorted.sortOrder === 'asc') {
+            this.arrayArts.sort((a, b) => 
+              a.CantidadReservada - b.CantidadReservada
+            );
+          } else {
+            this.arrayArts.sort((a, b) => 
+              b.CantidadReservada - a.CantidadReservada
+            );
+          }
+  
+          break;
+      case 'Stock':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            new Date(a.Fecha_Devolucion).getTime() - new Date(b.Fecha_Devolucion).getTime()
+            a.Stock - b.Stock
           );
         } else {
-          this.arrayArts.sort((a, b) =>
-            new Date(b.Fecha_Devolucion).getTime() - new Date(a.Fecha_Devolucion).getTime()
+          this.arrayArts.sort((a, b) => 
+            b.Stock - a.Stock
           );
         }
 
@@ -644,14 +378,15 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
         break;
     }
 
-    this.arrayUnidadesMostrar = new Array<oUnidMostrar>();
-    this.arrayArts.forEach(element => {
-      let unidMostrar: oUnidMostrar = new oUnidMostrar();
-      unidMostrar.UnidadesMostrar = element.UnidadesMostrar;
-      this.arrayUnidadesMostrar.push(unidMostrar);
+    let arrayReordenadoUnidades = [];
+    this.arrayArts.forEach(art => {
+      this.arrayUnidadesOfertas.forEach(unid => {
+        if(art.IdArticulo === unid.IdArticulo)
+          arrayReordenadoUnidades.push(unid);
+      });
     });
 
-    this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesMostrar, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    this.dgConfigUnidades = new DataGridConfig(arrayReordenadoUnidades, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
     this.dgConfigUnidades.actualizarConfig(true,false,'standard');
   }
 
@@ -685,23 +420,20 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.dgArticulos.DataGrid.focusedRowIndex = selectedRowIndex;
   }
 
-  public limpiarControles() {
-    // this.str_txtUbiOrigen = '';
-
-    // this.color_txtUbiOrigen = ConfiGlobal.colorFoco;
-
-    // this.WSUbiOrigen_Validando = false;
-    // this.WSUbiOrigen_Valido = false;
-
-    // this.vCambiado_txtUbiOrigen = false;
-
-    // this.txtUbiOrigen.instance.focus();
-
+  public limpiarControles(recargar: boolean = true) {
     this.arrayArts = null;
-    this.arrayUnidadesMostrar = null;
+    this.arrayUnidadesOfertas = null;
+    this.arrayCabeceras = null;
+    this.oOfertaSeleccionada = null;
+    this.fechaAlta_mostrar = null;
+
+    this.colsUnidades = [];
 
     this.dgConfigArticulos = new DataGridConfig(null, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
     this.dgConfigUnidades = new DataGridConfig(null, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+
+    if(recargar)
+      this.getPlanificacion();
   }
 
   LPGen(value : boolean) {
@@ -717,18 +449,41 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       return def;
     }
   }
+
+
+  itemMenuArticulosClick(e) {
+    if (!e.itemData.items) {
+      alert('The '+e.itemData.text+' item was clicked');
+    }
+  }
+
+}
+
+export class oOferta {
+  IdOferta: string = '';
+  IdAlmacen: number = 0;
+  IdEstado: number = 0;
+  Almacen: string = '';
+  Cliente: string = '';
+  Contrato: string = '';
+  Estado: string = '';
+  FechaAlta: Date = new Date();
+  FechaFin: Date = new Date();
+  FechaInicio: Date = new Date();
+  NumLineas: number = 0;
+  Obra: string = '';
+  Observaciones: string = '';
+  Referencia: string = '';
 }
 
 export class oArticulo {
-  Articulo: string;
-  Referencia: string;
-  Unidades: number;
-  Cliente: string;
-  UnidadesMostrar: number;
-  Fecha_Inicial: Date;
-  Fecha_Devolucion: Date;
-}
-
-export class oUnidMostrar {
-  UnidadesMostrar: number;
+  IdLinea: number;
+  IdOferta: number;
+  IdArticulo: string;
+  ArticuloNombre: string;
+  CantidadDisponible: number;
+  CantidadPedida: number;
+  CantidadReservada: number;
+  FechaActualizacion: Date;
+  Stock: number;
 }

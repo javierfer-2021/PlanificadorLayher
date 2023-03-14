@@ -30,6 +30,7 @@ export class ConfiGlobal {
   public static Usuario: number;
   public static NombreUsuario: string;
   public static sessionId: string;
+  
   public static DatosUsuario: Usuario;
 
   //#region  - VARIABLES CONFIGURACION -> Obtenidas BD.Tabla [CONFIGURACION_PROG_COMPL]
@@ -102,8 +103,8 @@ export class ConfiGlobal {
   public static arrayAlmacenesFiltrosBusqueda = new Array<Almacen>();
   public static arrayAlmacenesActivos = new Array<Almacen>();
   public static arrayIdiomas = [];
-  public static arrayEstadosDocumentos =[];
-  public static arrayTiposDocumentos =[];
+  public static arrayEstadosDocumentos = [];
+  public static arrayTiposDocumentos = [];
 
   //#endregion -- variables globales para reducir el uso de llamadas en run-time a web-services
 }

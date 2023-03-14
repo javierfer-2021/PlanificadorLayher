@@ -3,15 +3,15 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AfterContentChecked } from '@angular/core';
-import { CmpDataGridComponent } from '../../Componentes/cmp-data-grid/cmp-data-grid.component';
-import { TipoBoton } from '../../Enumeraciones/TipoBoton';
-import { ColumnDataGrid } from '../../Clases/Componentes/ColumnDataGrid';
-import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
-import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
-import { Utilidades } from '../../Utilidades/Utilidades';
-import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
-import { BotonIcono } from '../../Clases/Componentes/BotonIcono';
+import { CmpDataGridComponent } from '../../../Componentes/cmp-data-grid/cmp-data-grid.component';
+import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
+import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
+import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
+import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
+import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
+import { Utilidades } from '../../../Utilidades/Utilidades';
+import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
+import { BotonIcono } from '../../../Clases/Componentes/BotonIcono';
 
 @Component({
   selector: 'app-frm-cargar-oferta',

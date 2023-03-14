@@ -314,7 +314,7 @@ export class FrmVentaBuscarComponent implements OnInit {
       const navigationExtras: NavigationExtras = {
         state: { PantallaAnterior: 'frm-venta-buscar', oferta: vSalida.Referencia }
       };
-      this.router.navigate(['pruebas'], navigationExtras);
+      this.router.navigate(['planificador'], navigationExtras);
     }
   }
 

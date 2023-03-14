@@ -9,7 +9,7 @@ import { FrmOfertaBuscarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-b
 import { FrmOfertaImportarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-importar/frm-oferta-importar.component'
 import { FrmOfertaDetallesComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-detalles/frm-oferta-detalles.component';
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
-import { FrmPruebasComponent } from './Pantallas/frm-pruebas/frm-pruebas.component';
+import { FrmPruebasComponent } from './Pantallas/_Temp-Pruebas/frm-pruebas/frm-pruebas.component';
 import { FrmCompraBuscarComponent } from './Pantallas/Compras/frm-compra-buscar/frm-compra-buscar.component';
 import { FrmCompraImportarComponent } from './Pantallas/Compras/frm-compra-importar/frm-compra-importar.component';
 import { FrmVentaBuscarComponent } from './Pantallas/Ventas/frm-venta-buscar/frm-venta-buscar.component';
@@ -19,14 +19,16 @@ import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-busc
 import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
 import { FrmArticulosStockComponent } from './Pantallas/frm-articulos-stock/frm-articulos-stock.component';
 import { FrmIncidenciaComponent } from './Pantallas/frm-incidencia/frm-incidencia.component';
+import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
 
 const routes: Routes = [
   { path: '', component: FrmLoginComponent },
   { path: 'inicio', component: FrmPrincipalComponent, canActivate: [AuthGuard] },
+
   { path: 'lista_ofertas', component: FrmOfertaBuscarComponent, canActivate: [AuthGuard] },
   { path: 'importar_oferta', component: FrmOfertaImportarComponent, canActivate: [AuthGuard] },
   { path: 'detalles_oferta', component: FrmOfertaDetallesComponent, canActivate: [AuthGuard] },
-  { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard] },
+  { path: 'pruebas', component: FrmPruebasComponent, canActivate: [AuthGuard] },
   
   { path: 'venta_buscar', component: FrmVentaBuscarComponent, canActivate: [AuthGuard] },
   { path: 'venta_importar', component: FrmVentaImportarComponent, canActivate: [AuthGuard] },
@@ -37,8 +39,9 @@ const routes: Routes = [
   { path: 'usuario', component: FrmUsuarioComponent, canActivate: [AuthGuard] },
   { path: 'articulos_stock', component: FrmArticulosStockComponent, canActivate: [AuthGuard] },
   { path: 'incidencia', component: FrmIncidenciaComponent, canActivate: [AuthGuard] },
-
-  { path: 'pruebas', component: FrmPruebasComponent, canActivate: [AuthGuard] },
+  { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard] },
+  { path: 'configuracion', component: FrmConfiguracionComponent, canActivate: [AuthGuard] },
+    
 ];
 
 @NgModule({
