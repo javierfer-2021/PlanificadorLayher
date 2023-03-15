@@ -35,11 +35,6 @@ import { FormsModule } from '@angular/forms';
 import { FrmConexionesComponent } from './Pantallas/frm-conexiones/frm-conexiones.component';
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
 import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
-import { FrmPruebasComponent } from './Pantallas/_Temp-Pruebas/frm-pruebas/frm-pruebas.component';
-import { FrmOfertaImportarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-importar/frm-oferta-importar.component';
-import { FrmOfertaBuscarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-buscar/frm-oferta-buscar.component';
-import { FrmCargarOfertaComponent } from './Pantallas/_Temp-Pruebas/frm-cargar-oferta/frm-cargar-oferta.component';
-import { FrmOfertaDetallesComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-detalles/frm-oferta-detalles.component';
 import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-buscar/frm-usuario-buscar.component';
 import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
 import { FrmCompraBuscarComponent } from './Pantallas/Compras/frm-compra-buscar/frm-compra-buscar.component';
@@ -74,11 +69,6 @@ function initializeApp(appConfig: ConfigService) {
     FrmConexionesComponent,
     FrmPlanificadorComponent,
     FrmPrincipalComponent,
-    FrmPruebasComponent,
-    FrmOfertaImportarComponent,
-    FrmOfertaBuscarComponent,
-    FrmCargarOfertaComponent,
-    FrmOfertaDetallesComponent,
     FrmUsuarioBuscarComponent,
     FrmUsuarioComponent,
     FrmCompraBuscarComponent,

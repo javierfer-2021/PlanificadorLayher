@@ -5,11 +5,7 @@ import { AuthGuard } from './Guards/auth.guard';
 
 import { FrmLoginComponent } from './Pantallas/frm-login/frm-login.component';
 import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
-import { FrmOfertaBuscarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-buscar/frm-oferta-buscar.component';
-import { FrmOfertaImportarComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-importar/frm-oferta-importar.component'
-import { FrmOfertaDetallesComponent } from './Pantallas/_Temp-Pruebas/frm-oferta-detalles/frm-oferta-detalles.component';
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
-import { FrmPruebasComponent } from './Pantallas/_Temp-Pruebas/frm-pruebas/frm-pruebas.component';
 import { FrmCompraBuscarComponent } from './Pantallas/Compras/frm-compra-buscar/frm-compra-buscar.component';
 import { FrmCompraImportarComponent } from './Pantallas/Compras/frm-compra-importar/frm-compra-importar.component';
 import { FrmVentaBuscarComponent } from './Pantallas/Ventas/frm-venta-buscar/frm-venta-buscar.component';
@@ -24,11 +20,6 @@ import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-con
 const routes: Routes = [
   { path: '', component: FrmLoginComponent },
   { path: 'inicio', component: FrmPrincipalComponent, canActivate: [AuthGuard] },
-
-  { path: 'lista_ofertas', component: FrmOfertaBuscarComponent, canActivate: [AuthGuard] },
-  { path: 'importar_oferta', component: FrmOfertaImportarComponent, canActivate: [AuthGuard] },
-  { path: 'detalles_oferta', component: FrmOfertaDetallesComponent, canActivate: [AuthGuard] },
-  { path: 'pruebas', component: FrmPruebasComponent, canActivate: [AuthGuard] },
   
   { path: 'venta_buscar', component: FrmVentaBuscarComponent, canActivate: [AuthGuard] },
   { path: 'venta_importar', component: FrmVentaImportarComponent, canActivate: [AuthGuard] },

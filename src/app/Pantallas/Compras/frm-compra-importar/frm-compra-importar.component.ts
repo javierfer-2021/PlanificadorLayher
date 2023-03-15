@@ -10,8 +10,7 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { EstadoOferta } from '../../../Clases/_Temp-Pruebas/Oferta'
-import { Compra,LineaCompra} from '../../../Clases/Compra';
+import { Entrada,EntradaLinea,EstadoEntrada } from '../../../Clases/Entrada';
 import { Almacen} from '../../../Clases/Articulo';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent } from 'devextreme-angular';
@@ -47,15 +46,15 @@ export class FrmCompraImportarComponent implements OnInit {
   WSDatos_Validando: boolean = false;
   WSEnvioCsv_Valido: boolean = false;
 
-  _Compra: Compra = new(Compra);
-  arrayTiposEstadoOferta: Array<EstadoOferta> = [];  
+  _Compra: Entrada = new(Entrada);
+  arrayTiposEstadoOferta: Array<EstadoEntrada> = [];  
   arrayAlmacenes: Array<Almacen> = [];  
 
   ficheroCsv: File = null;
 
   // grid lista articulos cargados csv
   // [IdArticulo, NombreArticulo, Unidades, UnidadesDisponibles, Avisos, Mensaje]
-  arrayLineasCompra: Array<LineaCompra>;
+  arrayLineasCompra: Array<EntradaLinea>;
   cols: Array<ColumnDataGrid> = [
     {
       dataField: 'IdArticulo',
@@ -160,7 +159,7 @@ export class FrmCompraImportarComponent implements OnInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getCombos_PantallaOfertas()).subscribe(
+    (await this.planificadorService.getCombos_PantallaSalidas()).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoOferta = datos.datos.ListaEstados;
@@ -182,28 +181,28 @@ export class FrmCompraImportarComponent implements OnInit {
     if(this.WSDatos_Validando) return;
     if(Utilidades.isEmpty(this.ficheroCsv)) return;
 
-    this.WSDatos_Validando = true;
-    (await this.planificadorService.cargarDatosCSV_LineasOferta(this.ficheroCsv,this._Compra.FechaAlta,this._Compra.IdAlmacen)).subscribe(
-      datos => {
-        if(Utilidades.DatosWSCorrectos(datos)) {
-          this.WSEnvioCsv_Valido = true;
-          //console.log(datos);
-          this.arrayLineasCompra = datos.datos.ArticulosValidados;
+    // this.WSDatos_Validando = true;
+    // (await this.planificadorService.cargarDatosCSV_LineasOferta(this.ficheroCsv,this._Compra.FechaAlta,this._Compra.IdAlmacen)).subscribe(
+    //   datos => {
+    //     if(Utilidades.DatosWSCorrectos(datos)) {
+    //       this.WSEnvioCsv_Valido = true;
+    //       //console.log(datos);
+    //       this.arrayLineasCompra = datos.datos.ArticulosValidados;
 
-          // Se configura el grid
-          this.dgConfigLineas = new DataGridConfig(this.arrayLineasCompra, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          this.dgConfigLineas.actualizarConfig(true,false,'standard');
+    //       // Se configura el grid
+    //       this.dgConfigLineas = new DataGridConfig(this.arrayLineasCompra, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    //       this.dgConfigLineas.actualizarConfig(true,false,'standard');
 
-        } else {          
-          this.WSEnvioCsv_Valido = false;
-          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSCargarLineas','Error cargando lineas csv')); 
-        }
-        this.WSDatos_Validando = false;
-      }, error => {
-        this.WSDatos_Validando = false;
-        console.log(error);
-      }
-    );
+    //     } else {          
+    //       this.WSEnvioCsv_Valido = false;
+    //       Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSCargarLineas','Error cargando lineas csv')); 
+    //     }
+    //     this.WSDatos_Validando = false;
+    //   }, error => {
+    //     this.WSDatos_Validando = false;
+    //     console.log(error);
+    //   }
+    // );
   }  
 
   async importarOferta(){
@@ -213,35 +212,35 @@ export class FrmCompraImportarComponent implements OnInit {
 
     this.WSDatos_Validando = true;
 
-    (await this.planificadorService.importarOferta(this._Compra.Referencia,this._Compra.Cliente,this._Compra.Contrato,this._Compra.IdEstado
-                                                  ,this._Compra.FechaAlta,this._Compra.FechaInicio,this._Compra.FechaFin
-                                                  ,this._Compra.Obra,this._Compra.Observaciones,this._Compra.IdAlmacen,this.arrayLineasCompra)).subscribe(
-      datos => {
-        if(Utilidades.DatosWSCorrectos(datos)) {
-          this.WSEnvioCsv_Valido = true;
-          console.log(datos);
+    // (await this.planificadorService.importarOferta(this._Compra.Referencia,this._Compra.Cliente,this._Compra.Contrato,this._Compra.IdEstado
+    //                                               ,this._Compra.FechaAlta,this._Compra.FechaInicio,this._Compra.FechaFin
+    //                                               ,this._Compra.Obra,this._Compra.Observaciones,this._Compra.IdAlmacen,this.arrayLineasCompra)).subscribe(
+    //   datos => {
+    //     if(Utilidades.DatosWSCorrectos(datos)) {
+    //       this.WSEnvioCsv_Valido = true;
+    //       console.log(datos);
 
-          Utilidades.MostrarExitoStr(this.traducir('frm-ofertas-importar.msgOk_WSImportarOferta','Oferta Importada correctamente'));           
-          // ir a pantalla de planificador
-          //alert('ir a pantalla planificador con idoferta'+this._Compra.Referencia);
+    //       Utilidades.MostrarExitoStr(this.traducir('frm-ofertas-importar.msgOk_WSImportarOferta','Oferta Importada correctamente'));           
+    //       // ir a pantalla de planificador
+    //       //alert('ir a pantalla planificador con idoferta'+this._Compra.Referencia);
           
-          const navigationExtras: NavigationExtras = {
-            state: { PantallaAnterior: 'frm-oferta-buscar', oferta: this._Compra.Referencia },
-            replaceUrl: true
-          };
-          this.router.navigate(['pruebas'], navigationExtras);
+    //       const navigationExtras: NavigationExtras = {
+    //         state: { PantallaAnterior: 'frm-oferta-buscar', oferta: this._Compra.Referencia },
+    //         replaceUrl: true
+    //       };
+    //       this.router.navigate(['pruebas'], navigationExtras);
 
-          this.limpiarOferta();
-        } else {          
-          this.WSEnvioCsv_Valido = false;
-          Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSImportarOferta','Error WS importando oferta')); 
-        }
-        this.WSDatos_Validando = false;
-      }, error => {
-        this.WSDatos_Validando = false;
-        console.log(error);
-      }
-    );
+    //       this.limpiarOferta();
+    //     } else {          
+    //       this.WSEnvioCsv_Valido = false;
+    //       Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-importar.msgError_WSImportarOferta','Error WS importando oferta')); 
+    //     }
+    //     this.WSDatos_Validando = false;
+    //   }, error => {
+    //     this.WSDatos_Validando = false;
+    //     console.log(error);
+    //   }
+    // );
 
   }
 

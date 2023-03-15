@@ -7,7 +7,7 @@
         <div class="row px-1 py-2 titulo">
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
-                    {{traducir('frm-planificador.lblTitulo', 'Planificación - Contrato Salida')}} &nbsp; {{_oferta}}                    
+                    {{traducir('frm-planificador.lblTitulo', 'Planificación - Contrato Salida')}} &nbsp; {{_salida.Contrato}}                    
                 </div>
             </div>
             <div class="col-4 pt-0 px-1">
@@ -21,7 +21,10 @@
                 <div class="row" [ngStyle]="{'height': alturaDiv}">
                     <div class="col-9">
                         <div class="row">
-                            <div class="col-9 w-100">
+                            <div class="col-2 mt-2">
+                                <div class="row mt-2" style="font-size: 11px; height: 33px; align-items: center; text-align: right;"><b>CONTRATO</b></div>
+                            </div>                            
+                            <div class="col-10">
                                 <dx-text-box #txtOferta class="centerBold row" style="background-color: #00B0F0; height: 42px; font-size: 20px;" [showClearButton]="false" [(ngModel)]="idOferta_mostrar" [disabled]="true">
                                 </dx-text-box>
                             </div>
@@ -60,7 +63,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <app-cmp-data-grid #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+                    <app-cmp-data-grid id="dgArticulos" #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
                 </div>
             </div>
             <div class="col-7 px-0">

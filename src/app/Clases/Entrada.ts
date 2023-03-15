@@ -32,6 +32,17 @@ export class Entrada {
     FechaActualizacion: Date;
   }
 
+  export class EntradaLineaERP {
+    IdEntradaERP: string;
+    IdLinea: number;
+    IdArticuloERP: string
+    IdArticulo: string;
+    NombreArticulo: string;
+    Cantidad: number;
+    Cualidad: number;
+    Aviso: string;
+  }
+
   export class EstadoEntrada {
     IdEstado: number;
     NombreEstado: string;

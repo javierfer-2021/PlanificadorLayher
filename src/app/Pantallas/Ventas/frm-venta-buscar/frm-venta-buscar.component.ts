@@ -292,7 +292,6 @@ export class FrmVentaBuscarComponent implements OnInit {
       Utilidades.MostrarErrorStr(this.traducir('frm-venta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
       return;
     }
-    //TODO- verificar paso parametro salida
     let vSalida : Salida =  this.dg.objSeleccionado();    
     const navigationExtras: NavigationExtras = {
       state: { PantallaAnterior: 'frm-venta-buscar', Salida: vSalida }
@@ -312,7 +311,7 @@ export class FrmVentaBuscarComponent implements OnInit {
       //TODO- verificar paso parametro salida
       let vSalida : Salida =  this.dg.objSeleccionado();    
       const navigationExtras: NavigationExtras = {
-        state: { PantallaAnterior: 'frm-venta-buscar', oferta: vSalida.Referencia }
+        state: { PantallaAnterior: 'frm-venta-buscar', salida: vSalida }
       };
       this.router.navigate(['planificador'], navigationExtras);
     }

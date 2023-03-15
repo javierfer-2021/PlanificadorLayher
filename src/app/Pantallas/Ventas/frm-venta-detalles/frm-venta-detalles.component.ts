@@ -188,7 +188,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getCombos_PantallaOfertas()).subscribe(
+    (await this.planificadorService.getCombos_PantallaSalidas()).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoSalida = datos.datos.ListaEstados;

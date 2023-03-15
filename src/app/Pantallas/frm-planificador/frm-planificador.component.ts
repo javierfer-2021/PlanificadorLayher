@@ -12,6 +12,7 @@ import { PlanificadorService } from '../../Servicios/PlanificadorService/planifi
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
 import { DxContextMenuModule } from 'devextreme-angular';
+import { Salida, SalidaLinea } from '../../Clases/Salida'
 
 @Component({
   selector: 'app-frm-planificador',
@@ -35,12 +36,12 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     { icono: '', texto: this.traducir('frm-planificacion.btnLimpiar', 'Limpiar'), posicion: 2, accion: () => {this.limpiarControles();}, tipo: TipoBoton.secondary, activo: true, visible: true },
   ];
 
-  oOfertaSeleccionada: oOferta;  
-  arrayArts: Array<oArticulo> = [];
-  arrayCabeceras: Array<oOferta> = [];
+  _salida: Salida;
+  oOfertaSeleccionada: Salida;  
+  arrayArts: Array<SalidaLinea> = [];
+  arrayCabeceras: Array<Salida> = [];
   arrayUnidadesOfertas = [];
-
-  _oferta: string;
+  
 
   idOferta_mostrar: string;
   fechaAlta_mostrar: string;
@@ -60,19 +61,19 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       visible: false
     },
     {
-      dataField: 'IdOferta',
-      caption: 'Id Oferta',
+      dataField: 'IdSalida',
+      caption: 'Id Salida',
       cssClass: 'blanco',
       visible: false
     },
     {
       dataField: 'IdArticulo',
-      caption: 'Id Artículo',
+      caption: 'Cod.Artículo',
       cssClass: 'blanco'
     },
     {
-      dataField: 'ArticuloNombre',
-      caption: 'Nombre Artículo',
+      dataField: 'NombreArticulo',
+      caption: 'Descripción',
       cssClass: 'blanco'
     },
     {
@@ -99,13 +100,12 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       cssClass: 'blanco',
       visible: false
     },
-    {
-      dataField: 'Stock',
-      caption: 'Stock',
-      cssClass: 'blanco'
-    }
+    // {
+    //   dataField: 'Stock',
+    //   caption: 'Stock',
+    //   cssClass: 'blanco'
+    // }
   ];
-  
   dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
   
   colsUnidades: Array<ColumnDataGrid> = [];
@@ -132,18 +132,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     // obtenemos dato identificacion de envio del routing
     const nav = this.router.getCurrentNavigation().extras.state;
     if(Utilidades.isEmpty(nav)) return;
-    this._oferta = nav.oferta;
+    this._salida = nav.salida;
 
     //configuración menu articulos
-    this.itemsMenuArticulos= [{
-      text: 'Share',
-      items: [
-        { text: 'Facebook' },
-        { text: 'Twitter' }],
-    },
-    { text: 'Download' },
-    { text: 'Comment' },
-    { text: 'Favorite' },
+    this.itemsMenuArticulos= [{ text: 'Eliminar artículo' },
+                              { text: 'Insertar artículo' },
     ];
   }
 
@@ -185,19 +178,19 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.limpiarControles(false);
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getPlanificacion(this._oferta)).subscribe(
+    (await this.planificadorService.getDatosPlanificador(this._salida.IdSalida)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.WSDatos_Valido = true;
 
           this.oOfertaSeleccionada = datos.datos.Oferta[0];
-          this.idOferta_mostrar = this.oOfertaSeleccionada.IdOferta;
+          this.idOferta_mostrar = this.oOfertaSeleccionada.Contrato;
           this.fechaAlta_mostrar = this.oOfertaSeleccionada.FechaAlta.toString().substring(0, this.oOfertaSeleccionada.FechaAlta.toString().indexOf('T'));
           this.fechaInicio_mostrar = this.oOfertaSeleccionada.FechaInicio.toString().substring(0, this.oOfertaSeleccionada.FechaInicio.toString().indexOf('T'));
           this.fechaFin_mostrar = this.oOfertaSeleccionada.FechaFin.toString().substring(0, this.oOfertaSeleccionada.FechaFin.toString().indexOf('T'));
-          this.estado_mostrar = this.oOfertaSeleccionada.Estado;
-          this.cliente_mostrar = this.oOfertaSeleccionada.Cliente;
-          this.almacen_mostrar = this.oOfertaSeleccionada.Almacen;
+          this.estado_mostrar = this.oOfertaSeleccionada.NombreEstado;
+          this.cliente_mostrar = this.oOfertaSeleccionada.IdCliente.toString()+' - '+this.oOfertaSeleccionada.NombreCliente;
+          this.almacen_mostrar = this.oOfertaSeleccionada.NombreAlmacen;
 
           this.arrayArts = datos.datos.LineasOferta;
           this.arrayCabeceras = datos.datos.OfertasRel;
@@ -211,37 +204,37 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           let nroCol: number = 0;
           this.arrayCabeceras.forEach(c => {
             let newCol: ColumnDataGrid = {
-              dataField: c.Cliente,
-              caption: c.Cliente,
-              cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisClaroBold' : 'grisClaro',
+              dataField: c.NombreCliente,
+              caption: c.NombreCliente,
+              cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisClaroBold' : 'grisClaro',
               columns: [{
                 dataField: c.Contrato,
                 caption: c.Contrato,
-                cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisBold' : 'gris',
+                cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
                 columns: [{
                   dataField: c.Obra,
                   caption: c.Obra,
-                  cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'blancoBold' : 'blanco',
+                  cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blancoBold' : 'blanco',
                   columns: [{
                     dataField: c.Observaciones,
                     caption: c.Observaciones,
-                    cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'blancoBold' : 'blanco',
+                    cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blancoBold' : 'blanco',
                     columns: [{
                       dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
                       caption: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
-                      cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'fechaBold' : 'fecha',
+                      cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fechaBold' : 'fecha',
                       columns: [{
                         dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                         caption: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                        cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'fechaRojaBold' : 'fechaRoja',
+                        cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fechaRojaBold' : 'fechaRoja',
                         columns: [{
-                          dataField: c.Estado,
-                          caption: c.Estado,
-                          cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'rojoClaroBold' : 'rojoClaro',
+                          dataField: c.NombreEstado,
+                          caption: c.NombreEstado,
+                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'rojoClaroBold' : 'rojoClaro',
                           columns: [{
                             dataField: 'C' + nroCol.toString(),
                             caption: 'Unidades',
-                            cssClass: (c.IdOferta === this.oOfertaSeleccionada.IdOferta) ? 'grisBold' : 'gris',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
                             allowSorting: false
                           }]
                         }]
@@ -300,19 +293,17 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
             b.IdArticulo.localeCompare(a.IdArticulo, 'en', { numeric: true })
           );
         }
-
         break;
       case 'ArticuloNombre':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            a.ArticuloNombre.localeCompare(b.ArticuloNombre, 'en', { numeric: true })
+            a.NombreArticulo.localeCompare(b.NombreArticulo, 'en', { numeric: true })
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            b.ArticuloNombre.localeCompare(a.ArticuloNombre, 'en', { numeric: true })
+            b.NombreArticulo.localeCompare(a.NombreArticulo, 'en', { numeric: true })
           );
         }
-
         break;
       case 'CantidadDisponible':
         if(columnOptionSorted.sortOrder === 'asc') {
@@ -324,7 +315,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
             b.CantidadDisponible - a.CantidadDisponible
           );
         }
-
         break;
       case 'CantidadPedida':
         if(columnOptionSorted.sortOrder === 'asc') {
@@ -336,7 +326,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
             b.CantidadPedida - a.CantidadPedida
           );
         }
-
         break;
       case 'CantidadReservada':
         if(columnOptionSorted.sortOrder === 'asc') {
@@ -348,32 +337,32 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
             b.CantidadReservada - a.CantidadReservada
           );
         }
-
         break;
-      case 'CantidadReservada':
-          if(columnOptionSorted.sortOrder === 'asc') {
-            this.arrayArts.sort((a, b) => 
-              a.CantidadReservada - b.CantidadReservada
-            );
-          } else {
-            this.arrayArts.sort((a, b) => 
-              b.CantidadReservada - a.CantidadReservada
-            );
-          }
-  
-          break;
-      case 'Stock':
-        if(columnOptionSorted.sortOrder === 'asc') {
-          this.arrayArts.sort((a, b) => 
-            a.Stock - b.Stock
-          );
-        } else {
-          this.arrayArts.sort((a, b) => 
-            b.Stock - a.Stock
-          );
-        }
+      // case 'CantidadReservada':
+      //     if(columnOptionSorted.sortOrder === 'asc') {
+      //       this.arrayArts.sort((a, b) => 
+      //         a.CantidadReservada - b.CantidadReservada
+      //       );
+      //     } else {
+      //       this.arrayArts.sort((a, b) => 
+      //         b.CantidadReservada - a.CantidadReservada
+      //       );
+      //     } 
+      //     break;
 
-        break;
+      //TODO - revisar
+      // case 'Stock':
+      //   if(columnOptionSorted.sortOrder === 'asc') {
+      //     this.arrayArts.sort((a, b) => 
+      //       a.Stock - b.Stock
+      //     );
+      //   } else {
+      //     this.arrayArts.sort((a, b) => 
+      //       b.Stock - a.Stock
+      //     );
+      //   }
+      //   break;
+
       default:
         break;
     }
@@ -459,6 +448,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
 }
 
+/*
 export class oOferta {
   IdOferta: string = '';
   IdAlmacen: number = 0;
@@ -487,3 +477,4 @@ export class oArticulo {
   FechaActualizacion: Date;
   Stock: number;
 }
+*/

@@ -57,8 +57,7 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
 
     this.Reconectar();
 
-    this.botonBuscarOfertas.accion = () => { this.router.navigate(['lista_ofertas']); };
-    this.botonImportarOferta.accion = () => { this.router.navigate(['importar_oferta']); };
+
     this.botonPlanificador.accion = () => { this.router.navigate(['planificador']); };
 
     this.botonVentaBuscar.accion = () => { this.router.navigate(['venta_buscar']); };
@@ -70,10 +69,13 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonUsuarios.accion = () => { this.router.navigate(['usuario_buscar']); };
     this.botonConfiguracion.accion = () => { this.router.navigate(['configuracion']); };
 
-    const navigationExtras: NavigationExtras = {
-      state: { PantallaAnterior: 'frm-principal', oferta: 'EV_103+PODIUM' }
-    };
-    this.botonPruebas.accion = () => { this.router.navigate(['pruebas'], navigationExtras); };
+    //TODO - Eliminar
+    // this.botonBuscarOfertas.accion = () => { this.router.navigate(['lista_ofertas']); };
+    // this.botonImportarOferta.accion = () => { this.router.navigate(['importar_oferta']); };    
+    // const navigationExtras: NavigationExtras = {
+    //   state: { PantallaAnterior: 'frm-principal', oferta: 'EV_103+PODIUM' }
+    // };
+    // this.botonPruebas.accion = () => { this.router.navigate(['pruebas'], navigationExtras); };
     
 
     this.loadingPrincipalVisible = Utilidades.VarStatic.LoadPrincipal;

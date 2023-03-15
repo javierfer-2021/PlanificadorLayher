@@ -4,11 +4,14 @@
     <div #pantalla>
 
             <!-- Titulo -->
-            <div class="row px-1 py-2 bg-secondary">
-                <div class="col pt-1 px-1 text-white text-center">
-                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-compra-buscar.lblTitulo', 'Lista de Compras Registradas')}} </div>
+            <div class="row px-1 py-2 titulo">
+                <div class="col pt-1 px-1">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-compra-buscar.lblTitulo', 'Lista Entradas incluidas en el Planificador (Compras)')}} </div>
+                </div>
+                <div class="col-4 pt-0 px-1">
+                    <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
                 </div>   
-            </div>  
+            </div>              
 
             <!-- grid lista ofertas -->    
             <div class="row">
@@ -26,9 +29,3 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
-<!-- <dx-popup *ngIf="popUpVisibleDireccion" 
-    #popUpDireccion (window:resize)="onResize($event)" [fullScreen]="true"
-    [(visible)]="popUpVisibleDireccion" [dragEnabled]="false" [showTitle]="false" [showCloseButton]="true" [closeOnOutsideClick]="false"
-    title="{{traducir('frm-envio-lista.popUpTituloDatosEntrega', 'Direccion Entrega')}}">
-    <app-frm-envio-direccion [idEnvio]="ver_info_envio" (cerrarPopUp)="cerrarPopUpDireccion()"></app-frm-envio-direccion>
-</dx-popup> -->
