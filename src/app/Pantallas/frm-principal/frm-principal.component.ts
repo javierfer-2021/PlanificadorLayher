@@ -24,16 +24,16 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   WSGetInci_Validando: boolean = false;
   WSGetInci_Valido: boolean = false;
   
-  botonBuscarOfertas: BotonMenu =  { icono: './assets/icons/Buscar Art A_B.svg', texto: 'Ver Ofertas', ruta: '', nombre: 'botonBuscarOfertas', notificacion: 0, desactivado: false, accion: () => { } };
-  botonImportarOferta: BotonMenu =  { icono: './assets/icons/Log A_B.svg', texto: 'Importar Oferta', ruta: '', nombre: 'botonImportarOferta', notificacion: 0, desactivado: false, accion: () => { } };
-  botonPlanificador: BotonMenu = { icono: './assets/icons/Mas A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } }; 
-  botonPruebas: BotonMenu = { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
+  // botonBuscarOfertas: BotonMenu =  { icono: './assets/icons/Buscar Art A_B.svg', texto: 'Ver Ofertas', ruta: '', nombre: 'botonBuscarOfertas', notificacion: 0, desactivado: false, accion: () => { } };
+  // botonImportarOferta: BotonMenu =  { icono: './assets/icons/Log A_B.svg', texto: 'Importar Oferta', ruta: '', nombre: 'botonImportarOferta', notificacion: 0, desactivado: false, accion: () => { } };
+  // botonPlanificador: BotonMenu = { icono: './assets/icons/Mas A_B.svg', texto: 'Planificador', ruta: '', nombre: 'botonPlanificador', notificacion: 0, desactivado: false, accion: () => { } }; 
+  // botonPruebas: BotonMenu = { icono: './assets/icons/Mas A_B.svg', texto: 'Pruebas', ruta: '', nombre: 'botonPruebas', notificacion: 0, desactivado: false, accion: () => { } };
 
-  botonVentaBuscar: BotonMenu = { icono: './assets/icons/salidas.svg', texto: 'Ver Salidas', ruta: '', nombre: 'botonVentaBuscar', notificacion: 0, desactivado: false, accion: () => { } };
-  botonVentaImportar: BotonMenu = { icono: './assets/icons/importar.svg', texto: 'Importar Salida', ruta: '', nombre: 'botonVentaImportar', notificacion: 0, desactivado: false, accion: () => { } };
-
-  botonComprasBuscar: BotonMenu = { icono: './assets/icons/entradas.svg', texto: 'Ver Entradas', ruta: '', nombre: 'botonComprasBuscar', notificacion: 0, desactivado: false, accion: () => { } };
+  botonComprasBuscar: BotonMenu = { icono: './assets/icons/entradas.svg', texto: 'Buscar y Ver Entradas', ruta: '', nombre: 'botonComprasBuscar', notificacion: 0, desactivado: false, accion: () => { } };
   botonComprasImportar: BotonMenu = { icono: './assets/icons/importar.svg', texto: 'Importar Entrada', ruta: '', nombre: 'botonComprasImportar', notificacion: 0, desactivado: false, accion: () => { } };
+
+  botonVentaBuscar: BotonMenu = { icono: './assets/icons/salidas.svg', texto: 'Buscar y Ver Salidas', ruta: '', nombre: 'botonVentaBuscar', notificacion: 0, desactivado: false, accion: () => { } };
+  botonVentaImportar: BotonMenu = { icono: './assets/icons/importar.svg', texto: 'Importar Salida', ruta: '', nombre: 'botonVentaImportar', notificacion: 0, desactivado: false, accion: () => { } };
   
   botonIncidencias: BotonMenu = { icono: './assets/icons/atencion.svg', texto: 'Gestión Incidencias', ruta: '', nombre: 'botonIncidencias', notificacion: 0, desactivado: false, accion: () => { } };
   
@@ -58,7 +58,7 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.Reconectar();
 
 
-    this.botonPlanificador.accion = () => { this.router.navigate(['planificador']); };
+    //this.botonPlanificador.accion = () => { this.router.navigate(['planificador']); };
 
     this.botonVentaBuscar.accion = () => { this.router.navigate(['venta_buscar']); };
     this.botonVentaImportar.accion = () => { this.router.navigate(['venta_importar']); };

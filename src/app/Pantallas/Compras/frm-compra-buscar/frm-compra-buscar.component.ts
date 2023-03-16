@@ -285,11 +285,11 @@ export class FrmCompraBuscarComponent implements OnInit {
       Utilidades.MostrarErrorStr(this.traducir('frm-compra-buscar.msgErrorSelectLinea','Debe seleccionar una Entrada'));
       return;
     }
-    let vOferta : Entrada =  this.dg.objSeleccionado();    
+    let vEntrada : Entrada =  this.dg.objSeleccionado();    
     const navigationExtras: NavigationExtras = {
-      state: { PantallaAnterior: 'frm-compra-buscar', oferta: vOferta }
+      state: { PantallaAnterior: 'frm-compra-buscar', Entrada: vEntrada }
     };
-    this.router.navigate(['detalles_compra'], navigationExtras);
+    this.router.navigate(['compra_detalle'], navigationExtras);
 
   }
 

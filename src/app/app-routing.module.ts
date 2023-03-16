@@ -8,6 +8,7 @@ import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.c
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
 import { FrmCompraBuscarComponent } from './Pantallas/Compras/frm-compra-buscar/frm-compra-buscar.component';
 import { FrmCompraImportarComponent } from './Pantallas/Compras/frm-compra-importar/frm-compra-importar.component';
+import { FrmCompraDetallesComponent } from './Pantallas/Compras/frm-compra-detalles/frm-compra-detalles.component';
 import { FrmVentaBuscarComponent } from './Pantallas/Ventas/frm-venta-buscar/frm-venta-buscar.component';
 import { FrmVentaImportarComponent } from './Pantallas/Ventas/frm-venta-importar/frm-venta-importar.component';
 import { FrmVentaDetallesComponent } from './Pantallas/Ventas/frm-venta-detalles/frm-venta-detalles.component';
@@ -24,13 +25,18 @@ const routes: Routes = [
   { path: 'venta_buscar', component: FrmVentaBuscarComponent, canActivate: [AuthGuard] },
   { path: 'venta_importar', component: FrmVentaImportarComponent, canActivate: [AuthGuard] },
   { path: 'venta_detalle', component: FrmVentaDetallesComponent, canActivate: [AuthGuard] },
+
   { path: 'compra_buscar', component: FrmCompraBuscarComponent, canActivate: [AuthGuard] },
   { path: 'compra_importar', component: FrmCompraImportarComponent, canActivate: [AuthGuard] },
-  { path: 'usuario_buscar', component: FrmUsuarioBuscarComponent, canActivate: [AuthGuard] },
-  { path: 'usuario', component: FrmUsuarioComponent, canActivate: [AuthGuard] },
-  { path: 'articulos_stock', component: FrmArticulosStockComponent, canActivate: [AuthGuard] },
+  { path: 'compra_detalle', component: FrmCompraDetallesComponent, canActivate: [AuthGuard] }, 
+  
   { path: 'incidencia', component: FrmIncidenciaComponent, canActivate: [AuthGuard] },
+  { path: 'articulos_stock', component: FrmArticulosStockComponent, canActivate: [AuthGuard] },
+
   { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard] },
+  
+  { path: 'usuario_buscar', component: FrmUsuarioBuscarComponent, canActivate: [AuthGuard] },
+  { path: 'usuario', component: FrmUsuarioComponent, canActivate: [AuthGuard] }, 
   { path: 'configuracion', component: FrmConfiguracionComponent, canActivate: [AuthGuard] },
     
 ];

@@ -32,7 +32,7 @@ export class PlanificadorService {
 
   //#endregion
 
-  
+
   //#region - Maestro STOCK-ARTICULOS
 
   async getStockArticulos(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
@@ -50,39 +50,38 @@ export class PlanificadorService {
 
   //#region - ENTRADAS - Importar del ERP
 
-  // async cargarEntrada_from_ERP(contrato): Promise<Observable<any>>{ // Promise<Observable<any>>
-  //   //await Utilidades.establecerConexion();
-  //   while (ConfiGlobal.principalValidando) {
-  //     await Utilidades.delay(500);
-  //   }    
-  //   const body = { usuario : ConfiGlobal.Usuario, datos: { Contrato:contrato } };    
-  //   return this.http.post(ConfiGlobal.URL + '/api/entradas/cargarEntrada_from_ERP', body, Utilidades.getHeaders());
-  // }   
+  async cargarEntrada_from_ERP(contrato): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { Contrato:contrato } };    
+    return this.http.post(ConfiGlobal.URL + '/api/entradas/cargarEntrada_from_ERP', body, Utilidades.getHeaders());
+  }   
 
-  // async importarEntrada(idSalidaERP,contrato,referencia,idEstado,fechaAlta,fechaInicio,fechaFin,idCliente,idClienteERP,nombreCliente,obra,observaciones,idAlmacen,idTipoDocumento,planificar,lineasSalida ): Promise<Observable<any>>{ // Promise<Observable<any>>
-  //   //await Utilidades.establecerConexion();
-  //   while (ConfiGlobal.principalValidando) {
-  //     await Utilidades.delay(500);
-  //   }    
-  //   const body = { usuario : ConfiGlobal.Usuario, datos: { IdSalidaERP:idSalidaERP
-  //                                                         ,Contrato:contrato
-  //                                                         ,Referencia:referencia
-  //                                                         ,IdEstado:idEstado
-  //                                                         ,FechaAlta:fechaAlta
-  //                                                         ,FechaInicio:fechaInicio
-  //                                                         ,FechaFin:fechaFin
-  //                                                         ,IdCliente:idCliente
-  //                                                         ,IdClienteERP:idClienteERP
-  //                                                         ,NombreCiente:nombreCliente
-  //                                                         ,Obra:obra
-  //                                                         ,Observaciones:observaciones
-  //                                                         ,IdAlmacen:idAlmacen
-  //                                                         ,IdTipoDocumento:idTipoDocumento
-  //                                                         ,Planificar:planificar
-  //                                                         ,LineasSalidaERP:lineasSalida
-  //   } };    
-  //   return this.http.post(ConfiGlobal.URL + '/api/entradas/importarEntrada_ERP', body, Utilidades.getHeaders());
-  // }   
+  async importarEntrada(idEntradaERP,contrato,referencia,idEstado,fechaAlta,fechaPrevista,fechaConfirmada,idProveedor,idProveedorERP,nombreProveedor,observaciones,idAlmacen,idTipoDocumento,confirmada,lineasEntrada ): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdEntradaERP:idEntradaERP
+                                                          ,Contrato:contrato
+                                                          ,Referencia:referencia
+                                                          ,IdEstado:idEstado
+                                                          ,FechaAlta:fechaAlta
+                                                          ,FechaPrevista:fechaPrevista
+                                                          ,FechaConfirmada:fechaConfirmada
+                                                          ,IdProveedor:idProveedor
+                                                          ,IdProveedorERP:idProveedorERP
+                                                          ,NombreProveedor:nombreProveedor
+                                                          ,Observaciones:observaciones
+                                                          ,IdAlmacen:idAlmacen
+                                                          ,IdTipoDocumento:idTipoDocumento
+                                                          ,Confirmada:confirmada
+                                                          ,LineasEntradaERP:lineasEntrada
+    } };    
+    return this.http.post(ConfiGlobal.URL + '/api/entradas/importarEntrada_ERP', body, Utilidades.getHeaders());
+  }   
 
   async getEntradasAlmacen(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();

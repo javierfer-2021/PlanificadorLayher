@@ -4,7 +4,7 @@ export class Salida {
     IdSalidaERP: number;
     Contrato: string;
     Referencia: string;
-    FechaAlta: string;
+    FechaAlta: Date;
     FechaInicio: Date;
     FechaFin: Date;   
     IdEstado: number;

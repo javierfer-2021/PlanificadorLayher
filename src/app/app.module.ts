@@ -46,6 +46,7 @@ import { FrmVentaBuscarComponent } from './Pantallas/Ventas/frm-venta-buscar/frm
 import { FrmVentaDetallesComponent } from './Pantallas/Ventas/frm-venta-detalles/frm-venta-detalles.component';
 import { CmdSelectBoxComponent } from './Componentes/cmp-select-box/cmd-select-box.component';
 import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
+import { FrmCompraDetallesComponent } from './Pantallas/Compras/frm-compra-detalles/frm-compra-detalles.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -79,7 +80,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmVentaBuscarComponent,
     FrmVentaDetallesComponent,
     CmdSelectBoxComponent,
-    FrmConfiguracionComponent
+    FrmConfiguracionComponent,
+    FrmCompraDetallesComponent
 
   ],
   imports: [

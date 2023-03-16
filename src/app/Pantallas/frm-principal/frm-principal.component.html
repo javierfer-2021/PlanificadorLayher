@@ -16,36 +16,73 @@
     <mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSGetInci_Validando)"></mat-progress-bar>
     <div class="container">
 
-        <!-- <p>Botones prototipo Inicial</p>
-        <div class="row pt-2">
-            <div class="container">
-                <div class="row">
-                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonBuscarOfertas"></app-boton-menu>
+        <div class="row">
+            <!-- Entradas Material -->
+            <div class="col-6">               
+                <div class="card" style="margin-top: 20px;">
+                    <h5 class="card-header" style="font-size: 0.9em;">Gestión ENTRADAS de Material (Compras)</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonComprasBuscar"></app-boton-menu>                      
+                            </div>
+                            <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonComprasImportar"></app-boton-menu>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonImportarOferta"></app-boton-menu>
-                    </div>
-                </div>
+                  </div>                
             </div>
-        </div>
+            <!-- Salidas Material-->
+            <div class="col-6">
+                <div class="card" style="margin-top: 20px;">
+                    <h5 class="card-header" style="font-size: 0.9em;">Gestión SALIDAS de Material (Venta-Alquiler-Traspasos)</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonVentaBuscar"></app-boton-menu>
+                            </div>
+                            <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonVentaImportar"></app-boton-menu>
+                            </div>
+                        </div>
+                    </div>
+                  </div>                
+            </div>
+        </div>   
+
 
         <div class="row">
-            <div class="container">
-                <div class="row">
-                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonPlanificador"></app-boton-menu>
+            <!-- Incidencias -->
+            <div class="col-6">               
+                <div class="card" style="margin-top: 20px;">
+                    <h5 class="card-header" style="font-size: 0.9em;">Gestión de INCIDENCIAS y Excepciones</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonIncidencias"></app-boton-menu>                      
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonPruebas"></app-boton-menu>
-                    </div>
-                </div>
+                  </div>                
             </div>
-        </div>
-        
-        <hr>
-        <p>Botones beta 1</p> -->
+            <!-- Maestro de Articulos-->
+            <div class="col-6">
+                <div class="card" style="margin-top: 20px;">
+                    <h5 class="card-header" style="font-size: 0.9em;">Maestro de Articulos y Stock</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonStock"></app-boton-menu>
+                            </div>
+                        </div>
+                    </div>
+                  </div>                
+            </div>
+        </div>   
 
+
+        <!-- 
         <div class="row pt-2">
             <div class="container">
                 <div class="row">
@@ -70,21 +107,22 @@
                     </div>
                 </div>
             </div>
-        </div>  
-        
+        </div>   
 
-        <div class="row">
+        <div class="row" style="margin-top: 20px;">
             <div class="container">
                 <div class="row">
                     <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
                         <app-boton-menu [btnMenu]="botonIncidencias"></app-boton-menu>
                     </div>
-                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">                        
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonStock"></app-boton-menu>                        
                     </div>
                 </div>
             </div>
         </div>         
         
+
         <div class="row">
             <div class="container">
                 <div class="row">
@@ -95,9 +133,9 @@
                     </div>
                 </div>
             </div>
-        </div>   
+        </div>  
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="container">
                 <div class="row">
                     <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
@@ -107,11 +145,14 @@
                     </div>
                 </div>
             </div>
-        </div>            -->
+        </div> 
+        -->
 
 
 
 
+
+        <!-- grupo de Administración aplicación -->
         <div class="card" style="margin-top: 20px;">
             <h5 class="card-header" style="font-size: 0.9em;">Opciones de Administración de la Aplicación</h5>
             <div class="card-body">
@@ -133,7 +174,7 @@
                 </div>                    
                 <!-- </div> -->
             </div>
-          </div>
+        </div>
 
     </div>
 </div>

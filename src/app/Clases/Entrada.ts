@@ -4,7 +4,7 @@ export class Entrada {
     IdEntradaERP: number;
     Contrato: string;
     Referencia: string;
-    FechaAlta: string;
+    FechaAlta: Date;
     FechaPrevista: Date;
     FechaConfirmada: Date;   
     IdEstado: number;
@@ -19,6 +19,7 @@ export class Entrada {
     NombreTipoDocumento: string;
     Confirmada: boolean;
     NumLineas: number;
+    Aviso?: string;
   }
 
   export class EntradaLinea {

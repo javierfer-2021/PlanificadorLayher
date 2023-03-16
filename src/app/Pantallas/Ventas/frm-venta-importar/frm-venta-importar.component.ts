@@ -49,7 +49,6 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   btnIconoBuscar: BotonIcono =  { icono: 'bi bi-search', texto: this.traducir('frm-venta-importar.btnBuscar', 'Buscar'), accion: () => this.btnBuscarDocumento(), nroFilas:1 };
 
   WSDatos_Validando: boolean = false;
-  //WSEnvioCsv_Valido: boolean = false;
 
   str_txtContrato: string = '';
   color_txtContrato: string = '';
@@ -64,7 +63,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   arrayAlmacenes: Array<Almacen> = [];  
   requerirFechaFin:boolean = false;
 
-  // grid lista articulos cargados csv
+  // grid lista articulos cargados ERP
   // [IdSalidaERP, Cantidad, Cualidad, IdArticuloERP, IdArticulo, NombreArticulo, Aviso]
   arrayLineasSalida: Array<SalidaLineaERP>;
   cols: Array<ColumnDataGrid> = [
@@ -124,16 +123,23 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
   ngOnInit(): void {
     this.cargarCombos();
+    this.contratoValido= true;
   }
 
 
   ngAfterViewInit(): void {    
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
+
+    // configuracion extra del grid -> mostrar fila total registros + redimensionar
+    this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Líneas: '),'count');    
     setTimeout(() => {
-      Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
-      //foco
-      this.formSalida.instance.getEditor('IdEstado').focus();
+      this.contratoValido= false;      
     }, 200);    
+
+    //foco
+    // try {this.formSalida.instance.getEditor('IdEstado').focus();} catch {} 
+
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -223,16 +229,18 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
           
+          this.asignarValoresDefecto();
           //Foco
-          this.formSalida.instance.getEditor('Obra').focus();
+          try {this.formSalida.instance.getEditor('Obra').focus();} catch { }
+
         } else {          
           //this.WSEnvioCsv_Valido = false;
-          Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSobtenerDatosVentaERP','Error: Documento no encontrado')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSobtenerDatosERP','Error: Documento no encontrado')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSobtenerDatosVentaERP','Error WebService --> Obtener datos ERP')); 
+        Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSobtenerDatosERP','Error WebService --> Obtener datos ERP')); 
         console.log(error);
       }
     );
@@ -254,15 +262,14 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
           //this.WSEnvioCsv_Valido = true;
           console.log(datos);
 
-          Utilidades.MostrarExitoStr(this.traducir('frm-venta-importar.msgOk_WSImportarOferta','Oferta Importada correctamente'));           
+          Utilidades.MostrarExitoStr(this.traducir('frm-venta-importar.msgOk_WSImportarEntrada','Documento Importado correctamente'));           
 
           // ir a pantalla de planificador
           const navigationExtras: NavigationExtras = {
-            state: { PantallaAnterior: 'frm-oferta-buscar', oferta: this._salida.Referencia },
+            state: { PantallaAnterior: 'frm-venta-importar', salida: this._salida.Referencia },
             replaceUrl: true
           };
-          this.router.navigate(['pruebas'], navigationExtras);
-
+          this.router.navigate(['planificador'], navigationExtras);
           this.limpiarDocumento();
         } else {          
           //this.WSEnvioCsv_Valido = false;
@@ -314,7 +321,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
 
   asignarValoresDefecto(){
-    this._salida.FechaAlta = new Date().toLocaleDateString();
+    this._salida.FechaAlta = new Date();  //new Date().toLocaleDateString();
     this._salida.IdEstado = 1;
     this._salida.IdAlmacen = ConfiGlobal.DatosUsuario.idAlmacenDefecto;
     this._salida.Planificar = true;
