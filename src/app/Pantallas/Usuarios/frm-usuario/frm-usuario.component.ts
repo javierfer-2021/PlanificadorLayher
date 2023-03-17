@@ -39,12 +39,17 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-usuario.btnSalir', 'Cancelar'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Guardar'), posicion: 2, accion: () => {this.btnCancelarOferta()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-usuario.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-usuario.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarUsuario()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-usuario.btnNuevo', 'Nuevo'), posicion: 3, accion: () => {this.btnNuevoUsuario()}, tipo: TipoBoton.secondary },
+  ];
+  
+  btnAcionesEdicion: BotonPantalla[] = [
+    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-usuario.btnGuardar', 'Guardar'), posicion: 2, accion: () => {this.btnGuardar()}, tipo: TipoBoton.success },
   ];
   
   WSDatos_Validando: boolean = false;
-  WSEnvioCsv_Valido: boolean = false;
 
   _usuario: Usuario = new(Usuario);
   arrayIdiomas: Array<Idioma> = ConfiGlobal.arrayIdiomas;  
@@ -54,6 +59,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   arrayAlmacenesAsignados: Array<Almacen> = [];
 
   checkBoxBajaOptions: any;
+  modoEdicion: boolean = false;
 
   //TODO - Cambiar por permisos
   // // grid almacenes asoiados
@@ -124,11 +130,11 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
         this._usuario= nav.usuario;
       }
 
-      // gestion dinamica checkBox BAJA del form
+      // gestion dinamica checkBox campo BAJA del form
       this.checkBoxBajaOptions = {
         // text: 'Show Address',
         // value: true,
-        disabled: false,
+        disabled: true,
         onValueChanged: (e) => {
           if ((this._usuario!=null) && (this._usuario!=undefined)) {
             if (e.component.option('value')) {
@@ -150,6 +156,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
     // redimensionar grid, popUp
     // setTimeout(() => {
     //   this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
@@ -237,10 +244,48 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     this.location.back();
   }
 
-  btnCancelarOferta(){
-    alert('Función no implementada')
+  btnEditarUsuario(){
+    this.setModoEdicion(true);
+    //alert('Función no implementada')
   }
 
+  btnNuevoUsuario(){
+    alert('Función no implementada');
+    // copiar usuario actual a var_temp
+    // insertar nuevo ususario
+    this.setModoEdicion(true);
+  }
+
+  btnCancelar(){
+    alert('Función no implementada');
+    // distingir entre edicion o insercion
+    // volver a pantalla anterio vs volver al usuario anterior
+    // llamar a ws con datos del formulario
+
+    this.setModoEdicion(false);
+  }
+
+  btnGuardar(){
+    alert('Función no implementada');
+    // distingir entre edicion o insercion
+    // validar formulario
+    // llamar a ws con datos del formulario
+    this.setModoEdicion(false);
+  }
+  
+
+  setModoEdicion(editar:boolean){
+    this.modoEdicion = editar;
+    this.checkBoxBajaOptions.disabled = !editar;
+    setTimeout(() => {
+      if (editar) {
+          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
+      }
+      else {
+          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
+      }
+      }, 100);     
+  }
 
   onDragStart(e) {
     e.itemData = e.fromData[e.fromIndex];
@@ -253,6 +298,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   onRemove(e) {
     e.fromData.splice(e.fromIndex, 1);
   }
+
 
 }
 

@@ -30,6 +30,53 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/getListaUsuarios', body, Utilidades.getHeaders());
   }  
 
+  async insertarUsuario(login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: {Login: login,
+                                                          Password: password,
+                                                          NombreUsuario: nombreUsuario,
+                                                          Email: email,
+                                                          IdIdioma: idIdioma,                                                         
+                                                          FechaAlta: fechaAlta,
+                                                          FechaBaja: fechaBaja,
+                                                          Baja: baja,
+                                                          Administrador: administrador,
+                                                          VerAlmacenes : verAlmacenes,
+                                                          IdAlmacenDefecto: idAlmacenDefecto,
+                                                          Skin: skin,
+                                                          Perfil: perfil,
+                                                          IdPersonal: idPersonal
+    } };    
+    return this.http.post(ConfiGlobal.URL + '/api/usuarios/insertarUsuario', body, Utilidades.getHeaders());
+  }  
+
+  async actualizarUsuario(idUsuario,login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: {IdUsuario: idUsuario,
+                                                          Login: login,
+                                                          Password: password,
+                                                          NombreUsuario: nombreUsuario,
+                                                          Email: email,
+                                                          IdIdioma: idIdioma,                                                         
+                                                          FechaAlta: fechaAlta,
+                                                          FechaBaja: fechaBaja,
+                                                          Baja: baja,
+                                                          Administrador: administrador,
+                                                          VerAlmacenes : verAlmacenes,
+                                                          IdAlmacenDefecto: idAlmacenDefecto,
+                                                          Skin: skin,
+                                                          Perfil: perfil,
+                                                          IdPersonal: idPersonal
+    } };    
+    return this.http.post(ConfiGlobal.URL + '/api/usuarios/ActualizarUsuario', body, Utilidades.getHeaders());
+  }    
+
   //#endregion
 
 

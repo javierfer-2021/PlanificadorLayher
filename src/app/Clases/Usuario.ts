@@ -15,6 +15,8 @@ export class Usuario {
     idAlmacenDefecto: number;
     NombreAlmacenDefecto: String;
     Skin: string;
+    Perfil: number;
+    IdPersonal: number;
   }
   
 

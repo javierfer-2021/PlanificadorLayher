@@ -22,10 +22,10 @@
                         <dxi-item dataField="FechaBaja" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
                         <dxi-item dataField="Baja" editorType="dxCheckBox" [editorOptions]="checkBoxBajaOptions"></dxi-item>
 
-                        <dxi-item dataField="NombreUsuario" [colSpan]="2" [editorOptions]="{disabled: false}">
+                        <dxi-item dataField="NombreUsuario" [colSpan]="2" [editorOptions]="{disabled: !modoEdicion}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE USUARIO"></dxi-validation-rule>
                         </dxi-item>                           
-                        <dxi-item dataField="Login" [colSpan]="1" [editorOptions]="{disabled: false}">
+                        <dxi-item dataField="Login" [colSpan]="1" [editorOptions]="{disabled: !modoEdicion}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo LOGIN"></dxi-validation-rule>
                         </dxi-item>                          
                         <dxi-item dataField="Password" [colSpan]="1" [editorOptions]="{disabled: true, mode: 'password'}">
@@ -33,14 +33,14 @@
                         </dxi-item>  
 
                         <dxi-item dataField="IdIdioma" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayIdiomas, displayExpr:'NombreIdioma', valueExpr:'IdIdioma', searchEnabled: true }"></dxi-item>
-                        <dxi-item dataField="idAlmacenDefecto" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }"></dxi-item>
-                        <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled: false}" [colSpan]="2"></dxi-item>
+                        <dxi-item dataField="idAlmacenDefecto" editorType="dxSelectBox" [editorOptions]="{ disabled:!modoEdicion, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }"></dxi-item>
+                        <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled: !modoEdicion}" [colSpan]="2"></dxi-item>
                     </dxi-item>         
                     
                     
                     <dxi-item itemType="group" caption="Permisos" [colCount]="1" [colSpan]="1">
-                        <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
-                        <dxi-item dataField="Ver Almacenes" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:!modoEdicion, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="Ver Almacenes" editorType="dxCheckBox" [editorOptions]="{disabled:!modoEdicion, width:'100%'}"></dxi-item>
                         <!-- <dxi-item itemType="empty" [colSpan]="2 "></dxi-item> -->
                     </dxi-item>
 
@@ -98,10 +98,17 @@
     </div>
 </div>
 
-<div #btnFooter>
-    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+<!-- <div *ngIf="modoEdicion; then BotonesEdicion ; else BotonesVer" #btnFooter></div>
+    <ng-template #BotonesEdicion><app-cmp-botones-pantallas [botones]="btnAcionesEdicion"></app-cmp-botones-pantallas></ng-template>
+    <ng-template #BotonesVer><app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas></ng-template> -->
+
+<div *ngIf="modoEdicion" #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAcionesEdicion"></app-cmp-botones-pantallas>
 </div>
 
+<div *ngIf="!modoEdicion" #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
 
 
 

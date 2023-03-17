@@ -268,7 +268,7 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
 
   btnDetallesUsuario(){
     if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
-      Utilidades.MostrarErrorStr(this.traducir('frm-usuario-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
+      Utilidades.MostrarErrorStr(this.traducir('frm-usuario-buscar.msgErrorSelectLinea','Debe seleccionar un usuario'));
       return;
     }
 
