@@ -13,54 +13,57 @@
         <!-- Formulario cliente -->
         <div class="row pt-2">
             <div id="form-container" class="formulario">
-                <dx-form id="formUsuario" #formUsuario [colCount]="5" [formData]="_usuario" labelMode="static">
+                <dx-form id="formUsuario" #formUsuario [colCount]="5" [formData]="_usuario" labelMode="static" [readOnly]="!modoEdicion">
 
                     <dxi-item itemType="group" caption="Datos Usuario" [colCount]="4" [colSpan]="4">
                         
                         <dxi-item dataField="IdUsuario" [editorOptions]="{disabled: true}"></dxi-item>
                         <dxi-item dataField="FechaAlta" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
                         <dxi-item dataField="FechaBaja" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
-                        <dxi-item dataField="Baja" editorType="dxCheckBox" [editorOptions]="checkBoxBajaOptions"></dxi-item>
+                        <dxi-item dataField="Baja" editorType="dxCheckBox" #cbBaja [editorOptions]="checkBoxBajaOptions"></dxi-item>
+                        <!-- <dxi-item dataField="Baja" editorType="dxCheckBox" #cbBaja [editorOptions]='{disabled: !modoEdicion (onValueChanged)="cbBaja_onValueChanged($event)"}'></dxi-item> -->
 
-                        <dxi-item dataField="NombreUsuario" [colSpan]="2" [editorOptions]="{disabled: !modoEdicion}">
+                        <dxi-item dataField="NombreUsuario" [colSpan]="2" [editorOptions]="{disabled:false}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE USUARIO"></dxi-validation-rule>
                         </dxi-item>                           
-                        <dxi-item dataField="Login" [colSpan]="1" [editorOptions]="{disabled: !modoEdicion}">
+                        <dxi-item dataField="Login" [colSpan]="1" [editorOptions]="{disabled:false}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo LOGIN"></dxi-validation-rule>
                         </dxi-item>                          
-                        <dxi-item dataField="Password" [colSpan]="1" [editorOptions]="{disabled: true, mode: 'password'}">
+                        <dxi-item dataField="Password" [colSpan]="1" [editorOptions]="{disabled: false, mode: 'password'}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo PASSWORD"></dxi-validation-rule>
                         </dxi-item>  
 
-                        <dxi-item dataField="IdIdioma" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayIdiomas, displayExpr:'NombreIdioma', valueExpr:'IdIdioma', searchEnabled: true }"></dxi-item>
-                        <dxi-item dataField="idAlmacenDefecto" editorType="dxSelectBox" [editorOptions]="{ disabled:!modoEdicion, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }"></dxi-item>
-                        <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled: !modoEdicion}" [colSpan]="2"></dxi-item>
+                        <dxi-item dataField="IdIdioma" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayIdiomas, displayExpr:'NombreIdioma', valueExpr:'IdIdioma', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo IDIOMA"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="idAlmacenDefecto" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled:false}" [colSpan]="2"></dxi-item>
                     </dxi-item>         
                     
                     
                     <dxi-item itemType="group" caption="Permisos" [colCount]="1" [colSpan]="1">
-                        <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:!modoEdicion, width:'100%'}"></dxi-item>
-                        <dxi-item dataField="Ver Almacenes" editorType="dxCheckBox" [editorOptions]="{disabled:!modoEdicion, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="Ver Almacenes" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
                         <!-- <dxi-item itemType="empty" [colSpan]="2 "></dxi-item> -->
                     </dxi-item>
-
 
                 </dx-form>
             </div>
         </div>
 
-        <hr>
-
-        <p>{{traducir('frm-usuario.lblAlmacenesAsignados', 'Almacenes asignados para planificación')}} </p>
+        <span class="dx-widget dx-form-group-caption pt-2">{{traducir('frm-usuario.lblAlmacenesAsignados', 'Almacenes asignados para planificación')}} </span>
         <!-- grid lineas cargadas del CSVs -->    
         <!-- <div class="row">
             <div class="col pt-1 px-1">    
                 <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
             </div>
-        </div>             -->
+        </div>  -->
 
-        <div class="row">
-            <div class="col pt-1 px-2 m-2 border rounded">          
+        <div class="row barraGrupo">
+            <div class="col pt-1 px-2 m-2 border rounded">     
+                <div style="background-color: rgb(240, 180, 150); padding: 5px;">Almacenes disponibles</div>     
                 <dx-list
                     [dataSource]="arrayAlmacenesDisponibles"
                     [repaintChangesOnly]="true"
@@ -69,15 +72,16 @@
                         <dxo-item-dragging
                         group="almacenes"
                         [data]="arrayAlmacenesDisponibles"
-                        [allowReordering]="false"
+                        [allowReordering]="true"                        
                         [onDragStart]="onDragStart"
                         [onAdd]="onAdd"
                         [onRemove]="onRemove"
                     >
-                    </dxo-item-dragging>                    
+                    </dxo-item-dragging>                                      
                 </dx-list>
             </div>
             <div class="col pt-1 px-2 m-2 border rounded">
+                <div style="background-color: rgb(170, 250, 200); padding: 5px;">Almacenes Asignados</div>
                 <dx-list
                     [dataSource]="arrayAlmacenesAsignados"
                     [repaintChangesOnly]="true"
@@ -86,21 +90,18 @@
                         <dxo-item-dragging
                         group="almacenes"
                         [data]="arrayAlmacenesAsignados"
-                        [allowReordering]="false"
+                        [allowReordering]="true"
                         [onDragStart]="onDragStart"
                         [onAdd]="onAdd"
                         [onRemove]="onRemove"
                     >
-                    </dxo-item-dragging>                    
+                    </dxo-item-dragging>                                        
                 </dx-list>                
             </div>
         </div>
     </div>
 </div>
 
-<!-- <div *ngIf="modoEdicion; then BotonesEdicion ; else BotonesVer" #btnFooter></div>
-    <ng-template #BotonesEdicion><app-cmp-botones-pantallas [botones]="btnAcionesEdicion"></app-cmp-botones-pantallas></ng-template>
-    <ng-template #BotonesVer><app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas></ng-template> -->
 
 <div *ngIf="modoEdicion" #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAcionesEdicion"></app-cmp-botones-pantallas>

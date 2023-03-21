@@ -30,7 +30,17 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/getListaUsuarios', body, Utilidades.getHeaders());
   }  
 
-  async insertarUsuario(login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async getListaAlmacesUsuario(idUsuario): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: {IdUsuario: idUsuario} };    
+    return this.http.post(ConfiGlobal.URL + '/api/usuarios/getAlmacenesUsuario', body, Utilidades.getHeaders());
+  } 
+
+  async insertarUsuario(login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal,almacenesAsignados): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
@@ -48,12 +58,13 @@ export class PlanificadorService {
                                                           IdAlmacenDefecto: idAlmacenDefecto,
                                                           Skin: skin,
                                                           Perfil: perfil,
-                                                          IdPersonal: idPersonal
+                                                          IdPersonal: idPersonal,
+                                                          AlmacenesAsignados: almacenesAsignados,
     } };    
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/insertarUsuario', body, Utilidades.getHeaders());
   }  
 
-  async actualizarUsuario(idUsuario,login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async actualizarUsuario(idUsuario,login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal,almacenesAsignados): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
@@ -72,7 +83,8 @@ export class PlanificadorService {
                                                           IdAlmacenDefecto: idAlmacenDefecto,
                                                           Skin: skin,
                                                           Perfil: perfil,
-                                                          IdPersonal: idPersonal
+                                                          IdPersonal: idPersonal,
+                                                          AlmacenesAsignados: almacenesAsignados,
     } };    
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/ActualizarUsuario', body, Utilidades.getHeaders());
   }    
@@ -238,6 +250,8 @@ export class PlanificadorService {
 
   //#endregion
 
+
+  // -------------------------------------------
   //#region -- DESCATALOGADOS, SIN USO, EJEMOLOS --
   async cargarDatos_ficheroCSV(fileToUpload: File): Promise<Observable<any>> {
     const url =  ConfiGlobal.URL + '/api/salidas/cargarDatosCSV_LineasOferta';

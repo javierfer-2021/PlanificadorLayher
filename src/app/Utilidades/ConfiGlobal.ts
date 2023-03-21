@@ -102,6 +102,7 @@ export class ConfiGlobal {
   // Carga de tablas de referencia
   public static arrayAlmacenesFiltrosBusqueda = new Array<Almacen>();
   public static arrayAlmacenesActivos = new Array<Almacen>();
+  public static arrayAlmacenesUsuario = new Array<Almacen>();
   public static arrayIdiomas = [];
   public static arrayEstadosDocumentos = [];
   public static arrayTiposDocumentos = [];

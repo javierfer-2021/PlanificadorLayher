@@ -258,8 +258,9 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           ConfiGlobal.DatosUsuario = datos.datos.Usuario[0];
           
           // Valores tablas de referencia a varGolbal -> reducir llamadas webservice sobre tablas referencia
-          ConfiGlobal.arrayAlmacenesFiltrosBusqueda = datos.datos.Almacenes;
+          ConfiGlobal.arrayAlmacenesFiltrosBusqueda = datos.datos.AlmacenesBuscar;
           ConfiGlobal.arrayAlmacenesActivos = ConfiGlobal.arrayAlmacenesFiltrosBusqueda.slice(1);
+          ConfiGlobal.arrayAlmacenesUsuario = datos.datos.AlmacenesUsuario;
           ConfiGlobal.arrayIdiomas.push({'IdIdioma':1, 'NombreIdioma':'Español', 'iso':'es', 'Activo':1})
 
           this.WSLogin_Valido = true;

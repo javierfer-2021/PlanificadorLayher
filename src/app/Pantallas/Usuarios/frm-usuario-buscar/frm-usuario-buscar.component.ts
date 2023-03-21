@@ -281,8 +281,11 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
 
 
   btnNuevoUsuario() {
-    alert('Ir a pantalla nuevo usuario con null -> alta nuevo registro');
-    //this.router.navigate(['importar_oferta']);
+    // let vUsuario : Usuario =  this.dg.objSeleccionado();    
+    const navigationExtras: NavigationExtras = {
+      state: { PantallaAnterior: 'frm-usuario-buscar', usuario: null }
+    };
+    this.router.navigate(['usuario'], navigationExtras);    
   }
 
   //#endregion
