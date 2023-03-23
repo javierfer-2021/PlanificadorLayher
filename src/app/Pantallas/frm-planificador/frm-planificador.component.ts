@@ -116,7 +116,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   primeraVez: boolean = true; // Indica si está entrando de 0 en la pantalla
 
+  //popUp menus asociados a los grid
   itemsMenuArticulos: any;
+  itemsMenuContratos: any;
+
 //#endregion - cte y var de la pantalla
 
 //#region - creación, inicializacion y gestion eventos pantalla
@@ -138,6 +141,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.itemsMenuArticulos= [{ text: 'Eliminar artículo' },
                               { text: 'Insertar artículo' },
     ];
+    //configuración menu contratos
+    this.itemsMenuContratos= [{ text: 'Seleccionar Contrato' }];    
   }
 
   ngOnInit(): void {
@@ -454,13 +459,33 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
 
   itemMenuArticulosClick(e) {
-    if (!e.itemData.items) {
-      alert('The '+e.itemData.text+' item was clicked');
+    //if (!e.itemData.items) { alert('The '+e.itemData.text+' item was clicked'); }
+    if (e.itemIndex === 0) {      
+      alert('Eliminar Articulo '+ this.dgArticulos.objSeleccionado().IdArticulo);
+      // confirmar eliminación
+      // Actualizar SALIDAS_LINEAS
+      // Recalcular stock
+      // actualizar en array articulos y unidades
+    }
+    else if (e.itemIndex === 1) {
+      alert('Añadir Articulo ' + this.dgArticulos.objSeleccionado().IdArticulo);
+      // pantalla buscar seleccionar articulo
+      // Insertar en SALIDAS_LINEAS
+      // Recalcular stock
+      // Insertar en array articulos y unidades
+    }
+  }
+
+
+  itemMenuContratosClick(e) {
+    if (!e.itemData.items) { 
+      alert('Opcion '+e.itemData.text+' del contrato'+ this.dgUnidades.objSeleccionado().Contrato); 
     }
   }
 
 }
 
+//TODO - Eliminar
 /*
 export class oOferta {
   IdOferta: string = '';

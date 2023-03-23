@@ -17,6 +17,7 @@ import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuari
 import { FrmArticulosStockComponent } from './Pantallas/frm-articulos-stock/frm-articulos-stock.component';
 import { FrmIncidenciaComponent } from './Pantallas/frm-incidencia/frm-incidencia.component';
 import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
+import { FrmImportarMaestrosComponent } from './Pantallas/frm-importar-maestros/frm-importar-maestros.component';
 
 const routes: Routes = [
   { path: '', component: FrmLoginComponent },
@@ -38,6 +39,9 @@ const routes: Routes = [
   { path: 'usuario_buscar', component: FrmUsuarioBuscarComponent, canActivate: [AuthGuard] },
   { path: 'usuario', component: FrmUsuarioComponent, canActivate: [AuthGuard] }, 
   { path: 'configuracion', component: FrmConfiguracionComponent, canActivate: [AuthGuard] },
+  { path: 'importar_maestros', component: FrmImportarMaestrosComponent, canActivate: [AuthGuard] },
+
+  
     
 ];
 

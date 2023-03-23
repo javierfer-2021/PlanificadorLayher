@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="col-8 px-0">
-                <app-cmp-data-grid #dgUnidades [dgConfig]="dgConfigUnidades"
+                <app-cmp-data-grid id="dgUnidades" #dgUnidades [dgConfig]="dgConfigUnidades"
                     (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" 
                     (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)">
                 </app-cmp-data-grid>
@@ -82,6 +82,13 @@
                 target="#dgArticulos"
                 (onItemClick)="itemMenuArticulosClick($event)">
             </dx-context-menu>
+
+            <dx-context-menu
+                [dataSource]="itemsMenuContratos"
+                [width]="200"
+                target="#dgUnidades"
+                (onItemClick)="itemMenuContratosClick($event)">
+            </dx-context-menu>            
 
         </div>
 

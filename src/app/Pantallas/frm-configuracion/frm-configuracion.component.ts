@@ -73,7 +73,7 @@ export class FrmConfiguracionComponent implements OnInit {
     this.arrayEstadosEntrada.push({id:1, nombre:'PENDIENTE'});
     this.arrayEstadosEntrada.push({id:2, nombre:'CONFIRMADO'});
     
-    // estados entradas por defecto
+    // estados salidas por defecto
     //this.arrayEstadosSalida = Object.assign({},ConfiGlobal.arrayEstadosSalida);
     this.arrayEstadosSalida.splice(0, 0,{id:0, nombre:'No asignar'});
     this.arrayEstadosSalida.push({id:1, nombre:'PENDIENTE'});
