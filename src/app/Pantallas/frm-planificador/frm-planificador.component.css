@@ -5,6 +5,7 @@
 
 ::ng-deep .dx-header-row .grisClaro,
 ::ng-deep .dx-header-row .verde,
+::ng-deep .dx-header-row .verdeClaro,
 ::ng-deep .dx-header-row .gris,
 ::ng-deep .dx-header-row .blanco,
 ::ng-deep .dx-header-row .fecha {
@@ -16,7 +17,11 @@
 }
 
 ::ng-deep .dx-header-row .verde {
-    background-color: rgb(0, 118, 4);
+    background-color: rgb(84, 175, 87);
+}
+
+::ng-deep .dx-header-row .verdeClaro {
+    background-color: rgb(179, 235, 181);
 }
 
 ::ng-deep .dx-header-row .gris {

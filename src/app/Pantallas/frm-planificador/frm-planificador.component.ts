@@ -206,19 +206,19 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
             let newCol: ColumnDataGrid = {
               dataField: c.NombreCliente,
               caption: c.NombreCliente,
-              cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisClaroBold' : 'grisClaro',
+              cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'verde' : 'gris',
               columns: [{
                 dataField: c.Contrato,
                 caption: c.Contrato,
-                cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
+                cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'verdeClaro' : 'grisClaro',
                 columns: [{
                   dataField: c.Obra,
                   caption: c.Obra,
-                  cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blancoBold' : 'blanco',
+                  cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blanco' : 'blanco',
                   columns: [{
                     dataField: c.Observaciones,
                     caption: c.Observaciones,
-                    cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blancoBold' : 'blanco',
+                    cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blanco' : 'blanco',
                     columns: [{
                       dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
                       caption: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
@@ -232,11 +232,24 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                           caption: c.NombreEstado,
                           cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'rojoClaroBold' : 'rojoClaro',
                           columns: [{
-                            dataField: 'C' + nroCol.toString(),
-                            caption: 'Unidades',
+                            dataField: 'C' + nroCol.toString() + '_PEDIDAS',
+                            caption: 'Ped.',
                             cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
                             allowSorting: false
-                          }]
+                          },
+                          {
+                            dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
+                            caption: 'Asig.',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
+                            allowSorting: false
+                          },
+                          {
+                            dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
+                            caption: 'Dis.',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
+                            allowSorting: false
+                          },
+                        ]
                         }]
                       }]
                     }]
@@ -294,7 +307,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           );
         }
         break;
-      case 'ArticuloNombre':
+      case 'NombreArticulo':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
             a.NombreArticulo.localeCompare(b.NombreArticulo, 'en', { numeric: true })

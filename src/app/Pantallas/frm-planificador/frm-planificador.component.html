@@ -7,7 +7,10 @@
         <div class="row px-1 py-2 titulo">
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
-                    {{traducir('frm-planificador.lblTitulo', 'Planificación - Contrato Salida')}} &nbsp; {{_salida.Contrato}}                    
+                    {{traducir('frm-planificador.lblTitulo', 'Planificación:')}} &nbsp; 
+                    {{traducir('frm-planificador.lblTituloContrato', 'Contrato Salida')}}&nbsp;<b>{{_salida.Contrato}}</b> 
+                    &nbsp;|&nbsp;
+                    {{traducir('frm-planificador.lblTituloCliente', 'Cliente')}}&nbsp;<b>{{_salida.IdCliente}} - {{_salida.NombreCliente}}</b>
                 </div>
             </div>
             <div class="col-4 pt-0 px-1">
@@ -17,7 +20,7 @@
 
         <!-- datos pantalla-->
         <div class="row pt-3">
-            <div class="col-5 px-0">
+            <div class="col-4 px-0">
                 <div class="row" [ngStyle]="{'height': alturaDiv}">
                     <div class="col-9">
                         <div class="row">
@@ -66,8 +69,11 @@
                     <app-cmp-data-grid id="dgArticulos" #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
                 </div>
             </div>
-            <div class="col-7 px-0">
-                <app-cmp-data-grid #dgUnidades (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)" [dgConfig]="dgConfigUnidades"></app-cmp-data-grid>
+            <div class="col-8 px-0">
+                <app-cmp-data-grid #dgUnidades [dgConfig]="dgConfigUnidades"
+                    (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" 
+                    (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)">
+                </app-cmp-data-grid>
             </div>
 
             <dx-context-menu

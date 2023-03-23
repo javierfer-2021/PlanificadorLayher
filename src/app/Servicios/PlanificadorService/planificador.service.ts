@@ -250,7 +250,31 @@ export class PlanificadorService {
 
   //#endregion
 
+  
+  //#region - CONFIGURACION 
 
+  async getConfigPlanificador(): Promise<Observable<any>> {
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: { } };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getConfiguracionLayher', body, this.headers);
+  }
+
+  async setConfigPlanificador(numItemPlanificador, entradaConfirmarDefecto, entradaEstadoDefecto, entradaAlmacenDefecto, salidaPlanificarDefecto, salidaEstadoDefecto, salidaAlmacenDefecto): Promise<Observable<any>> {    
+    while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { LogData: Utilidades.RecuperarLog(), 
+                   usuario : ConfiGlobal.Usuario, datos: {NumItemPlanificador: numItemPlanificador, 
+                                                          EntradaConfirmarDefecto: entradaConfirmarDefecto, 
+                                                          EntradaEstadoDefecto: entradaEstadoDefecto, 
+                                                          EntradaAlmacenDefecto: entradaAlmacenDefecto, 
+                                                          SalidaPlanificarDefecto: salidaPlanificarDefecto, 
+                                                          SalidaEstadoDefecto: salidaEstadoDefecto, 
+                                                          SalidaAlmacenDefecto: salidaAlmacenDefecto } };
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/setConfiguracionLayher', body, this.headers);
+  }
+
+  //#endregion
+  
+  
   // -------------------------------------------
   //#region -- DESCATALOGADOS, SIN USO, EJEMOLOS --
   async cargarDatos_ficheroCSV(fileToUpload: File): Promise<Observable<any>> {

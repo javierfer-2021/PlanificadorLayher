@@ -35,3 +35,15 @@ export class Articulo {
     iso: string;
     Activo: boolean;
   }
+
+  export class Configuracion {
+    Id: number;
+    NumItemPlanificador: number;
+    EntradaEstadoDefecto: number;
+    EntradaAlmacenDefecto: number;
+    EntradaConfirmarDefecto: boolean;
+    SalidaEstadoDefecto: number;
+    SalidaAlmacenDefecto: number;
+    SalidaPlanificarDefecto: boolean;
+  }
+

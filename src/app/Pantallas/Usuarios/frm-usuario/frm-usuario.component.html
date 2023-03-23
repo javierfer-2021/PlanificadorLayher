@@ -65,6 +65,7 @@
             <div class="col pt-1 px-2 m-2 border rounded">     
                 <div style="background-color: rgb(240, 180, 150); padding: 5px;">Almacenes disponibles</div>     
                 <dx-list
+                    [disabled]="!modoEdicion"
                     [dataSource]="arrayAlmacenesDisponibles"
                     [repaintChangesOnly]="true"
                     keyExpr="IdAlmacen"
@@ -83,6 +84,7 @@
             <div class="col pt-1 px-2 m-2 border rounded">
                 <div style="background-color: rgb(170, 250, 200); padding: 5px;">Almacenes Asignados</div>
                 <dx-list
+                    [disabled]="!modoEdicion"
                     [dataSource]="arrayAlmacenesAsignados"
                     [repaintChangesOnly]="true"
                     keyExpr="IdAlmacen"

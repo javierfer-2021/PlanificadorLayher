@@ -2,19 +2,45 @@
 
 <div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
     <div #pantalla>          
-            <!-- Titulo -->
-            <div class="row px-1 py-2 titulo">
-                <div class="col pt-1 px-1">
-                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-configuracion.lblTitulo', 'Parametros de configuración de la aplicación')}} </div>
-                </div>
-            </div>  
-
-            <!-- grid lista salidas -->    
-            <div class="row">
-                <div class="col pt-1 px-1">    
-                    Formulario con datos configuracion    
-                </div>
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-configuracion.lblTitulo', 'Parametros de configuración de la aplicación')}} </div>
             </div>
+        </div>  
+
+        <!-- Formulario de configuracion -->    
+        <div class="row pt-2">
+            <div id="form-container" class="formulario">
+                <dx-form id="formConfig" #formConfig [colCount]="3" [formData]="_config" labelMode="static" [readOnly]="!modoEdicion">
+
+                    <dxi-item itemType="group" caption="Planificador" [colCount]="1" [colSpan]="1">
+                        <dxi-item dataField="NumItemPlanificador" label="Nº Columnas Planificador" [colSpan]="1" [editorOptions]="{disabled:false}"></dxi-item>
+                    </dxi-item>
+
+                    <dxi-item itemType="group" caption="Entradas" [colCount]="1" [colSpan]="1">                        
+                        <dxi-item dataField="EntradaConfirmarDefecto" label="Confirmar Entrada" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="EntradaEstadoDefecto" label="Estado def. Entrada" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayEstadosEntrada, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO ENTRADA"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="EntradaAlmacenDefecto" label="Almacen def. Entrada" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenDefecto, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN ENTRADA"></dxi-validation-rule>
+                        </dxi-item>
+                    </dxi-item>                                    
+
+                    <dxi-item itemType="group" caption="Salidas" [colCount]="1" [colSpan]="1">
+                        <dxi-item dataField="SalidaPlanificarDefecto" label="Planificar Salida" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="SalidaEstadoDefecto" label="Estado def. Salida" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayEstadosEntrada, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO ENTRADA"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="SalidaAlmacenDefecto" label="Almacen def. Salida" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenDefecto, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN ENTRADA"></dxi-validation-rule>
+                        </dxi-item>
+                    </dxi-item>
+
+                </dx-form>
+            </div>
+        </div>
     </div>
 </div>
 

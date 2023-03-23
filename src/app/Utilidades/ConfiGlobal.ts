@@ -1,13 +1,13 @@
 import { Permiso } from "../Clases/Permiso";
 import { environment } from '../../environments/environment';
 import { Usuario } from "../Clases/Usuario";
-import { Almacen } from "../Clases/Maestros";
+import { Almacen, Configuracion } from "../Clases/Maestros";
 
 export class ConfiGlobal {
   
   // aplicacion && version 
   public static appName : string = 'Vstock Planificador'
-  public static version : string = '1.23.7.1';
+  public static version : string = '1.23.11.4';
   
   // traducion label generales 
   public static lbl_NoHayDatos : string = 'No hay datos';
@@ -16,7 +16,7 @@ export class ConfiGlobal {
   public static colorReadOnly: string = '#CACACA';
   public static colorValido: string =  '#66cc66';
   public static colorError: string = '#FB7C7C';
-  public static colorFoco: string = '#d5f1f9';  //#7ebdfb'; // 7ebdfb
+  public static colorFoco: string = '#d5f1f9';  
   public static colorGridRowLeido : string = '#ddfad2';     //usado para marcar lineas de un grid segun estado de un campo
   public static altoMinBotonesXS: number = 35;
   public static altoMaxBotonesXS: number = 50;
@@ -104,8 +104,12 @@ export class ConfiGlobal {
   public static arrayAlmacenesActivos = new Array<Almacen>();
   public static arrayAlmacenesUsuario = new Array<Almacen>();
   public static arrayIdiomas = [];
-  public static arrayEstadosDocumentos = [];
+  //public static arrayEstadosDocumentos = [];
+  public static arrayEstadosEntrada = [];
+  public static arrayEstadosSalida = [];
   public static arrayTiposDocumentos = [];
+
+  public static configLayher : Configuracion = new Configuracion();
 
   //#endregion -- variables globales para reducir el uso de llamadas en run-time a web-services
 }
