@@ -202,6 +202,7 @@ export class FrmCompraBuscarComponent implements OnInit {
 
     // configuracion extra del grid -> mostrar fila total registros
     this.dg.mostrarFilaSumaryTotal('IdEntrada','Contrato',this.traducir('frm-compra-buscar.TotalRegistros','Total Entradas: '),'count');
+    this.dg.habilitarExportar('Compras_Planificador.xlsx');
 
     // redimensionar grid, popUp
     setTimeout(() => {

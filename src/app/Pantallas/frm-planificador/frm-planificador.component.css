@@ -18,10 +18,12 @@
 
 ::ng-deep .dx-header-row .verde {
     background-color: rgb(84, 175, 87);
+    font-weight: bold;
 }
 
 ::ng-deep .dx-header-row .verdeClaro {
     background-color: rgb(179, 235, 181);
+    font-weight: bold;
 }
 
 ::ng-deep .dx-header-row .gris {
@@ -36,3 +38,4 @@
     background-color: yellow;
     color: red;
 }
+

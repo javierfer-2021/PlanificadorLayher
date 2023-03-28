@@ -210,7 +210,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           this.arrayCabeceras.forEach(c => {
             let newCol: ColumnDataGrid = {
               dataField: c.NombreCliente,
-              caption: c.NombreCliente,
+              caption: (this.obtenerCaptionColumna(c.NombreCliente,true)+'.'),
               cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'verde' : 'gris',
               columns: [{
                 dataField: c.Contrato,
@@ -218,11 +218,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                 cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'verdeClaro' : 'grisClaro',
                 columns: [{
                   dataField: c.Obra,
-                  caption: c.Obra,
+                  caption: this.obtenerCaptionColumna(c.Obra),
                   cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blanco' : 'blanco',
                   columns: [{
                     dataField: c.Observaciones,
-                    caption: c.Observaciones,
+                    caption: this.obtenerCaptionColumna(c.Observaciones),
                     cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blanco' : 'blanco',
                     columns: [{
                       dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
@@ -483,36 +483,12 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     }
   }
 
+
+  obtenerCaptionColumna(texto:string, rellenar:boolean=false): string {
+    let cadena:string = texto.substring(0,Math.min(30,texto.length));
+    if (rellenar) cadena = cadena.padEnd(30," ");
+    return cadena;
+  }
+
 }
 
-//TODO - Eliminar
-/*
-export class oOferta {
-  IdOferta: string = '';
-  IdAlmacen: number = 0;
-  IdEstado: number = 0;
-  Almacen: string = '';
-  Cliente: string = '';
-  Contrato: string = '';
-  Estado: string = '';
-  FechaAlta: Date = new Date();
-  FechaFin: Date = new Date();
-  FechaInicio: Date = new Date();
-  NumLineas: number = 0;
-  Obra: string = '';
-  Observaciones: string = '';
-  Referencia: string = '';
-}
-
-export class oArticulo {
-  IdLinea: number;
-  IdOferta: number;
-  IdArticulo: string;
-  ArticuloNombre: string;
-  CantidadDisponible: number;
-  CantidadPedida: number;
-  CantidadReservada: number;
-  FechaActualizacion: Date;
-  Stock: number;
-}
-*/

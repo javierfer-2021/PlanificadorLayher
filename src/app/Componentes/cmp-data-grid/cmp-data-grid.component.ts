@@ -25,6 +25,8 @@ export class CmpDataGridComponent implements OnInit {
 
   filtro: any;
   mostrarPanelBusqueda:boolean = false;
+  mostrarBotonExportar:boolean = false;
+  _nombreFichero:string = "";
 
   constructor() { }
 
@@ -111,5 +113,14 @@ export class CmpDataGridComponent implements OnInit {
         displayFormat: text,
       }]
     }
+  }
+
+  public habilitarExportar(nombreFichero?:string){
+    this.mostrarBotonExportar = true;
+    if (!Utilidades.isEmpty(nombreFichero)) {this._nombreFichero=nombreFichero}
+  }
+
+  onExporting(e) {
+    if (!Utilidades.isEmpty(this._nombreFichero)) {e.fileName=this._nombreFichero}
   }
 }

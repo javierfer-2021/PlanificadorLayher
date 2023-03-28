@@ -259,18 +259,21 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
                                                   ,this.arrayLineasSalida)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          //this.WSEnvioCsv_Valido = true;
-          console.log(datos);
-
+          //console.log(datos);
+          this._salida = datos.datos[0];
           Utilidades.MostrarExitoStr(this.traducir('frm-venta-importar.msgOk_WSImportarEntrada','Documento Importado correctamente'));           
 
           // ir a pantalla de planificador
+          let vSalida : Salida =  this._salida;
           const navigationExtras: NavigationExtras = {
-            state: { PantallaAnterior: 'frm-venta-importar', salida: this._salida.Referencia },
+            state: { PantallaAnterior: 'frm-venta-importar', salida: vSalida },
             replaceUrl: true
           };
           this.router.navigate(['planificador'], navigationExtras);
+
+          // limpiar datos 
           this.limpiarDocumento();
+
         } else {          
           //this.WSEnvioCsv_Valido = false;
           Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSImportarOferta','Error WS importando oferta')); 
@@ -328,7 +331,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   }
 
 
-  validarDatosFormulario():boolean{
+  validarFormulario():boolean{
     const res = this.formSalida.instance.validate();
     // res.status === "pending" && res.complete.then((r) => {
     //   console.log(r.status);
@@ -336,15 +339,26 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     return (res.isValid);
   }
 
+  validarDatosFormulario():boolean{
+    if ((!Utilidades.isEmpty(this._salida.FechaFin)) && (this._salida.FechaFin <= this._salida.FechaInicio)) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_FechaFin','Fecha FIN debe ser mayor que Fecha INICIO. Revise el formulario'));
+      return false;
+    }
+    return true;
+  }
 
   btnImportarOferta() {
-    if (!this.validarDatosFormulario()) {
-      Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_FaltanDatos','Faltan campos obligatorios. Revise el formulario'));
+    // validacion extandar del formulario con datos requeridos y formatos
+    if (!this.validarFormulario()) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_FaltanDatos','Faltan datos y/o hay datos incorrectos. Revise el formulario'));
       return;
     }
     else {
-      // llamar a web_service de importacion
-      this.importarOferta();
+      // validacion especifica adicional de datos
+      if (this.validarDatosFormulario()) {
+        // llamar a web_service de importacion
+        this.importarOferta();
+      }
     }
   }
     

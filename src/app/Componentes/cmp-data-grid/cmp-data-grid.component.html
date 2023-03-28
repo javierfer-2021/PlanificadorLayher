@@ -21,7 +21,8 @@
         [scrolling]="{mode: dgConfig.modoScrolling}" 
         [editing]="{confirmDelete : false, allowUpdating: dgConfig.editable, mode: 'cell'}"
         [pager]="{allowedPageSizes:'auto', displayMode: 'full', infoText: 'Num. registros {2}', showInfo: true, showNavigationButtons:false, visible: false}"
-        [paging]="{enabled: false}" >
+        [paging]="{enabled: false}" 
+        (onExporting)="onExporting($event)">
 
         <dxo-filter-row [visible]="dgConfig.filterRowVisible">
             <dxo-operation-descriptions 
@@ -44,6 +45,10 @@
             [width]="240"
             placeholder="Buscar..."
         ></dxo-search-panel>
+
+        <dxo-export [enabled]="mostrarBotonExportar" [formats]="['xlsx']" [allowExportSelectedData]="false" 
+            [texts]="{exportAll:'Exportar a Excel',exportSelectedRows:'Exportar filas seleccionadas a {0}',exportTo:'Exportar'}">
+        </dxo-export>
 
     </dx-data-grid>
 </div>

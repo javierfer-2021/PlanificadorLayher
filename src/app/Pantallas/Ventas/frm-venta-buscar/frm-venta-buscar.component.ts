@@ -209,7 +209,8 @@ export class FrmVentaBuscarComponent implements OnInit {
 
     // configuracion extra del grid -> mostrar fila total registros
     this.dg.mostrarFilaSumaryTotal('IdSalida','Contrato',this.traducir('frm-venta-buscar.TotalRegistros','Total Salidas: '),'count');
-
+    this.dg.habilitarExportar('Ventas_Planificador.xlsx');
+    
     // redimensionar grid, popUp
     setTimeout(() => {
       this.dg.panelBusqueda(true);

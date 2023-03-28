@@ -5,9 +5,13 @@ import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
 
+import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';
+import { DataSelectBoxConfig } from '../../Clases/Componentes/DataSelectBoxConfig';
+
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
+import { BotonMenu } from '../../Clases/Componentes/BotonMenu';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { Configuracion, Almacen } from '../../Clases/Maestros';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
@@ -28,11 +32,23 @@ export class FrmImportarMaestrosComponent implements OnInit {
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
 
+  @ViewChild('sbAlmacenes', { static: false }) sbAlmacenes: CmdSelectBoxComponent; 
+
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-configuracion.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
   ];
 
+  botonStock: BotonMenu = { icono: './assets/icons/stock.svg', texto: 'Importar Articulos', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false,
+                            accion: () => {this.importarArticulos() } };
+  botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Periodo (Stock)', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, 
+                                     accion: () => {this.iniciarPeriodo() } };
+
   WSDatos_Validando: boolean = false;
+
+  // combo filtro almacenes
+  almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
+  sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
+  
   //#endregion - declaracion de cte y variables 
 
 
@@ -47,12 +63,13 @@ export class FrmImportarMaestrosComponent implements OnInit {
   { }
 
   ngOnInit(): void {
-    //this.cargarSalidas(-1);
+    //this.cargarSalidas(-1);    
   }
 
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla,this.container,this.btnFooter,this.btnAciones,this.renderer);
+    this.sbAlmacenes.SelectBox.value=this.almacenes[0].IdAlmacen;
   }
 
   ngAfterContentChecked(): void {   
@@ -106,6 +123,13 @@ export class FrmImportarMaestrosComponent implements OnInit {
 
   //#endregion
 
+  importarArticulos() {
+    alert('sincronizar articulos y familias');
+  }
+
+  iniciarPeriodo() {
+    alert('Inizializar periodo -Traer stock y recalcular planificador');
+  }
 
   salir() {
     this.location.back();

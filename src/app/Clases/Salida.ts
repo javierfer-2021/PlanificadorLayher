@@ -21,6 +21,8 @@ export class Salida {
     Planificar: boolean;
     NumLineas: number;
     Aviso?: string;
+
+    ClienteMostrar: string;
   }
 
   export class SalidaLinea {
