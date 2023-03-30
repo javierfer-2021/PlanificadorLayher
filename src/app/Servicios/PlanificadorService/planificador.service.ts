@@ -247,6 +247,20 @@ export class PlanificadorService {
 
     return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacion', body, this.headers);
   }
+  
+  async eliminarArticuloPlanificador(idSalida,idArticulo,observaciones): Promise<Observable<any>> {
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
+                   datos: { IdSalida:idSalida, IdArticulo:idArticulo, Observaciones:observaciones } };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/eliminarLineaArticuloPlanificacion', body, this.headers);
+  }
+
+  async insertarArticuloPlanificador(idSalida,idArticulo,unidades): Promise<Observable<any>> {
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
+                   datos: { IdSalida:idSalida, IdArticulo:idArticulo, Unidades:unidades } };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/insertarLineaArticuloPlanificacion', body, this.headers);
+  }
 
   //#endregion
 

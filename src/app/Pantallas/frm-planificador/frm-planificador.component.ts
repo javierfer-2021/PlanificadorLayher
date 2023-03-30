@@ -11,7 +11,7 @@ import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
-import { DxContextMenuModule } from 'devextreme-angular';
+import { DxPopupComponent } from 'devextreme-angular';
 import { Salida, SalidaLinea } from '../../Clases/Salida'
 
 @Component({
@@ -42,7 +42,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   arrayCabeceras: Array<Salida> = [];
   arrayUnidadesOfertas = [];
   
-
   idOferta_mostrar: string;
   fechaAlta_mostrar: string;
   fechaInicio_mostrar: string;
@@ -50,64 +49,51 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   estado_mostrar: string;
   cliente_mostrar: string;
   almacen_mostrar: string;
-
-  alturaDiv: string = '0px';
-
+  
+  // grid articulos contrato seleccionado
   colsArts: Array<ColumnDataGrid> = [
-    {
-      dataField: 'IdLinea',
+    { dataField: 'IdLinea',
       caption: 'Id Línea',
       cssClass: 'blanco',
       visible: false
     },
-    {
-      dataField: 'IdSalida',
+    { dataField: 'IdSalida',
       caption: 'Id Salida',
       cssClass: 'blanco',
       visible: false
     },
-    {
-      dataField: 'IdArticulo',
+    { dataField: 'IdArticulo',
       caption: 'Cod.Artículo',
       cssClass: 'blanco'
     },
-    {
-      dataField: 'NombreArticulo',
+    { dataField: 'NombreArticulo',
       caption: 'Descripción',
       cssClass: 'blanco'
     },
-    {
-      dataField: 'CantidadDisponible',
+    { dataField: 'CantidadDisponible',
       caption: 'Cantidad Disponible',
       cssClass: 'blanco',
       visible: false
     },
-    {
-      dataField: 'CantidadPedida',
+    { dataField: 'CantidadPedida',
       caption: 'Cantidad Pedida',
       cssClass: 'blanco' ,
       visible: false     
     },
-    {
-      dataField: 'CantidadReservada',
+    { dataField: 'CantidadReservada',
       caption: 'Cantidad Reservada',
       cssClass: 'blanco',
       visible: false
     },
-    {
-      dataField: 'FechaActualizacion',
+    { dataField: 'FechaActualizacion',
       caption: 'Fecha Actualización',
       cssClass: 'blanco',
       visible: false
     },
-    // {
-    //   dataField: 'Stock',
-    //   caption: 'Stock',
-    //   cssClass: 'blanco'
-    // }
   ];
   dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
   
+  // grid articulos Contratos Planificados & Unidades
   colsUnidades: Array<ColumnDataGrid> = [];
   dgConfigUnidades: DataGridConfig = new DataGridConfig(null, this.colsUnidades, 100, '');
 
@@ -115,10 +101,16 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   WSDatos_Valido: boolean = false;
 
   primeraVez: boolean = true; // Indica si está entrando de 0 en la pantalla
+  alturaDiv: string = '0px';
 
   //popUp menus asociados a los grid
   itemsMenuArticulos: any;
   itemsMenuContratos: any;
+
+  //popUp Seleccion de Articulos
+  @ViewChild('popUpArticulos', { static: false }) popUpArticulos: DxPopupComponent;
+  popUpVisibleArticulos:boolean = false;
+  popUpTitulo:string = "Selección Articulo";
 
 //#endregion - cte y var de la pantalla
 
@@ -138,11 +130,12 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this._salida = nav.salida;
 
     //configuración menu articulos
-    this.itemsMenuArticulos= [{ text: 'Eliminar artículo' },
-                              { text: 'Insertar artículo' },
+    this.itemsMenuArticulos= [{ text: 'Reemplazar artículo' },
+                              { text: 'Eliminar artículo' },
+                              { text: 'Añadir artículo' },                              
     ];
-    //configuración menu contratos
-    this.itemsMenuContratos= [{ text: 'Seleccionar Contrato' }];    
+    //configuración menu contratos -> configurado dinamicamente en evento  "onContextMenuPreparing_DataGridUnidades(e)"
+    this.itemsMenuContratos= [];  
   }
 
   ngOnInit(): void {
@@ -174,8 +167,23 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.alturaDiv = '210px';
   }
 
+  LPGen(value : boolean) {
+    Utilidades.VerLPGenerico(value);
+    return value;
+  }
+
+  traducir(key: string, def: string): string {
+    let traduccion: string = this.translate.instant(key);
+    if (traduccion !== key) {
+      return traduccion;
+    } else {
+      return def;
+    }
+  }  
 //#endregion - creación, inicializacion y gestion eventos pantalla
 
+
+//#region - WEB SERVICES
 
   async getPlanificacion(){
     if(this.WSDatos_Validando) return;
@@ -227,11 +235,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                     columns: [{
                       dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
                       caption: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
-                      cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fechaBold' : 'fecha',
+                      cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha' : 'blanco',
                       columns: [{
                         dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                         caption: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                        cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fechaRojaBold' : 'fechaRoja',
+                        cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha' : 'blanco',
                         columns: [{
                           dataField: c.NombreEstado,
                           caption: c.NombreEstado,
@@ -279,6 +287,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       }
     );
   }
+
+//#endregion - WEB SERVICES  
+
+
+//#endregion - Gestion ordenacion simultanea de los grid
 
   public async onContentReady_DataGridArticulos(): Promise<void> {
     if(this.primeraVez) {
@@ -427,6 +440,104 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.dgArticulos.DataGrid.focusedRowIndex = selectedRowIndex;
   }
 
+//#endregion - Gestion ordenacion simultanea de los grid
+
+
+//#region - Gestion de menus y click asociados a los Grid
+
+  //GRID ARTICULOS CONTRATO SELECCIONADO
+
+  async itemMenuArticulosClick(e) {
+    //if (!e.itemData.items) { alert('The '+e.itemData.text+' item was clicked'); }
+    let articulo:SalidaLinea = this.dgArticulos.objSeleccionado();
+    switch (e.itemIndex) {     
+      //cambiar articulo
+      case 0: this.cambiarArticuloSalida(articulo);
+      break;
+      //eliminar articulo
+      case 1: this.eliminarArticuloSalida(articulo);
+      break;
+      //añadir articulo
+      case 2: this.anadirArticuloSalida();          
+      break;
+      default: break;
+    }
+  }
+
+
+  // GRID CONTRATOS AFECTADOS PLANIFICACION
+
+  onCellDblClick_DataGridUnidades(e){
+     if (e.rowType=='header' && e.column.cssClass=='gris') {       
+       //alert('Doble click cabecera '+e.columnIndex+ ' '+e.cellIndex+' '+e.column.dataField);
+       this.cambiarContratoSeleccionado((e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
+     }
+   }
+ 
+  onContextMenuPreparing_DataGridUnidades(e) {
+     //console.log(e);     
+     if (e.target == 'header') {
+      // e.items can be undefined
+      if (!e.items) e.items = [];
+
+      // añadimos items personalizados del menu segun columna/fila pulsada
+      e.items.push({ text: 'Seleccionar Contrato', onItemClick: () => {alert(e.column.caption); } });
+      e.items.push({ text: 'Planificar', onItemClick: () => {alert(e.column.caption); } });
+    }
+    else {
+      e.items = []; 
+    }
+  }
+ 
+  itemMenuContratosClick(e) {
+    // if (!e.itemData.items) { 
+    //   alert('Opcion '+e.itemData.text+' del contrato'+ this.dgUnidades.objSeleccionado().Contrato); 
+    // }
+  }
+
+//#endgion - Gestion de menus y click asociados a los Grid
+
+  async eliminarArticuloSalida(articulo:SalidaLinea){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
+    if (!continuar) return;
+    else {
+      alert('eliminar articulo '+articulo.IdArticulo);
+      // Actualizar SALIDAS_LINEAS
+      // Recalcular stock
+      // actualizar en array articulos y unidades    
+    }   
+  }
+
+  anadirArticuloSalida(){
+    // Seleccionar articulo a añadir
+    this.popUpVisibleArticulos=true;
+    // pantalla buscar seleccionar articulo
+      // Insertar en SALIDAS_LINEAS
+      // Recalcular stock
+      // Insertar en array articulos y unidades
+  }
+ 
+  cambiarArticuloSalida(articulo:SalidaLinea){    
+    //eliminar + añadir
+    this.popUpVisibleArticulos=true;
+  }
+
+
+
+  async cambiarContratoSeleccionado(index:number){
+    let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
+                        + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
+                        + this.traducir('frm-planificador.MsgCambiarContratoSeleccionado','¿Esta seguro que desea continuar?');
+    let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloCambiarContrato', 'Cambiar contrato seleccionado'));  
+    if (!continuar) return
+    else {
+      alert('cambiar contrato');
+      this._salida = Object.assign({},this.arrayCabeceras[index]);
+      this.limpiarControles(false);           
+      this.getPlanificacion();
+    }
+  }
+
   public limpiarControles(recargar: boolean = true) {
     this.arrayArts = null;
     this.arrayUnidadesOfertas = null;
@@ -443,51 +554,19 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       this.getPlanificacion();
   }
 
-  LPGen(value : boolean) {
-    Utilidades.VerLPGenerico(value);
-    return value;
-  }
-
-  traducir(key: string, def: string): string {
-    let traduccion: string = this.translate.instant(key);
-    if (traduccion !== key) {
-      return traduccion;
-    } else {
-      return def;
-    }
-  }
-
-
-  itemMenuArticulosClick(e) {
-    //if (!e.itemData.items) { alert('The '+e.itemData.text+' item was clicked'); }
-    if (e.itemIndex === 0) {      
-      alert('Eliminar Articulo '+ this.dgArticulos.objSeleccionado().IdArticulo);
-      // confirmar eliminación
-      // Actualizar SALIDAS_LINEAS
-      // Recalcular stock
-      // actualizar en array articulos y unidades
-    }
-    else if (e.itemIndex === 1) {
-      alert('Añadir Articulo ' + this.dgArticulos.objSeleccionado().IdArticulo);
-      // pantalla buscar seleccionar articulo
-      // Insertar en SALIDAS_LINEAS
-      // Recalcular stock
-      // Insertar en array articulos y unidades
-    }
-  }
-
-
-  itemMenuContratosClick(e) {
-    if (!e.itemData.items) { 
-      alert('Opcion '+e.itemData.text+' del contrato'+ this.dgUnidades.objSeleccionado().Contrato); 
-    }
-  }
-
-
   obtenerCaptionColumna(texto:string, rellenar:boolean=false): string {
     let cadena:string = texto.substring(0,Math.min(30,texto.length));
     if (rellenar) cadena = cadena.padEnd(30," ");
     return cadena;
+  }
+
+  cerrarSeleccionarArticulo(e){
+    if (e != null) {
+      alert('Articulos seleccionado: ' + e.idArticulo + ' -- unidades: '+ e.unidades)
+      // comprobar articulo no existe previamente
+      // añadir articulo en la planificación
+    }
+    this.popUpVisibleArticulos = false;
   }
 
 }

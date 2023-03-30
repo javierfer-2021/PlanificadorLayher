@@ -13,6 +13,8 @@
         (onRowUpdated)="onRowUpdated_DataGrid.emit($event)" 
         (onRowUpdating)="onRowUpdating_DataGrid.emit($event)"
         (onFocusedRowChanged)="onFocusedRowChanged_DataGrid.emit($event)"
+        (onCellDblClick)="onCellDoubleClick_DataGrid.emit($event)" 
+        (onContextMenuPreparing)="onContextMenuPreparing_DataGrid.emit($event)" 
         [filterValue]="filtro" 
         [selection]="{mode: dgConfig.modoSeleccion}" 
         [disabled]="dgConfig.disabled" 
