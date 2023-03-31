@@ -199,7 +199,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-ventas-detalles');
       }
     );
   }  
@@ -222,7 +222,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-ventas-detalles');
       }
     );
   } 

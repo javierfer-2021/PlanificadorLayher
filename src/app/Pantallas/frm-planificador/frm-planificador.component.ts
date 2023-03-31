@@ -23,6 +23,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
 //#region - cte y var de la pantalla  
   altoBtnFooter = '45px';
+  loadingVisible = false;
+  indicatorUrl = "";
+  loadingMessage = 'Cargando...'
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('btnFooter') btnFooter: ElementRef;
@@ -180,6 +183,14 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       return def;
     }
   }  
+
+  mostrarGif_Ok(){
+    this.indicatorUrl = "../../assets/gifs/checkBackground.gif"
+    this.loadingMessage = "Correto";
+    this.loadingVisible = true;
+    setTimeout(() => { this.loadingVisible = false; this.indicatorUrl = ''; }, 2000); 
+  }
+
 //#endregion - creación, inicializacion y gestion eventos pantalla
 
 
@@ -283,10 +294,60 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router, 'frm-planificador');  
+        //console.log(error);
       }
     );
   }
+
+
+  async insertarArticulo(idArticulo:string,unidades:number){
+    if(this.WSDatos_Validando) return;    
+    if (!Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.insertarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,unidades)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          //console.log(datos);
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador-importar.msgOk_WSInsertarArticulos','Artículo Insertado correctamente'));           
+          this.WSDatos_Validando = false;
+          this.limpiarControles(true);
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSInsertarArticulos','Error WS insertando artículo')); 
+        }
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router, 'frm-planificador');        
+        //console.log(error);        
+      }
+    );
+  }
+
+  async eliminarArticulo(idArticulo:string,motivo:string){
+    if(this.WSDatos_Validando) return;    
+    if (!Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.eliminarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,motivo)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          //console.log(datos);
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador-importar.msgOk_WSEliminarArticulos','Artículo Eliminado correctamente'));           
+          this.WSDatos_Validando = false;
+          this.limpiarControles(true);
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSEliminarArticulos','Error WS eliminando artículo')); 
+        }
+      }, error => {        
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router, 'frm-planificador');        
+        //console.log(error);
+      }
+    );
+  }  
 
 //#endregion - WEB SERVICES  
 
@@ -481,8 +542,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       if (!e.items) e.items = [];
 
       // añadimos items personalizados del menu segun columna/fila pulsada
-      e.items.push({ text: 'Seleccionar Contrato', onItemClick: () => {alert(e.column.caption); } });
-      e.items.push({ text: 'Planificar', onItemClick: () => {alert(e.column.caption); } });
+      if (this.oOfertaSeleccionada.Contrato != this.arrayCabeceras[e.columnIndex].Contrato) {
+        e.items.push({ text: 'Seleccionar Contrato', onItemClick: () => { this.cambiarContratoSeleccionado(e.columnIndex); } });
+        e.items.push({ text: 'Planificar/Desplanificar', onItemClick: () => {alert(e.column.caption); } });
+      }
     }
     else {
       e.items = []; 
@@ -501,10 +564,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
     if (!continuar) return;
     else {
-      alert('eliminar articulo '+articulo.IdArticulo);
+      //alert('eliminar articulo '+articulo.IdArticulo);      
       // Actualizar SALIDAS_LINEAS
       // Recalcular stock
       // actualizar en array articulos y unidades    
+      this.eliminarArticulo(articulo.IdArticulo,"Eliminado desde planificador");
     }   
   }
 
@@ -517,11 +581,34 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       // Insertar en array articulos y unidades
   }
  
-  cambiarArticuloSalida(articulo:SalidaLinea){    
+  async cambiarArticuloSalida(articulo:SalidaLinea){    
     //eliminar + añadir
-    this.popUpVisibleArticulos=true;
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
+    if (!continuar) return;
+    else {
+      // eliminar
+      this.eliminarArticulo(articulo.IdArticulo,"Eliminado desde planificador");
+      // añadir
+      this.anadirArticuloSalida();
+    }      
   }
 
+  cerrarSeleccionarArticulo(e){
+    if (e != null) {
+      //alert('Articulos seleccionado: ' + e.idArticulo + ' -- unidades: '+ e.unidades)
+      // comprobar articulo no existe previamente
+      let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.idArticulo);
+      if (index<0) {
+        // añadir articulo en la planificación
+        this.insertarArticulo(e.idArticulo, e.unidades);
+      } else {
+        Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','Artículo ya incluido (No insertado).<br>Modifique unidades manualmente'))
+      }
+    }
+    this.popUpVisibleArticulos = false;
+  }
+
+  // -------------------------
 
   async cambiarContratoSeleccionado(index:number){
     let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
@@ -530,7 +617,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloCambiarContrato', 'Cambiar contrato seleccionado'));  
     if (!continuar) return
     else {
-      alert('cambiar contrato');
       this._salida = Object.assign({},this.arrayCabeceras[index]);
       this.limpiarControles(false);           
       this.getPlanificacion();
@@ -559,14 +645,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     return cadena;
   }
 
-  cerrarSeleccionarArticulo(e){
-    if (e != null) {
-      alert('Articulos seleccionado: ' + e.idArticulo + ' -- unidades: '+ e.unidades)
-      // comprobar articulo no existe previamente
-      // añadir articulo en la planificación
-    }
-    this.popUpVisibleArticulos = false;
-  }
 
 }
 

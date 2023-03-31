@@ -201,7 +201,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-venta-importar');
       }
     );
   }  
@@ -240,8 +240,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSobtenerDatosERP','Error WebService --> Obtener datos ERP')); 
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-venta-importar');
       }
     );
   }  
@@ -259,7 +258,6 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
                                                   ,this.arrayLineasSalida)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          //console.log(datos);
           this._salida = datos.datos[0];
           Utilidades.MostrarExitoStr(this.traducir('frm-venta-importar.msgOk_WSImportarEntrada','Documento Importado correctamente'));           
 
@@ -275,16 +273,14 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
           this.limpiarDocumento();
 
         } else {          
-          //this.WSEnvioCsv_Valido = false;
           Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSImportarOferta','Error WS importando oferta')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-venta-importar');
       }
     );
-
   }
 
   //#endregion

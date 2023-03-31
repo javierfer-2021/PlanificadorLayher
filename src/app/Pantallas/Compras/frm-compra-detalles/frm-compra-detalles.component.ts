@@ -199,7 +199,7 @@ export class FrmCompraDetallesComponent implements OnInit {
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-compras-detalles');
       }
     );
   }  
@@ -222,7 +222,7 @@ export class FrmCompraDetallesComponent implements OnInit {
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-compras-detalles');
       }
     );
   } 

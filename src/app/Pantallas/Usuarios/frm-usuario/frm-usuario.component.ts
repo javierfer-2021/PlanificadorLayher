@@ -225,7 +225,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-usuario');
       }
     );
   } 
@@ -253,7 +253,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-usuario');
       }
     );
   } 
@@ -281,7 +281,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-usuario');
       }
     );
   }   

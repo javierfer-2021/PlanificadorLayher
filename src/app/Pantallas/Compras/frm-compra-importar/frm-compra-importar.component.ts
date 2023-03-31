@@ -201,7 +201,7 @@ export class FrmCompraImportarComponent implements OnInit {
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-compra-importar');
       }
     );
   }  
@@ -229,14 +229,13 @@ export class FrmCompraImportarComponent implements OnInit {
           
           this.asignarValoresDefecto();
         } else {          
-          //this.WSEnvioCsv_Valido = false;
           Utilidades.MostrarErrorStr(this.traducir('frm-compra-importar.msgError_WSobtenerDatosERP','Error: Documento no encontrado')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        Utilidades.MostrarErrorStr(this.traducir('frm-compra-importar.msgError_WSobtenerDatosERP','Error WebService --> Obtener datos ERP')); 
-        console.log(error);
+        //Utilidades.MostrarErrorStr(this.traducir('frm-compra-importar.msgError_WSobtenerDatosERP','Error WebService --> Obtener datos ERP')); 
+        Utilidades.compError(error, this.router,'frm-compra-importar');
       }
     );
   }  
@@ -254,26 +253,16 @@ export class FrmCompraImportarComponent implements OnInit {
                                                   ,this.arrayLineasEntrada)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          //this.WSEnvioCsv_Valido = true;
           console.log(datos);
-
           Utilidades.MostrarExitoStr(this.traducir('frm-compra-importar.msgOk_WSImportarCompra','Documento Importado correctamente'));           
-
-          // ir a pantalla de planificador
-          // const navigationExtras: NavigationExtras = {
-          //   state: { PantallaAnterior: 'frm-oferta-buscar', oferta: this._entrada.Referencia },
-          //   replaceUrl: true
-          // };
-          // this.router.navigate(['pruebas'], navigationExtras);
           this.limpiarDocumento();
         } else {          
-          //this.WSEnvioCsv_Valido = false;
           Utilidades.MostrarErrorStr(this.traducir('frm-compra-importar.msgError_WSImportarCompra','Error WS importando documento')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-compra-importar');
       }
     );
 

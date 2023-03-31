@@ -133,7 +133,7 @@ export class FrmConfiguracionComponent implements OnInit {
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        console.log(error);
+        Utilidades.compError(error, this.router,'frm-configuracion');
       }
     );
   }   
