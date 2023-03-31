@@ -523,7 +523,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }
 
 
-
   async cambiarContratoSeleccionado(index:number){
     let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
                         + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
