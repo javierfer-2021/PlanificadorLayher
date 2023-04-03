@@ -7,11 +7,7 @@ export class ConfiGlobal {
   
   // aplicacion && version 
   public static appName : string = 'Vstock Planificador'
-<<<<<<< HEAD
   public static version : string = '1.23.12.1';
-=======
-  public static version : string = '1.23.11.5';
->>>>>>> 72985e154f6b4867a6df0ef2a1fd158e927cb3c8
   
   // traducion label generales 
   public static lbl_NoHayDatos : string = 'No hay datos';
