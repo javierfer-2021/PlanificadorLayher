@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col pt-1 px-1">    
                     <app-cmp-data-grid #dg [dgConfig]="dgConfig" 
-                        (onDoubleClick_DataGrid)="onDoubleClick_DataGrid()">
+                        (onDoubleClick_DataGrid)="onDoubleClick_DataGrid($event)">
                     </app-cmp-data-grid>
                 </div>
             </div>

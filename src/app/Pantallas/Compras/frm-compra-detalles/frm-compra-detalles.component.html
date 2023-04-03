@@ -16,7 +16,7 @@
         <!-- Formulario Datos Entrada (Compra) -->
         <div class="row pt-2">
             <div id="form-container" class="formulario">
-                <dx-form id="formEntrada" #formEntrada [colCount]="3" [formData]="_entrada" labelMode='static' labelLocation="left">
+                <dx-form id="formEntrada" #formEntrada [colCount]="3" [formData]="_entrada" labelMode='static' labelLocation="left" [readOnly]="!modoEdicion">
 
                     <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
 
@@ -56,6 +56,7 @@
                         <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
                         <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
 
+                        <dxi-item itemType="button" horizontalAlignment="left"  [buttonOptions]="confirmarButtonOptions"></dxi-item>
                     <!-- </dxi-item>                    -->
                 </dx-form>
             </div>
@@ -71,7 +72,17 @@
     </div>
 </div>
 
-<div #btnFooter>
+
+<div *ngIf="modoEdicion" #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAcionesEdicion"></app-cmp-botones-pantallas>
+</div>
+
+<div *ngIf="!modoEdicion" #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
+
+<!-- <div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAcionesActivo"></app-cmp-botones-pantallas>
+</div> -->
+
 

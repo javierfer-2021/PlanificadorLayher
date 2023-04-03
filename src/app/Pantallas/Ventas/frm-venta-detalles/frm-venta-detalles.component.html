@@ -16,7 +16,7 @@
         <!-- Formulario Datos Salida (Venta-Alquiler) -->
         <div class="row pt-2">
             <div id="form-container" class="formulario">
-                <dx-form id="formSalida" #formSalida [colCount]="3" [formData]="_salida" labelMode='static' labelLocation="left">
+                <dx-form id="formSalida" #formSalida [colCount]="3" [formData]="_salida" labelMode='static' labelLocation="left" [readOnly]="!modoEdicion">
                     <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
                         <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
@@ -31,7 +31,7 @@
                         <dxi-item dataField="IdCliente" [colSpan]="1" [editorOptions]="{disabled: true}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID CLIENTE"></dxi-validation-rule>
                         </dxi-item>                            
-                        <dxi-item dataField="NombreCliente" [colSpan]="2" [editorOptions]="{disabled: false}">
+                        <dxi-item dataField="NombreCliente" [colSpan]="2" [editorOptions]="{disabled: true}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE CLIENTE"></dxi-validation-rule>
                         </dxi-item>                            
 
@@ -71,10 +71,16 @@
     </div>
 </div>
 
-<div #btnFooter>
+<!-- <div #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div> -->
+
+<div *ngIf="modoEdicion" #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAcionesEdicion"></app-cmp-botones-pantallas>
 </div>
 
-
+<div *ngIf="!modoEdicion" #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
 
 

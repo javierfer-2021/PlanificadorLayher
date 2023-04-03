@@ -21,7 +21,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   templateUrl: './frm-compra-detalles.component.html',
   styleUrls: ['./frm-compra-detalles.component.css']
 })
-export class FrmCompraDetallesComponent implements OnInit {
+export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
 
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
@@ -34,15 +34,21 @@ export class FrmCompraDetallesComponent implements OnInit {
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
   
-  @ViewChild('formSalida', { static: false }) formSalida: DxFormComponent;  
+  @ViewChild('formEntrada', { static: false }) formEntrada: DxFormComponent;  
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-compra-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-compra-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarEntrada()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-compra-detalles.btnConfirmar', 'Confirmar'), posicion: 3, accion: () => {this.btnConfirmarEntrada()}, tipo: TipoBoton.success },
+//    { icono: '', texto: this.traducir('frm-compra-detalles.btnConfirmar', 'Confirmar'), posicion: 3, accion: () => {this.btnConfirmarEntrada()}, tipo: TipoBoton.success },
   ];
   
+  btnAcionesEdicion: BotonPantalla[] = [
+    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-usuario.btnGuardar', 'Guardar'), posicion: 2, accion: () => {this.btnGuardar()}, tipo: TipoBoton.success },
+  ];
+
+
   WSDatos_Validando: boolean = false;
   WSEnvioCsv_Valido: boolean = false;
 
@@ -50,6 +56,9 @@ export class FrmCompraDetallesComponent implements OnInit {
   arrayTiposEstadoEntrada: Array<EstadoEntrada> = [];  
   arrayAlmacenes: Array<Almacen> = [];
   requerirFechaConfirmacion:boolean = false;
+  
+  modoEdicion: boolean = false;
+  _entradaCopia: Entrada = new(Entrada);
 
   // grid lineas Entrada
   // [IdEntrada,  IdLinea, IdArticulo, NombreArticulo, CantidadPedida, CantidadConfirmada, CantidadCancelada, FechaActualizacion ]
@@ -58,7 +67,7 @@ export class FrmCompraDetallesComponent implements OnInit {
     {
       dataField: '',
       caption: '',
-      visible: true,
+      visible: false,
       type: "buttons",
       width: 40,
       //alignment: "center",
@@ -119,6 +128,10 @@ export class FrmCompraDetallesComponent implements OnInit {
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
+  // botones acciones formulario
+  confirmarButtonOptions: any;
+  cancelarButtonOptions: any;
+
   //#endregion
 
   
@@ -136,6 +149,19 @@ export class FrmCompraDetallesComponent implements OnInit {
       if (( nav.Entrada !== null) && ( nav.Entrada !== undefined)) {
         this._entrada= nav.Entrada;
       }
+
+      // botones acciones formulario
+      this.confirmarButtonOptions = {
+        icon: 'add',
+        text: 'Confirmar',
+        type: 'success',
+        visible: this.modoEdicion,      
+        onClick: () => {
+          alert('Confirmar');
+          // this.employee.Phones.push('');
+          // this.phoneOptions = this.getPhonesOptions(this.employee.Phones);
+        },
+      };
     }
 
 
@@ -146,12 +172,14 @@ export class FrmCompraDetallesComponent implements OnInit {
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
+
     // redimensionar grid, popUp
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
     }, 200);    
     // foco 
-    this.formSalida.instance.getEditor('Contrato').focus();
+    this.formEntrada.instance.getEditor('Contrato').focus();
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -163,6 +191,7 @@ export class FrmCompraDetallesComponent implements OnInit {
 
   onResize(event) {
     Utilidades.BtnFooterUpdate(this.pantalla,this.container,this.btnFooter,this.btnAciones,this.renderer);
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
     this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
   }
 
@@ -234,8 +263,47 @@ export class FrmCompraDetallesComponent implements OnInit {
   }
 
   btnEditarEntrada(){
-    alert('Función no implementada')
+    // copiar entrada actual a var_temp (posibilidad cancelar)
+    this._entradaCopia = Object.assign({},this._entrada);
+    // edicion
+    this.setModoEdicion(true);    
   }
+
+  setModoEdicion(editar:boolean){
+    this.modoEdicion = editar;
+    this.cols[0].visible = editar;        
+    this.dg.DataGrid.instance.option('columns',this.cols);
+    setTimeout(() => {
+      if (editar) {
+          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer,false);
+      }
+      else {
+          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
+      }
+      }, 100); 
+  }
+
+  btnCancelar(){
+    // recuperar datos entrada previa a cambios
+    this._entrada = this._entradaCopia
+    this.setModoEdicion(false);      
+  }
+
+  btnGuardar(){
+    // validar formulario
+    if (!this.validarFormulario()) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_ErrorValidacionDatos','Faltan datos y/o Datos incorrectos. Revise el formulario'));
+      return;
+    }
+    else {
+      // validacion especifica adicional de datos
+      if (this.validarDatosFormulario()) {
+        alert('llamar web-service actualizar datos');
+        this.setModoEdicion(false);
+      }
+    }      
+  }
+
 
   btnConfirmarEntrada(){
     alert('Función no implementada')
@@ -243,6 +311,25 @@ export class FrmCompraDetallesComponent implements OnInit {
 
   btnEditarLineaEntrada(index:number){    
     alert('pendiente de implementar');
+  }
+
+  // validacion estandar del formulario
+  validarFormulario():boolean{
+    const res = this.formEntrada.instance.validate();
+    // res.status === "pending" && res.complete.then((r) => {
+    //   console.log(r.status);
+    // });
+    return (res.isValid);
+  }
+
+  // validacion complementaria datos del formulario
+  validarDatosFormulario():boolean{
+    
+    if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
+      return false;
+    }
+    return true;
   }
 }
 

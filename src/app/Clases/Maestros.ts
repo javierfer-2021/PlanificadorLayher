@@ -2,6 +2,8 @@
 export class Articulo {
     IdArticulo: string;
     NombreArticulo: string;
+    Fmilia:string;
+    Secunadrio:boolean;
   }
 
 //  -- NO USADO EN ESTA VERSION

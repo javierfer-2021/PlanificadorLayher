@@ -41,7 +41,7 @@ export class FrmCompraBuscarComponent implements OnInit {
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-compra-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-compra-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesOferta()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-compra-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesEntrada()}, tipo: TipoBoton.secondary },
     { icono: '', texto: this.traducir('frm-compra-buscar.btnImportar', 'Importar'), posicion: 3, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.secondary },
   ];
 
@@ -136,7 +136,7 @@ export class FrmCompraBuscarComponent implements OnInit {
       visible: false,
     },
     {
-      dataField: 'Estado',
+      dataField: 'NombreEstado',
       caption: this.traducir('frm-venta-buscar.colEstado','Estado'),
       visible: true,
     },
@@ -281,7 +281,7 @@ export class FrmCompraBuscarComponent implements OnInit {
     this.location.back();
   }
 
-  verDetallesOferta(){
+  verDetallesEntrada(){
     if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
       Utilidades.MostrarErrorStr(this.traducir('frm-compra-buscar.msgErrorSelectLinea','Debe seleccionar una Entrada'));
       return;
@@ -301,8 +301,11 @@ export class FrmCompraBuscarComponent implements OnInit {
 
   //#endregion
 
-  onDoubleClick_DataGrid(){
-    //this.verPlanificador();
+  onDoubleClick_DataGrid(e){
+    this.dg.DataGrid.instance.selectRowsByIndexes([e.dataIndex]);
+    if ((this.selectedRowsData === null) || (this.selectedRowsData.length === 0)) {
+    this.verDetallesEntrada();
+    }   
   }
 
   btnMostrarOferta(index:number){

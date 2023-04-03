@@ -42,6 +42,11 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     { icono: '', texto: this.traducir('frm-venta-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarSalida()}, tipo: TipoBoton.secondary },
     { icono: '', texto: this.traducir('frm-venta-detalles.btnPlanificar', 'Planificar'), posicion: 3, accion: () => {this.btnPlanificarSalida()}, tipo: TipoBoton.success },
   ];
+
+  btnAcionesEdicion: BotonPantalla[] = [
+    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-usuario.btnGuardar', 'Guardar'), posicion: 2, accion: () => {this.btnGuardar()}, tipo: TipoBoton.success },
+  ];
   
   WSDatos_Validando: boolean = false;
   WSEnvioCsv_Valido: boolean = false;
@@ -51,6 +56,9 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   arrayAlmacenes: Array<Almacen> = [];
   requerirFechaFin:boolean = false;  
 
+  modoEdicion: boolean = false;
+  _salidaCopia: Salida = new(Salida);
+
   // grid lineas Salida
   // [IdSalida,  IdLinea, IdArticulo, NombreArticulo, CantidadPedida, CantidadReservada, CantidadDisponible, FechaActualizacion ]
   arrayLineasSalida: Array<SalidaLinea>;
@@ -58,7 +66,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     {
       dataField: '',
       caption: '',
-      visible: true,
+      visible: false,
       type: "buttons",
       width: 40,
       //alignment: "center",
@@ -233,8 +241,32 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     this.location.back();
   }
 
+  btnCancelar(){
+    // recuperar datos entrada previa a cambios
+    this._salida = this._salidaCopia
+    this.setModoEdicion(false);      
+  }
+
+  btnGuardar(){
+    // validar formulario
+    if (!this.validarFormulario()) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-venta-detalles.msgError_ErrorValidacionDatos','Faltan datos y/o Datos incorrectos. Revise el formulario'));
+      return;
+    }
+    else {
+      // validacion especifica adicional de datos
+      if (this.validarDatosFormulario()) {
+        alert('llamar web-service actualizar datos');
+        this.setModoEdicion(false);
+      }
+    }      
+  }
+
   btnEditarSalida(){
-    alert('Función no implementada')
+    // copiar entrada actual a var_temp (posibilidad cancelar)
+    this._salidaCopia = Object.assign({},this._salida);
+    // edicion
+    this.setModoEdicion(true);   
   }
 
   btnPlanificarSalida(){
@@ -244,4 +276,36 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   btnEditarLineaSalida(index:number){    
     alert('pendiente de implementar');
   }
+
+    // validacion estandar del formulario
+    validarFormulario():boolean{
+      const res = this.formSalida.instance.validate();
+      // res.status === "pending" && res.complete.then((r) => {
+      //   console.log(r.status);
+      // });
+      return (res.isValid);
+    }
+  
+    // validacion complementaria datos del formulario
+    validarDatosFormulario():boolean{      
+      // if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
+      //   Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
+      //   return false;
+      // }
+      return true;
+    }
+
+    setModoEdicion(editar:boolean){
+      this.modoEdicion = editar;
+      this.cols[0].visible = editar;        
+      this.dg.DataGrid.instance.option('columns',this.cols);
+      setTimeout(() => {
+        if (editar) {
+            Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer,false);
+        }
+        else {
+            Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
+        }
+        }, 100); 
+    }
 }

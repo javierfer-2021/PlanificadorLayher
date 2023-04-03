@@ -138,7 +138,7 @@ export class FrmVentaBuscarComponent implements OnInit {
       visible: false,
     },
     {
-      dataField: 'Estado',
+      dataField: 'NombreEstado',
       caption: this.traducir('frm-venta-buscar.colEstado','Estado'),
       visible: true,
     },
@@ -289,7 +289,8 @@ export class FrmVentaBuscarComponent implements OnInit {
   }
 
   verDetallesOferta(){
-    if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
+    this.selectedRowsData = this.dg.DataGrid.instance.getSelectedRowsData();
+    if ((this.selectedRowsData === null) || (this.selectedRowsData.length === 0)) {
       Utilidades.MostrarErrorStr(this.traducir('frm-venta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));
       return;
     }

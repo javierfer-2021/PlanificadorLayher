@@ -64,58 +64,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   checkBoxBajaOptions: any;
   modoEdicion: boolean = false;
   nuevoUsuario: boolean = false;
-
-  //TODO - Cambiar por permisos
-  // // grid almacenes asoiados
-  // // [IdOferta,  IdLinea, IdArticulo, ArticuloNombre, CantidadPedida, CantidadReservada, CantidadDisponible, FechaActualizacion ]
-  // arrayLineasOferta: Array<OfertaLinea>;
-  // cols: Array<ColumnDataGrid> = [
-  //   {
-  //     dataField: 'IdAlmacen',
-  //     caption: this.traducir('frm-usuario.colIdAlmacen','id.Almacen'),
-  //     visible: false,
-  //   }, 
-  //   {
-  //     dataField: 'NombreAlmacen',
-  //     caption: this.traducir('frm-usuario.colNombreAlmacen','Almacen'),
-  //     visible: false,
-  //   },     
-  //   {
-  //     dataField: 'IdArticulo',
-  //     caption: this.traducir('frm-usuario.colIdArticulo','Articulo'),
-  //     visible: true,
-  //   },      
-  //   {
-  //     dataField: 'ArticuloNombre',
-  //     caption: this.traducir('frm-usuario.colNombreArticulo','Descripción'),
-  //     visible: true,
-  //   },    
-  //   {
-  //     dataField: 'CantidadPedida',
-  //     caption: this.traducir('frm-usuario.colUndPedidas','Und.Pedidas'),      
-  //     visible: true,
-  //     width: 150,
-  //   },
-  //   {
-  //     dataField: 'CantidadReservada',
-  //     caption: this.traducir('frm-usuario.colUndPedidas','Und.Reservadas'),      
-  //     visible: true,
-  //     width: 150,
-  //   },    
-  //   {
-  //     dataField: 'CantidadDisponible',
-  //     caption: this.traducir('frm-usuario.colUndDisponibles','Disponibles'),      
-  //     visible: true,
-  //     width: 150,
-  //   },   
-  //   {
-  //     dataField: 'FechaActualizacion',
-  //     caption: this.traducir('frm-usuario.colAvisos','Fec.Actualización'),
-  //     visible: false,
-  //   },       
-  // ];
-  // dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
-
+ 
   //#endregion
 
   
@@ -130,7 +79,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     { 
       // gestion dinamica checkBox campo BAJA del form
       this.checkBoxBajaOptions = {
-        // text: 'Show Address',
+        // text: 'Baja',
         // value: true,
         disabled: false,
         onValueChanged: (e) => {
@@ -165,11 +114,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
    
-    // redimensionar grid, popUp
-    // setTimeout(() => {
-    //   this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
-    // }, 200);    
-   
     // foco 
     //this.formUsuario.instance.getEditor('Referencia').focus();
    
@@ -184,7 +128,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
 
   onResize(event) {
     Utilidades.BtnFooterUpdate(this.pantalla,this.container,this.btnFooter,this.btnAciones,this.renderer);
-    //this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
   }
 
   LPGen(value : boolean) {
@@ -242,11 +186,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-usuario.msgOk_WSInsertarUsuario','Usuario insertando')); 
           this._usuario = datos.datos[0];
-
-          // this.arrayLineasOferta = datos.datos;          
-          // // Se configura el grid
-          // this.dgConfigLineas = new DataGridConfig(this.arrayLineasOferta, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          // this.dgConfigLineas.actualizarConfig(true,false,'standard');
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-usuario.msgError_WSInsertarUsuario','Error insertando nuevo usuario')); 
         }
@@ -270,11 +209,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-usuario.msgOk_WSActualizarUsuario','Usuario actualizado')); 
           //this._usuario = datos.datos[0];
-          
-          // this.arrayLineasOferta = datos.datos;          
-          // // Se configura el grid
-          // this.dgConfigLineas = new DataGridConfig(this.arrayLineasOferta, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          // this.dgConfigLineas.actualizarConfig(true,false,'standard');
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-usuario.msgError_WSActualizarUsuario','Error actualizando usuario')); 
         }
@@ -293,7 +227,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   }
 
   btnEditarUsuario(){
-    this.setModoEdicion(true);  
     // copiar usuario actual a var_temp (posibilidad cancelar)
     this._usuarioCopia = Object.assign({},this._usuario);
     this.nuevoUsuario = false;
@@ -352,8 +285,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   setModoEdicion(editar:boolean){
     this.modoEdicion = editar;    
     setTimeout(() => {
-      //this.checkBoxBajaOptions.disabled = !editar;
-      //this.cbBaja.instance.option("disabled",!editar);
       if (editar) {
           Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
       }

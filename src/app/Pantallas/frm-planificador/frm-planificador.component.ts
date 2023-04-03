@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2} from '@angular/core';
+import { formatDate, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AfterContentChecked } from '@angular/core';
@@ -12,7 +12,8 @@ import { PlanificadorService } from '../../Servicios/PlanificadorService/planifi
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
 import { DxPopupComponent } from 'devextreme-angular';
-import { Salida, SalidaLinea } from '../../Clases/Salida'
+import { Salida, SalidaLinea } from '../../Clases/Salida';
+
 
 @Component({
   selector: 'app-frm-planificador',
@@ -36,7 +37,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-planificacion.btnSalir', 'Salir'), posicion: 1, accion: () => {this.location.back();}, tipo: TipoBoton.danger, activo: true, visible: true },
-    { icono: '', texto: this.traducir('frm-planificacion.btnLimpiar', 'Limpiar'), posicion: 2, accion: () => {this.limpiarControles();}, tipo: TipoBoton.secondary, activo: true, visible: true },
+    { icono: '', texto: this.traducir('frm-planificacion.btnRecargar', 'Recargar'), posicion: 2, accion: () => {this.limpiarControles();}, tipo: TipoBoton.secondary, activo: true, visible: true },
   ];
 
   _salida: Salida;
@@ -209,9 +210,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
           this.oOfertaSeleccionada = datos.datos.Oferta[0];
           this.idOferta_mostrar = this.oOfertaSeleccionada.Contrato;
-          this.fechaAlta_mostrar = this.oOfertaSeleccionada.FechaAlta.toString().substring(0, this.oOfertaSeleccionada.FechaAlta.toString().indexOf('T'));
-          this.fechaInicio_mostrar = this.oOfertaSeleccionada.FechaInicio.toString().substring(0, this.oOfertaSeleccionada.FechaInicio.toString().indexOf('T'));
-          this.fechaFin_mostrar = this.oOfertaSeleccionada.FechaFin.toString().substring(0, this.oOfertaSeleccionada.FechaFin.toString().indexOf('T'));
+          this.fechaAlta_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaAlta.toString());
+          this.fechaInicio_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaInicio.toString());
+          this.fechaFin_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaFin.toString());
           this.estado_mostrar = this.oOfertaSeleccionada.NombreEstado;
           this.cliente_mostrar = this.oOfertaSeleccionada.IdCliente.toString()+' - '+this.oOfertaSeleccionada.NombreCliente;
           this.almacen_mostrar = this.oOfertaSeleccionada.NombreAlmacen;
@@ -230,47 +231,49 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
             let newCol: ColumnDataGrid = {
               dataField: c.NombreCliente,
               caption: (this.obtenerCaptionColumna(c.NombreCliente,true)+'.'),
-              cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'verde' : 'gris',
+              cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'cliente_sel' : 'cliente',
               columns: [{
                 dataField: c.Contrato,
                 caption: c.Contrato,
-                cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'verdeClaro' : 'grisClaro',
+                cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'contrato_sel' : 'contrato',
                 columns: [{
                   dataField: c.Obra,
                   caption: this.obtenerCaptionColumna(c.Obra),
-                  cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blanco' : 'blanco',
+                  cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'otros_sel' : 'otros',
                   columns: [{
-                    dataField: c.Observaciones,
-                    caption: this.obtenerCaptionColumna(c.Observaciones),
-                    cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'blanco' : 'blanco',
+                    dataField: c.Referencia,
+                    caption: this.obtenerCaptionColumna(c.Referencia),
+                    cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'otros_sel' : 'otros',
                     columns: [{
+                      // dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
+                      // caption: c.FechaInicio.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                       dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
-                      caption: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
-                      cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha' : 'blanco',
+                      caption: this.obtenerFecha(c.FechaInicio.toString()),
+                      cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha_sel' : 'fecha',
                       columns: [{
                         dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                        caption: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                        cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha' : 'blanco',
+                        caption: this.obtenerFecha(c.FechaFin.toString()), //c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
+                        cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha_sel' : 'fecha',
                         columns: [{
                           dataField: c.NombreEstado,
                           caption: c.NombreEstado,
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'rojoClaroBold' : 'rojoClaro',
+                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'estado_sel' : 'estdo',
                           columns: [{
                             dataField: 'C' + nroCol.toString() + '_PEDIDAS',
                             caption: 'Ped.',
-                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
                             allowSorting: false
                           },
                           {
                             dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
                             caption: 'Asig.',
-                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
                             allowSorting: false
                           },
                           {
                             dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
                             caption: 'Dis.',
-                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'grisBold' : 'gris',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
                             allowSorting: false
                           },
                         ]
@@ -501,6 +504,19 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.dgArticulos.DataGrid.focusedRowIndex = selectedRowIndex;
   }
 
+  // color articulos secundarios
+  //TODO - incluir campo a comparar y asigan color articulos secundarios
+  onRowPrepared_DataGridUnidades(e){ 
+    if (e.rowType==="data") {      
+      // if (e.data.CantidadEsperada===e.data.CantidadDescargada) { 
+      //   e.rowElement.style.backgroundColor = '#E3F9D3 '
+      // }
+      // else if (e.data.CantidadEsperada<e.data.CantidadDescargada){
+      //   e.rowElement.style.backgroundColor = '#FED2D2 '
+      // }
+    }
+  }  
+
 //#endregion - Gestion ordenacion simultanea de los grid
 
 
@@ -529,7 +545,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   // GRID CONTRATOS AFECTADOS PLANIFICACION
 
   onCellDblClick_DataGridUnidades(e){
-     if (e.rowType=='header' && e.column.cssClass=='gris') {       
+     if (e.rowType=='header' && e.column.cssClass=='cliente') {       
        //alert('Doble click cabecera '+e.columnIndex+ ' '+e.cellIndex+' '+e.column.dataField);
        this.cambiarContratoSeleccionado((e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
      }
@@ -645,6 +661,14 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     return cadena;
   }
 
+  obtenerFecha(fecha:string):string {    
+    if (fecha.substring(0,4) == '1900') {
+      return '-'
+    } else {
+      let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4);
+      return strFecha;
+    }    
+  }
 
 }
 
