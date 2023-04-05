@@ -8,7 +8,7 @@ import { PlanificadorService } from '../../../Servicios/PlanificadorService/plan
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
-import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
+import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
 import { DataSelectBoxConfig } from '../../../Clases/Componentes/DataSelectBoxConfig';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
@@ -19,6 +19,7 @@ import { Entrada } from '../../../Clases/Entrada';
 import { Almacen } from 'src/app/Clases/Maestros';
 
 import { locale } from 'devextreme/localization';
+import { DxPopupComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-frm-compra-buscar',
@@ -177,6 +178,10 @@ export class FrmCompraBuscarComponent implements OnInit {
   almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
   sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
 
+  //popUp Filtros Adicionales
+  @ViewChild('popUpFiltros', { static: false }) popUpFiltros: DxPopupComponent;
+  popUpVisibleFiltros:boolean = false;
+    
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -325,4 +330,14 @@ export class FrmCompraBuscarComponent implements OnInit {
     this.cargarEntradas(this.sbAlmacenes.SelectBox.value);
   } 
 
+  seleccionarFiltrosAdicionales(){
+    this.popUpVisibleFiltros = true;
+  }
+
+  cerrarFiltrosAdicionales(e){
+    if (e != null) {
+      alert('Funcion de filtro no implementada')
+    }
+    this.popUpVisibleFiltros = false;
+  }
 }

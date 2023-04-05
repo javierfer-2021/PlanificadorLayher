@@ -32,6 +32,10 @@ export class Salida {
     CantidadReservada: number;
     CantidadDisponible: number;
     FechaActualizacion: Date;
+    Prioridad: number;
+    Eliminada: boolean;
+    Insertada: boolean;
+    Observaciones: string;
   }
 
 

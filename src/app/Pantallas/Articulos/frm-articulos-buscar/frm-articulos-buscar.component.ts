@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
-import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
+import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';

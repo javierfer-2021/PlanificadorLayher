@@ -58,3 +58,10 @@ default:
     margin: 5px 0px;
     padding-top: 5px;
 }
+
+.botonFiltros {
+    height: 30px; 
+    width: 100%; 
+    padding: 0px; 
+    font-size: 14px;
+}

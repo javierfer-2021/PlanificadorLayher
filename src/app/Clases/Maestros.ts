@@ -2,8 +2,11 @@
 export class Articulo {
     IdArticulo: string;
     NombreArticulo: string;
-    Fmilia:string;
-    Secunadrio:boolean;
+    IdFamilia: number;
+    NombreFamilia:string;
+    IdSubfamilia: number;
+    NombreSubfamilia:string;
+    Secundario:boolean;
   }
 
 //  -- NO USADO EN ESTA VERSION
@@ -13,6 +16,21 @@ export class Articulo {
 //     Mostrar: string;
 //   }
   
+export class ArticuloFamilia {
+  IdFamilia: number;
+  CodFamilia: string;
+  NombreFamilia: string;
+  Importado: boolean;
+  FechaActualizacion: Date;
+  UsoFiltro:boolean;
+}
+
+export class ArticuloSubfamilia {
+  IdSubfamilia: number;
+  IdFamilia: number;
+  NombreSubfamilia: string;
+}
+
   export class Almacen {
     IdAlmacen: number;
     NombreAlmacen: string;

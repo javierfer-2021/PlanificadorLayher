@@ -1,0 +1,47 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+            <!-- Titulo -->
+            <div class="row px-1 py-2 titulo">
+                <div class="col pt-1 px-1">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-filtros-buscar.lblTitulo', 'Contiene articulos de ...')}}</div>
+                </div>
+            </div>  
+
+            <!-- Contenido (FILTROS DISPONIBLES) -->  
+            <div class="row pt-2">
+                <div class="col px-1">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblFamilia', 'Familia Artículo')}}</div>
+                    <dx-select-box  #comboFamilia [height]="30"
+                        [(ngModel)]="str_txtFamilia"
+                        [dataSource]="arrayFamilias"                     
+                        displayExpr="NombreFamilia"
+                        valueExpr="IdFamilia"           
+                        placeholder="{{traducir('frm-filtros-buscar.comboFamilia', 'Seleccionar familia')}}"
+                        [disabled]="false" [readOnly]="false">
+                    </dx-select-box>
+                </div>
+            </div>            
+            
+            <div class="row pt-2">
+                <div class="col px-1">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblSubfamilia', 'Subfamilia Artículo')}}</div>
+                    <dx-select-box  #comboSubfamilia [height]="30"
+                        [(ngModel)]="str_txtSubfamilia"
+                        [dataSource]="arraySubfamilias"                     
+                        displayExpr="NombreSubfamilia"
+                        valueExpr="IdSubfamilia"           
+                        placeholder="{{traducir('frm-filtros-buscar.comboSubfamilia', 'Seleccionar subfamilia')}}"
+                        [disabled]="false" [readOnly]="false">
+                    </dx-select-box>
+                </div>
+            </div> 
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>

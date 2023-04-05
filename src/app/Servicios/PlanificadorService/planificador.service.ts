@@ -255,9 +255,9 @@ export class PlanificadorService {
     return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/eliminarLineaArticuloPlanificacion', body, this.headers);
   }
 
-  async insertarArticuloPlanificador(idSalida,idArticulo,unidades): Promise<Observable<any>> {
+  async insertarArticuloPlanificador(idSalida,idArticulo,unidades,observaciones): Promise<Observable<any>> {
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
-                   datos: { IdSalida:idSalida, IdArticulo:idArticulo, Unidades:unidades } };
+                   datos: { IdSalida:idSalida, IdArticulo:idArticulo, Unidades:unidades, Observaciones:observaciones } };
 
     return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/insertarLineaArticuloPlanificacion', body, this.headers);
   }

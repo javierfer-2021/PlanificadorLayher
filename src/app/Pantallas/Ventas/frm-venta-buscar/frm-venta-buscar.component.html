@@ -8,8 +8,13 @@
                 <div class="col pt-1 px-1">
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-venta-buscar.lblTitulo', 'Lista Salidas incluidas en el Planificador (Ventas-Alquileres-Traspasos)')}} </div>
                 </div>
-                <div class="col-4 pt-0 px-1">
+                <div class="col-3 pt-0 px-1">
                     <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
+                </div>   
+                <div class="col-1 pt-0 px-1">
+                    <button type="button" class="btn btn-outline-secondary botonFiltros" (click)="seleccionarFiltrosAdicionales()">
+                        {{traducir('frm-venta-buscar.lblBtnFiltros', '+ Filtros')}}
+                    </button>
                 </div>   
             </div>  
 
@@ -29,10 +34,14 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
-<!-- <dx-popup *ngIf="popUpVisibleDetallesSalida" #popUpDetallesSalida [fullScreen]="true"
-    (window:resize)="onResize($event)" [dragEnabled]="false" [showTitle]="false" [showCloseButton]="false" [closeOnOutsideClick]="false"
-    [(visible)]="popUpVisibleDetallesSalida"
-    title="{{traducir('frm-venta-detalles.popUpTituloDetallesSalida', 'Detalles Contrato Salida')}}">
-    <app-frm-venta-detalles [salida]="salida_seleccionada" (cerrarPopUp)="cerrarPopUpDetallesSalida()"></app-frm-venta-detalles>
-</dx-popup> -->
 
+<!-- popUp filtros adicionales -->
+<dx-popup *ngIf="popUpVisibleFiltros" #popUpFiltros (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="330px" width="600px"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleFiltros" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-buscar.str_txtPopupFiltros', 'Filtros Adicionales')}}"
+    contentTemplate="contentFiltrosAdicionales">
+    <div *dxTemplate="let data of 'contentFiltrosAdicionales'">
+        <app-frm-filtros-buscar (cerrarPopUp)="cerrarFiltrosAdicionales($event)"></app-frm-filtros-buscar>
+    </div>    
+</dx-popup>

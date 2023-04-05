@@ -304,12 +304,12 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }
 
 
-  async insertarArticulo(idArticulo:string,unidades:number){
+  async insertarArticulo(idArticulo:string,unidades:number,observaciones:string){
     if(this.WSDatos_Validando) return;    
     if (!Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.insertarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,unidades)).subscribe(
+    (await this.planificadorService.insertarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,unidades,observaciones)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           //console.log(datos);
@@ -616,7 +616,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.idArticulo);
       if (index<0) {
         // añadir articulo en la planificación
-        this.insertarArticulo(e.idArticulo, e.unidades);
+        this.insertarArticulo(e.idArticulo, e.unidades,"Insertado desde el planificador");
       } else {
         Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','Artículo ya incluido (No insertado).<br>Modifique unidades manualmente'))
       }

@@ -3,7 +3,7 @@ import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { Location } from '@angular/common';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { CmpDataGridComponent } from 'src/app/componentes/cmp-data-grid/cmp-data-grid.component';
+import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
