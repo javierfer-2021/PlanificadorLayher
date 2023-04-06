@@ -154,7 +154,8 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-    // redimensionar grid, popUp
+    // Totales + redimensionar grid, popUp
+    this.dg.mostrarFilaSumaryTotal('IdLinea','IdArticulo',this.traducir('frm-venta-detalles.TotalRegistros','Total Lineas: '),'count');
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
     }, 200);    
@@ -308,4 +309,16 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
         }
         }, 100); 
     }
+
+
+    onRowPrepared_DataGrid(e){ 
+      if (e.rowType==="data") {
+        if (e.data.Eliminada) { 
+          e.rowElement.style.backgroundColor = '#FED2D2'
+        }
+        else if (e.data.Insertada){
+          e.rowElement.style.backgroundColor = '#E3F9D3'
+        }
+      }
+    }    
 }

@@ -54,17 +54,17 @@ export class FrmArticulosStockComponent implements OnInit {
     {
       dataField: '',
       caption: '',
-      visible: false,
+      visible: true,
       type: "buttons",
       width: 40,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
       buttons: [ 
-        { icon: "info",
-          hint: "Ver Articulo",
+        { icon: "edit",
+          hint: "Editar Artículo",
           onClick: (e) => { 
-            this.btnMostrarArticulo(e.row.rowIndex); 
+            this.btnEditarArticulo(e.row.rowIndex); 
           }
         },
       ]
@@ -95,6 +95,26 @@ export class FrmArticulosStockComponent implements OnInit {
       visible: true,
     },
     {
+      dataField: 'IdFamilia',
+      caption: this.traducir('frm-articulos-stock.colIdFamilia','IdFamilia'),
+      visible: false,
+    },
+    {
+      dataField: 'NombreFamilia',
+      caption: this.traducir('frm-articulos-stock.colNombreFamilia','Familia'),
+      visible: true,
+    }, 
+    {
+      dataField: 'IdSubfamilia',
+      caption: this.traducir('frm-articulos-stock.colIdSubfamilia','IdSubfamilia'),
+      visible: false,
+    },
+    {
+      dataField: 'NombreSubfamilia',
+      caption: this.traducir('frm-articulos-stock.colNombreSubfamilia','Subfamilia'),
+      visible: true,
+    },            
+    {
       dataField: 'IdCualidad',
       caption: this.traducir('frm-articulos-stock.colIdCualidad','IdCualidad'),
       visible: false,
@@ -108,6 +128,7 @@ export class FrmArticulosStockComponent implements OnInit {
       dataField: 'Secundario',
       caption: this.traducir('frm-articulos-stock.colFechaStock','Secundario'),
       visible: true,
+      width: 100,
     },
   ];
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
@@ -245,8 +266,9 @@ export class FrmArticulosStockComponent implements OnInit {
     // añadir codigo doble-click sobre el grid
   }
 
-  btnMostrarArticulo(index:number){
+  btnEditarArticulo(index:number){
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles 
+    alert('Pantalla edicion articulo');
   }
 
   onValueChanged_ComboAlmacen(){

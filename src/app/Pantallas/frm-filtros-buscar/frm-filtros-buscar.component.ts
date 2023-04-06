@@ -1,14 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
-import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
-import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';
-import { DataSelectBoxConfig } from '../../Clases/Componentes/DataSelectBoxConfig';
 import { Utilidades } from '../../Utilidades/Utilidades';
 import { ArticuloFamilia,ArticuloSubfamilia } from '../../Clases/Maestros';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
@@ -48,7 +44,7 @@ export class FrmFiltrosBuscarComponent implements OnInit {
   str_txtSubfamilia:string = '';
 
   arrayFamilias: Array<ArticuloFamilia> = [];
-  arraySubFamilias: Array<ArticuloSubfamilia> = [];
+  arraySubfamilias: Array<ArticuloSubfamilia> = [];
 
   //#endregion
 
@@ -56,8 +52,6 @@ export class FrmFiltrosBuscarComponent implements OnInit {
 
   constructor(private cdref: ChangeDetectorRef,
               private renderer: Renderer2,
-              private location: Location,
-              private router: Router,
               public translate: TranslateService,
               public planificadorService: PlanificadorService) 
   { 
@@ -73,7 +67,7 @@ export class FrmFiltrosBuscarComponent implements OnInit {
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // foco
-    //this.dg.DataGrid.instance.focus();    
+    this.comboFamilia.instance.focus();
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -142,6 +136,8 @@ export class FrmFiltrosBuscarComponent implements OnInit {
   }
 
   btnAceptar(){
+    //comprobar algun filtro seleccionado
+    // comprobar subfamilia asignada a la familia
     this.cerrarPopUp.emit({familia:1,subfamilia:0})
   }
 

@@ -334,6 +334,7 @@ export class FrmVentaBuscarComponent implements OnInit {
     this.verPlanificador();
   }
 
+
   btnMostrarOferta(index:number){
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles Oefrta
   }

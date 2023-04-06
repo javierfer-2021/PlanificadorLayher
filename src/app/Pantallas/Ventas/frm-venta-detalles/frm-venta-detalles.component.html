@@ -64,7 +64,9 @@
         <!-- grid lineas cargadas del CSVs -->    
         <div class="row pt-1 px-1">
             <div class="col pt-1 px-1">    
-                <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+                <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"
+                    (onRowPrepared_DataGrid)="onRowPrepared_DataGrid($event)">
+                </app-cmp-data-grid>
             </div>
         </div>            
 

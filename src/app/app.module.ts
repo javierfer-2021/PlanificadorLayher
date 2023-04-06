@@ -50,6 +50,7 @@ import { FrmCompraDetallesComponent } from './Pantallas/Compras/frm-compra-detal
 import { FrmImportarMaestrosComponent } from './Pantallas/frm-importar-maestros/frm-importar-maestros.component';
 import { FrmArticulosBuscarComponent } from './Pantallas/Articulos/frm-articulos-buscar/frm-articulos-buscar.component';
 import { FrmFiltrosBuscarComponent } from './Pantallas/frm-filtros-buscar/frm-filtros-buscar.component';
+import { FrmArticulosEditarComponent } from './Pantallas/Articulos/frm-articulos-editar/frm-articulos-editar.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -87,7 +88,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmCompraDetallesComponent,
     FrmImportarMaestrosComponent,
     FrmArticulosBuscarComponent,
-    FrmFiltrosBuscarComponent
+    FrmFiltrosBuscarComponent,
+    FrmArticulosEditarComponent
 
   ],
   imports: [

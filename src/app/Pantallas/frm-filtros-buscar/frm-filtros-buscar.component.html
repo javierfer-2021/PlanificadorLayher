@@ -13,7 +13,7 @@
             <!-- Contenido (FILTROS DISPONIBLES) -->  
             <div class="row pt-2">
                 <div class="col px-1">
-                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblFamilia', 'Familia Artículo')}}</div>
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblFamilia', 'Familia')}}</div>
                     <dx-select-box  #comboFamilia [height]="30"
                         [(ngModel)]="str_txtFamilia"
                         [dataSource]="arrayFamilias"                     
@@ -27,7 +27,7 @@
             
             <div class="row pt-2">
                 <div class="col px-1">
-                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblSubfamilia', 'Subfamilia Artículo')}}</div>
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblSubfamilia', 'Subfamilia')}}</div>
                     <dx-select-box  #comboSubfamilia [height]="30"
                         [(ngModel)]="str_txtSubfamilia"
                         [dataSource]="arraySubfamilias"                     

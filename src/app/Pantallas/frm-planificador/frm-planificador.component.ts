@@ -306,7 +306,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async insertarArticulo(idArticulo:string,unidades:number,observaciones:string){
     if(this.WSDatos_Validando) return;    
-    if (!Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+    if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
 
     this.WSDatos_Validando = true;
     (await this.planificadorService.insertarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,unidades,observaciones)).subscribe(
@@ -330,7 +330,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async eliminarArticulo(idArticulo:string,motivo:string){
     if(this.WSDatos_Validando) return;    
-    if (!Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+    if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
 
     this.WSDatos_Validando = true;
     (await this.planificadorService.eliminarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,motivo)).subscribe(
