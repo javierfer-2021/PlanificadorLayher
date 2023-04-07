@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -52,6 +53,7 @@ export class FrmFiltrosBuscarComponent implements OnInit {
 
   constructor(private cdref: ChangeDetectorRef,
               private renderer: Renderer2,
+              private router: Router,
               public translate: TranslateService,
               public planificadorService: PlanificadorService) 
   { 
@@ -103,27 +105,21 @@ export class FrmFiltrosBuscarComponent implements OnInit {
   async cargarCombosFiltro(){
     if (this.WSDatos_Validando) return;
     
-    // this.WSDatos_Validando = true;
-    // (await this.planificadorService.getStockArticulos(almacen)).subscribe(
-    //   (datos) => {
-    //     if (Utilidades.DatosWSCorrectos(datos)) {
-    //       this.loadIndicatorVisible = true;
-    //       // asignar valores devuletos
-    //       this.arrayStockArticulos = datos.datos;
-    //       this.dgConfig = new DataGridConfig(this.arrayStockArticulos, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-    //       if (this.arrayStockArticulos.length>0) { this.dgConfig.actualizarConfig(true,false, 'virtual',true, true);}
-    //       else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
-    //       this.loadIndicatorVisible = false;
-    //     }
-    //     else {
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-filtros-buscar.msgErrorWS_CargarArticulosStock','Error web-service obtener lista filtros-buscar')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, (error) => {
-    //     this.WSDatos_Validando = false;
-    //     Utilidades.compError(error, this.router,'frm-filtros-buscar');
-    //   }
-    // );
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.getListaFamiliasSubfamilias(-1)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.arrayFamilias = datos.datos.Familias;
+          this.arraySubfamilias = datos.datos.Subfailias;
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-filtros-buscar.msgError_WSCargarCombos','Error cargando familias y subfamilias')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-filtros-buscar');
+      }
+    );
   }
 
   //#endregion 

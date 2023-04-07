@@ -15,7 +15,8 @@ import { Utilidades } from '../../../Utilidades/Utilidades';
 import { ArticuloStock } from '../../../Clases/Articulo';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
-import { Almacen } from 'src/app/Clases/Maestros';
+import { Almacen, Articulo } from 'src/app/Clases/Maestros';
+import { DxPopupComponent } from 'devextreme-angular';
 
 
 @Component({
@@ -132,12 +133,16 @@ export class FrmArticulosStockComponent implements OnInit {
     },
   ];
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
-  selectedRowsData = [];
-
-  // combo filtro almacenes
+  
+    // combo filtro almacenes
   almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
   sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
   
+  //popUp Filtros Adicionales
+  @ViewChild('popUpVisibleEditar', { static: false }) popUpEditar: DxPopupComponent;
+  popUpVisibleEditar:boolean = false;
+  articuloSeleccionado: Articulo = new Articulo();
+
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -268,7 +273,18 @@ export class FrmArticulosStockComponent implements OnInit {
 
   btnEditarArticulo(index:number){
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles 
-    alert('Pantalla edicion articulo');
+    this.articuloSeleccionado.IdArticulo = this.arrayStockArticulos[index].IdArticulo;
+    this.articuloSeleccionado.NombreArticulo = this.arrayStockArticulos[index].NombreArticulo;
+    this.articuloSeleccionado.IdFamilia = null; //this.arrayStockArticulos[index].IdFamilia;
+    this.articuloSeleccionado.IdSubfamilia = null; //this.arrayStockArticulos[index].IdArticulo;
+    this.articuloSeleccionado.Secundario = this.arrayStockArticulos[index].Secundario;
+    this.popUpVisibleEditar = true;
+  }
+
+  cerrarEditarArticulo(e){
+    alert(e);
+    // Actualizar info del grid    
+    this.popUpVisibleEditar = false;    
   }
 
   onValueChanged_ComboAlmacen(){

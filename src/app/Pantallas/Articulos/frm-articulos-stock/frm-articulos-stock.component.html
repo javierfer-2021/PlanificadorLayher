@@ -28,4 +28,14 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
+<!-- popUp Editar Articulo -->
+<dx-popup #popUpEditar (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="480px" width="640px"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleEditar" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-stock.str_txtPopupEditar', 'Editar Artículo')}}"
+    contentTemplate="contentEditarArticulo">
+    <div *dxTemplate="let data of 'contentEditarArticulo'">
+        <app-frm-articulos-editar [articulo]="articuloSeleccionado" (cerrarPopUp)="cerrarEditarArticulo($event)"></app-frm-articulos-editar>
+    </div>    
+</dx-popup>
 

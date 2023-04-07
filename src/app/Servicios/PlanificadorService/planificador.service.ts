@@ -104,6 +104,49 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/articulostock/getListaArticulosStock', body, Utilidades.getHeaders());
   }  
 
+  async getListaFamiliasSubfamilias(familia): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdFamilia:familia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/getListaFamiliaSubfamilia', body, Utilidades.getHeaders());
+  }  
+
+  async getListaFamilias(): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/getListaFamilias', body, Utilidades.getHeaders());
+  }  
+  
+  async getListaSubfamilias(familia): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdFamilia:familia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/getListaSubfamilias', body, Utilidades.getHeaders());
+  }  
+
+  async actualizarArticulo(articulo,familia,subfamilia,secundario): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdArticulo:articulo,
+                                                           IdFamilia:familia,
+                                                           IdSubfamilia:subfamilia, 
+                                                           Secundario:secundario } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/actualizarArticulo', body, Utilidades.getHeaders());
+  }    
+
   //#endregion
 
 
