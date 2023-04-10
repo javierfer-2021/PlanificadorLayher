@@ -574,42 +574,42 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   //color celdas unidades
   onCellPrepared_DataGridUnidades(e){     
-    //console.log(e.rowType+' -> columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
-    // check filas correspondiente a datos
-    if ((e.rowType==="data") && (e.rowIndex != undefined)) {
-      //console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
-      let estilo:string="";
+    // //console.log(e.rowType+' -> columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
+    // // check filas correspondiente a datos
+    // if ((e.rowType==="data") && (e.rowIndex != undefined)) {
+    //   //console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
+    //   let estilo:string="";
         
-      // determinar si estamos en columna contrato seleccionado
-      // 1. valores unidades contrato seleccionado
-      if (this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida == this._salida.IdSalida) {
-        estilo = "valorUnidades_sel";        
-        // und. pendientes_asignar
-        if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
-            estilo = "valorUndPendientes_sel";
-        }
-        // stock=0
-        if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
-            estilo = "valorStockCero"
-        }                
-      } 
+    //   // determinar si estamos en columna contrato seleccionado
+    //   // 1. valores unidades contrato seleccionado
+    //   if (this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida == this._salida.IdSalida) {
+    //     estilo = "valorUnidades_sel";        
+    //     // und. pendientes_asignar
+    //     if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
+    //         estilo = "valorUndPendientes_sel";
+    //     }
+    //     // stock=0
+    //     if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
+    //         estilo = "valorStockCero"
+    //     }                
+    //   } 
       
-      // 2. valores de articulos <> contrato seleccionado
-      else {
-        estilo = "valorUnidades";
-        // und. pendientes_asignar
-        if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
-          estilo = "valorUndPendientes";
-        }
-        // stock=0
-        if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
-            estilo = "valorStockCero"
-        }                
-      }
+    //   // 2. valores de articulos <> contrato seleccionado
+    //   else {
+    //     estilo = "valorUnidades";
+    //     // und. pendientes_asignar
+    //     if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
+    //       estilo = "valorUndPendientes";
+    //     }
+    //     // stock=0
+    //     if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
+    //         estilo = "valorStockCero"
+    //     }                
+    //   }
 
-      e.column.cssClass = estilo;         
-      console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}'+' - estilo:'+estilo);
-    }    
+    //   e.column.cssClass = estilo;         
+    //   console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}'+' - estilo:'+estilo);
+    // }    
     
   }    
 
