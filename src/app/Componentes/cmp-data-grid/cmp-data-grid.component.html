@@ -15,6 +15,7 @@
         (onFocusedRowChanged)="onFocusedRowChanged_DataGrid.emit($event)"
         (onCellDblClick)="onCellDoubleClick_DataGrid.emit($event)" 
         (onContextMenuPreparing)="onContextMenuPreparing_DataGrid.emit($event)" 
+        (onCellPrepared)="onCellPrepared_DataGrid.emit($event)" 
         [filterValue]="filtro" 
         [selection]="{mode: dgConfig.modoSeleccion}" 
         [disabled]="dgConfig.disabled" 

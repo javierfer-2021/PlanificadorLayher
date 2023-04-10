@@ -64,14 +64,14 @@ export class FrmArticulosEditarComponent implements OnInit {
 
   ngOnInit(): void {
     // copia del articulo pasado como parametro
-    this._articuloCopia = Object.assign({},this.articulo);
+    this._articuloCopia = Object.assign({},this.articulo);    
     // cargar combos familias y subfamilias
     this.cargarCombos();
   }
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-  
+
     // foco 
     //this.formUsuario.instance.getEditor('Referencia').focus();
    
@@ -110,11 +110,11 @@ export class FrmArticulosEditarComponent implements OnInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getListaFamiliasSubfamilias(-1)).subscribe(
+    (await this.planificadorService.getListaFamiliasSubfamilias(0)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayFamilias = datos.datos.Familias;
-          this.arraySubfamilias = datos.datos.Subfailias;
+          this.arraySubfamilias = datos.datos.Subfamilias;
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-articulos-editar.msgError_WSCargarCombos','Error cargando familias y subfamilias')); 
         }
@@ -130,23 +130,23 @@ export class FrmArticulosEditarComponent implements OnInit {
   async actualiaArticulo(){
     if(this.WSDatos_Validando) return;
 
-    // this.WSDatos_Validando = true;
-    // (await this.planificadorService.actualizarUsuario(this._usuario.IdUsuario,this._usuario.Login,this._usuario.Password,this._usuario.NombreUsuario,this._usuario.Email,this._usuario.IdIdioma,
-    //                                                 this._usuario.FechaAlta,this._usuario.FechaBaja,this._usuario.Baja,this._usuario.Administrador,this._usuario.VerAlmacenes,
-    //                                                 this._usuario.idAlmacenDefecto,this._usuario.Skin,this._usuario.Perfil,this._usuario.IdPersonal,this.arrayAlmacenesAsignados)).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       Utilidades.MostrarExitoStr(this.traducir('frm-usuario.msgOk_WSActualizarUsuario','Usuario actualizado')); 
-    //       //this._usuario = datos.datos[0];
-    //     } else {          
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-usuario.msgError_WSActualizarUsuario','Error actualizando usuario')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, error => {
-    //     this.WSDatos_Validando = false;
-    //     Utilidades.compError(error, this.router,'frm-usuario');
-    //   }
-    // );
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarArticulo(this._articuloCopia.IdArticulo,this._articuloCopia.IdFamilia, this._articuloCopia.IdSubfamilia, this._articuloCopia.Secundario)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-articulos-editar.msgOk_WSActualizarArticulo','Artículo actualizado')); 
+          // salir 
+          //this.articulo = this._articuloCopia;          
+          this.cerrarPopUp.emit(this._articuloCopia);
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-articulos-editar.msgError_WSActualizarUsuario','Error actualizando artículo')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-articulos-editar');
+      }
+    );
   }   
 
   //#endregion
@@ -158,9 +158,8 @@ export class FrmArticulosEditarComponent implements OnInit {
   }
 
   btnGuardar(){
-    // Actualizamos cambios -> articulo parametro = copia temporal
-    this.articulo = this._articuloCopia;
-    this.cerrarPopUp.emit(this.articulo);
+    // Actualizar articulo + salir si ok
+    this.actualiaArticulo();
   }
   
   

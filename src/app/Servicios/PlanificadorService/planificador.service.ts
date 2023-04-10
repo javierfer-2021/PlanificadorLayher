@@ -147,6 +147,19 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/articulostock/actualizarArticulo', body, Utilidades.getHeaders());
   }    
 
+
+  async actualizarArticuloValorSecundario(articulo,almacen,secundario): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdArticulo:articulo,
+                                                           IdAlmacen:almacen,
+                                                           Secundario:secundario } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/actualizarArticuloValorSecundario', body, Utilidades.getHeaders());
+  }   
+
   //#endregion
 
 

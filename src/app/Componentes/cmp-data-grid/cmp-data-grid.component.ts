@@ -23,6 +23,7 @@ export class CmpDataGridComponent implements OnInit {
   // new jn 29/03/2023
   @Output() onCellDoubleClick_DataGrid = new EventEmitter<any>();
   @Output() onContextMenuPreparing_DataGrid = new EventEmitter<any>();
+  @Output() onCellPrepared_DataGrid = new EventEmitter<any>();
 
   @ViewChild('DataGrid', { static: false }) DataGrid: DxDataGridComponent;
 

@@ -68,7 +68,7 @@ export class FrmVentaBuscarComponent implements OnInit {
         { icon: "info",
           hint: "Ver detalles salida",
           onClick: (e) => { 
-            this.btnMostrarOferta(e.row.rowIndex); 
+            this.btnMostrarOferta(e.row.data); 
           }
         },
       ]
@@ -315,7 +315,7 @@ export class FrmVentaBuscarComponent implements OnInit {
       return;
     } 
     else {
-      //TODO- verificar paso parametro salida
+      // ir a pantalla planificador con parametro router salida_seleccionada
       let vSalida : Salida =  this.dg.objSeleccionado();    
       const navigationExtras: NavigationExtras = {
         state: { PantallaAnterior: 'frm-venta-buscar', salida: vSalida }
@@ -335,7 +335,7 @@ export class FrmVentaBuscarComponent implements OnInit {
   }
 
 
-  btnMostrarOferta(index:number){
+  btnMostrarOferta(data:any){
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles Oefrta
   }
 

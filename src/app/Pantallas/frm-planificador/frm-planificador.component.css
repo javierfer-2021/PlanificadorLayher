@@ -125,3 +125,34 @@
     background-color: #f2f2f2;
 }
 
+
+
+
+/* ESTILOS COLUMNAS VALORES UNIDADES ARTICULOS */
+
+::ng-deep .dx-data-row .valorUnidades {
+    font-weight: normal;
+}
+
+::ng-deep .dx-data-row .valorStockCero {
+    color: red;
+}
+
+::ng-deep .dx-data-row .valorUndPendientes {
+    background-color:lightpink; 
+}
+
+::ng-deep .dx-data-row .valorUnidades_sel {
+    font-weight: bold; 
+}
+
+::ng-deep .dx-data-row .valorStockCero_sel {
+    font-weight: bold; 
+    color: red;
+}
+
+::ng-deep .dx-data-row .valorUndPendientes_sel {
+    font-weight: bold; 
+    background-color:lightpink; 
+}
+

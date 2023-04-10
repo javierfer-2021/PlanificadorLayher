@@ -20,11 +20,11 @@
 
                     <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{disabled:true}"></dxi-item>                           
 
-                    <dxi-item dataField="IdFamilia" label="Familia" [colSpan]="2" editorType="dxSelectBox" 
+                    <dxi-item dataField="IdFamilia" [label]="{text:'Familia'}" [colSpan]="2" editorType="dxSelectBox" 
                         [editorOptions]="{disabled:false, dataSource:arrayFamilias, displayExpr:'NombreFamilia', valueExpr:'IdFamilia', searchEnabled: true }">                            
                     </dxi-item>
 
-                    <dxi-item dataField="IdSubfamilia" [colSpan]="2" editorType="dxSelectBox" 
+                    <dxi-item dataField="IdSubfamilia" [label]="{text:'Subfamilia'}" [colSpan]="2" editorType="dxSelectBox" 
                         [editorOptions]="{disabled:false, dataSource:arraySubfamilias, displayExpr:'NombreSubfamilia', valueExpr:'IdSubfamilia', searchEnabled: true }">                            
                     </dxi-item>
 

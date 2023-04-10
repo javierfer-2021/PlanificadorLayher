@@ -40,8 +40,9 @@ export class FrmArticulosStockComponent implements OnInit {
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-articulos-stock.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-articulos-stock.btnIncidencia', 'Incidencia'), posicion: 2, accion: () => {this.btnIncidencia()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-articulos-stock.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.btnRegularizar()}, tipo: TipoBoton.secondary },
+    //{ icono: '', texto: this.traducir('frm-articulos-stock.btnIncidencia', 'Incidencia'), posicion: 2, accion: () => {this.btnIncidencia()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-articulos-stock.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditar()}, tipo: TipoBoton.secondary },    
+    { icono: '', texto: this.traducir('frm-articulos-stock.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.btnVerPlanificador()}, tipo: TipoBoton.secondary },
   ];
 
   WSDatos_Validando: boolean = false;
@@ -57,7 +58,7 @@ export class FrmArticulosStockComponent implements OnInit {
       caption: '',
       visible: true,
       type: "buttons",
-      width: 40,
+      width: 50,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
@@ -65,7 +66,8 @@ export class FrmArticulosStockComponent implements OnInit {
         { icon: "edit",
           hint: "Editar Artículo",
           onClick: (e) => { 
-            this.btnEditarArticulo(e.row.rowIndex); 
+            //this.btnEditarArticulo(e.row.rowIndex); 
+            this.btnEditarArticulo(e.row.data); 
           }
         },
       ]
@@ -247,6 +249,16 @@ export class FrmArticulosStockComponent implements OnInit {
     this.location.back();
   }
 
+  btnEditar(){
+    if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorSelectLinea','Debe seleccionar un Artículo'));
+      return;
+    } else {
+      this.btnEditarArticulo(this.dg.objSeleccionado());
+    }
+  }
+
+
   btnIncidencia(){
     if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
       Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorSelectLinea','Debe seleccionar un Artículo'));
@@ -261,29 +273,39 @@ export class FrmArticulosStockComponent implements OnInit {
 
 
   // regularizar stock --> Importar, Cambiar valor, etc... (ver si se implementa)  
-  btnRegularizar(){    
-    try { alert('Gestión de regularización stock Articulo -> '+ this.dg.objSeleccionado().IdArticulo); } catch {} 
+  btnVerPlanificador(){    
+    try { alert('Planificador del articulo -> '+ this.dg.objSeleccionado().IdArticulo); } catch {} 
   }
 
   //#endregion
 
   onDoubleClick_DataGrid(){
-    // añadir codigo doble-click sobre el grid
+    // comprobar registro seleecionado
+    let selectedRowsData = this.dg.DataGrid.instance.getSelectedRowsData();
+    if ((selectedRowsData === null) || (selectedRowsData.length === 0)) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorSelectLinea','Debe seleccionar un Artículo'));
+      this.dg.DataGrid.instance.focus(); 
+      return;
+    } else {
+      this.btnEditarArticulo(this.dg.objSeleccionado());
+    }    
   }
 
-  btnEditarArticulo(index:number){
+  btnEditarArticulo(data:any){
     // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles 
-    this.articuloSeleccionado.IdArticulo = this.arrayStockArticulos[index].IdArticulo;
-    this.articuloSeleccionado.NombreArticulo = this.arrayStockArticulos[index].NombreArticulo;
-    this.articuloSeleccionado.IdFamilia = null; //this.arrayStockArticulos[index].IdFamilia;
-    this.articuloSeleccionado.IdSubfamilia = null; //this.arrayStockArticulos[index].IdArticulo;
-    this.articuloSeleccionado.Secundario = this.arrayStockArticulos[index].Secundario;
+    this.articuloSeleccionado.IdArticulo = data.IdArticulo;
+    this.articuloSeleccionado.NombreArticulo = data.NombreArticulo;
+    this.articuloSeleccionado.IdFamilia = data.IdFamilia;
+    this.articuloSeleccionado.IdSubfamilia = data.IdSubfamilia;
+    this.articuloSeleccionado.Secundario = data.Secundario;
     this.popUpVisibleEditar = true;
   }
 
   cerrarEditarArticulo(e){
-    alert(e);
-    // Actualizar info del grid    
+    if (e != null) {     
+      // Actualizar info del grid    
+      this.cargarStock(this.sbAlmacenes.SelectBox.value);
+    }
     this.popUpVisibleEditar = false;    
   }
 

@@ -35,33 +35,47 @@
 
                         <div class="row mt-1">
                             <div class="col-2 mt-0">
-                                <div class="row mt-0" style="font-size: 11px; height: 33px; align-items: center; text-align: right;"><b>CLIENTE</b></div>
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>CLIENTE</b></div>
                             </div>                            
                             <div class="col-10">
-                                <dx-text-box #txtCliente class="centerBold row" style="background-color: white; height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="cliente_mostrar" [disabled]="true">
+                                <dx-text-box #txtCliente class="centerBold row" style="background-color: white; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="cliente_mostrar" [disabled]="true">
                                 </dx-text-box>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-2 mt-1">
-                                <div class="row mt-1" style="font-size: 11px; height: 33px; align-items: center; text-align: right;"><b>DESDE</b></div>
-                                <div class="row mt-1" style="font-size: 11px; height: 33px; align-items: center; text-align: right;"><b>HASTA</b></div>
-                            </div>
-                            <div class="col-5 mt-1">
-                                <dx-text-box #txtFechaInicio class="centerBold fechaInicio row mt-1" style="background-color: yellow; height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="fechaInicio_mostrar" [disabled]="true">
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>OBRA/REF.</b></div>
+                            </div>                            
+                            <div class="col-5">
+                                <dx-text-box #txtObra class="centerBold row" style="background-color: white; height: 30px; font-size: 11px;" [showClearButton]="false" [(ngModel)]="obra_mostrar" [disabled]="true">
                                 </dx-text-box>
-                                <dx-text-box #txtFechaFin class="centerBold fechaFin row mt-1" style="background-color: yellow; height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="fechaFin_mostrar" [disabled]="true">
+                            </div>
+                            <div class="col-5" style="padding-left: 20px;">
+                                <dx-text-box #txtRefereciia class="centerBold row" style="background-color: white; height: 30px; font-size: 11px;" [showClearButton]="false" [(ngModel)]="referencia_mostrar" [disabled]="true">
+                                </dx-text-box>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>DESDE</b></div>
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>HASTA</b></div>
+                            </div>
+                            <div class="col-5">
+                                <dx-text-box #txtFechaInicio class="centerBold fechaInicio row" style="background-color: yellow; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="fechaInicio_mostrar" [disabled]="true">
+                                </dx-text-box>
+                                <dx-text-box #txtFechaFin class="centerBold fechaFin row mt-1" style="background-color: yellow; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="fechaFin_mostrar" [disabled]="true">
                                 </dx-text-box>
                                 <!-- <dx-text-box #txtEstado class="centerBold row mt-2" style="background-color: rgb(255, 183, 183); height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="estado_mostrar" [disabled]="true">
                                 </dx-text-box> -->
 
                             </div>
-                            <div class="col-5 mt-1" style="padding-left: 25px;">
+                            <div class="col-5" style="padding-left: 20px;">
                                 <!-- <div class="row mt-2" style="height: 33px; font-size: 12px; align-items: center; justify-content: center; font-weight: bold;">{{ fechaAlta_mostrar }}</div> -->
-                                <dx-text-box #txtEmpresa class="centerBold row mt-1" style="background-color: yellow; height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="almacen_mostrar" [disabled]="true">
+                                <dx-text-box #txtAlmacen class="centerBold row" style="background-color: yellow; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="almacen_mostrar" [disabled]="true">
                                 </dx-text-box>
-                                <dx-text-box #txtEstado class="centerBold row mt-1" style="background-color: rgb(255, 183, 183); height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="estado_mostrar" [disabled]="true">
+                                <dx-text-box #txtEstado class="centerBold row mt-1" style="background-color: rgb(255, 183, 183); height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="estado_mostrar" [disabled]="true">
                                 </dx-text-box>                                
                                 <!-- <dx-text-box #txtCliente class="centerBold row mt-2" style="background-color: white; height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="cliente_mostrar" [disabled]="true">
                                 </dx-text-box> -->
@@ -69,7 +83,16 @@
                                 </dx-text-box> -->
                             </div>
                         </div>
+                        
+                        <!-- <div class="row mt-1">
+                            <div class="col-7 mt-0"></div>                            
+                            <div class="col-5 mt-0">
+                                <button>Observaciones</button>
+                            </div>
+                        </div> -->
+
                     </div>
+
                     <div class="col-3" style="padding-right: 20px;">
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>CLIENTE</u></div>
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>CONTRATO</u></div>
@@ -81,7 +104,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <app-cmp-data-grid id="dgArticulos" #dgArticulos (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)" [dgConfig]="dgConfigArticulos"></app-cmp-data-grid>
+                    <app-cmp-data-grid id="dgArticulos" #dgArticulos [dgConfig]="dgConfigArticulos"
+                        (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" 
+                        (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)"
+                        (onRowPrepared_DataGrid)="onRowPrepared_DataGridArticulos($event)">
+                    </app-cmp-data-grid>
                 </div>
             </div>
             <div class="col-8 px-0">
@@ -90,7 +117,7 @@
                     (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)"
                     (onCellDoubleClick_DataGrid)="onCellDblClick_DataGridUnidades($event)"
                     (onContextMenuPreparing_DataGrid)="onContextMenuPreparing_DataGridUnidades($event)"
-                    (onRowPrepared_DataGrid)="onRowPrepared_DataGridUnidades($event)">
+                    (onCellPrepared_DataGrid)="onCellPrepared_DataGridUnidades($event)">
                 </app-cmp-data-grid>
             </div>
 

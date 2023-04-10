@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2} from '@angular/core';
-import { formatDate, Location } from '@angular/common';
+import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { AfterContentChecked } from '@angular/core';
 import { CmpDataGridComponent } from '../../Componentes/cmp-data-grid/cmp-data-grid.component';
 import { TipoBoton } from '../../Enumeraciones/TipoBoton';
 import { ColumnDataGrid } from '../../Clases/Componentes/ColumnDataGrid';
@@ -53,48 +53,67 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   estado_mostrar: string;
   cliente_mostrar: string;
   almacen_mostrar: string;
+  obra_mostrar: string;
+  referencia_mostrar: string;
   
   // grid articulos contrato seleccionado
   colsArts: Array<ColumnDataGrid> = [
     { dataField: 'IdLinea',
       caption: 'Id Línea',
-      cssClass: 'blanco',
       visible: false
     },
     { dataField: 'IdSalida',
       caption: 'Id Salida',
-      cssClass: 'blanco',
       visible: false
     },
     { dataField: 'IdArticulo',
       caption: 'Cod.Artículo',
-      cssClass: 'blanco'
     },
     { dataField: 'NombreArticulo',
       caption: 'Descripción',
-      cssClass: 'blanco'
     },
     { dataField: 'CantidadDisponible',
       caption: 'Cantidad Disponible',
       cssClass: 'blanco',
-      visible: false
     },
     { dataField: 'CantidadPedida',
       caption: 'Cantidad Pedida',
-      cssClass: 'blanco' ,
       visible: false     
     },
     { dataField: 'CantidadReservada',
       caption: 'Cantidad Reservada',
-      cssClass: 'blanco',
       visible: false
     },
     { dataField: 'FechaActualizacion',
       caption: 'Fecha Actualización',
-      cssClass: 'blanco',
       visible: false
     },
-  ];
+    { dataField: 'CantidadDisponible',
+      caption: 'Cantidad Disponible',
+      visible: false
+    },
+    { dataField: 'CantidadDisponible',
+      caption: 'Cantidad Disponible',
+      visible: false
+    },   
+    { dataField: 'Prioridad',
+      caption: 'Prioridad',
+      visible: false
+    },    
+    { dataField: 'Eliminada',
+      caption: 'Eliminada',
+      visible: false
+    },    
+    { dataField: 'Insertada',
+      caption: 'Insertada',
+      visible: false
+    },    
+    { dataField: 'Observaciones',
+      caption: 'Observaciones',
+      visible: false
+    },    
+
+  ]
   dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
   
   // grid articulos Contratos Planificados & Unidades
@@ -119,7 +138,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 //#endregion - cte y var de la pantalla
 
 //#region - creación, inicializacion y gestion eventos pantalla
-  constructor(private renderer: Renderer2,
+  constructor(private cdref: ChangeDetectorRef,
+              private renderer: Renderer2,
               private location: Location,
               private router: Router,
               public translate: TranslateService,
@@ -136,7 +156,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     //configuración menu articulos
     this.itemsMenuArticulos= [{ text: 'Reemplazar artículo' },
                               { text: 'Eliminar artículo' },
-                              { text: 'Añadir artículo' },                              
+                              { text: 'Añadir artículo' }, 
+                              { text: 'Marcar/Desmarcar Secundario' },                              
     ];
     //configuración menu contratos -> configurado dinamicamente en evento  "onContextMenuPreparing_DataGridUnidades(e)"
     this.itemsMenuContratos= [];  
@@ -152,12 +173,16 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
     // Actualizar altura de los grids
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 210);
-    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
-    
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
     this.alturaDiv = '210px';
+
+    // eliminar error debug ... expression has changed after it was checked.
+    this.cdref.detectChanges();      
   }
 
   ngAfterContentChecked(): void {
+    // eliminar error debug ... expression has changed after it was checked.
+    this.cdref.detectChanges();   
   }
 
   onResize(event) {
@@ -216,6 +241,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           this.estado_mostrar = this.oOfertaSeleccionada.NombreEstado;
           this.cliente_mostrar = this.oOfertaSeleccionada.IdCliente.toString()+' - '+this.oOfertaSeleccionada.NombreCliente;
           this.almacen_mostrar = this.oOfertaSeleccionada.NombreAlmacen;
+          this.obra_mostrar = this.oOfertaSeleccionada.Obra;
+          this.referencia_mostrar = this.oOfertaSeleccionada.Referencia;
 
           this.arrayArts = datos.datos.LineasOferta;
           this.arrayCabeceras = datos.datos.OfertasRel;
@@ -257,7 +284,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                         columns: [{
                           dataField: c.NombreEstado,
                           caption: c.NombreEstado,
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'estado_sel' : 'estdo',
+                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'estado_sel' : 'estado',
                           columns: [{
                             dataField: 'C' + nroCol.toString() + '_PEDIDAS',
                             caption: 'Ped.',
@@ -313,7 +340,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           //console.log(datos);
-          Utilidades.MostrarExitoStr(this.traducir('frm-planificador-importar.msgOk_WSInsertarArticulos','Artículo Insertado correctamente'));           
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSInsertarArticulos','Artículo Insertado correctamente'));           
           this.WSDatos_Validando = false;
           this.limpiarControles(true);
         } else {          
@@ -337,7 +364,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           //console.log(datos);
-          Utilidades.MostrarExitoStr(this.traducir('frm-planificador-importar.msgOk_WSEliminarArticulos','Artículo Eliminado correctamente'));           
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSEliminarArticulos','Artículo Eliminado correctamente'));           
           this.WSDatos_Validando = false;
           this.limpiarControles(true);
         } else {          
@@ -351,6 +378,29 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       }
     );
   }  
+
+  async actulizarArticuloValorSecundario(idArticulo:string,valor:boolean){
+    if(this.WSDatos_Validando) return;    
+    if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarArticuloValorSecundario(idArticulo,this.oOfertaSeleccionada.IdAlmacen,valor)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          //Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSActualizarValorSecunadrio','Artículo Actualizado correctamente')); 
+          let index:number = this.arrayArts.findIndex(e => e.IdArticulo=idArticulo);
+          if (index>=0) { this.arrayArts[index].Prioridad = valor; }
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSActualizarValorSecunadrio','Error WS actualizando valor prioridad artículo')); 
+        }
+      }, error => {        
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router, 'frm-planificador');        
+      }
+    );
+  } 
 
 //#endregion - WEB SERVICES  
 
@@ -504,18 +554,64 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.dgArticulos.DataGrid.focusedRowIndex = selectedRowIndex;
   }
 
-  // color articulos secundarios
-  //TODO - incluir campo a comparar y asigan color articulos secundarios
-  onRowPrepared_DataGridUnidades(e){ 
+  // color articulos secundarios + añadidos
+  onRowPrepared_DataGridArticulos(e){ 
     if (e.rowType==="data") {      
-      // if (e.data.CantidadEsperada===e.data.CantidadDescargada) { 
-      //   e.rowElement.style.backgroundColor = '#E3F9D3 '
-      // }
-      // else if (e.data.CantidadEsperada<e.data.CantidadDescargada){
-      //   e.rowElement.style.backgroundColor = '#FED2D2 '
-      // }
+      // priosidad -> art. secundario
+      if (e.data.Prioridad) { 
+        e.rowElement.style.backgroundColor = '#f2f2f2'
+      } else {
+        e.rowElement.style.backgroundColor = '#FFFFFF'
+      }
+      // marca articulo insertado
+      if (e.data.Insertada) {
+        e.rowElement.style.color = 'green'
+      } else {
+        e.rowElement.style.color = '#000000'
+      }
     }
   }  
+
+  //color celdas unidades
+  onCellPrepared_DataGridUnidades(e){     
+    //console.log(e.rowType+' -> columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
+    // check filas correspondiente a datos
+    if ((e.rowType==="data") && (e.rowIndex != undefined)) {
+      //console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
+      let estilo:string="";
+        
+      // determinar si estamos en columna contrato seleccionado
+      // 1. valores unidades contrato seleccionado
+      if (this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida == this._salida.IdSalida) {
+        estilo = "valorUnidades_sel";        
+        // und. pendientes_asignar
+        if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
+            estilo = "valorUndPendientes_sel";
+        }
+        // stock=0
+        if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
+            estilo = "valorStockCero"
+        }                
+      } 
+      
+      // 2. valores de articulos <> contrato seleccionado
+      else {
+        estilo = "valorUnidades";
+        // und. pendientes_asignar
+        if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
+          estilo = "valorUndPendientes";
+        }
+        // stock=0
+        if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
+            estilo = "valorStockCero"
+        }                
+      }
+
+      e.column.cssClass = estilo;         
+      console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}'+' - estilo:'+estilo);
+    }    
+    
+  }    
 
 //#endregion - Gestion ordenacion simultanea de los grid
 
@@ -537,6 +633,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       //añadir articulo
       case 2: this.anadirArticuloSalida();          
       break;
+      //marcar/desmarcar secundario
+      case 3:         
+        this.actualizarValorSecunadrio(articulo);          
+      break;      
       default: break;
     }
   }
@@ -546,8 +646,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   onCellDblClick_DataGridUnidades(e){
      if (e.rowType=='header' && e.column.cssClass=='cliente') {       
-       //alert('Doble click cabecera '+e.columnIndex+ ' '+e.cellIndex+' '+e.column.dataField);
-       this.cambiarContratoSeleccionado((e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
+       this.cambiarContratoSeleccionado(Math.floor(e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
      }
    }
  
@@ -562,6 +661,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
         e.items.push({ text: 'Seleccionar Contrato', onItemClick: () => { this.cambiarContratoSeleccionado(e.columnIndex); } });
         e.items.push({ text: 'Planificar/Desplanificar', onItemClick: () => {alert(e.column.caption); } });
       }
+      e.items.push({ text: 'Ver Observaciones', onItemClick: () => { this.verObservaciones(e.columnIndex); } });
     }
     else {
       e.items = []; 
@@ -609,10 +709,15 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     }      
   }
 
+  actualizarValorSecunadrio(articulo:SalidaLinea){
+    let valor : boolean = (articulo.Prioridad) ? false : true;
+    this.actulizarArticuloValorSecundario(articulo.IdArticulo,valor);
+  }
+
   cerrarSeleccionarArticulo(e){
     if (e != null) {
       //alert('Articulos seleccionado: ' + e.idArticulo + ' -- unidades: '+ e.unidades)
-      // comprobar articulo no existe previamente
+      //TODO // comprobar articulo no existe previamente
       let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.idArticulo);
       if (index<0) {
         // añadir articulo en la planificación
@@ -623,7 +728,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     }
     this.popUpVisibleArticulos = false;
   }
-
+ 
   // -------------------------
 
   async cambiarContratoSeleccionado(index:number){
@@ -637,6 +742,15 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       this.limpiarControles(false);           
       this.getPlanificacion();
     }
+  }
+
+  verObservaciones(index:number){
+    if (!Utilidades.isEmpty(this.arrayCabeceras[index].Observaciones)) {
+      alert(this.arrayCabeceras[index].Observaciones);
+    } 
+    else {
+      alert('No hay observaciones asociadas al contrato');
+    }   
   }
 
   public limpiarControles(recargar: boolean = true) {
