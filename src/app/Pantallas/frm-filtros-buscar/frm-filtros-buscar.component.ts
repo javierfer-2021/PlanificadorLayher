@@ -11,6 +11,7 @@ import { ArticuloFamilia,ArticuloSubfamilia } from '../../Clases/Maestros';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 import { DxSelectBoxComponent } from 'devextreme-angular';
+import { filtrosBusqueda}  from '../../Clases/Salida';
 
 @Component({
   selector: 'app-frm-filtros-buscar',
@@ -47,6 +48,8 @@ export class FrmFiltrosBuscarComponent implements OnInit {
   arrayFamilias: Array<ArticuloFamilia> = [];
   arraySubfamilias: Array<ArticuloSubfamilia> = [];
 
+  filtros:filtrosBusqueda = new filtrosBusqueda();
+
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -59,6 +62,10 @@ export class FrmFiltrosBuscarComponent implements OnInit {
   { 
     // Asignar localizacion ESPAÑA
     locale('es');
+    // inicializacion var filtros
+    this.filtros = new filtrosBusqueda();
+    this.filtros.IdFamilia=0;
+    this.filtros.IdSubfamilia=0;       
   }
 
   ngOnInit(): void {
@@ -106,11 +113,11 @@ export class FrmFiltrosBuscarComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getListaFamiliasSubfamilias(-1)).subscribe(
+    (await this.planificadorService.getListaFamiliasSubfamilias(0)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayFamilias = datos.datos.Familias;
-          this.arraySubfamilias = datos.datos.Subfailias;
+          this.arraySubfamilias = datos.datos.Subfamilias;
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-filtros-buscar.msgError_WSCargarCombos','Error cargando familias y subfamilias')); 
         }
@@ -132,9 +139,12 @@ export class FrmFiltrosBuscarComponent implements OnInit {
   }
 
   btnAceptar(){
-    //comprobar algun filtro seleccionado
     // comprobar subfamilia asignada a la familia
-    this.cerrarPopUp.emit({familia:1,subfamilia:0})
+
+    // devolucion filtros seleccionados
+    this.filtros.IdFamilia = (Utilidades.isEmpty(this.comboFamilia.value)) ? 0 : this.comboFamilia.value;
+    this.filtros.IdSubfamilia = (Utilidades.isEmpty(this.comboSubfamilia.value)) ? 0 : this.comboSubfamilia.value;
+    this.cerrarPopUp.emit(this.filtros);
   }
 
 

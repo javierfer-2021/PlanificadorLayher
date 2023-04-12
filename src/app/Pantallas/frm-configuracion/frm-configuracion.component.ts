@@ -59,9 +59,7 @@ export class FrmConfiguracionComponent implements OnInit {
               public translate: TranslateService,
               public planificadorService: PlanificadorService) 
   { 
-    // copia de var ConfiGlobal
-    this._config = Object.assign({},ConfiGlobal.configLayher);
-    
+   
     // Gestión de almacenes por defecto
     this.arrayAlmacenDefecto.push({id:0, nombre:this.traducir('frm-configuracion.nombreAlmaNoAsignar','No Asignar')});
     this.arrayAlmacenDefecto.push({id:1, nombre:this.traducir('frm-configuracion.nombreAlmaUsuario','Asignado al usuario')});
@@ -78,10 +76,12 @@ export class FrmConfiguracionComponent implements OnInit {
     this.arrayEstadosSalida.splice(0, 0,{id:0, nombre:'No asignar'});
     this.arrayEstadosSalida.push({id:1, nombre:'PENDIENTE'});
     this.arrayEstadosSalida.push({id:2, nombre:'CONFIRMADO'});
+    
   }
 
   ngOnInit(): void {
-    //this.cargarSalidas(-1);
+    // copia de var ConfiGlobal
+    this._config = Object.assign({},ConfiGlobal.configLayher);
   }
 
 

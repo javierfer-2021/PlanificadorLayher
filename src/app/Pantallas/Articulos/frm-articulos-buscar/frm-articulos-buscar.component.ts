@@ -122,7 +122,6 @@ export class FrmArticulosBuscarComponent implements OnInit {
     //this.cargarStock();
   }
 
-
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // configuracion extra del grid -> mostrar fila total registros

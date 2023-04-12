@@ -55,5 +55,9 @@ export class Salida {
     NombreEstado: string;
   }  
 
-  
+  export class filtrosBusqueda {
+    IdFamilia: number;
+    IdSubfamilia: number;
+    otros: string;
+  }
 

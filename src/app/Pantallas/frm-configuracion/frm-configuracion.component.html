@@ -15,25 +15,27 @@
                 <dx-form id="formConfig" #formConfig [colCount]="3" [formData]="_config" labelMode="static" [readOnly]="!modoEdicion">
 
                     <dxi-item itemType="group" caption="Planificador" [colCount]="1" [colSpan]="1">
-                        <dxi-item dataField="NumItemPlanificador" label="Nº Columnas Planificador" [colSpan]="1" [editorOptions]="{disabled:false}"></dxi-item>
+                        <dxi-item dataField="NumItemPlanificador" [label]="{text:'Nº Columnas Planificador'}" [colSpan]="1" [editorOptions]="{disabled:false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor (0..N) para el campo NUM.COLUMNAS"></dxi-validation-rule>
+                        </dxi-item>
                     </dxi-item>
 
                     <dxi-item itemType="group" caption="Entradas" [colCount]="1" [colSpan]="1">                        
-                        <dxi-item dataField="EntradaConfirmarDefecto" label="Confirmar Entrada" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
-                        <dxi-item dataField="EntradaEstadoDefecto" label="Estado def. Entrada" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayEstadosEntrada, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                        <dxi-item dataField="EntradaConfirmarDefecto" [label]="{text:'Confirmar por defecto'}" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="EntradaEstadoDefecto" [label]="{text:'Estado por defeto'}" [editorOptions]="{disabled:false, dataSource:arrayEstadosEntrada, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO ENTRADA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="EntradaAlmacenDefecto" label="Almacen def. Entrada" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenDefecto, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                        <dxi-item dataField="EntradaAlmacenDefecto" [label]="{text:'Almacen por Defecto'}" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenDefecto, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN ENTRADA"></dxi-validation-rule>
                         </dxi-item>
                     </dxi-item>                                    
 
                     <dxi-item itemType="group" caption="Salidas" [colCount]="1" [colSpan]="1">
-                        <dxi-item dataField="SalidaPlanificarDefecto" label="Planificar Salida" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
-                        <dxi-item dataField="SalidaEstadoDefecto" label="Estado def. Salida" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayEstadosEntrada, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                        <dxi-item dataField="SalidaPlanificarDefecto" [label]="{text:'Planificar por Defecto'}" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="SalidaEstadoDefecto" [label]="{text:'Estado por defeto'}" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayEstadosEntrada, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO ENTRADA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="SalidaAlmacenDefecto" label="Almacen def. Salida" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenDefecto, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
+                        <dxi-item dataField="SalidaAlmacenDefecto" [label]="{text:'Almacen por Defecto'}" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenDefecto, displayExpr:'nombre', valueExpr:'id', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN ENTRADA"></dxi-validation-rule>
                         </dxi-item>
                     </dxi-item>

@@ -15,7 +15,6 @@ import { Almacen } from '../../../Clases/Maestros'
 import { Salida, SalidaLineaERP, EstadoSalida } from '../../../Clases/Salida'
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent, DxTextBoxComponent } from 'devextreme-angular';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { locale } from 'devextreme/localization';
 
 @Component({
@@ -131,14 +130,11 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // configuracion extra del grid -> mostrar fila total registros + redimensionar
-    this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Líneas: '),'count');    
+    this.dg.mostrarFilaSumaryTotal('IdSalidaERP','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Líneas: '),'count');    
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
       this.contratoValido= false;      
     }, 200);    
-
-    //foco
-    // try {this.formSalida.instance.getEditor('IdEstado').focus();} catch {} 
 
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
@@ -306,7 +302,6 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     }
   }
 
-
   limpiarDocumento(){
     //limpiamos documento y formulario
     this.str_txtContrato = '';
@@ -318,14 +313,14 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     this.txtContrato.instance.focus();
   }
 
-
+  //TODO - Asignar valores segun configuracion
   asignarValoresDefecto(){
     this._salida.FechaAlta = new Date();  //new Date().toLocaleDateString();
     this._salida.IdEstado = 1;
     this._salida.IdAlmacen = ConfiGlobal.DatosUsuario.idAlmacenDefecto;
     this._salida.Planificar = true;
+    this.setFormFocus('IdEstado');
   }
-
 
   validarFormulario():boolean{
     const res = this.formSalida.instance.validate();
@@ -363,6 +358,13 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     this.location.back();
   }
 
+  setFormFocus(campo:string){
+    try {
+      const editor = this.formSalida.instance.getEditor(campo);
+      editor.focus();
+    } 
+    catch {} 
+  }
 
 }
 

@@ -169,6 +169,7 @@ export class FrmArticulosStockComponent implements OnInit {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // configuracion extra del grid -> mostrar fila total registros
     this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-articulos-stock.TotalRegistros','Total Registros: '),'count');
+    this.dg.habilitarExportar('Articulos_Stock.xlsx');
 
     // redimensionar grid, popUp
     setTimeout(() => {
@@ -292,7 +293,7 @@ export class FrmArticulosStockComponent implements OnInit {
   }
 
   btnEditarArticulo(data:any){
-    // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles 
+    // ICONO DEL GRID. 
     this.articuloSeleccionado.IdArticulo = data.IdArticulo;
     this.articuloSeleccionado.NombreArticulo = data.NombreArticulo;
     this.articuloSeleccionado.IdFamilia = data.IdFamilia;

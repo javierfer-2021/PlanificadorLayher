@@ -265,12 +265,14 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/salidas/importarSalida_ERP', body, Utilidades.getHeaders());
   }   
 
-  async getSalidasAlmacen(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async getSalidasAlmacen(almacen,filtroFamilia,filtroSubfamilia): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
     }    
-    const body = { usuario : ConfiGlobal.Usuario, datos: { IdAlmacen:almacen } };    
+    const body = { usuario : ConfiGlobal.Usuario, datos: {IdAlmacen:almacen,
+                                                          FiltroFamilia:filtroFamilia,
+                                                          FiltroSubfamilia:filtroSubfamilia } };    
     return this.http.post(ConfiGlobal.URL + '/api/salidas/getListaSalidasAlmacen', body, Utilidades.getHeaders());
   }  
 
