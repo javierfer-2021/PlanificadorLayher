@@ -6,6 +6,7 @@ import { AuthGuard } from './Guards/auth.guard';
 import { FrmLoginComponent } from './Pantallas/frm-login/frm-login.component';
 import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
 import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
+import { FrmPlanificadorArticulosComponent } from './Pantallas/frm-planificador-articulos/frm-planificador-articulos.component';
 import { FrmCompraBuscarComponent } from './Pantallas/Compras/frm-compra-buscar/frm-compra-buscar.component';
 import { FrmCompraImportarComponent } from './Pantallas/Compras/frm-compra-importar/frm-compra-importar.component';
 import { FrmCompraDetallesComponent } from './Pantallas/Compras/frm-compra-detalles/frm-compra-detalles.component';
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'articulos_stock', component: FrmArticulosStockComponent, canActivate: [AuthGuard] },
 
   { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard] },
+  { path: 'planificador_articulos', component: FrmPlanificadorArticulosComponent, canActivate: [AuthGuard] },
   
   { path: 'usuario_buscar', component: FrmUsuarioBuscarComponent, canActivate: [AuthGuard] },
   { path: 'usuario', component: FrmUsuarioComponent, canActivate: [AuthGuard] }, 

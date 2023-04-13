@@ -65,6 +65,9 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   modoEdicion: boolean = false;
   nuevoUsuario: boolean = false;
  
+  passwordMode: string;
+  passwordButton: any;
+
   //#endregion
 
   
@@ -92,6 +95,15 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
           }
         },
       }; 
+      // gestion boton ver password      
+      this.passwordMode = 'password';
+      this.passwordButton = {
+        icon: 'edit',
+        type: 'default',
+        onClick: () => {
+          this.passwordMode = (this.passwordMode === 'text') ? 'password' : 'text';
+        },
+      };
 
       // obtenemos dato identificacion de envio del routing
       const nav = this.router.getCurrentNavigation().extras.state;      
@@ -185,7 +197,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-usuario.msgOk_WSInsertarUsuario','Usuario insertando')); 
-          this._usuario = datos.datos[0];
+          this._usuario = datos.datos;
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-usuario.msgError_WSInsertarUsuario','Error insertando nuevo usuario')); 
         }

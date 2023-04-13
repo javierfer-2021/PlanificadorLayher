@@ -29,7 +29,8 @@
                         <dxi-item dataField="Login" [colSpan]="1" [editorOptions]="{disabled:false}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo LOGIN"></dxi-validation-rule>
                         </dxi-item>                          
-                        <dxi-item dataField="Password" [colSpan]="1" [editorOptions]="{disabled: false, mode: 'password'}">
+                        <dxi-item dataField="Password" [colSpan]="1" 
+                            [editorOptions]="{disabled:false, mode:'password'}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo PASSWORD"></dxi-validation-rule>
                         </dxi-item>  
 
@@ -42,7 +43,17 @@
                         <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled:false}" [colSpan]="2"></dxi-item>
                     </dxi-item>         
                     
-                    
+                    <!-- [template]="'passwordBox'" -->
+                    <!-- <div *dxTemplate="let data of 'passwordBox'">
+                        <dx-text-box [(value)]="_usuario.Password" [(mode)]="passwordMode" disabled='false' [readOnly]="!modoEdicion">
+                           <dxi-button
+                            name="pass"
+                            location="after"
+                            [options]="passwordButton">
+                          </dxi-button>
+                        </dx-text-box>
+                    </div> -->
+
                     <dxi-item itemType="group" caption="Permisos" [colCount]="1" [colSpan]="1">
                         <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
                         <dxi-item dataField="VerAlmacenes" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>

@@ -148,6 +148,15 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    // personalizacion boton Planificar/DESplanificar segun valor salida mostrada
+    if (this._salida.Planificar) {
+      this.btnAciones[2].texto='Planificar';
+      this.btnAciones[2].accion = () => {this.btnPlanificarSalida()}
+    } else {
+      this.btnAciones[2].texto='DES-Planificar';
+      this.btnAciones[2].accion= () => {this.btnDesPlanificarSalida()}
+    }
+    // cargar informacion
     this.cargarCombos();
     setTimeout(() => {this.cargarLineasSalida();},1000);
   }
@@ -271,54 +280,59 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }
 
   btnPlanificarSalida(){
-    alert('Función no implementada')
+    alert('Función Planificar NO implementada')
+  }
+
+  btnDesPlanificarSalida(){
+    alert('Función DES-Planificar NO implementada')
   }
 
   btnEditarLineaSalida(index:number){    
     alert('pendiente de implementar');
   }
 
-    // validacion estandar del formulario
-    validarFormulario():boolean{
-      const res = this.formSalida.instance.validate();
-      // res.status === "pending" && res.complete.then((r) => {
-      //   console.log(r.status);
-      // });
-      return (res.isValid);
-    }
-  
-    // validacion complementaria datos del formulario
-    validarDatosFormulario():boolean{      
-      // if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
-      //   Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
-      //   return false;
-      // }
-      return true;
-    }
+  // validacion estandar del formulario
+  validarFormulario():boolean{
+    const res = this.formSalida.instance.validate();
+    // res.status === "pending" && res.complete.then((r) => {
+    //   console.log(r.status);
+    // });
+    return (res.isValid);
+  }
 
-    setModoEdicion(editar:boolean){
-      this.modoEdicion = editar;
-      this.cols[0].visible = editar;        
-      this.dg.DataGrid.instance.option('columns',this.cols);
-      setTimeout(() => {
-        if (editar) {
-            Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer,false);
-        }
-        else {
-            Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
-        }
-        }, 100); 
-    }
+  // validacion complementaria datos del formulario
+  validarDatosFormulario():boolean{      
+    // if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
+    //   Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
+    //   return false;
+    // }
+    return true;
+  }
 
-
-    onRowPrepared_DataGrid(e){ 
-      if (e.rowType==="data") {
-        if (e.data.Eliminada) { 
-          e.rowElement.style.backgroundColor = '#FED2D2'
-        }
-        else if (e.data.Insertada){
-          e.rowElement.style.backgroundColor = '#E3F9D3'
-        }
+  setModoEdicion(editar:boolean){
+    this.modoEdicion = editar;
+    this.cols[0].visible = editar;        
+    this.dg.DataGrid.instance.option('columns',this.cols);
+    setTimeout(() => {
+      if (editar) {
+          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer,false);
       }
-    }    
+      else {
+          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
+      }
+      }, 100); 
+  }
+
+
+  onRowPrepared_DataGrid(e){ 
+    if (e.rowType==="data") {
+      if (e.data.Eliminada) { 
+        e.rowElement.style.backgroundColor = '#FED2D2'
+      }
+      else if (e.data.Insertada){
+        e.rowElement.style.backgroundColor = '#E3F9D3'
+      }
+    }
+  }    
+
 }

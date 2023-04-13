@@ -306,7 +306,15 @@ export class FrmArticulosStockComponent implements OnInit {
 
   // regularizar stock --> Importar, Cambiar valor, etc... (ver si se implementa)  
   btnVerPlanificador(){    
-    try { alert('Planificador del articulo -> '+ this.dg.objSeleccionado().IdArticulo); } catch {} 
+    if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorSelectLinea','Debe seleccionar un Artículo'));
+      return;
+    }
+    let vArticulo : ArticuloStock =  this.dg.objSeleccionado();    
+    const navigationExtras: NavigationExtras = {
+      state: { PantallaAnterior: 'frm-articulos-stock', idArticulo: vArticulo.IdArticulo }
+    };
+    this.router.navigate(['planificador_articulos'], navigationExtras);
   }
 
   //#endregion

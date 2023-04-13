@@ -1,0 +1,33 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+        
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
+                    {{traducir('frm-planificador.lblTitulo', 'Visor Planificación Artículos')}} &nbsp; 
+                </div>
+            </div>
+            <!-- <div class="col-4 pt-0 px-1">
+                <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
+            </div>    -->
+        </div>          
+
+        <!-- datos pantalla-->
+        <h4>Pendiente desarrollo</h4>
+        <p>Muestra las salidas que contienen el articulo pasado como parametro</p>
+        <p>Posibilidad de agragar nuevos articulos o todos los artículos de familia concreta</p>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
+    [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
