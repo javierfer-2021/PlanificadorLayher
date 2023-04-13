@@ -12,10 +12,9 @@ import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';
 import { DataSelectBoxConfig } from '../../../Clases/Componentes/DataSelectBoxConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { ArticuloStock } from '../../../Clases/Articulo';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
-import { Almacen, Articulo } from 'src/app/Clases/Maestros';
+import { Almacen, Articulo, ArticuloStock } from 'src/app/Clases/Maestros';
 import { DxPopupComponent } from 'devextreme-angular';
 
 
@@ -58,11 +57,17 @@ export class FrmArticulosStockComponent implements OnInit {
       caption: '',
       visible: true,
       type: "buttons",
-      width: 50,
+      width: 90,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
       buttons: [ 
+        { icon: "unpin",
+          hint: "Marcar/Desmarcar como secundario",
+          onClick: (e) => { 
+            this.btnMarcarDesmarcarSecundario(e.row.data); 
+          }
+        },        
         { icon: "edit",
           hint: "Editar Artículo",
           onClick: (e) => { 
@@ -143,7 +148,8 @@ export class FrmArticulosStockComponent implements OnInit {
   //popUp Filtros Adicionales
   @ViewChild('popUpVisibleEditar', { static: false }) popUpEditar: DxPopupComponent;
   popUpVisibleEditar:boolean = false;
-  articuloSeleccionado: Articulo = new Articulo();
+  //articuloSeleccionado: Articulo = new Articulo();
+  articuloSeleccionado: ArticuloStock = new ArticuloStock();
 
   //#endregion
 
@@ -241,6 +247,31 @@ export class FrmArticulosStockComponent implements OnInit {
     );
   }
 
+  async actualizarValorSecundario(data:any){
+    if (this.WSDatos_Validando) return;
+    
+    let articulo:string = data.IdAriculo;
+    let almacen:number = data.IdAlmacen;
+    let valor:boolean = !data.Secundario
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarArticuloValorSecundario(articulo,almacen,valor)).subscribe(
+      (datos) => {
+        if (Utilidades.DatosWSCorrectos(datos)) {
+          // actualizar valor confirmado en datos grid memoria
+          data.Secundario = valor;
+        }
+        else {
+          Utilidades.MostrarErrorStr(this.traducir('frm-articulos-stock.msgErrorWS_ActualizarValorSecundario','Error web-service actualizando valor Secundario')); 
+        }
+        this.WSDatos_Validando = false;
+      }, (error) => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-articulos-stock');
+      }
+    );
+  }
+
   //#endregion 
 
   
@@ -292,13 +323,22 @@ export class FrmArticulosStockComponent implements OnInit {
     }    
   }
 
+  btnMarcarDesmarcarSecundario(data:any){
+    // web-service para cambiar valor campo secundario del [articulo,almacen] indicado
+    this.actualizarValorSecundario(data);
+  }
+
   btnEditarArticulo(data:any){
-    // ICONO DEL GRID. 
+    // datos del artículo. 
     this.articuloSeleccionado.IdArticulo = data.IdArticulo;
     this.articuloSeleccionado.NombreArticulo = data.NombreArticulo;
     this.articuloSeleccionado.IdFamilia = data.IdFamilia;
     this.articuloSeleccionado.IdSubfamilia = data.IdSubfamilia;
     this.articuloSeleccionado.Secundario = data.Secundario;
+    // añadimos info almacen
+    this.articuloSeleccionado.IdAlmacen = data.IdAlmacen;
+    this.articuloSeleccionado.NombreAlmacen = data.NombreAlmacen;
+    // ver popup edicion
     this.popUpVisibleEditar = true;
   }
 

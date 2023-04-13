@@ -12,7 +12,7 @@
                     <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
                 </div>
                 <div class="col-1 pt-0 px-1">
-                    <button type="button" class="btn btn-outline-secondary botonFiltros" (click)="seleccionarFiltrosAdicionales()">
+                    <button type="button" class="btn botonFiltros" [ngClass]="{'btn-success': filtrosActivos, 'btn-outline-secondary': !filtrosActivos}" (click)="seleccionarFiltrosAdicionales()">
                         {{traducir('frm-compra-buscar.lblBtnFiltros', '+ Filtros')}}
                     </button>
                 </div>                      
@@ -36,7 +36,8 @@
 
 
 <!-- popUp filtros adicionales -->
-<dx-popup *ngIf="popUpVisibleFiltros" #popUpFiltros (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="330px" width="600px"
+<!-- *ngIf="popUpVisibleFiltros" -->
+<dx-popup  #popUpFiltros (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="330px" width="600px"
     [fullScreen]="false" 
     [(visible)]="popUpVisibleFiltros" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-compra-buscar.str_txtPopupFiltros', 'Filtros Adicionales')}}"

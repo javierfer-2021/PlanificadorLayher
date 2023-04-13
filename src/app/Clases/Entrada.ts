@@ -49,5 +49,9 @@ export class Entrada {
     NombreEstado: string;
   }  
 
-  
+  export class filtrosBusqueda {
+    IdFamilia: number;
+    IdSubfamilia: number;
+    otros: string;
+  }
 

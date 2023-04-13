@@ -8,7 +8,7 @@ import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 
-import { Articulo,ArticuloFamilia,ArticuloSubfamilia } from '../../../Clases/Maestros';
+import { ArticuloStock,ArticuloFamilia,ArticuloSubfamilia, Almacen } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxCheckBoxComponent, DxFormComponent } from 'devextreme-angular';
 
@@ -19,7 +19,7 @@ import { DxCheckBoxComponent, DxFormComponent } from 'devextreme-angular';
 })
 export class FrmArticulosEditarComponent implements OnInit {
 
-  @Input() articulo: Articulo;                                            // articulo a modificar
+  @Input() articulo: ArticuloStock;                                            // articulo a modificar
   @Output() cerrarPopUp : EventEmitter<any> = new EventEmitter<any>();    // retorno de la pantalla
 
   //#region - declaracion de cte y variables 
@@ -42,11 +42,11 @@ export class FrmArticulosEditarComponent implements OnInit {
   
   WSDatos_Validando: boolean = false;
 
-  _articuloCopia: Articulo = new(Articulo);
+  _articuloCopia: ArticuloStock = new(ArticuloStock);
 
   arrayFamilias: Array<ArticuloFamilia> = [];
-  arraySubfamilias: Array<ArticuloSubfamilia> = [];
-
+  arraySubfamilias: Array<ArticuloSubfamilia> = [];  
+  arrayAlmacenes: Array<Almacen>=[]
   modoEdicion: boolean = true;
  
   //#endregion
@@ -65,6 +65,10 @@ export class FrmArticulosEditarComponent implements OnInit {
   ngOnInit(): void {
     // copia del articulo pasado como parametro
     this._articuloCopia = Object.assign({},this.articulo);    
+    // asignar valores array almacenes
+    this.arrayAlmacenes.push({IdAlmacen:-1,NombreAlmacen:'TODOS',Prefijo:'T',Activo:false});
+    this.arrayAlmacenes.push({IdAlmacen:this._articuloCopia.IdAlmacen,NombreAlmacen:this._articuloCopia.NombreAlmacen,Prefijo:'',Activo:true});
+    
     // cargar combos familias y subfamilias
     this.cargarCombos();
   }
@@ -131,7 +135,10 @@ export class FrmArticulosEditarComponent implements OnInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.actualizarArticulo(this._articuloCopia.IdArticulo,this._articuloCopia.IdFamilia, this._articuloCopia.IdSubfamilia, this._articuloCopia.Secundario)).subscribe(
+    if (Utilidades.isEmpty(this._articuloCopia.IdFamilia)) this._articuloCopia.IdFamilia=0;
+    if (Utilidades.isEmpty(this._articuloCopia.IdSubfamilia)) this._articuloCopia.IdSubfamilia=0;
+
+    (await this.planificadorService.actualizarArticulo(this._articuloCopia.IdArticulo,this._articuloCopia.IdFamilia, this._articuloCopia.IdSubfamilia, this._articuloCopia.Secundario,this._articuloCopia.IdAlmacen)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-articulos-editar.msgOk_WSActualizarArticulo','Artículo actualizado')); 

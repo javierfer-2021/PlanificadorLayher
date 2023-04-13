@@ -23,6 +23,7 @@
 
 */
 
+//TODO - revisar para eliminar -> traspasado a Maestros.ts
 export class Articulo {
   IdArticulo: string;
   Descripcion: string;

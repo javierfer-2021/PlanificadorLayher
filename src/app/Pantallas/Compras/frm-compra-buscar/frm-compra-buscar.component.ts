@@ -15,7 +15,7 @@ import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';
 
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { Entrada } from '../../../Clases/Entrada';
+import { Entrada, filtrosBusqueda } from '../../../Clases/Entrada';
 import { Almacen } from 'src/app/Clases/Maestros';
 
 import { locale } from 'devextreme/localization';
@@ -181,6 +181,8 @@ export class FrmCompraBuscarComponent implements OnInit {
   //popUp Filtros Adicionales
   @ViewChild('popUpFiltros', { static: false }) popUpFiltros: DxPopupComponent;
   popUpVisibleFiltros:boolean = false;
+  filtrosAdicionales:filtrosBusqueda; 
+  filtrosActivos:boolean = false;
     
   //#endregion
 
@@ -195,6 +197,11 @@ export class FrmCompraBuscarComponent implements OnInit {
   { 
     // Asignar localizacion ESPAÑA
     locale('es');
+    // inicializacion filtros 
+    this.filtrosAdicionales= new filtrosBusqueda();
+    this.filtrosAdicionales.IdFamilia=0;
+    this.filtrosAdicionales.IdSubfamilia=0;
+    this.filtrosAdicionales.otros='';    
   }
 
   ngOnInit(): void {
@@ -257,7 +264,7 @@ export class FrmCompraBuscarComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getEntradasAlmacen(almacen)).subscribe(
+    (await this.planificadorService.getEntradasAlmacen(almacen, this.filtrosAdicionales.IdFamilia, this.filtrosAdicionales.IdSubfamilia)).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {
@@ -336,7 +343,11 @@ export class FrmCompraBuscarComponent implements OnInit {
 
   cerrarFiltrosAdicionales(e){
     if (e != null) {
-      alert('Funcion de filtro no implementada')
+      this.filtrosAdicionales.IdFamilia=e.IdFamilia;
+      this.filtrosAdicionales.IdSubfamilia=e.IdSubfamilia;
+      this.filtrosActivos = ((this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0))
+      // refrescamos consulta
+      this.cargarEntradas(this.sbAlmacenes.SelectBox.value);
     }
     this.popUpVisibleFiltros = false;
   }

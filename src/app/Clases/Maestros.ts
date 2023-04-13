@@ -49,6 +49,22 @@ export class ArticuloSubfamilia {
     Secundario: boolean;
   }
 
+
+  export class ArticuloStock {
+    IdArticulo: string;
+    NombreArticulo: string;
+    IdAlmacen: number;
+    NombreAlmacen: string;
+    Unidades: number;
+    IdCualidad: number;
+    NombreCualidad: string;
+    Secundario: boolean;
+    IdFamilia: number;
+    NombreFamilia:string;
+    IdSubfamilia: number;
+    NombreSubfamilia:string;    
+  }
+
   export class Idioma {
     IdIdioma: number;
     NombreIdioma: string;

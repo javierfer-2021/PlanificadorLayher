@@ -134,7 +134,7 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/articulostock/getListaSubfamilias', body, Utilidades.getHeaders());
   }  
 
-  async actualizarArticulo(articulo,familia,subfamilia,secundario): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async actualizarArticulo(articulo,familia,subfamilia,secundario,almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
@@ -143,10 +143,10 @@ export class PlanificadorService {
     const body = { usuario : ConfiGlobal.Usuario, datos: { IdArticulo:articulo,
                                                            IdFamilia:familia,
                                                            IdSubfamilia:subfamilia, 
-                                                           Secundario:secundario } };    
+                                                           Secundario:secundario,
+                                                           IdAlmacen:almacen } };    
     return this.http.post(ConfiGlobal.URL + '/api/articulostock/actualizarArticulo', body, Utilidades.getHeaders());
   }    
-
 
   async actualizarArticuloValorSecundario(articulo,almacen,secundario): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
@@ -198,12 +198,14 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/entradas/importarEntrada_ERP', body, Utilidades.getHeaders());
   }   
 
-  async getEntradasAlmacen(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async getEntradasAlmacen(almacen,filtroFamilia,filtroSubfamilia): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
     }    
-    const body = { usuario : ConfiGlobal.Usuario, datos: { IdAlmacen:almacen } };    
+    const body = { usuario : ConfiGlobal.Usuario, datos: {IdAlmacen:almacen,
+                                                          FiltroFamilia:filtroFamilia,
+                                                          FiltroSubfamilia:filtroSubfamilia } };            
     return this.http.post(ConfiGlobal.URL + '/api/entradas/getListaEntradasAlmacen', body, Utilidades.getHeaders());
   }  
 

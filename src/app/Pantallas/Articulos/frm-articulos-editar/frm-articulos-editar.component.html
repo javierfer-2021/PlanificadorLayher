@@ -14,22 +14,30 @@
         <div class="row pt-2">
             <div id="form-container" class="formulario">
                 <dx-form id="formArticulo" #formArticulo [colCount]="2" [formData]="_articuloCopia" labelMode="static" [readOnly]="!modoEdicion">
-                        
-                    <dxi-item dataField="IdArticulo" [editorOptions]="{disabled: true}"></dxi-item>
-                    <dxi-item itemType="empty" [colSpan]="1 "></dxi-item>
+                    
+                    <dxi-item itemType="group" caption="" [colCount]="2" [colSpan]="2">
+                        <dxi-item dataField="IdArticulo" [editorOptions]="{disabled: true}"></dxi-item>
+                        <dxi-item itemType="empty" [colSpan]="1 "></dxi-item>
 
-                    <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{disabled:true}"></dxi-item>                           
+                        <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{disabled:true}"></dxi-item>                           
 
-                    <dxi-item dataField="IdFamilia" [label]="{text:'Familia'}" [colSpan]="2" editorType="dxSelectBox" 
-                        [editorOptions]="{disabled:false, dataSource:arrayFamilias, displayExpr:'NombreFamilia', valueExpr:'IdFamilia', searchEnabled: true }">                            
-                    </dxi-item>
+                        <dxi-item dataField="IdFamilia" [label]="{text:'Familia'}" [colSpan]="2" editorType="dxSelectBox" 
+                            [editorOptions]="{disabled:false, dataSource:arrayFamilias, displayExpr:'NombreFamilia', valueExpr:'IdFamilia', searchEnabled: true, showClearButton:'true' }">                            
+                        </dxi-item>
 
-                    <dxi-item dataField="IdSubfamilia" [label]="{text:'Subfamilia'}" [colSpan]="2" editorType="dxSelectBox" 
-                        [editorOptions]="{disabled:false, dataSource:arraySubfamilias, displayExpr:'NombreSubfamilia', valueExpr:'IdSubfamilia', searchEnabled: true }">                            
-                    </dxi-item>
+                        <dxi-item dataField="IdSubfamilia" [label]="{text:'Subfamilia'}" [colSpan]="2" editorType="dxSelectBox" 
+                            [editorOptions]="{disabled:false, dataSource:arraySubfamilias, displayExpr:'NombreSubfamilia', valueExpr:'IdSubfamilia', searchEnabled: true, showClearButton:'true' }">                            
+                        </dxi-item>
+                    </dxi-item>  
 
-                    <dxi-item dataField="Secundario" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
-                    <dxi-item itemType="empty" [colSpan]="1 "></dxi-item>
+                    <dxi-item itemType="group" cssClass="grupoAlmacen" caption="Valor Secundario (Almacen)" [colCount]="2" [colSpan]="2">
+                        <dxi-item dataField="IdAlmacen" [label]="{text:'Almacen'}" editorType="dxSelectBox" 
+                            [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">                            
+                        </dxi-item> 
+                        <dxi-item dataField="Secundario" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+   
+                    </dxi-item>                
+                    <!-- <dxi-item itemType="empty" [colSpan]="1 "></dxi-item> -->
 
                 </dx-form>
             </div>
