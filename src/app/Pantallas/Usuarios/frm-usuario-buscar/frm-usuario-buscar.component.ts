@@ -49,7 +49,7 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       caption: '',
       visible: true,
       type: "buttons",
-      width: 120,
+      width: 95,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
@@ -57,19 +57,19 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
         { icon: "info",
           hint: "Ver detalles usuario",
           onClick: (e) => { 
-            this.btnMostrarUsuario(e.row.rowIndex); 
+            this.btnMostrarUsuario(e); 
           }
         },
-        { icon: "edit",
-          hint: "Editar usuario",
-          onClick: (e) => { 
-            this.btnMostrarUsuario(e.row.rowIndex); 
-          }
-        },   
+        // { icon: "edit",
+        //   hint: "Editar usuario",
+        //   onClick: (e) => { 
+        //     this.btnMostrarUsuario(e.row.rowIndex); 
+        //   }
+        // },   
         { icon: "trash",
           hint: "Eliminar usuario",
           onClick: (e) => { 
-            this.btnMostrarUsuario(e.row.rowIndex); 
+            this.btnEliminarUsuario(e); 
           }
         },                
       ]
@@ -258,6 +258,34 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
   }
 
 
+  async eliminarUsuarios(idUser:number){
+    if (this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.eliminarUsuario(idUser)).subscribe(
+      (datos) => 
+      {
+        if (Utilidades.DatosWSCorrectos(datos)) 
+        {
+          // asignar valores devuletos (lista usuarios actualizada)
+          this.arrayUsuarios = datos.datos;
+          this.dgConfig = new DataGridConfig(this.arrayUsuarios, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          if (this.arrayUsuarios.length>0) { this.dgConfig.actualizarConfig(true,false, 'standard',true, true);}
+          else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
+        }
+        else 
+        {
+          Utilidades.MostrarErrorStr(this.traducir('frm-usuario-buscar.msgErrorWS_EliminarUsuario','Error web-service eliminar usuarios')); 
+        }
+      this.WSDatos_Validando = false;
+      }, (error) => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-usuario-buscar');
+      }
+    );
+  }
+
+
   //#endregion 
 
   //#region -- botones de opciones principales
@@ -281,7 +309,6 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
 
 
   btnNuevoUsuario() {
-    // let vUsuario : Usuario =  this.dg.objSeleccionado();    
     const navigationExtras: NavigationExtras = {
       state: { PantallaAnterior: 'frm-usuario-buscar', usuario: null }
     };
@@ -294,8 +321,19 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
     this.btnDetallesUsuario(); 
   }
 
-  btnMostrarUsuario(index:number){
-  // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles Usuario
+  btnMostrarUsuario(e:any){
+    this.dg.seleccionarFila(e.row.data.IdUsuario,'IdUsuario');
+    this.btnDetallesUsuario();
   }
+
+  async btnEliminarUsuario(e:any){
+    this.dg.seleccionarFila(e.row.data.IdUsuario,'IdUsuario');
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-usuario-buscar.MsgEliminarUsuario', 'El Usuario '+e.row.data.NombreUsuario+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-usuario-buscar.TituloEliminar', 'Eliminar Usuario'));  
+    if (!continuar) return;
+    else {
+      this.eliminarUsuarios(e.row.data.IdUsuario);
+    }
+  }
+  
 
 }

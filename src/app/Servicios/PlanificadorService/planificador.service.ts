@@ -89,6 +89,16 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/ActualizarUsuario', body, Utilidades.getHeaders());
   }    
 
+  async eliminarUsuario(idUsuario): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: {IdUsuario: idUsuario} };    
+    return this.http.post(ConfiGlobal.URL + '/api/usuarios/eliminarUsuario', body, Utilidades.getHeaders());
+  }  
+   
   //#endregion
 
 

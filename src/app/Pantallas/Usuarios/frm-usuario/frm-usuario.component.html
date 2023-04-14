@@ -28,9 +28,9 @@
                         </dxi-item>                           
                         <dxi-item dataField="Login" [colSpan]="1" [editorOptions]="{disabled:false}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo LOGIN"></dxi-validation-rule>
-                        </dxi-item>                          
-                        <dxi-item dataField="Password" [colSpan]="1" 
-                            [editorOptions]="{disabled:false, mode:'password'}">
+                        </dxi-item>       
+                                           
+                        <dxi-item dataField="Password" [colSpan]="1"  [editorOptions]="textBoxPasswordOptions">                           
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo PASSWORD"></dxi-validation-rule>
                         </dxi-item>  
 
@@ -43,9 +43,9 @@
                         <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled:false}" [colSpan]="2"></dxi-item>
                     </dxi-item>         
                     
-                    <!-- [template]="'passwordBox'" -->
+                    <!-- editorType="dxTexttBox" [template]="'passwordBox'"> -->
                     <!-- <div *dxTemplate="let data of 'passwordBox'">
-                        <dx-text-box [(value)]="_usuario.Password" [(mode)]="passwordMode" disabled='false' [readOnly]="!modoEdicion">
+                        <dx-text-box [(mode)]="passwordMode" disabled='false' (readOnly)="!modoEdicion">
                            <dxi-button
                             name="pass"
                             location="after"
@@ -63,6 +63,13 @@
                 </dx-form>
             </div>
         </div>
+<!-- 
+        <dx-context-menu
+            [dataSource]="itemsMenuVerClave"
+            [width]="200"
+            target="#tbPassword"
+            (onItemClick)="itemMenuVerClave($event)">
+        </dx-context-menu> -->
 
         <span class="dx-widget dx-form-group-caption pt-2">{{traducir('frm-usuario.lblAlmacenesAsignados', 'Almacenes asignados para planificación')}} </span>
         <!-- grid lineas cargadas del CSVs -->    

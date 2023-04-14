@@ -65,9 +65,13 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   modoEdicion: boolean = false;
   nuevoUsuario: boolean = false;
  
-  passwordMode: string;
-  passwordButton: any;
+  //TODO - limpiar no valido + html
 
+  // passwordMode: string;
+  // passwordButton: any;
+  textBoxPasswordOptions: any;
+
+  // itemsMenuVerClave: any;
   //#endregion
 
   
@@ -80,6 +84,8 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
               public planificadorService: PlanificadorService
               )  
     { 
+      // this.itemsMenuVerClave =  [{text: 'Reemplazar artículo' }];
+     
       // gestion dinamica checkBox campo BAJA del form
       this.checkBoxBajaOptions = {
         // text: 'Baja',
@@ -95,15 +101,32 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
           }
         },
       }; 
-      // gestion boton ver password      
-      this.passwordMode = 'password';
-      this.passwordButton = {
-        icon: 'edit',
-        type: 'default',
-        onClick: () => {
-          this.passwordMode = (this.passwordMode === 'text') ? 'password' : 'text';
-        },
-      };
+
+      // gestion boton ver password  
+      this.textBoxPasswordOptions = {
+        disabled: false,
+        mode:'password',
+        buttons: [
+          { name:'pass',
+            location:'after',
+            icon: 'info',
+            text: 'V',
+            hint: 'Ver password',
+            onClick:(e) => { alert('boton ver password');}
+          }
+        ]
+      }
+
+      
+      // // gestion boton ver password      
+      // this.passwordMode = 'password';
+      // this.passwordButton = {
+      //   icon: 'edit',
+      //   type: 'default',
+      //   onClick: () => {
+      //     this.passwordMode = (this.passwordMode === 'text') ? 'password' : 'text';
+      //   },
+      // };
 
       // obtenemos dato identificacion de envio del routing
       const nav = this.router.getCurrentNavigation().extras.state;      
@@ -169,7 +192,9 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayAlmacenesAsignados = datos.datos;
-          //arrayAlmacenesDisponibles
+          
+          //arrayAlmacenesDisponibles -> Todos - Asignados al usuario
+          this.arrayAlmacenesDisponibles=[];
           for(let i = 0 ; i < this.arrayAlmacenes.length ; i++){
             let alma:Almacen = this.arrayAlmacenes[i];
             if (this.arrayAlmacenesAsignados.findIndex(e => (e.IdAlmacen === alma.IdAlmacen)) === -1) this.arrayAlmacenesDisponibles.push(alma);
@@ -197,7 +222,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-usuario.msgOk_WSInsertarUsuario','Usuario insertando')); 
-          this._usuario = datos.datos;
+          this._usuario = datos.datos[0];
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-usuario.msgError_WSInsertarUsuario','Error insertando nuevo usuario')); 
         }
@@ -283,6 +308,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       // distingir entre edicion o insercion
       if (this.nuevoUsuario) {
         this.insertarUsuario();
+        setTimeout(() => { this.cargarAlmacenes()}, 500);
       } 
       else {
         this.actualiarUsuario();
@@ -338,6 +364,10 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   onRemove(e) {
     e.fromData.splice(e.fromIndex, 1);
   }
+
+  // itemMenuVerClave(e){
+  //   alert('ver clave');
+  // }
 
 }
 
