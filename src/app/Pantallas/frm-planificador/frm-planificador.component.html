@@ -84,12 +84,15 @@
                             </div>
                         </div>
                         
-                        <!-- <div class="row mt-1">
-                            <div class="col-7 mt-0"></div>                            
-                            <div class="col-5 mt-0">
-                                <button>Observaciones</button>
-                            </div>
-                        </div> -->
+                        <div *ngIf="oOfertaSeleccionada.Observaciones!=''" class="row mt-1">
+                            <div class="col-7 mt-0">&nbsp;</div>                            
+                            <div class="col-5" style="padding:0px 0px 0px 8px;">
+                                <button type="button" class="btn btn-outline-secondary btn-sm w-100" style="font-size:0.8em;" (click)="btnMostrarObservaciones()">
+                                    <i class="bi bi-info-circle"></i>&nbsp;&nbsp;
+                                    {{traducir('frm-venta-buscar.lblBtnObservaciones', 'Ver Observaciones')}}
+                                </button>
+                            </div>   
+                        </div>
 
                     </div>
 
@@ -103,6 +106,7 @@
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>ESTADO</u></div>
                     </div>
                 </div>
+
                 <div class="row">
                     <app-cmp-data-grid id="dgArticulos" #dgArticulos [dgConfig]="dgConfigArticulos"
                         (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" 
@@ -110,6 +114,7 @@
                         (onRowPrepared_DataGrid)="onRowPrepared_DataGridArticulos($event)">
                     </app-cmp-data-grid>
                 </div>
+
             </div>
             <div class="col-8 px-0">
                 <app-cmp-data-grid id="dgUnidades" #dgUnidades [dgConfig]="dgConfigUnidades"
@@ -144,6 +149,7 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
+
 <!-- popUp para seleccion de articulo  -->
 <dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
     [fullScreen]="false" 
@@ -153,6 +159,19 @@
     <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
         <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
     </div>    
+</dx-popup>
+
+<!-- popUp ver observciones  -->
+<dx-popup #popUpObservaciones [dragEnabled]="false" [width]="480" [height]="360"  
+    [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    [showTitle]="true" title="{{traducir('frm-articulos-buscar.str_txtPopupObservaciones', 'Observaciones')}}"
+    [(visible)]="popUpVisibleObservaciones"
+    contentTemplate="contentObservaciones">
+    <div *dxTemplate="let data of 'contentObservaciones'">
+        CONTRATO: {{str_contrato}}
+        <br>
+        {{str_observaciones}}
+    </div>      
 </dx-popup>
 
 

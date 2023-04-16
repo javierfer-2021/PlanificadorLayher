@@ -150,11 +150,11 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // personalizacion boton Planificar/DESplanificar segun valor salida mostrada
     if (this._salida.Planificar) {
+      this.btnAciones[2].texto='DES-Planificar';
+      this.btnAciones[2].accion= () => {this.btnDesPlanificarSalida()}      
+    } else {
       this.btnAciones[2].texto='Planificar';
       this.btnAciones[2].accion = () => {this.btnPlanificarSalida()}
-    } else {
-      this.btnAciones[2].texto='DES-Planificar';
-      this.btnAciones[2].accion= () => {this.btnDesPlanificarSalida()}
     }
     // cargar informacion
     this.cargarCombos();
@@ -279,12 +279,20 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     this.setModoEdicion(true);   
   }
 
-  btnPlanificarSalida(){
-    alert('Función Planificar NO implementada')
+  async btnPlanificarSalida(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgPlanificar', '¿Esta seguro que desea Planificar el contrato actual?'), this.traducir('frm-ventas-detalles.TituloPlanificar', 'Planificar Contrato Salida'));  
+    if (!continuar) return;
+    else {
+      alert('Función Planificar NO ENLAZADA. Realizar desde planificador')
+    }   
   }
 
-  btnDesPlanificarSalida(){
-    alert('Función DES-Planificar NO implementada')
+  async btnDesPlanificarSalida(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgDESPlanificar', '¿Esta seguro que desea DES-Planificar el contrato actual?'), this.traducir('frm-ventas-detalles.TituloDESPlanificar', 'DES-Planificar Contrato Salida'));  
+    if (!continuar) return;
+    else {
+      alert('Función DES-Planificar NO ENLAZADA. Realizar desde planificador')
+    }   
   }
 
   btnEditarLineaSalida(index:number){    
@@ -323,7 +331,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       }, 100); 
   }
 
-
+  // asignar color de lineas grid (normal, eliminada, insertada)
   onRowPrepared_DataGrid(e){ 
     if (e.rowType==="data") {
       if (e.data.Eliminada) { 

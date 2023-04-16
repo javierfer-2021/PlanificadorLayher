@@ -126,7 +126,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   primeraVez: boolean = true; // Indica si está entrando de 0 en la pantalla
   alturaDiv: string = '0px';
 
-  //popUp menus asociados a los grid
+  //menus asociados a los grid
   itemsMenuArticulos: any;
   itemsMenuContratos: any;
 
@@ -134,6 +134,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   @ViewChild('popUpArticulos', { static: false }) popUpArticulos: DxPopupComponent;
   popUpVisibleArticulos:boolean = false;
   popUpTitulo:string = "Selección Articulo";
+
+  //popUp ver observaciones de contrato
+  popUpVisibleObservaciones:boolean = false;
+  str_contrato:string = '';
+  str_observaciones:string = '';
 
 //#endregion - cte y var de la pantalla
 
@@ -329,7 +334,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       }
     );
   }
-
 
   async insertarArticulo(idArticulo:string,unidades:number,observaciones:string){
     if(this.WSDatos_Validando) return;    
@@ -619,7 +623,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 //#region - Gestion de menus y click asociados a los Grid
 
   //GRID ARTICULOS CONTRATO SELECCIONADO
-
   async itemMenuArticulosClick(e) {
     //if (!e.itemData.items) { alert('The '+e.itemData.text+' item was clicked'); }
     let articulo:SalidaLinea = this.dgArticulos.objSeleccionado();
@@ -643,7 +646,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
 
   // GRID CONTRATOS AFECTADOS PLANIFICACION
-
   onCellDblClick_DataGridUnidades(e){
      if (e.rowType=='header' && e.column.cssClass=='cliente') {       
        this.cambiarContratoSeleccionado(Math.floor(e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
@@ -657,11 +659,22 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       if (!e.items) e.items = [];
 
       // añadimos items personalizados del menu segun columna/fila pulsada
+      // seleccionar contrato
       if (this.oOfertaSeleccionada.Contrato != this.arrayCabeceras[e.columnIndex].Contrato) {
         e.items.push({ text: 'Seleccionar Contrato', onItemClick: () => { this.cambiarContratoSeleccionado(e.columnIndex); } });
-        e.items.push({ text: 'Planificar/Desplanificar', onItemClick: () => {alert(e.column.caption); } });
       }
-      e.items.push({ text: 'Ver Observaciones', onItemClick: () => { this.verObservaciones(e.columnIndex); } });
+
+      // Planificar-DESplanificar
+      if (this.arrayCabeceras[e.columnIndex].Planificar) {
+        e.items.push({ text: 'DES-Planificar', onItemClick: () => { this.DESplanificarContrato(e.columnIndex); } });       
+      } else {
+        e.items.push({ text: 'Planificar', onItemClick: () => { this.planificarContrato(e.columnIndex); } });       
+      }
+
+      // ver observaciones
+      if (!Utilidades.isEmpty(this.arrayCabeceras[e.columnIndex].Observaciones)) {
+        e.items.push({ text: 'Ver Observaciones', onItemClick: () => { this.verObservaciones(e.columnIndex); } });
+      }
     }
     else {
       e.items = []; 
@@ -729,6 +742,12 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.popUpVisibleArticulos = false;
   }
  
+  btnMostrarObservaciones(){
+    this.str_contrato = this.oOfertaSeleccionada.Contrato;
+    this.str_observaciones = this.oOfertaSeleccionada.Observaciones;
+    this.popUpVisibleObservaciones = true;
+  }
+
   // -------------------------
 
   async cambiarContratoSeleccionado(index:number){
@@ -744,12 +763,36 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     }
   }
 
+  async planificarContrato(index:number){
+    let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
+                        + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
+                        + this.traducir('frm-planificador.MsgPlanificarContrato','¿Esta seguro que desea continuar?');
+    let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloPlanificarContrato', 'Planificar Contrato'));  
+    if (!continuar) return
+    else {    
+      alert('Planificar CONTRATO: '+this.arrayCabeceras[index].Contrato);
+    }
+  }
+
+  async DESplanificarContrato(index:number){
+    let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
+                        + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
+                        + this.traducir('frm-planificador.MsgDesplanificarContrato','¿Esta seguro que desea continuar?');
+    let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloDesplanificarContrato', 'DES-Planificar Contrato'));  
+    if (!continuar) return
+    else {    
+      alert('DES-Planificar CONTRATO: '+this.arrayCabeceras[index].Contrato);
+    }
+  }
+
   verObservaciones(index:number){
     if (!Utilidades.isEmpty(this.arrayCabeceras[index].Observaciones)) {
-      alert(this.arrayCabeceras[index].Observaciones);
+      this.str_contrato = this.arrayCabeceras[index].Contrato;
+      this.str_observaciones = this.arrayCabeceras[index].Observaciones;
+      this.popUpVisibleObservaciones = true; 
     } 
     else {
-      alert('No hay observaciones asociadas al contrato');
+      Utilidades.ShowDialogInfo('La oferta indicada NO tiene observaciones','Sin Observaciones');
     }   
   }
 
