@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, Input, Output, EventEmitter } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, NumberSymbol } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,14 +12,15 @@ import { ArticuloStock,ArticuloFamilia,ArticuloSubfamilia, Almacen } from '../..
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent } from 'devextreme-angular';
 
-@Component({
-  selector: 'app-frm-articulos-editar',
-  templateUrl: './frm-articulos-editar.component.html',
-  styleUrls: ['./frm-articulos-editar.component.css']
-})
-export class FrmArticulosEditarComponent implements OnInit {
 
-  @Input() articulo: ArticuloStock;                                       // articulo a modificar
+@Component({
+  selector: 'app-frm-planificador-und',
+  templateUrl: './frm-planificador-und.component.html',
+  styleUrls: ['./frm-planificador-und.component.css']
+})
+export class FrmPlanificadorUndComponent implements OnInit {
+
+  @Input() lineaArticulo: modLineaPlanificador;                                // articulo y unidades a modificar
   @Output() cerrarPopUp : EventEmitter<any> = new EventEmitter<any>();    // retorno de la pantalla
 
   //#region - declaracion de cte y variables 
@@ -33,7 +34,7 @@ export class FrmArticulosEditarComponent implements OnInit {
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
   
-  @ViewChild('formArticulo', { static: false }) formArticulo: DxFormComponent; 
+  @ViewChild('formModLineaArticulo', { static: false }) formModLineaArticulo: DxFormComponent; 
   
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
@@ -42,11 +43,8 @@ export class FrmArticulosEditarComponent implements OnInit {
   
   WSDatos_Validando: boolean = false;
 
-  _articuloCopia: ArticuloStock = new(ArticuloStock);
+  _lineaCopia: modLineaPlanificador = new(modLineaPlanificador);
 
-  arrayFamilias: Array<ArticuloFamilia> = [];
-  arraySubfamilias: Array<ArticuloSubfamilia> = [];  
-  arrayAlmacenes: Array<Almacen>=[]
   modoEdicion: boolean = true;
  
   //#endregion
@@ -64,13 +62,7 @@ export class FrmArticulosEditarComponent implements OnInit {
 
   ngOnInit(): void {
     // copia del articulo pasado como parametro
-    this._articuloCopia = Object.assign({},this.articulo);    
-    // asignar valores array almacenes
-    this.arrayAlmacenes.push({IdAlmacen:-1,NombreAlmacen:'TODOS',Prefijo:'T',Activo:false});
-    this.arrayAlmacenes.push({IdAlmacen:this._articuloCopia.IdAlmacen,NombreAlmacen:this._articuloCopia.NombreAlmacen,Prefijo:'',Activo:true});
-    
-    // cargar combos familias y subfamilias
-    this.cargarCombos();
+    this._lineaCopia = Object.assign({},this.lineaArticulo);       
   }
 
   ngAfterViewInit(): void {
@@ -110,51 +102,6 @@ export class FrmArticulosEditarComponent implements OnInit {
 
   //#region -- WEB_SERVICES
 
-  async cargarCombos(){
-    if(this.WSDatos_Validando) return;
-
-    this.WSDatos_Validando = true;
-    (await this.planificadorService.getListaFamiliasSubfamilias(0)).subscribe(
-      datos => {
-        if(Utilidades.DatosWSCorrectos(datos)) {
-          this.arrayFamilias = datos.datos.Familias;
-          this.arraySubfamilias = datos.datos.Subfamilias;
-        } else {          
-          Utilidades.MostrarErrorStr(this.traducir('frm-articulos-editar.msgError_WSCargarCombos','Error cargando familias y subfamilias')); 
-        }
-        this.WSDatos_Validando = false;
-      }, error => {
-        this.WSDatos_Validando = false;
-        Utilidades.compError(error, this.router,'frm-articulos-editar');
-      }
-    );
-  } 
-
-
-  async actualiaArticulo(){
-    if(this.WSDatos_Validando) return;
-
-    this.WSDatos_Validando = true;
-    if (Utilidades.isEmpty(this._articuloCopia.IdFamilia)) this._articuloCopia.IdFamilia=0;
-    if (Utilidades.isEmpty(this._articuloCopia.IdSubfamilia)) this._articuloCopia.IdSubfamilia=0;
-
-    (await this.planificadorService.actualizarArticulo(this._articuloCopia.IdArticulo,this._articuloCopia.IdFamilia, this._articuloCopia.IdSubfamilia, this._articuloCopia.Secundario,this._articuloCopia.IdAlmacen)).subscribe(
-      datos => {
-        if(Utilidades.DatosWSCorrectos(datos)) {
-          Utilidades.MostrarExitoStr(this.traducir('frm-articulos-editar.msgOk_WSActualizarArticulo','Artículo actualizado')); 
-          // salir 
-          //this.articulo = this._articuloCopia;          
-          this.cerrarPopUp.emit(this._articuloCopia);
-        } else {          
-          Utilidades.MostrarErrorStr(this.traducir('frm-articulos-editar.msgError_WSActualizarUsuario','Error actualizando artículo')); 
-        }
-        this.WSDatos_Validando = false;
-      }, error => {
-        this.WSDatos_Validando = false;
-        Utilidades.compError(error, this.router,'frm-articulos-editar');
-      }
-    );
-  }   
 
   //#endregion
   
@@ -165,18 +112,43 @@ export class FrmArticulosEditarComponent implements OnInit {
   }
 
   btnGuardar(){
-    // Actualizar articulo + salir si ok
-    this.actualiaArticulo();
+    // Validar valores y confirmar cambio
+    if (this.validarFormulario() && this.validarDatosFormulario()) {
+      this.cerrarPopUp.emit(this._lineaCopia);
+    }    
   }
   
   
-  validarDatosFormulario():boolean{
-    const res = this.formArticulo.instance.validate();
+  validarFormulario():boolean{
+    const res = this.formModLineaArticulo.instance.validate();
     // res.status === "pending" && res.complete.then((r) => {
     //   console.log(r.status);
     // });
     return (res.isValid);
   }
+  
+  validarDatosFormulario():boolean{      
+    if (this._lineaCopia.UndServidas>this._lineaCopia.UndPedidas)  {
+      Utilidades.MostrarErrorStr(this.traducir('frm-planificar-und.msgError_UndServidasMayorPedidas','Las und.Servidas no pueden ser mayor que las und. Pedidas'));
+      return false;
+    }
+    if (this._lineaCopia.UndServidas>this._lineaCopia.UndDisponibles)  {
+      Utilidades.MostrarErrorStr(this.traducir('frm-planificar-und.msgError_UndServidasMayorStock','Las und.Servidas no pueden ser mayor que las und. Disponibles'));
+      return false;
+    }    
+    return true;
+  }
 
+}
 
+export class modLineaPlanificador {
+  IdSalida:number;
+  Contrato:string;
+  Cliente:string;
+  IdLinea:number;
+  IdArticulo:string;
+  NombreArticulo:string;
+  UndPedidas:number;
+  UndServidas:number;
+  UndDisponibles:number;
 }

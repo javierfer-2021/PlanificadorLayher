@@ -297,7 +297,7 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
             if (datos.datos.Idiomas.length > 0) {
     
               let array: string[] = [];
-              let defecto: string = '';
+              let defecto: string = 'es';
               datos.datos.Idiomas.forEach(element => {
                 array.push(element.ISO);
                 if(element.DEFECTO)

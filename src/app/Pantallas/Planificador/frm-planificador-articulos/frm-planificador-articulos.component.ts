@@ -3,16 +3,16 @@ import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { CmpDataGridComponent } from '../../Componentes/cmp-data-grid/cmp-data-grid.component';
-import { TipoBoton } from '../../Enumeraciones/TipoBoton';
-import { ColumnDataGrid } from '../../Clases/Componentes/ColumnDataGrid';
-import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
-import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
-import { Utilidades } from '../../Utilidades/Utilidades';
-import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
+import { CmpDataGridComponent } from '../../../Componentes/cmp-data-grid/cmp-data-grid.component';
+import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
+import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
+import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
+import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
+import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
+import { Utilidades } from '../../../Utilidades/Utilidades';
+import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { DxPopupComponent } from 'devextreme-angular';
-import { Salida, SalidaLinea } from '../../Clases/Salida';
+import { Salida, SalidaLinea } from '../../../Clases/Salida';
 
 @Component({
   selector: 'app-frm-planificador-articulos',

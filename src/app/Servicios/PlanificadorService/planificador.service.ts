@@ -307,6 +307,35 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/salidas/getCombos_PantallaSalidas', body, Utilidades.getHeaders());
   }   
 
+  async cancelarSalida(idSalida): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSalida:idSalida } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/cancelarSalida', body, Utilidades.getHeaders());
+  }  
+
+  async actualizarSalida(idSalida,referencia,fechaInicio,fechaFin,idEstado,nombreCliente,obra,observaciones,idAlmacen,planificar): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, 
+                   datos: { IdSalida: idSalida,
+                            Referencia: referencia, 
+                            FechaInicio: fechaInicio, 
+                            FechaFin: fechaFin, 
+                            IdEstado: idEstado,
+                            NombreCiente: nombreCliente, 
+                            Obra: obra, 
+                            Observaciones: observaciones, 
+                            IdAlmacen: idAlmacen, 
+                            Planificar: planificar
+} };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/actualizarSalida', body, Utilidades.getHeaders());
+  } 
+
   //#endregion
 
   
@@ -330,6 +359,20 @@ export class PlanificadorService {
                    datos: { IdSalida:idSalida, IdArticulo:idArticulo, Unidades:unidades, Observaciones:observaciones } };
 
     return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/insertarLineaArticuloPlanificacion', body, this.headers);
+  }
+
+  async planificarContratoSalida(idSalida): Promise<Observable<any>> {
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
+                   datos: { IdSalida:idSalida } };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/planificarContratoSalida', body, this.headers);
+  }
+  
+  async desPlanificarContratoSalida(idSalida): Promise<Observable<any>> {
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
+                   datos: { IdSalida:idSalida } };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/desPlanificarContratoSalida', body, this.headers);
   }
 
   //#endregion

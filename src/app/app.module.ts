@@ -33,7 +33,7 @@ import { CmpTextBoxComponent } from './Componentes/cmp-text-box/cmp-text-box.com
 import { CmpDataGridComponent } from './Componentes/cmp-data-grid/cmp-data-grid.component';
 import { FormsModule } from '@angular/forms';
 import { FrmConexionesComponent } from './Pantallas/frm-conexiones/frm-conexiones.component';
-import { FrmPlanificadorComponent } from './Pantallas/frm-planificador/frm-planificador.component';
+import { FrmPlanificadorComponent } from './Pantallas/Planificador/frm-planificador/frm-planificador.component';
 import { FrmPrincipalComponent } from './Pantallas/frm-principal/frm-principal.component';
 import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-buscar/frm-usuario-buscar.component';
 import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
@@ -51,7 +51,8 @@ import { FrmImportarMaestrosComponent } from './Pantallas/frm-importar-maestros/
 import { FrmArticulosBuscarComponent } from './Pantallas/Articulos/frm-articulos-buscar/frm-articulos-buscar.component';
 import { FrmFiltrosBuscarComponent } from './Pantallas/frm-filtros-buscar/frm-filtros-buscar.component';
 import { FrmArticulosEditarComponent } from './Pantallas/Articulos/frm-articulos-editar/frm-articulos-editar.component';
-import { FrmPlanificadorArticulosComponent } from './Pantallas/frm-planificador-articulos/frm-planificador-articulos.component';
+import { FrmPlanificadorArticulosComponent } from './Pantallas/Planificador/frm-planificador-articulos/frm-planificador-articulos.component';
+import { FrmPlanificadorUndComponent } from './Pantallas/Planificador/frm-planificador-und/frm-planificador-und.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -91,7 +92,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmArticulosBuscarComponent,
     FrmFiltrosBuscarComponent,
     FrmArticulosEditarComponent,
-    FrmPlanificadorArticulosComponent
+    FrmPlanificadorArticulosComponent,
+    FrmPlanificadorUndComponent
 
   ],
   imports: [

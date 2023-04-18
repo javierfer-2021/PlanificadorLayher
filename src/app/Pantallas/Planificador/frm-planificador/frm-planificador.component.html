@@ -84,11 +84,28 @@
                             </div>
                         </div>
                         
-                        <div *ngIf="oOfertaSeleccionada.Observaciones!=''" class="row mt-1">
-                            <div class="col-7 mt-0">&nbsp;</div>                            
-                            <div class="col-5" style="padding:0px 0px 0px 8px;">
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">&nbsp;</div>  
+                            <div *ngIf="oOfertaSeleccionada.Planificar; then btnDESplanificarBlock else btnPlanificarBlock"></div>
+                                <ng-template #btnPlanificarBlock>
+                                    <div class="col-5 px-0">
+                                        <button type="button" class="btn btn-outline-success btn-sm w-100" style="font-size:0.8em;" (click)="btnPlanificarContrato()">
+                                            <i class="bi bi-check-circle-fill"></i>&nbsp;&nbsp;
+                                            {{traducir('frm-venta-buscar.lblBtnPlanificar', 'Planificar')}}
+                                        </button> 
+                                    </div>
+                                </ng-template>
+                                <ng-template #btnDESplanificarBlock>
+                                    <div class="col-5 px-0">
+                                        <button type="button" class="btn btn-outline-danger btn-sm w-100" style="font-size:0.8em;" (click)="btnDESplanificarContrato()">
+                                            <i class="bi bi-dash-circle-fill"></i>&nbsp;&nbsp;
+                                            {{traducir('frm-venta-buscar.lblBtnDESPlanificar', 'DES-Planificar')}}
+                                        </button> 
+                                    </div>
+                                </ng-template>                            
+                            <div *ngIf="oOfertaSeleccionada.Observaciones!=''" class="col-5" style="padding:0px 0px 0px 8px;">
                                 <button type="button" class="btn btn-outline-secondary btn-sm w-100" style="font-size:0.8em;" (click)="btnMostrarObservaciones()">
-                                    <i class="bi bi-info-circle"></i>&nbsp;&nbsp;
+                                    <i class="bi bi-chat-fill"></i>&nbsp;&nbsp;
                                     {{traducir('frm-venta-buscar.lblBtnObservaciones', 'Ver Observaciones')}}
                                 </button>
                             </div>   
@@ -116,6 +133,7 @@
                 </div>
 
             </div>
+            
             <div class="col-8 px-0">
                 <app-cmp-data-grid id="dgUnidades" #dgUnidades [dgConfig]="dgConfigUnidades"
                     (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" 
@@ -174,6 +192,16 @@
     </div>      
 </dx-popup>
 
+<!-- popUp para edicion und.linea  -->
+<dx-popup *ngIf="popUpVisibleEditarUndLinea" #popUpEditarUndLineas (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="800px" height="440px"
+    [(visible)]="popUpVisibleEditarUndLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-planificador.str_txtPopupUndEditarUndLineas', 'Modificar Und. Asignadas')}}"
+    contentTemplate="contentUnidadesLineas">
+    <div *dxTemplate="let data of 'contentUnidadesLineas'">
+        <app-frm-planificador-und [lineaArticulo]="_modLineaArticulo" (cerrarPopUp)="cerrarEditarUnidadesArticulo($event)"></app-frm-planificador-und>
+    </div>    
+</dx-popup>
 
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
     [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">

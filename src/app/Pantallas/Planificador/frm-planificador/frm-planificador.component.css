@@ -72,6 +72,19 @@
     font-weight: bold;
 }
 
+::ng-deep .dx-header-row .planificado_sel {
+    background-color: rgb(179, 235, 181);
+    color: rgb(5, 60, 10);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .sinPlanificar_sel {
+    background-color: rgb(179, 235, 181);
+    color: red;
+    font-weight: bold;
+}
+
+
 ::ng-deep .dx-header-row .unidades_sel,
 ::ng-deep .dx-header-row .undPedidas_sel,
 ::ng-deep .dx-header-row .undStock_sel
@@ -109,6 +122,18 @@
 }
 
 ::ng-deep .dx-header-row .estado {
+    background-color: #f2f2f2;
+    color: red;
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .planificado {
+    background-color: #f2f2f2;
+    color: rgb(5, 60, 10);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .sinPlanificar {
     background-color: #f2f2f2;
     color: red;
     font-weight: bold;
