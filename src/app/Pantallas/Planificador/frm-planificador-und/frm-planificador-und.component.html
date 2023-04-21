@@ -13,7 +13,7 @@
         <!-- Formulario cliente -->
         <div class="row pt-2">
             <div id="form-container" class="formulario">
-                <dx-form id="formModLineaArticulo" #formModLineaArticulo [colCount]="2" [formData]="_lineaCopia" labelMode="static" [readOnly]="!modoEdicion">
+                <dx-form id="formModLineaArticulo" #formModLineaArticulo [colCount]="2" [formData]="_lineaCopia" labelMode="static" [readOnly]="!modoEdicion" (onContentReady)="setFocus()">
                     
                     <dxi-item itemType="group" caption="" [colCount]="2" [colSpan]="2">
                         <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}"></dxi-item>
@@ -28,7 +28,7 @@
                         <dxi-item dataField="UndPedidas" [editorOptions]="{disabled: true}"></dxi-item>
                         <dxi-item dataField="UndDisponibles" [editorOptions]="{disabled: true}"></dxi-item>
                         
-                        <dxi-item dataField="UndServidas" [editorOptions]="{disabled: false}">
+                        <dxi-item dataField="UndServidas" #UndServidas [editorOptions]="textBoxReservadasOptions">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo UND.SERVIDAS"></dxi-validation-rule>
                         </dxi-item>
                         <dxi-item itemType="empty" [colSpan]="1 "></dxi-item>

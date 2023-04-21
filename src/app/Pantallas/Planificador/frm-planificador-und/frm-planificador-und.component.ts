@@ -8,9 +8,9 @@ import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 
-import { ArticuloStock,ArticuloFamilia,ArticuloSubfamilia, Almacen } from '../../../Clases/Maestros';
+import { modLineaPlanificador } from '../../../Clases/Planificador';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent } from 'devextreme-angular';
+import { DxFormComponent, DxNumberBoxComponent } from 'devextreme-angular';
 
 
 @Component({
@@ -46,6 +46,7 @@ export class FrmPlanificadorUndComponent implements OnInit {
   _lineaCopia: modLineaPlanificador = new(modLineaPlanificador);
 
   modoEdicion: boolean = true;
+  textBoxReservadasOptions: any;
  
   //#endregion
 
@@ -57,7 +58,14 @@ export class FrmPlanificadorUndComponent implements OnInit {
               private router: Router,
               public translate: TranslateService,
               public planificadorService: PlanificadorService
-              ) { }
+              ) { 
+    this.textBoxReservadasOptions = {
+      // text: 'Baja',
+      // value: true,
+      disabled: false,
+      onEnterKey: (e) => { this.btnGuardar() }
+    };                 
+  }
 
 
   ngOnInit(): void {
@@ -68,14 +76,14 @@ export class FrmPlanificadorUndComponent implements OnInit {
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
-    // foco 
-    //this.formUsuario.instance.getEditor('Referencia').focus();
-   
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
 
   ngAfterContentChecked(): void {   
+    // foco 
+    try {this.formModLineaArticulo.instance.getEditor('UndServidas').focus();} catch {}
+
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -139,16 +147,10 @@ export class FrmPlanificadorUndComponent implements OnInit {
     return true;
   }
 
+  setFocus(){
+    // try {this.formModLineaArticulo.instance.getEditor('UndServidas').focus();} 
+    // catch {}
+  }
+
 }
 
-export class modLineaPlanificador {
-  IdSalida:number;
-  Contrato:string;
-  Cliente:string;
-  IdLinea:number;
-  IdArticulo:string;
-  NombreArticulo:string;
-  UndPedidas:number;
-  UndServidas:number;
-  UndDisponibles:number;
-}

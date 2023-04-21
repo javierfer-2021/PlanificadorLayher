@@ -14,7 +14,7 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { DxPopupComponent } from 'devextreme-angular';
 import { Salida, SalidaLinea } from '../../../Clases/Salida';
 
-import { modLineaPlanificador } from '../frm-planificador-und/frm-planificador-und.component';
+import { modLineaPlanificador } from '../../../Clases/Planificador';
 
 @Component({
   selector: 'app-frm-planificador',
@@ -459,6 +459,30 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       }
     );
   }  
+
+  async actializarPlanificacionLineas(datosLinea:modLineaPlanificador, listaSalidas:Array<modLineaPlanificador>){
+    if(this.WSDatos_Validando) return;    
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarLineasPlanificadas(datosLinea.IdSalida,datosLinea.IdArticulo,datosLinea.UndServidas,listaSalidas)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSActualizarPlanificacionLineas','Articulos RE-Planificado'),'success',1000);           
+          // actualizar grid de datos     
+          this.arrayUnidadesOfertas[datosLinea.Fila] = Object.assign(this.arrayUnidadesOfertas[datosLinea.Fila],datos.datos[0]);
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSActualizarPlanificacionLineas','Error WS RE-Planificar artículo')); 
+        }
+      }, error => {
+        //console.log(error);        
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router, 'frm-planificador');        
+      }
+    );
+  }    
+
 //#endregion - WEB SERVICES  
 
 
@@ -723,7 +747,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
      if (e.rowType=='header' && e.column.cssClass=='cliente') {       
        this.cambiarContratoSeleccionado(Math.floor(e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
      }
-     else if ((e.rowType=='data') && ((e.columnIndex % 3) == 1) && (e.values[e.columnIndex-1]>0) && (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) ) {
+     else if ((e.rowType=='data') && (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 1) && (e.values[e.columnIndex-1]>0) ) {
+      this._modLineaArticulo.Columna =e.columnIndex;
+      this._modLineaArticulo.Fila = e.rowIndex;
+      this._modLineaArticulo.values = e.values;
+      this._modLineaArticulo.IdSalida = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida;
       this._modLineaArticulo.Contrato = this.arrayCabeceras[Math.floor(e.columnIndex/3)].Contrato;
       this._modLineaArticulo.Cliente = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdCliente + ' - ' + this.arrayCabeceras[Math.floor(e.columnIndex/3)].NombreCliente;
       this._modLineaArticulo.IdArticulo = this.arrayArts[e.rowIndex].IdArticulo;
@@ -858,7 +886,33 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     }
   }
 
-  cerrarEditarUnidadesArticulo(e){
+  cerrarEditarUnidadesArticulo(datos){
+    if (datos!=null) {
+      console.log(datos);
+      
+      // actualizar valor modificado
+      datos.values[datos.Columna]=datos.UndServidas;
+
+      //construir array para recalculo
+      let arrayRecalculoLineas: Array<modLineaPlanificador> = [];
+      let lineaRecalculo: modLineaPlanificador;
+      for (let col=datos.Columna; col<(this.arrayCabeceras.length*3); col+=3){
+        // if cabecera.Planificar y articulo.UndPedidas>0
+        lineaRecalculo = new (modLineaPlanificador);
+        
+        lineaRecalculo.Columna = Math.floor(col/3);
+        lineaRecalculo.IdSalida = this.arrayCabeceras[Math.floor(col/3)].IdSalida;
+        lineaRecalculo.IdArticulo = this.arrayArts[datos.Fila].IdArticulo;
+        lineaRecalculo.UndPedidas = datos.values[col-1];
+        lineaRecalculo.UndServidas = datos.values[col];
+        lineaRecalculo.UndDisponibles = datos.values[col+1];
+
+        arrayRecalculoLineas.push(lineaRecalculo);
+      }
+      // console.log(arrayRecalculoLineas);
+      //llamar a ws recalculo
+      this.actializarPlanificacionLineas(datos, arrayRecalculoLineas);
+    }
     this.popUpVisibleEditarUndLinea = false;
   }
   // -------------------------

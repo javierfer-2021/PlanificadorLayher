@@ -264,7 +264,7 @@ export class FrmCompraBuscarComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getEntradasAlmacen(almacen, this.filtrosAdicionales.IdFamilia, this.filtrosAdicionales.IdSubfamilia)).subscribe(
+    (await this.planificadorService.getEntradasAlmacen(almacen, this.filtrosAdicionales.IdFamilia, this.filtrosAdicionales.IdSubfamilia, this.filtrosAdicionales.mostrarCanceladas)).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {
@@ -345,7 +345,8 @@ export class FrmCompraBuscarComponent implements OnInit {
     if (e != null) {
       this.filtrosAdicionales.IdFamilia=e.IdFamilia;
       this.filtrosAdicionales.IdSubfamilia=e.IdSubfamilia;
-      this.filtrosActivos = ((this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0))
+      this.filtrosAdicionales.mostrarCanceladas=e.mostrarCanceladas;
+      this.filtrosActivos = ((this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0) || (this.filtrosAdicionales.mostrarCanceladas))
       // refrescamos consulta
       this.cargarEntradas(this.sbAlmacenes.SelectBox.value);
     }

@@ -190,6 +190,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoSalida = datos.datos.ListaEstados;
+          this.arrayTiposEstadoSalida.pop();  //eliminamos la opcion de estado CANCELADO
           this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 

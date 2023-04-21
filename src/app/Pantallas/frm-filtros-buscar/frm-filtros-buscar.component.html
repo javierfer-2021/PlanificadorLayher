@@ -3,14 +3,21 @@
 <div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
     <div #pantalla>
 
-            <!-- Titulo -->
+            <!-- Filtro Mostrar CANCELADAS -->  
+            <div class="row pt-0 pb-2">
+                <div class="col px-1 pb-1">
+                    <dx-check-box #checkCanceladas [value]="mostrarCanceladas" [disabled]="false" text="{{traducir('frm-filtros-buscar.lblMostrarCanceladas', 'Mostrar Canceladas')}}"></dx-check-box>
+                </div>
+            </div> 
+
+            <!-- Filtros Familia y Subfamilia Articulos -->
+            <!-- Titulo seccion -->
             <div class="row px-1 py-2 titulo">
                 <div class="col pt-1 px-1">
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-filtros-buscar.lblTitulo', 'Contiene articulos de ...')}}</div>
                 </div>
             </div>  
-
-            <!-- Contenido (FILTROS DISPONIBLES) -->  
+            <!-- filtro Familia -->  
             <div class="row pt-2">
                 <div class="col px-1">
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblFamilia', 'Familia')}}</div>
@@ -25,7 +32,7 @@
                     </dx-select-box>
                 </div>
             </div>            
-            
+            <!-- filtro Subfamilia -->  
             <div class="row pt-2">
                 <div class="col px-1">
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblSubfamilia', 'Subfamilia')}}</div>
@@ -40,7 +47,6 @@
                     </dx-select-box>
                 </div>
             </div> 
-
     </div>
 </div>
 

@@ -10,7 +10,7 @@ import { Utilidades } from '../../Utilidades/Utilidades';
 import { ArticuloFamilia,ArticuloSubfamilia } from '../../Clases/Maestros';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
-import { DxSelectBoxComponent } from 'devextreme-angular';
+import { DxCheckBoxComponent, DxSelectBoxComponent } from 'devextreme-angular';
 import { filtrosBusqueda}  from '../../Clases/Salida';
 
 @Component({
@@ -33,6 +33,7 @@ export class FrmFiltrosBuscarComponent implements OnInit {
 
   @ViewChild('comboFamilia', { static: false }) comboFamilia: DxSelectBoxComponent
   @ViewChild('comboSubfamilia', { static: false }) comboSubfamilia: DxSelectBoxComponent; 
+  @ViewChild('checkCanceladas', { static: false }) checkCanceladas: DxCheckBoxComponent; 
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-filtros-buscar.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
@@ -44,6 +45,7 @@ export class FrmFiltrosBuscarComponent implements OnInit {
 
   str_txtFamilia:string = '';
   str_txtSubfamilia:string = '';
+  mostrarCanceladas:boolean = false;
 
   arrayFamilias: Array<ArticuloFamilia> = [];
   arraySubfamilias: Array<ArticuloSubfamilia> = [];
@@ -65,7 +67,8 @@ export class FrmFiltrosBuscarComponent implements OnInit {
     // inicializacion var filtros
     this.filtros = new filtrosBusqueda();
     this.filtros.IdFamilia=0;
-    this.filtros.IdSubfamilia=0;       
+    this.filtros.IdSubfamilia=0; 
+    this.filtros.mostrarCanceladas=false;      
   }
 
   ngOnInit(): void {
@@ -144,6 +147,7 @@ export class FrmFiltrosBuscarComponent implements OnInit {
     // devolucion filtros seleccionados
     this.filtros.IdFamilia = (Utilidades.isEmpty(this.comboFamilia.value)) ? 0 : this.comboFamilia.value;
     this.filtros.IdSubfamilia = (Utilidades.isEmpty(this.comboSubfamilia.value)) ? 0 : this.comboSubfamilia.value;
+    this.filtros.mostrarCanceladas = this.checkCanceladas.value;
     this.cerrarPopUp.emit(this.filtros);
   }
 

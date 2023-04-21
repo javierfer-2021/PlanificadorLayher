@@ -52,6 +52,7 @@ export class Entrada {
   export class filtrosBusqueda {
     IdFamilia: number;
     IdSubfamilia: number;
+    mostrarCanceladas: boolean;
     otros: string;
   }
 

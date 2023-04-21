@@ -271,7 +271,7 @@ export class FrmVentaBuscarComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getSalidasAlmacen(almacen,this.filtrosAdicionales.IdFamilia,this.filtrosAdicionales.IdSubfamilia)).subscribe(
+    (await this.planificadorService.getSalidasAlmacen(almacen,this.filtrosAdicionales.IdFamilia,this.filtrosAdicionales.IdSubfamilia,this.filtrosAdicionales.mostrarCanceladas)).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {
@@ -324,10 +324,14 @@ export class FrmVentaBuscarComponent implements OnInit {
     else {
       // ir a pantalla planificador con parametro router salida_seleccionada
       let vSalida : Salida =  this.dg.objSeleccionado();    
-      const navigationExtras: NavigationExtras = {
-        state: { PantallaAnterior: 'frm-venta-buscar', salida: vSalida }
-      };
-      this.router.navigate(['planificador'], navigationExtras);
+      if (vSalida.IdEstado<99) {
+        const navigationExtras: NavigationExtras = {
+          state: { PantallaAnterior: 'frm-venta-buscar', salida: vSalida }
+        };
+        this.router.navigate(['planificador'], navigationExtras); 
+      } else {
+        Utilidades.ShowDialogAviso('Contrato Salida CANCELADO.<br>No es posible ver la planificación asodiada');
+      }
     }
   }
 
@@ -367,7 +371,8 @@ export class FrmVentaBuscarComponent implements OnInit {
     if (e != null) {
       this.filtrosAdicionales.IdFamilia=e.IdFamilia;
       this.filtrosAdicionales.IdSubfamilia=e.IdSubfamilia;
-      this.filtrosActivos = ((this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0))
+      this.filtrosAdicionales.mostrarCanceladas=e.mostrarCanceladas;
+      this.filtrosActivos = ((this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0) || (this.filtrosAdicionales.mostrarCanceladas))
       // refrescamos
       this.cargarSalidas(this.sbAlmacenes.SelectBox.value);
     }

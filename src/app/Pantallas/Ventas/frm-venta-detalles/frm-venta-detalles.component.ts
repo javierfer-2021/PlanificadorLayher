@@ -40,7 +40,8 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-venta-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-venta-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarSalida()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnPlanificar', 'Planificar'), posicion: 3, accion: () => {this.btnPlanificarSalida()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Cancelar'), posicion: 3, accion: () => {this.btnCancelarSalida()}, tipo: TipoBoton.success },    
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnPlanificar', 'Planificar'), posicion: 4, accion: () => {this.btnPlanificarSalida()}, tipo: TipoBoton.success },
   ];
 
   btnAcionesEdicion: BotonPantalla[] = [
@@ -49,8 +50,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   ];
   
   WSDatos_Validando: boolean = false;
-  WSEnvioCsv_Valido: boolean = false;
-
+  
   _salida: Salida = new(Salida);
   arrayTiposEstadoSalida: Array<EstadoSalida> = [];  
   arrayAlmacenes: Array<Almacen> = [];
@@ -148,14 +148,8 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    // personalizacion boton Planificar/DESplanificar segun valor salida mostrada
-    if (this._salida.Planificar) {
-      this.btnAciones[2].texto='DES-Planificar';
-      this.btnAciones[2].accion= () => {this.btnDesPlanificarSalida()}      
-    } else {
-      this.btnAciones[2].texto='Planificar';
-      this.btnAciones[2].accion = () => {this.btnPlanificarSalida()}
-    }
+    // personalizacion texto y funciones botones adicionales de Cancelar/descancelat | Planificar/Desplanificar
+    this.personalizarBotonesAccion();
     // cargar informacion
     this.cargarCombos();
     setTimeout(() => {this.cargarLineasSalida();},1000);
@@ -209,7 +203,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     (await this.planificadorService.getCombos_PantallaSalidas()).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          this.arrayTiposEstadoSalida = datos.datos.ListaEstados;
+          this.arrayTiposEstadoSalida = datos.datos.ListaEstados;          
           this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-ventas-detalles.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 
@@ -234,8 +228,34 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
         } else {          
-          this.WSEnvioCsv_Valido = false;
           Utilidades.MostrarErrorStr(this.traducir('frm-ventas-detalles.msgError_WSCargarLineas','Error cargando lineas de la Salida')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-ventas-detalles');
+      }
+    );
+  } 
+
+  async ActualizarSalida(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarSalida(this._salida.IdSalida,this._salida.Referencia,this._salida.FechaInicio,this._salida.FechaFin,
+                                                     this._salida.IdEstado,this._salida.NombreCliente,this._salida.Obra,this._salida.Observaciones,
+                                                     this._salida.IdAlmacen,this._salida.Planificar, this.arrayLineasSalida)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSSalidaActualizada','Contrato Salida Actualizado'),'success',1000);                     
+          //this._salida = datos.datos[0];
+          this.personalizarBotonesAccion();
+          // this.arrayLineasSalida = datos.datos.lineas;
+          // // Se configura el grid
+          // this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          // this.dgConfigLineas.actualizarConfig(true,false,'standard');
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-ventas-detalles.msgError_WSActualizarSalida','Error WS Actualizando salida')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
@@ -267,6 +287,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       // validacion especifica adicional de datos
       if (this.validarDatosFormulario()) {
         alert('llamar web-service actualizar datos');
+        this.ActualizarSalida();
         this.setModoEdicion(false);
       }
     }      
@@ -283,7 +304,8 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgPlanificar', '¿Esta seguro que desea Planificar el contrato actual?'), this.traducir('frm-ventas-detalles.TituloPlanificar', 'Planificar Contrato Salida'));  
     if (!continuar) return;
     else {
-      alert('Función Planificar NO ENLAZADA. Realizar desde planificador')
+      this._salida.Planificar=true;
+      this.ActualizarSalida();
     }   
   }
 
@@ -291,9 +313,33 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgDESPlanificar', '¿Esta seguro que desea DES-Planificar el contrato actual?'), this.traducir('frm-ventas-detalles.TituloDESPlanificar', 'DES-Planificar Contrato Salida'));  
     if (!continuar) return;
     else {
-      alert('Función DES-Planificar NO ENLAZADA. Realizar desde planificador')
+      this._salida.Planificar=false;
+      this.ActualizarSalida();
     }   
   }
+
+
+  async btnCancelarSalida(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgCancelar', '¿Esta seguro que desea CANCELAR el contrato seleccionado?'), this.traducir('frm-ventas-detalles.TituloCancelar', 'Cancelar Contrato Salida'));  
+    if (!continuar) return;
+    else {
+      this._salida.IdEstado=99;
+      this._salida.Planificar=false;
+      this.ActualizarSalida();
+    }   
+  }
+
+  async btnDesCancelarSalida(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgDESCancelar', '¿Esta seguro que desea RE-ACTIVAR el contrato seleccionado?'), this.traducir('frm-ventas-detalles.TituloDESPlanificar', 'DES-Cancelar Contrato Salida'));  
+    if (!continuar) return;
+    else {
+      this._salida.IdEstado = 1;
+      let planificar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgReplanificar', '¿Quiere RE-Planificar el contrato al activarlo?'), this.traducir('frm-ventas-detalles.TituloReplanificar', 'RE-Planificar Contrato Salida'));  
+      this._salida.Planificar = planificar;
+      this.ActualizarSalida();
+    }   
+  }
+
 
   btnEditarLineaSalida(index:number){    
     alert('pendiente de implementar');
@@ -329,6 +375,26 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
           Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
       }
       }, 100); 
+  }
+
+  personalizarBotonesAccion(){
+    // personalizacion boton Cancelar/DEScancelar segun valor estado salida mostrada
+    if (this._salida.IdEstado==99) {
+      this.btnAciones[2].texto='DES-Cancelar';
+      this.btnAciones[2].accion= () => {this.btnDesCancelarSalida()}      
+    } else {
+      this.btnAciones[2].texto='Cancelar';
+      this.btnAciones[2].accion = () => {this.btnCancelarSalida()}
+    }
+
+    // personalizacion boton Planificar/DESplanificar segun valor planificar salida mostrada
+    if (this._salida.Planificar) {
+      this.btnAciones[3].texto='DES-Planificar';
+      this.btnAciones[3].accion= () => {this.btnDesPlanificarSalida()}      
+    } else {
+      this.btnAciones[3].texto='Planificar';
+      this.btnAciones[3].accion = () => {this.btnPlanificarSalida()}
+    }    
   }
 
   // asignar color de lineas grid (normal, eliminada, insertada)
