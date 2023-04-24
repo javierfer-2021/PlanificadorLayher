@@ -16,9 +16,97 @@
         </div>          
 
         <!-- datos pantalla-->
-        <h4>Pendiente desarrollo</h4>
-        <p>Muestra las salidas que contienen el articulo pasado como parametro</p>
-        <p>Posibilidad de agragar nuevos articulos o todos los artículos de familia concreta</p>
+        <div class="row pt-3">
+            <div class="col-4 px-0">
+                <div class="row" [ngStyle]="{'height': alturaDiv}">
+
+                    <div class="col-9">
+                        <div class="row mt-2 mb-2 px-2" style="font-size: 0.7em;border: 1px solid #000;background-color: beige;padding-left: 30px;">
+                            <h5>Pendiente desarrollo</h5>
+                            <ul>
+                                <li>Muestra las salidas que contienen el articulo pasado como parametro</li>
+                                <li>Posibilidad de agragar nuevos articulos o todos los artículos de familia concreta</li>                            
+                                <li>Poner fechas calculo???</li>    
+                            </ul>
+                        </div>
+
+                        <!-- <div class="row mt-1">
+                            <div class="col-2 mt-0">&nbsp;</div>  
+                            <div *ngIf="oOfertaSeleccionada.Planificar; then btnDESplanificarBlock else btnPlanificarBlock"></div>
+                                <ng-template #btnPlanificarBlock>
+                                    <div class="col-5 px-0">
+                                        <button type="button" class="btn btn-outline-success btn-sm w-100" style="font-size:0.8em;" (click)="btnPlanificarContrato()">
+                                            <i class="bi bi-check-circle-fill"></i>&nbsp;&nbsp;
+                                            {{traducir('frm-venta-buscar.lblBtnPlanificar', 'Planificar')}}
+                                        </button> 
+                                    </div>
+                                </ng-template>
+                                <ng-template #btnDESplanificarBlock>
+                                    <div class="col-5 px-0">
+                                        <button type="button" class="btn btn-outline-danger btn-sm w-100" style="font-size:0.8em;" (click)="btnDESplanificarContrato()">
+                                            <i class="bi bi-dash-circle-fill"></i>&nbsp;&nbsp;
+                                            {{traducir('frm-venta-buscar.lblBtnDESPlanificar', 'DES-Planificar')}}
+                                        </button> 
+                                    </div>
+                                </ng-template>    
+
+                            <div *ngIf="oOfertaSeleccionada.Observaciones!=''" class="col-5" style="padding:0px 0px 0px 8px;">
+                                <button type="button" class="btn btn-outline-secondary btn-sm w-100" style="font-size:0.8em;" (click)="btnMostrarObservaciones()">
+                                    <i class="bi bi-chat-fill"></i>&nbsp;&nbsp;
+                                    {{traducir('frm-venta-buscar.lblBtnObservaciones', 'Ver Observaciones')}}
+                                </button>
+                            </div>   
+                        </div> -->
+
+                    </div>
+
+                    <div class="col-3" style="padding-right: 20px;">
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>CLIENTE</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>CONTRATO</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>OBRA</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>REFERENCIA</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>SALIDA</b></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>ENTRADA</b></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>ESTADO</u></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <app-cmp-data-grid id="dgArticulos" #dgArticulos [dgConfig]="dgConfigArticulos"
+                        (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" 
+                        (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)"
+                        (onRowPrepared_DataGrid)="onRowPrepared_DataGridArticulos($event)">
+                    </app-cmp-data-grid>
+                </div>
+
+            </div>
+            
+            <div class="col-8 px-0">
+                <app-cmp-data-grid id="dgUnidades" #dgUnidades [dgConfig]="dgConfigUnidades"
+                    (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" 
+                    (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)"
+                    (onCellDoubleClick_DataGrid)="onCellDblClick_DataGridUnidades($event)"
+                    (onContextMenuPreparing_DataGrid)="onContextMenuPreparing_DataGridUnidades($event)"
+                    (onCellPrepared_DataGrid)="onCellPrepared_DataGridUnidades($event)">
+                </app-cmp-data-grid>
+            </div>
+
+            <dx-context-menu
+                [dataSource]="itemsMenuArticulos"
+                [width]="200"
+                target="#dgArticulos"
+                (onItemClick)="itemMenuArticulosClick($event)">
+            </dx-context-menu>
+
+            <!-- <dx-context-menu
+                [dataSource]="itemsMenuContratos"
+                [width]="200"
+                target="#dgUnidades"
+                (onItemClick)="itemMenuContratosClick($event)">
+            </dx-context-menu>             -->
+
+        </div>
+
 
     </div>
 </div>
@@ -27,7 +115,19 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
+<!-- popUp para seleccion de articulo  -->
+<dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    contentTemplate="contentSeleccionarArticulo">
+    <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
+        <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+    </div>    
+</dx-popup>
+
 
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
     [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
 </dx-load-panel>
+

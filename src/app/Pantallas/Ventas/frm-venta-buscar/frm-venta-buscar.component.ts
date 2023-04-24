@@ -125,7 +125,7 @@ export class FrmVentaBuscarComponent implements OnInit {
     },
     {
       dataField: 'IdClienteERP',
-      caption: this.traducir('frm-venta-buscar.colIdClienteERP','Id.ClienteERP'),      
+      caption: this.traducir('frm-venta-buscar.colIdClienteERP','Id.Cliente ERP'),      
       visible: true,
     },
     {

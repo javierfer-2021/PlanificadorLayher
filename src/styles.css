@@ -23,14 +23,16 @@ default:
 .container {max-width: 96% !important;} 
 .ancho {max-width: 96% !important;} 
 
+/* REDEFINICION CLASES COMPONENTES DEVEXTREME*/
 .dx-state-disabled .dx-widget,
 .dx-state-disabled.dx-widget {
     opacity: .9 !important;
 }
 
-.dx-texteditor-container {
+/* .dx-texteditor-container {
     align-items: center;
-}
+} */
+
 
 .centerBold .dx-texteditor-input {
     font-weight: bold;
@@ -45,6 +47,8 @@ default:
     text-align: center;
 }
 
+
+/* CLASES PROPIAS */
 .titulo {
     /*text-align: center;*/
     padding-left: 5px;

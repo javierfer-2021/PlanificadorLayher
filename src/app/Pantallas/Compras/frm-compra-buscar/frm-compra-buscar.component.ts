@@ -123,7 +123,7 @@ export class FrmCompraBuscarComponent implements OnInit {
     },
     {
       dataField: 'IdProveedorERP',
-      caption: this.traducir('frm-venta-buscar.colIdProveedorERP','Id.ProveedorERP'),      
+      caption: this.traducir('frm-venta-buscar.colIdProveedorERP','Id.Prov.ERP'),      
       visible: true,
     },
     {

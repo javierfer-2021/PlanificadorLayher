@@ -164,7 +164,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     const nav = this.router.getCurrentNavigation().extras.state;
     if(Utilidades.isEmpty(nav)) return;
     this._salida = nav.salida;
-
+    this.oOfertaSeleccionada = this._salida;
+    
     //configuración menu articulos
     this.itemsMenuArticulos= [{ text: 'Reemplazar artículo' },
                               { text: 'Eliminar artículo' },
@@ -251,7 +252,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           this.fechaInicio_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaInicio.toString());
           this.fechaFin_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaFin.toString());
           this.estado_mostrar = this.oOfertaSeleccionada.NombreEstado;
-          this.cliente_mostrar = this.oOfertaSeleccionada.IdCliente.toString()+' - '+this.oOfertaSeleccionada.NombreCliente;
+          this.cliente_mostrar = this.oOfertaSeleccionada.IdClienteERP.toString()+' - '+this.oOfertaSeleccionada.NombreCliente;
           this.almacen_mostrar = this.oOfertaSeleccionada.NombreAlmacen;
           this.obra_mostrar = this.oOfertaSeleccionada.Obra;
           this.referencia_mostrar = this.oOfertaSeleccionada.Referencia;
@@ -753,7 +754,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       this._modLineaArticulo.values = e.values;
       this._modLineaArticulo.IdSalida = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida;
       this._modLineaArticulo.Contrato = this.arrayCabeceras[Math.floor(e.columnIndex/3)].Contrato;
-      this._modLineaArticulo.Cliente = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdCliente + ' - ' + this.arrayCabeceras[Math.floor(e.columnIndex/3)].NombreCliente;
+      this._modLineaArticulo.Cliente = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdClienteERP + ' - ' + this.arrayCabeceras[Math.floor(e.columnIndex/3)].NombreCliente;
       this._modLineaArticulo.IdArticulo = this.arrayArts[e.rowIndex].IdArticulo;
       this._modLineaArticulo.NombreArticulo = this.arrayArts[e.rowIndex].NombreArticulo;
       this._modLineaArticulo.UndPedidas =  e.values[e.columnIndex-1];
@@ -864,7 +865,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async btnPlanificarContrato(){
     let msgConfirmacion = 'Contrato: '+ this.oOfertaSeleccionada.Contrato +'<br>'
-                        + 'Cliente: ' + this.oOfertaSeleccionada.IdCliente + ' - ' + this.oOfertaSeleccionada.NombreCliente +'<br><br>'
+                        + 'Cliente: ' + this.oOfertaSeleccionada.IdClienteERP + ' - ' + this.oOfertaSeleccionada.NombreCliente +'<br><br>'
                         + this.traducir('frm-planificador.MsgPlanificarContrato','¿Esta seguro que desea continuar?');
     let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloPlanificarContrato', 'Planificar Contrato'));  
     if (!continuar) return
@@ -876,7 +877,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async btnDESplanificarContrato(){
     let msgConfirmacion = 'Contrato: '+ this.oOfertaSeleccionada.Contrato +'<br>'
-                        + 'Cliente: ' + this.oOfertaSeleccionada.IdCliente + ' - ' + this.oOfertaSeleccionada.NombreCliente +'<br><br>'
+                        + 'Cliente: ' + this.oOfertaSeleccionada.IdClienteERP + ' - ' + this.oOfertaSeleccionada.NombreCliente +'<br><br>'
                         + this.traducir('frm-planificador.MsgPlanificarContrato','¿Esta seguro que desea continuar?');
     let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloDesplanificarContrato', 'DES-Planificar Contrato'));  
     if (!continuar) return
@@ -919,7 +920,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async cambiarContratoSeleccionado(index:number){
     let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
-                        + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
+                        + 'Cliente: ' + this.arrayCabeceras[index].IdClienteERP + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
                         + this.traducir('frm-planificador.MsgCambiarContratoSeleccionado','¿Esta seguro que desea continuar?');
     let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloCambiarContrato', 'Cambiar contrato seleccionado'));  
     if (!continuar) return
@@ -932,7 +933,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async planificarContrato(index:number){
     let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
-                        + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
+                        + 'Cliente: ' + this.arrayCabeceras[index].IdClienteERP + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
                         + this.traducir('frm-planificador.MsgPlanificarContrato','¿Esta seguro que desea continuar?');
     let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloPlanificarContrato', 'Planificar Contrato'));  
     if (!continuar) return
@@ -944,7 +945,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async DESplanificarContrato(index:number){
     let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
-                        + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
+                        + 'Cliente: ' + this.arrayCabeceras[index].IdClienteERP + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
                         + this.traducir('frm-planificador.MsgDesplanificarContrato','¿Esta seguro que desea continuar?');
     let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloDesplanificarContrato', 'DES-Planificar Contrato'));  
     if (!continuar) return
@@ -956,7 +957,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   async cancelarContrato(index:number){
     let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
-                        + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
+                        + 'Cliente: ' + this.arrayCabeceras[index].IdClienteERP + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
                         + this.traducir('frm-planificador.MsgCancelarContrato','¿Esta seguro que desea continuar?');
     let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloCancelarContrato', 'Cancelar Contrato'));  
     if (!continuar) return

@@ -10,7 +10,7 @@
                     {{traducir('frm-planificador.lblTitulo', 'Planificación:')}} &nbsp; 
                     {{traducir('frm-planificador.lblTituloContrato', 'Contrato Salida')}}&nbsp;<b>{{_salida.Contrato}}</b> 
                     &nbsp;|&nbsp;
-                    {{traducir('frm-planificador.lblTituloCliente', 'Cliente')}}&nbsp;<b>{{_salida.IdCliente}} - {{_salida.NombreCliente}}</b>
+                    {{traducir('frm-planificador.lblTituloCliente', 'Cliente')}}&nbsp;<b>{{_salida.IdClienteERP}} - {{_salida.NombreCliente}}</b>
                 </div>
             </div>
             <!-- <div class="col-4 pt-0 px-1">
@@ -86,6 +86,7 @@
                         
                         <div class="row mt-1">
                             <div class="col-2 mt-0">&nbsp;</div>  
+
                             <div *ngIf="oOfertaSeleccionada.Planificar; then btnDESplanificarBlock else btnPlanificarBlock"></div>
                                 <ng-template #btnPlanificarBlock>
                                     <div class="col-5 px-0">
@@ -103,12 +104,14 @@
                                         </button> 
                                     </div>
                                 </ng-template>                            
-                            <div *ngIf="oOfertaSeleccionada.Observaciones!=''" class="col-5" style="padding:0px 0px 0px 8px;">
-                                <button type="button" class="btn btn-outline-secondary btn-sm w-100" style="font-size:0.8em;" (click)="btnMostrarObservaciones()">
-                                    <i class="bi bi-chat-fill"></i>&nbsp;&nbsp;
-                                    {{traducir('frm-venta-buscar.lblBtnObservaciones', 'Ver Observaciones')}}
-                                </button>
-                            </div>   
+
+                                <div *ngIf="oOfertaSeleccionada.Observaciones!=''" class="col-5" style="padding:0px 0px 0px 8px;">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" style="font-size:0.8em;" (click)="btnMostrarObservaciones()">
+                                        <i class="bi bi-chat-fill"></i>&nbsp;&nbsp;
+                                        {{traducir('frm-venta-buscar.lblBtnObservaciones', 'Ver Observaciones')}}
+                                    </button>
+                                </div>   
+
                         </div>
                     </div>
 

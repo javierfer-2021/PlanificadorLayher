@@ -40,7 +40,8 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-compra-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-compra-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarEntrada()}, tipo: TipoBoton.secondary },
-//    { icono: '', texto: this.traducir('frm-compra-detalles.btnConfirmar', 'Confirmar'), posicion: 3, accion: () => {this.btnConfirmarEntrada()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Cancelar'), posicion: 3, accion: () => {this.btnCancelarSalida()}, tipo: TipoBoton.success },    
+    { icono: '', texto: this.traducir('frm-compra-detalles.btnConfirmar', 'Confirmar'), posicion: 4, accion: () => {this.btnConfirmarEntrada()}, tipo: TipoBoton.success },
   ];
   
   btnAcionesEdicion: BotonPantalla[] = [
@@ -162,10 +163,12 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
           // this.phoneOptions = this.getPhonesOptions(this.employee.Phones);
         },
       };
+     
     }
 
 
   ngOnInit(): void {
+    this.personalizarBotonesAccion()
     this.cargarCombos();
     setTimeout(() => {this.cargarLineasEntrada();},1000);
   }
@@ -304,6 +307,13 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     }      
   }
 
+  btnCancelarSalida(){
+    alert('Función no implementada')
+  }
+
+  btnDesCancelarSalida(){
+    alert('Función no implementada')
+  }
 
   btnConfirmarEntrada(){
     alert('Función no implementada')
@@ -331,5 +341,27 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     }
     return true;
   }
+
+  personalizarBotonesAccion(){
+    // personalizacion boton Cancelar/DEScancelar segun valor estado salida mostrada
+    if (this._entrada.IdEstado==99) {
+      this.btnAciones[2].texto='DES-Cancelar';
+      this.btnAciones[2].accion= () => {this.btnDesCancelarSalida()}      
+    } else {
+      this.btnAciones[2].texto='Cancelar';
+      this.btnAciones[2].accion = () => {this.btnCancelarSalida()}
+    }
+
+    //TODO - Eliminar
+    // // personalizacion boton Planificar/DESplanificar segun valor planificar salida mostrada
+    // if (this._entrada.Confirmada) {
+    //   this.btnAciones[3].texto='DES-Confirmar';
+    //   this.btnAciones[3].accion= () => {this.btnDesPlanificarSalida()}      
+    // } else {
+    //   this.btnAciones[3].texto='Confirmar';
+    //   this.btnAciones[3].accion = () => {this.btnPlanificarSalida()}
+    // }    
+  }
+
 }
 
