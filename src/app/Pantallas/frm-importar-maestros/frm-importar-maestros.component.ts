@@ -39,9 +39,9 @@ export class FrmImportarMaestrosComponent implements OnInit {
   ];
 
   botonStock: BotonMenu = { icono: './assets/icons/stock.svg', texto: 'Importar Articulos', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false,
-                            accion: () => {this.importarArticulos() } };
+                            accion: () => {this.btnImportarArticulos() } };
   botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Periodo (Stock)', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, 
-                                     accion: () => {this.iniciarPeriodo() } };
+                                     accion: () => {this.btnIniciarPeriodo() } };
 
   WSDatos_Validando: boolean = false;
 
@@ -99,36 +99,79 @@ export class FrmImportarMaestrosComponent implements OnInit {
 
   //#region - web_services
 
-  async guardarConfiguracion(){
-    // if(this.WSDatos_Validando) return;
+  async importarArticulos(){
+    if(this.WSDatos_Validando) return;
 
-    // this.WSDatos_Validando = true;
-    // (await this.planificadorService.setConfigPlanificador(this._config.NumItemPlanificador,this._config.EntradaConfirmarDefecto,this._config.EntradaEstadoDefecto,this._config.EntradaAlmacenDefecto,
-    //                                                       this._config.SalidaPlanificarDefecto,this._config.SalidaEstadoDefecto,this._config.SalidaAlmacenDefecto)).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       Utilidades.MostrarExitoStr(this.traducir('frm-configuracion.msgOk_WSActualizarConfiguracion','Configuracion actualizado'));           
-    //       //Actualizamos var ConfigGlobal
-    //       ConfiGlobal.configLayher = this._config;          
-    //     } else {          
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-configuracion.msgError_WSActualizarConfiguracion','Error actualizando configuración')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, error => {
-    //     this.WSDatos_Validando = false;
-    //     Utilidades.compError(error, this.router,'frm-configuracion');
-    //   }
-    // );
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.importarArticulos()).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-importar-maestros.msgOk_WSImportarArticulos','Maestro de artículos actualizado correctamente'));           
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-importar-maestros.msgError_WSImportarArticulos','Error importando/actualizando maestro de artículos')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-importar-maestros');
+      }
+    );
+  }   
+
+  async importarStockArticulos(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.importarStockArticulos()).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-importar-maestros.msgOk_WSImportarStockArticulos','Stock de artículos actualizado correctamente'));           
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-importar-maestros.msgError_WSImportarStockArticulos','Error importando/actualizando Stock de artículos')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-importar-maestros');
+      }
+    );
+  }  
+
+  async iniciarEjercicio(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.iniciarEjercicio()).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-importar-maestros.msgOk_WSiniciarEjercicio','Nuevo EJERCICIO Iniciado correctamente'));           
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-importar-maestros.msgError_WSiniciarEjercicio','Error iniciando nuevo ejercicio')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-importar-maestros');
+      }
+    );
   }   
 
   //#endregion
 
-  importarArticulos() {
-    alert('sincronizar articulos y familias');
+  async btnImportarArticulos() {
+    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-importar-maestros.dlgImportarArticulosMensaje','Recuerde que los datos de stock no son actualizados<br>¿Seguro que desea actualizar el maestro de Artículos?'), 
+                                                               this.traducir('frm-importar-maestros.dlgImportarArticulosTitulo', 'Importar Artículos'));
+    if (confirmar) {
+      this.importarArticulos();  
+    }     
   }
 
-  iniciarPeriodo() {
-    alert('Inizializar periodo -Traer stock y recalcular planificador');
+  async btnIniciarPeriodo() {
+    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-importar-maestros.dlgIniciarPeriodoMensaje','¡IMPORTANTE!<br>El maestro de STOCK va a ser actualizado a fecha de hoy<br>y la Planificación será recalculada.<br>¿Seguro que desea Iniciar un Nuevo Ejercicio?'), 
+                                                               this.traducir('frm-importar-maestros.dlgIniciarPeriodoTitulo', 'Iniciar Nuevo Ejercicio'));
+    if (confirmar) {
+      this.iniciarEjercicio();  
+    }     
   }
 
   salir() {

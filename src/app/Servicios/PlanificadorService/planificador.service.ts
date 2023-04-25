@@ -18,6 +18,7 @@ export class PlanificadorService {
 
   constructor(private http: HttpClient) { }
 
+
   //#region - USUARIOS
 
   async getListaUsuarios(): Promise<Observable<any>>{ // Promise<Observable<any>>
@@ -103,6 +104,34 @@ export class PlanificadorService {
 
 
   //#region - Maestro STOCK-ARTICULOS
+
+  async importarArticulos(): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/importarArticulos', body, Utilidades.getHeaders());
+  }  
+
+  async importarStockArticulos(): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/importarStockArticulos', body, Utilidades.getHeaders());
+  }  
+
+  async iniciarEjercicio(): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/iniciarEjercicio', body, Utilidades.getHeaders());
+  }  
+
 
   async getStockArticulos(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
@@ -237,6 +266,25 @@ export class PlanificadorService {
   
     const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
     return this.http.post(ConfiGlobal.URL + '/api/entradas/getCombos_PantallaEntradas', body, Utilidades.getHeaders());
+  }   
+
+  async actualizarEntrada(idEntrada,referencia,fechaPrevista,fechaConfirmada,idEstado,nombreProveedor,observaciones,idAlmacen,confirmada,lineas): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, 
+                   datos: { IdEntrada: idEntrada,
+                            Referencia: referencia, 
+                            FechaPrevista: fechaPrevista, 
+                            FechaConfirmada: fechaConfirmada, 
+                            IdEstado: idEstado,
+                            NombreProveedor: nombreProveedor, 
+                            Observaciones: observaciones, 
+                            IdAlmacen: idAlmacen, 
+                            Confirmada: confirmada,
+                            LineasEntrada:lineas } };    
+    return this.http.post(ConfiGlobal.URL + '/api/entradas/actualizarEntrada', body, Utilidades.getHeaders());
   }   
 
   //#endregion

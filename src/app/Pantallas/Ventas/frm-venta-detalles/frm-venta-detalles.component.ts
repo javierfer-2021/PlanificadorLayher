@@ -247,7 +247,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
                                                      this._salida.IdAlmacen,this._salida.Planificar, this.arrayLineasSalida)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSSalidaActualizada','Contrato Salida Actualizado'),'success',1000);                     
+          Utilidades.MostrarExitoStr(this.traducir('frm-ventas-detalles.msgOk_WSSalidaActualizada','Contrato Salida Actualizado'),'success',1000);                     
           //this._salida = datos.datos[0];
           this.personalizarBotonesAccion();
           // this.arrayLineasSalida = datos.datos.lineas;
@@ -330,7 +330,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }
 
   async btnDesCancelarSalida(){
-    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgDESCancelar', '¿Esta seguro que desea RE-ACTIVAR el contrato seleccionado?'), this.traducir('frm-ventas-detalles.TituloDESPlanificar', 'DES-Cancelar Contrato Salida'));  
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgDESCancelar', '¿Esta seguro que desea RE-ACTIVAR el contrato seleccionado?'), this.traducir('frm-ventas-detalles.TituloDESCancelar', 'DES-Cancelar Contrato Salida'));  
     if (!continuar) return;
     else {
       this._salida.IdEstado = 1;
@@ -408,5 +408,14 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       }
     }
   }    
+
+  
+  setFormFocus(campo:string){
+    try {
+      const editor = this.formSalida.instance.getEditor(campo);
+      editor.focus();
+    } 
+    catch {} 
+  }
 
 }

@@ -143,28 +143,27 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
               private router: Router,
               public translate: TranslateService,
               public planificadorService: PlanificadorService
-              )  
-    { 
-      // obtenemos dato identificacion de envio del routing
-      const nav = this.router.getCurrentNavigation().extras.state;      
-      if (( nav.Entrada !== null) && ( nav.Entrada !== undefined)) {
-        this._entrada= nav.Entrada;
-      }
-
-      // botones acciones formulario
-      this.confirmarButtonOptions = {
-        icon: 'add',
-        text: 'Confirmar',
-        type: 'success',
-        visible: this.modoEdicion,      
-        onClick: () => {
-          alert('Confirmar');
-          // this.employee.Phones.push('');
-          // this.phoneOptions = this.getPhonesOptions(this.employee.Phones);
-        },
-      };
-     
+              )  { 
+    // obtenemos dato identificacion de envio del routing
+    const nav = this.router.getCurrentNavigation().extras.state;      
+    if (( nav.Entrada !== null) && ( nav.Entrada !== undefined)) {
+      this._entrada= nav.Entrada;
     }
+
+    // botones acciones formulario
+    this.confirmarButtonOptions = {
+      icon: 'add',
+      text: 'Confirmar',
+      type: 'success',
+      visible: this.modoEdicion,      
+      onClick: () => {
+        alert('Confirmar');
+        // this.employee.Phones.push('');
+        // this.phoneOptions = this.getPhonesOptions(this.employee.Phones);
+      },
+    };     
+
+  }
 
 
   ngOnInit(): void {
@@ -259,6 +258,34 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     );
   } 
 
+  async ActualizarEntrada(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarEntrada(this._entrada.IdEntrada,this._entrada.Referencia,this._entrada.FechaPrevista,this._entrada.FechaConfirmada,
+                                                     this._entrada.IdEstado,this._entrada.NombreProveedor,this._entrada.Observaciones,
+                                                     this._entrada.IdAlmacen,this._entrada.Confirmada, this.arrayLineasEntrada)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-compra-detalles.msgOk_WSEntradaActualizada','Contrato Entrada Actualizado'),'success',1000);                     
+          //this._salida = datos.datos[0];
+          this.personalizarBotonesAccion();
+          // this.arrayLineasSalida = datos.datos.lineas;
+          // // Se configura el grid
+          // this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          // this.dgConfigLineas.actualizarConfig(true,false,'standard');
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_WSActualizarEntrada','Error WS Actualizando entrada')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-ventas-detalles');
+      }
+    );
+  } 
+
+
   //#endregion
   
   btnSalir() {
@@ -283,7 +310,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
       else {
           Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
       }
-      }, 100); 
+      }, 200); 
   }
 
   btnCancelar(){
@@ -301,17 +328,29 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     else {
       // validacion especifica adicional de datos
       if (this.validarDatosFormulario()) {
-        alert('llamar web-service actualizar datos');
+        this.ActualizarEntrada();
         this.setModoEdicion(false);
       }
     }      
   }
 
-  btnCancelarSalida(){
-    alert('Función no implementada')
+  async btnCancelarSalida(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgCancelar', '¿Esta seguro que desea CANCELAR el contrato de Entrada seleccionado?<br>Aviso: Se realizara re-planificación de las salidas'), this.traducir('frm-compra-detalles.TituloCancelar', 'Cancelar Entrada'));  
+    if (!continuar) return;
+    else {
+      this._entrada.IdEstado=99;
+      this._entrada.Confirmada=false;
+      this.ActualizarEntrada();
+    }     
   }
 
-  btnDesCancelarSalida(){
+  async btnDesCancelarSalida(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgDesCancelar', '¿Esta seguro que desea ACTIVAR el contrato de Entrada seleccionado?<br>Aviso: Se realizara re-planificación de las salidas'), this.traducir('frm-compra-detalles.TituloDESCancelar', 'DES-Cancelar Entrada'));  
+    if (!continuar) return;
+    else {
+      this._entrada.IdEstado=1;
+      this.ActualizarEntrada();
+    }      
     alert('Función no implementada')
   }
 
@@ -361,6 +400,14 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     //   this.btnAciones[3].texto='Confirmar';
     //   this.btnAciones[3].accion = () => {this.btnPlanificarSalida()}
     // }    
+  }
+
+  setFormFocus(campo:string){
+    try {
+      const editor = this.formEntrada.instance.getEditor(campo);
+      editor.focus();
+    } 
+    catch {} 
   }
 
 }

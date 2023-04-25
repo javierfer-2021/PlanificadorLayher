@@ -7,8 +7,6 @@ import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
-import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
-import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Usuario } from '../../../Clases/Usuario';
 import { Almacen,Idioma } from '../../../Clases/Maestros';
@@ -150,7 +148,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
    
     // foco 
-    //this.formUsuario.instance.getEditor('Referencia').focus();
+    this.setFormFocus('Referencia');
    
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
@@ -365,9 +363,14 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     e.fromData.splice(e.fromIndex, 1);
   }
 
-  // itemMenuVerClave(e){
-  //   alert('ver clave');
-  // }
+
+  setFormFocus(campo:string){
+    try {
+      const editor = this.formUsuario.instance.getEditor(campo);
+      editor.focus();
+    } 
+    catch {} 
+  }
 
 }
 

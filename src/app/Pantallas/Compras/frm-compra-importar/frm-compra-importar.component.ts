@@ -193,6 +193,7 @@ export class FrmCompraImportarComponent implements OnInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoEntrada = datos.datos.ListaEstados;
+          this.arrayTiposEstadoEntrada.pop();  //eliminamos la opcion de estado CANCELADO
           this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
           this._entrada.IdAlmacen = 1;
         } else {          
