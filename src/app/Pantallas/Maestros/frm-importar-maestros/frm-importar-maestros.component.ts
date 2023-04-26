@@ -1,20 +1,20 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentInit, Renderer2 } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
 
 import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-select-box.component';
-import { DataSelectBoxConfig } from '../../Clases/Componentes/DataSelectBoxConfig';
+import { DataSelectBoxConfig } from '../../../Clases/Componentes/DataSelectBoxConfig';
 
-import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { TipoBoton } from '../../Enumeraciones/TipoBoton';
-import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
-import { BotonMenu } from '../../Clases/Componentes/BotonMenu';
-import { Utilidades } from '../../Utilidades/Utilidades';
-import { Configuracion, Almacen } from '../../Clases/Maestros';
-import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
+import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
+import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
+import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
+import { BotonMenu } from '../../../Clases/Componentes/BotonMenu';
+import { Utilidades } from '../../../Utilidades/Utilidades';
+import { Almacen } from '../../../Clases/Maestros';
+import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 
 @Component({
   selector: 'app-frm-importar-maestros',
@@ -38,11 +38,23 @@ export class FrmImportarMaestrosComponent implements OnInit {
     { icono: '', texto: this.traducir('frm-configuracion.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
   ];
 
-  botonStock: BotonMenu = { icono: './assets/icons/stock.svg', texto: 'Importar Articulos', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false,
+  botonStock: BotonMenu = { icono: './assets/icons/stock.svg', 
+                            texto: 'Importar-Actualizar Articulos', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false,
                             accion: () => {this.btnImportarArticulos() } };
-  botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Periodo (Stock)', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, 
+
+  botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', 
+                                     texto: 'Iniciar Ejercicio (Stock)', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, 
                                      accion: () => {this.btnIniciarPeriodo() } };
 
+  botonFamilias: BotonMenu = { icono: './assets/icons/Mas A_B.svg', 
+                               texto: 'Maestro Familias', ruta: '', nombre: 'botonFamilias', notificacion: 0, desactivado: false, 
+                               accion: () => {this.btnFamilias() } };
+
+  botonSubfamilias: BotonMenu = { icono: './assets/icons/Mas A_B.svg', 
+                                  texto: 'Maestro Sub-Familias', ruta: '', nombre: 'botonSubfamilias', notificacion: 0, desactivado: false, 
+                                  accion: () => {this.btnSubfamilias() } };
+  
+  
   WSDatos_Validando: boolean = false;
 
   // combo filtro almacenes
@@ -172,6 +184,14 @@ export class FrmImportarMaestrosComponent implements OnInit {
     if (confirmar) {
       this.iniciarEjercicio();  
     }     
+  }
+
+  btnFamilias() {
+    this.router.navigate(['maestro-familias']);
+  }
+
+  btnSubfamilias() {
+    this.router.navigate(['maestro-subfamilias']);
   }
 
   salir() {

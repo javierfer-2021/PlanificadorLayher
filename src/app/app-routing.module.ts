@@ -18,7 +18,9 @@ import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuari
 import { FrmArticulosStockComponent } from './Pantallas/Articulos/frm-articulos-stock/frm-articulos-stock.component';
 import { FrmIncidenciaComponent } from './Pantallas/frm-incidencia/frm-incidencia.component';
 import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
-import { FrmImportarMaestrosComponent } from './Pantallas/frm-importar-maestros/frm-importar-maestros.component';
+import { FrmImportarMaestrosComponent } from './Pantallas/Maestros/frm-importar-maestros/frm-importar-maestros.component';
+import { FrmFamiliasComponent } from './Pantallas/Maestros/frm-familias/frm-familias.component';
+import { FrmSubfamiliasComponent } from './Pantallas/Maestros/frm-subfamilias/frm-subfamilias.component';
 
 const routes: Routes = [
   { path: '', component: FrmLoginComponent },
@@ -42,8 +44,8 @@ const routes: Routes = [
   { path: 'usuario', component: FrmUsuarioComponent, canActivate: [AuthGuard] }, 
   { path: 'configuracion', component: FrmConfiguracionComponent, canActivate: [AuthGuard] },
   { path: 'importar_maestros', component: FrmImportarMaestrosComponent, canActivate: [AuthGuard] },
-
-  
+  { path: 'maestro-familias', component: FrmFamiliasComponent, canActivate: [AuthGuard] },
+  { path: 'maestro-subfamilias', component: FrmSubfamiliasComponent, canActivate: [AuthGuard] },
     
 ];
 

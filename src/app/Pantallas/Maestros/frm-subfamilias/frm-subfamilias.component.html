@@ -1,0 +1,79 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla> 
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-subfamilias.lblTitulo', 'Maestro de Sub-Familias')}} </div>
+            </div>
+        </div>  
+
+        <!-- Datos pantalla -->  
+        <div class="row mt-2 pb-2 px-1">
+            <div class="col">
+                <div id="grid-subfamilias">
+                    <dx-data-grid #gridSubfamilias
+                      id="gridSubfamilias"                      
+                      [dataSource]="arraySubfamilias"
+                      keyExpr="IdSubfamilia"
+                      [showBorders]="true"
+                    >
+                      <dxo-paging [enabled]="false"></dxo-paging>
+                      <dxo-editing
+                        mode="popup"
+                        useIcons="true"
+                        [allowUpdating]="true"
+                        [allowAdding]="true"
+                        [allowDeleting]="true"
+                        [texts]="{ addRow:'Añadir',
+                                   cancelAllChanges:'Descartar Cambios',
+                                   cancelRowChanges:'Cancelar',
+                                   confirmDeleteMessage:'¿Seguro que desea eliminar el registro seleccionado?',
+                                   confirmDeleteTitle:'Eliminar',
+                                   deleteRow:'Borrar',
+                                   editRow:'Editar',
+                                   saveAllChanges:'Guardar Cambios',
+                                   saveRowChanges:'Guardar',
+                                   undeleteRow:'Undelete',
+                                   validationCancelChanges:'Cancelar Cambios'}"
+                      >
+                        <dxo-popup
+                          title="{{traducir('frm-familias.lblPopUpSubfamilia', 'Datos Sub-Familia')}}"
+                          [showTitle]="true"
+                          [width]="600"
+                          [height]="250"
+                        >
+                        </dxo-popup>                        
+                        <dxo-form>
+                          <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                            <dxi-item dataField="IdSubfamilia"></dxi-item>
+                            <dxi-item dataField="IdFamilia"></dxi-item>
+                            <dxi-item dataField="NombreSubfamilia" [colSpan]="2"></dxi-item>
+                            <!-- <dxi-item dataField="FechaActualizacion" readOnly="true"></dxi-item> -->
+                            <!-- <dxi-item dataField="CodFamilia"></dxi-item> -->
+                            <!-- <dxi-item dataField="Importado" readOnly="true"></dxi-item>                             -->
+                            <!-- <dxi-item dataField="UsoFiltro"></dxi-item> -->
+                          </dxi-item>
+                        </dxo-form>
+                      </dxo-editing>
+                  
+                      <dxi-column dataField="IdSubfamilia" caption="ID Sub-Familia" dataType="number" [width]="130"></dxi-column>
+                      <dxi-column dataField="IdFamilia" caption="ID Familia" dataType="number" [width]="120"></dxi-column>
+                      <dxi-column dataField="NombreSubfamilia" caption="Nombre Sub-Familia"></dxi-column>
+                      <!-- <dxi-column dataField="UsoFiltro" caption="Uso Filtros" dataType="boolean"> </dxi-column> -->
+                      <!-- <dxi-column dataField="Importado" caption="Importado" dataType="boolean"> </dxi-column> -->
+                      <!-- <dxi-column dataField="FechaActualizacion" caption="Fec.Actualización" dataType="date"> </dxi-column> -->
+                    </dx-data-grid>
+                </div>
+            </div>
+        </div>             
+       
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+

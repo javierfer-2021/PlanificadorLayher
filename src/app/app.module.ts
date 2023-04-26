@@ -47,12 +47,14 @@ import { FrmVentaDetallesComponent } from './Pantallas/Ventas/frm-venta-detalles
 import { CmdSelectBoxComponent } from './Componentes/cmp-select-box/cmd-select-box.component';
 import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
 import { FrmCompraDetallesComponent } from './Pantallas/Compras/frm-compra-detalles/frm-compra-detalles.component';
-import { FrmImportarMaestrosComponent } from './Pantallas/frm-importar-maestros/frm-importar-maestros.component';
+import { FrmImportarMaestrosComponent } from './Pantallas/Maestros/frm-importar-maestros/frm-importar-maestros.component';
 import { FrmArticulosBuscarComponent } from './Pantallas/Articulos/frm-articulos-buscar/frm-articulos-buscar.component';
 import { FrmFiltrosBuscarComponent } from './Pantallas/frm-filtros-buscar/frm-filtros-buscar.component';
 import { FrmArticulosEditarComponent } from './Pantallas/Articulos/frm-articulos-editar/frm-articulos-editar.component';
 import { FrmPlanificadorArticulosComponent } from './Pantallas/Planificador/frm-planificador-articulos/frm-planificador-articulos.component';
 import { FrmPlanificadorUndComponent } from './Pantallas/Planificador/frm-planificador-und/frm-planificador-und.component';
+import { FrmFamiliasComponent } from './Pantallas/Maestros/frm-familias/frm-familias.component';
+import { FrmSubfamiliasComponent } from './Pantallas/Maestros/frm-subfamilias/frm-subfamilias.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -93,7 +95,9 @@ function initializeApp(appConfig: ConfigService) {
     FrmFiltrosBuscarComponent,
     FrmArticulosEditarComponent,
     FrmPlanificadorArticulosComponent,
-    FrmPlanificadorUndComponent
+    FrmPlanificadorUndComponent,
+    FrmFamiliasComponent,
+    FrmSubfamiliasComponent
 
   ],
   imports: [

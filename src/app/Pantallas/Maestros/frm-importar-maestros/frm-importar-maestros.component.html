@@ -15,21 +15,7 @@
         <div class="row">
             <div class="col-2"></div>
 
-            <!-- Articulos -->
-            <div class="col-4">               
-                <div class="card" style="margin-top: 20px; height: 90%;">
-                    <h5 class="card-header" style="font-size: 0.9em;">Maestro de ARTICULOS</h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                                <app-boton-menu [btnMenu]="botonStock"></app-boton-menu>                      
-                            </div>
-                        </div>
-                    </div>
-                  </div>                
-            </div>
-
-            <!-- Stock-->
+            <!-- Iniciar Ejercicio -->
             <div class="col-4">
                 <div class="card" style="margin-top: 20px;">
                     <h5 class="card-header" style="font-size: 0.9em;">STOCK - Inicializar periodo</h5>
@@ -48,8 +34,45 @@
                   </div>                
             </div>
 
+            <!-- Maestro de Articulos -->
+            <div class="col-4">               
+                <div class="card" style="margin-top: 20px; height: 90%;">
+                    <h5 class="card-header" style="font-size: 0.9em;">Maestro de ARTICULOS</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonStock"></app-boton-menu>                      
+                            </div>
+                        </div>
+                    </div>
+                  </div>                
+            </div>
+
             <div class="col-2"></div>
         </div>             
+
+
+        <!-- Maestros de Familias y Subfamilias -->
+        <div class="row mt-2">
+            <div class="col-2"></div>
+            <div class="col-8">               
+                <div class="card" style="margin-top: 20px; height: 90%;">
+                    <h5 class="card-header" style="font-size: 0.9em;">Otros Maestros locales</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonFamilias"></app-boton-menu>                      
+                            </div>
+                            <div class="col pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonSubfamilias"></app-boton-menu>                      
+                            </div>                            
+                        </div>
+                    </div>
+                  </div>                
+            </div>
+            <div class="col-2"></div>
+        </div>             
+
 
         <!-- Edicion de maestros de familias y subfamilias -->
         <!--
