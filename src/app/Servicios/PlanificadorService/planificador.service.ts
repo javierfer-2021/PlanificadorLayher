@@ -435,6 +435,13 @@ export class PlanificadorService {
     return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/actualizarLineasPlanificadas', body, this.headers);
   }
 
+  async getDatosPlanificadorArticulos(almacen,articulos): Promise<Observable<any>> {
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
+                   datos: { IdAlmacen:almacen, ListaArticulos:articulos } };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacionAriculo', body, this.headers);
+  }
+
   //#endregion
 
   

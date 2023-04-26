@@ -314,7 +314,7 @@ export class FrmVentaBuscarComponent implements OnInit {
   }
 
   verPlanificador(){
-    // comprobar registro seleecionado
+    // comprobar registro seleccionado
     this.selectedRowsData = this.dg.DataGrid.instance.getSelectedRowsData();
     if ((this.selectedRowsData === null) || (this.selectedRowsData.length === 0)) {
       Utilidades.MostrarErrorStr(this.traducir('frm-venta-buscar.msgErrorSelectLinea','Debe seleccionar una oferta'));

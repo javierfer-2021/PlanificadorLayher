@@ -10,26 +10,34 @@
                     {{traducir('frm-planificador.lblTitulo', 'Visor Planificación Artículos')}} &nbsp; 
                 </div>
             </div>
-            <!-- <div class="col-4 pt-0 px-1">
-                <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
-            </div>    -->
         </div>          
 
         <!-- datos pantalla-->
         <div class="row pt-3">
             <div class="col-4 px-0">
                 <div class="row" [ngStyle]="{'height': alturaDiv}">
-
                     <div class="col-9">
-                        <div class="row mt-2 mb-2 px-2" style="font-size: 0.7em;border: 1px solid #000;background-color: beige;padding-left: 30px;">
-                            <h5>Pendiente desarrollo</h5>
-                            <ul>
-                                <li>Muestra las salidas que contienen el articulo pasado como parametro</li>
-                                <li>Posibilidad de agragar nuevos articulos o todos los artículos de familia concreta</li>                            
-                                <li>Poner fechas calculo???</li>    
-                            </ul>
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>ALMACEN</b></div>
+                            </div>                            
+                            <div class="col-10">
+                                <dx-text-box #txtAlmacen class="centerBold row" style="background-color: yellow; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="_nombreAlmacen" [disabled]="true">
+                                </dx-text-box>
+                            </div>
                         </div>
-
+                        
+                        <!--
+                        <div class="row mt-2 mb-2 px-2" style="font-size: 0.7em;border: 1px solid #000;background-color: beige;padding-left: 30px;">
+                            <div class="col mt-0">
+                                <ul>
+                                    <li>Muestra las salidas que contienen el articulo pasado como parametro</li>
+                                    <li>Posibilidad de agragar nuevos articulos o todos los artículos de familia concreta</li>                            
+                                    <li>Poner fechas calculo???</li>    
+                                </ul>
+                            </div>
+                        </div>
+                        -->
                         <!-- <div class="row mt-1">
                             <div class="col-2 mt-0">&nbsp;</div>  
                             <div *ngIf="oOfertaSeleccionada.Planificar; then btnDESplanificarBlock else btnPlanificarBlock"></div>
@@ -57,7 +65,6 @@
                                 </button>
                             </div>   
                         </div> -->
-
                     </div>
 
                     <div class="col-3" style="padding-right: 20px;">
@@ -98,16 +105,7 @@
                 (onItemClick)="itemMenuArticulosClick($event)">
             </dx-context-menu>
 
-            <!-- <dx-context-menu
-                [dataSource]="itemsMenuContratos"
-                [width]="200"
-                target="#dgUnidades"
-                (onItemClick)="itemMenuContratosClick($event)">
-            </dx-context-menu>             -->
-
         </div>
-
-
     </div>
 </div>
 
@@ -122,10 +120,22 @@
     title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
     contentTemplate="contentSeleccionarArticulo">
     <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
-        <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+        <app-frm-articulos-buscar [idAlmacen]="_idAlmacen" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
     </div>    
 </dx-popup>
 
+<!-- popUp ver observciones  -->
+<dx-popup #popUpObservaciones [dragEnabled]="false" [width]="480" [height]="360"  
+    [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    [showTitle]="true" title="{{traducir('frm-articulos-buscar.str_txtPopupObservaciones', 'Observaciones')}}"
+    [(visible)]="popUpVisibleObservaciones"
+    contentTemplate="contentObservaciones">
+    <div *dxTemplate="let data of 'contentObservaciones'">
+        CONTRATO: {{str_contrato}}
+        <br>
+        {{str_observaciones}}
+    </div>      
+</dx-popup>
 
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
     [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">

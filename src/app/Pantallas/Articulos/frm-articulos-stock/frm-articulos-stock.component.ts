@@ -312,7 +312,9 @@ export class FrmArticulosStockComponent implements OnInit {
     }
     let vArticulo : ArticuloStock =  this.dg.objSeleccionado();    
     const navigationExtras: NavigationExtras = {
-      state: { PantallaAnterior: 'frm-articulos-stock', idArticulo: vArticulo.IdArticulo }
+      state: { PantallaAnterior: 'frm-articulos-stock', 
+               Articulo: vArticulo         
+             }
     };
     this.router.navigate(['planificador_articulos'], navigationExtras);
   }

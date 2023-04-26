@@ -13,6 +13,7 @@ import { Utilidades } from '../../../Utilidades/Utilidades';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { DxPopupComponent } from 'devextreme-angular';
 import { Salida, SalidaLinea } from '../../../Clases/Salida';
+import { ArticuloStock } from '../../../Clases/Maestros';
 
 @Component({
   selector: 'app-frm-planificador-articulos',
@@ -39,79 +40,42 @@ btnAciones: BotonPantalla[] = [
   { icono: '', texto: this.traducir('frm-planificacion.btnRecargar', 'Recargar'), posicion: 2, accion: () => {this.limpiarControles();}, tipo: TipoBoton.secondary, activo: true, visible: true },
 ];
 
-_salida: Salida;
-oOfertaSeleccionada: Salida;  
-arrayArts: Array<SalidaLinea> = [];
+// _salida: Salida;
+oOfertaSeleccionada: Salida; 
+
+_articulo: ArticuloStock = new(ArticuloStock);
+_listaArticulos: Array<ArticuloStock> = []
+_listaIdArticulos: Array<string> = [];
+_idAlmacen:number;
+_nombreAlmacen:string;
+
+
+//arrayArts: Array<SalidaLinea> = [];
+arrayArts: Array<ArticuloStock> = [];
 arrayCabeceras: Array<Salida> = [];
 arrayUnidadesOfertas = [];
 
-idOferta_mostrar: string;
-fechaAlta_mostrar: string;
-fechaInicio_mostrar: string;
-fechaFin_mostrar: string;
-estado_mostrar: string;
-cliente_mostrar: string;
-almacen_mostrar: string;
-obra_mostrar: string;
-referencia_mostrar: string;
-
 // grid articulos contrato seleccionado
 colsArts: Array<ColumnDataGrid> = [
-  { dataField: 'IdLinea',
-    caption: 'Id Línea',
-    visible: false
-  },
-  { dataField: 'IdSalida',
-    caption: 'Id Salida',
-    visible: false
-  },
   { dataField: 'IdArticulo',
     caption: 'Cod.Artículo',
   },
   { dataField: 'NombreArticulo',
     caption: 'Descripción',
   },
-  { dataField: 'CantidadDisponible',
-    caption: 'Cantidad Disponible',
+  { dataField: 'Unidades',
+    caption: 'Stock',
     cssClass: 'blanco',
   },
-  { dataField: 'CantidadPedida',
-    caption: 'Cantidad Pedida',
-    visible: false     
-  },
-  { dataField: 'CantidadReservada',
-    caption: 'Cantidad Reservada',
-    visible: false
-  },
-  { dataField: 'FechaActualizacion',
-    caption: 'Fecha Actualización',
-    visible: false
-  },
-  { dataField: 'CantidadDisponible',
-    caption: 'Cantidad Disponible',
-    visible: false
-  },
-  { dataField: 'CantidadDisponible',
-    caption: 'Cantidad Disponible',
-    visible: false
-  },   
-  { dataField: 'Prioridad',
-    caption: 'Prioridad',
-    visible: false
-  },    
-  { dataField: 'Eliminada',
-    caption: 'Eliminada',
-    visible: false
-  },    
-  { dataField: 'Insertada',
-    caption: 'Insertada',
-    visible: false
-  },    
-  { dataField: 'Observaciones',
-    caption: 'Observaciones',
-    visible: false
-  },    
-
+  { dataField: 'IdAlmacen', caption: '', visible: false },
+  { dataField: 'NombreAlmacen', caption: '', visible: false },
+  { dataField: 'IdCualidad', caption: '', visible: false },
+  { dataField: 'NombreCualidad', caption: '', visible: false },
+  { dataField: 'IdFamilia', caption: '', visible: false },   
+  { dataField: 'NombreFamilia', caption: '', visible: false },    
+  { dataField: 'IdSubfamilia', caption: '', visible: false },    
+  { dataField: 'NombreSubfamilia', caption: '', visible: false },    
+  { dataField: 'Secundario', caption: '', visible: false},    
 ]
 dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
 
@@ -127,12 +91,16 @@ alturaDiv: string = '0px';
 
 //popUp menus asociados a los grid
 itemsMenuArticulos: any;
-itemsMenuContratos: any;
 
 //popUp Seleccion de Articulos
 @ViewChild('popUpArticulos', { static: false }) popUpArticulos: DxPopupComponent;
 popUpVisibleArticulos:boolean = false;
 popUpTitulo:string = "Selección Articulo";
+
+//popUp ver observaciones de contrato
+popUpVisibleObservaciones:boolean = false;
+str_contrato:string = '';
+str_observaciones:string = '';
 
 //#endregion - cte y var de la pantalla
 
@@ -150,19 +118,25 @@ ConstructorPantalla() {
   // obtenemos dato identificacion de envio del routing
   const nav = this.router.getCurrentNavigation().extras.state;
   if(Utilidades.isEmpty(nav)) return;
-  this._salida = nav.salida;
+  //this._salida = nav.salida;
+  this._articulo = nav.Articulo;
+  this._idAlmacen = nav.Articulo.IdAlmacen;
+  this._nombreAlmacen = nav.Articulo.NombreAlmacen;
+  this._listaArticulos.push(nav.Articulo);
+  this._listaIdArticulos.push(nav.Articulo.IdArticulo);
+
 
   //configuración menu articulos
-  this.itemsMenuArticulos= [{ text: 'Añadir artículo' }, 
+  this.itemsMenuArticulos= [{ text: 'Reemplazar artículo' },
                             { text: 'Eliminar artículo' },
-                            { text: 'Añadir Familia' },                              
+                            { text: 'Añadir artículo' }, 
+                            { text: 'Marcar/Desmarcar Secundario' },                              
+                            { text: 'Añadir articulos familia' },
   ];
-  //configuración menu contratos -> configurado dinamicamente en evento  "onContextMenuPreparing_DataGridUnidades(e)"
-  this.itemsMenuContratos= [];  
 }
 
 ngOnInit(): void {
-  //this.getPlanificacion();
+  this.getPlanificacionArticulo();
 }
 
 // para actualizar la altura de btnFooter
@@ -220,29 +194,18 @@ mostrarGif_Ok(){
 
 //#region - WEB SERVICES
 
-async getPlanificacion(){
+async getPlanificacionArticulo(){
   if(this.WSDatos_Validando) return;
 
   this.limpiarControles(false);
 
   this.WSDatos_Validando = true;
-  (await this.planificadorService.getDatosPlanificador(this._salida.IdSalida)).subscribe(
+  (await this.planificadorService.getDatosPlanificadorArticulos(this._idAlmacen, this._listaIdArticulos)).subscribe(
     datos => {
       if(Utilidades.DatosWSCorrectos(datos)) {
         this.WSDatos_Valido = true;
 
-        this.oOfertaSeleccionada = datos.datos.Oferta[0];
-        this.idOferta_mostrar = this.oOfertaSeleccionada.Contrato;
-        this.fechaAlta_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaAlta.toString());
-        this.fechaInicio_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaInicio.toString());
-        this.fechaFin_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaFin.toString());
-        this.estado_mostrar = this.oOfertaSeleccionada.NombreEstado;
-        this.cliente_mostrar = this.oOfertaSeleccionada.IdCliente.toString()+' - '+this.oOfertaSeleccionada.NombreCliente;
-        this.almacen_mostrar = this.oOfertaSeleccionada.NombreAlmacen;
-        this.obra_mostrar = this.oOfertaSeleccionada.Obra;
-        this.referencia_mostrar = this.oOfertaSeleccionada.Referencia;
-
-        this.arrayArts = datos.datos.LineasOferta;
+        this.arrayArts = this._listaArticulos; // datos.datos.LineasOferta;
         this.arrayCabeceras = datos.datos.OfertasRel;
         this.arrayUnidadesOfertas = datos.datos.LineasOfertasRel;
 
@@ -256,49 +219,47 @@ async getPlanificacion(){
           let newCol: ColumnDataGrid = {
             dataField: c.NombreCliente,
             caption: (this.obtenerCaptionColumna(c.NombreCliente,true)+'.'),
-            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'cliente_sel' : 'cliente',
+            cssClass: 'cliente',
             columns: [{
               dataField: c.Contrato,
               caption: c.Contrato,
-              cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'contrato_sel' : 'contrato',
+              cssClass: 'contrato',
               columns: [{
                 dataField: c.Obra,
                 caption: this.obtenerCaptionColumna(c.Obra),
-                cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'otros_sel' : 'otros',
+                cssClass: 'otros',
                 columns: [{
                   dataField: c.Referencia,
                   caption: this.obtenerCaptionColumna(c.Referencia),
-                  cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'otros_sel' : 'otros',
+                  cssClass: 'otros',
                   columns: [{
-                    // dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
-                    // caption: c.FechaInicio.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                     dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
                     caption: this.obtenerFecha(c.FechaInicio.toString()),
-                    cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha_sel' : 'fecha',
+                    cssClass: 'fecha',
                     columns: [{
                       dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                      caption: this.obtenerFecha(c.FechaFin.toString()), //c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                      cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha_sel' : 'fecha',
+                      caption: this.obtenerFecha(c.FechaFin.toString()), 
+                      cssClass: 'fecha',
                       columns: [{
                         dataField: c.NombreEstado,
                         caption: c.NombreEstado,
-                        cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'estado_sel' : 'estado',
+                        cssClass: 'estado',
                         columns: [{
                           dataField: 'C' + nroCol.toString() + '_PEDIDAS',
                           caption: 'Ped.',
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
+                          cssClass: 'unidades',
                           allowSorting: false
                         },
                         {
                           dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
                           caption: 'Asig.',
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
+                          cssClass: 'unidades',
                           allowSorting: false
                         },
                         {
                           dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
                           caption: 'Dis.',
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
+                          cssClass: 'unidades',
                           allowSorting: false
                         },
                       ]
@@ -314,6 +275,7 @@ async getPlanificacion(){
 
           nroCol++;
         });
+
         this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesOfertas, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
         this.dgConfigUnidades.actualizarConfig(true,false,'standard');
       } else {
@@ -322,80 +284,81 @@ async getPlanificacion(){
       this.WSDatos_Validando = false;
     }, error => {
       this.WSDatos_Validando = false;
-      Utilidades.compError(error, this.router, 'frm-planificador');  
+      Utilidades.compError(error, this.router, 'frm-planificador-articulos');  
       //console.log(error);
     }
   );
 }
 
 
-async insertarArticulo(idArticulo:string,unidades:number,observaciones:string){
-  if(this.WSDatos_Validando) return;    
-  if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+// async insertarArticuloPlanificador(idArticulo:string,unidades:number,observaciones:string){
+//   if(this.WSDatos_Validando) return;    
+//   if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
 
-  this.WSDatos_Validando = true;
-  (await this.planificadorService.insertarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,unidades,observaciones)).subscribe(
-    datos => {
-      if(Utilidades.DatosWSCorrectos(datos)) {
-        //console.log(datos);
-        Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSInsertarArticulos','Artículo Insertado correctamente'));           
-        this.WSDatos_Validando = false;
-        this.limpiarControles(true);
-      } else {          
-        this.WSDatos_Validando = false;
-        Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSInsertarArticulos','Error WS insertando artículo')); 
-      }
-    }, error => {
-      this.WSDatos_Validando = false;
-      Utilidades.compError(error, this.router, 'frm-planificador');        
-      //console.log(error);        
-    }
-  );
-}
+//   this.WSDatos_Validando = true;
+//   (await this.planificadorService.insertarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,unidades,observaciones)).subscribe(
+//     datos => {
+//       if(Utilidades.DatosWSCorrectos(datos)) {
+//         //console.log(datos);
+//         Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSInsertarArticulos','Artículo Insertado correctamente'));           
+//         this.WSDatos_Validando = false;
+//         this.limpiarControles(true);
+//       } else {          
+//         this.WSDatos_Validando = false;
+//         Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSInsertarArticulos','Error WS insertando artículo')); 
+//       }
+//     }, error => {
+//       this.WSDatos_Validando = false;
+//       Utilidades.compError(error, this.router, 'frm-planificador');        
+//       //console.log(error);        
+//     }
+//   );
+// }
 
-async eliminarArticulo(idArticulo:string,motivo:string){
-  if(this.WSDatos_Validando) return;    
-  if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
 
-  this.WSDatos_Validando = true;
-  (await this.planificadorService.eliminarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,motivo)).subscribe(
-    datos => {
-      if(Utilidades.DatosWSCorrectos(datos)) {
-        //console.log(datos);
-        Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSEliminarArticulos','Artículo Eliminado correctamente'));           
-        this.WSDatos_Validando = false;
-        this.limpiarControles(true);
-      } else {          
-        this.WSDatos_Validando = false;
-        Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSEliminarArticulos','Error WS eliminando artículo')); 
-      }
-    }, error => {        
-      this.WSDatos_Validando = false;
-      Utilidades.compError(error, this.router, 'frm-planificador');        
-      //console.log(error);
-    }
-  );
-}  
+// async eliminarArticuloPlanificador(idArticulo:string,motivo:string){
+//   if(this.WSDatos_Validando) return;    
+//   if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+
+//   this.WSDatos_Validando = true;
+//   (await this.planificadorService.eliminarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,idArticulo,motivo)).subscribe(
+//     datos => {
+//       if(Utilidades.DatosWSCorrectos(datos)) {
+//         //console.log(datos);
+//         Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSEliminarArticulos','Artículo Eliminado correctamente'));           
+//         this.WSDatos_Validando = false;
+//         this.limpiarControles(true);
+//       } else {          
+//         this.WSDatos_Validando = false;
+//         Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSEliminarArticulos','Error WS eliminando artículo')); 
+//       }
+//     }, error => {        
+//       this.WSDatos_Validando = false;
+//       Utilidades.compError(error, this.router, 'frm-planificador');        
+//       //console.log(error);
+//     }
+//   );
+// }  
 
 async actulizarArticuloValorSecundario(idArticulo:string,valor:boolean){
   if(this.WSDatos_Validando) return;    
   if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
 
   this.WSDatos_Validando = true;
-  (await this.planificadorService.actualizarArticuloValorSecundario(idArticulo,this.oOfertaSeleccionada.IdAlmacen,valor)).subscribe(
+  (await this.planificadorService.actualizarArticuloValorSecundario(idArticulo,this._idAlmacen,valor)).subscribe(
     datos => {
       if(Utilidades.DatosWSCorrectos(datos)) {
-        //Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSActualizarValorSecunadrio','Artículo Actualizado correctamente')); 
+        Utilidades.MostrarExitoStr(this.traducir('frm-planificador-articulos.msgOk_WSActualizarValorSecunadrio','Artículo Actualizado correctamente'),'success',1000); 
         let index:number = this.arrayArts.findIndex(e => e.IdArticulo=idArticulo);
-        if (index>=0) { this.arrayArts[index].Prioridad = valor; }
+        if (index>=0) { this.arrayArts[index].Secundario = valor; }
         this.WSDatos_Validando = false;
       } else {          
         this.WSDatos_Validando = false;
-        Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSActualizarValorSecunadrio','Error WS actualizando valor prioridad artículo')); 
+        Utilidades.MostrarErrorStr(this.traducir('frm-planificador-articulos.msgError_WSActualizarValorSecunadrio','Error WS actualizando valor prioridad artículo')); 
       }
     }, error => {        
       this.WSDatos_Validando = false;
-      Utilidades.compError(error, this.router, 'frm-planificador');        
+      Utilidades.compError(error, this.router, 'frm-planificador-articulos');        
     }
   );
 } 
@@ -448,39 +411,43 @@ public async onContentReady_DataGridArticulos(): Promise<void> {
         );
       }
       break;
-    case 'CantidadDisponible':
-      if(columnOptionSorted.sortOrder === 'asc') {
-        this.arrayArts.sort((a, b) => 
-          a.CantidadDisponible - b.CantidadDisponible
-        );
-      } else {
-        this.arrayArts.sort((a, b) => 
-          b.CantidadDisponible - a.CantidadDisponible
-        );
-      }
-      break;
-    case 'CantidadPedida':
-      if(columnOptionSorted.sortOrder === 'asc') {
-        this.arrayArts.sort((a, b) => 
-          a.CantidadPedida - b.CantidadPedida
-        );
-      } else {
-        this.arrayArts.sort((a, b) => 
-          b.CantidadPedida - a.CantidadPedida
-        );
-      }
-      break;
-    case 'CantidadReservada':
-      if(columnOptionSorted.sortOrder === 'asc') {
-        this.arrayArts.sort((a, b) => 
-          a.CantidadReservada - b.CantidadReservada
-        );
-      } else {
-        this.arrayArts.sort((a, b) => 
-          b.CantidadReservada - a.CantidadReservada
-        );
-      }
-      break;
+
+//TODO - Revisar      
+    // case 'CantidadDisponible':
+    //   if(columnOptionSorted.sortOrder === 'asc') {
+    //     this.arrayArts.sort((a, b) => 
+    //       a.CantidadDisponible - b.CantidadDisponible
+    //     );
+    //   } else {
+    //     this.arrayArts.sort((a, b) => 
+    //       b.CantidadDisponible - a.CantidadDisponible
+    //     );
+    //   }
+    //   break;
+    // case 'CantidadPedida':
+    //   if(columnOptionSorted.sortOrder === 'asc') {
+    //     this.arrayArts.sort((a, b) => 
+    //       a.CantidadPedida - b.CantidadPedida
+    //     );
+    //   } else {
+    //     this.arrayArts.sort((a, b) => 
+    //       b.CantidadPedida - a.CantidadPedida
+    //     );
+    //   }
+    //   break;
+    // case 'CantidadReservada':
+    //   if(columnOptionSorted.sortOrder === 'asc') {
+    //     this.arrayArts.sort((a, b) => 
+    //       a.CantidadReservada - b.CantidadReservada
+    //     );
+    //   } else {
+    //     this.arrayArts.sort((a, b) => 
+    //       b.CantidadReservada - a.CantidadReservada
+    //     );
+    //   }
+    //   break;
+
+
     // case 'CantidadReservada':
     //     if(columnOptionSorted.sortOrder === 'asc') {
     //       this.arrayArts.sort((a, b) => 
@@ -494,17 +461,17 @@ public async onContentReady_DataGridArticulos(): Promise<void> {
     //     break;
 
     //TODO - revisar
-    // case 'Stock':
-    //   if(columnOptionSorted.sortOrder === 'asc') {
-    //     this.arrayArts.sort((a, b) => 
-    //       a.Stock - b.Stock
-    //     );
-    //   } else {
-    //     this.arrayArts.sort((a, b) => 
-    //       b.Stock - a.Stock
-    //     );
-    //   }
-    //   break;
+    case 'Stock':
+      if(columnOptionSorted.sortOrder === 'asc') {
+        this.arrayArts.sort((a, b) => 
+          a.Unidades - b.Unidades
+        );
+      } else {
+        this.arrayArts.sort((a, b) => 
+          b.Unidades - a.Unidades
+        );
+      }
+      break;
 
     default:
       break;
@@ -556,16 +523,10 @@ public async onFocusedRowChanged_DataGridUnidades(e): Promise<void>{
 onRowPrepared_DataGridArticulos(e){ 
   if (e.rowType==="data") {      
     // priosidad -> art. secundario
-    if (e.data.Prioridad) { 
+    if (e.data.Secundario) { 
       e.rowElement.style.backgroundColor = '#f2f2f2'
     } else {
       e.rowElement.style.backgroundColor = '#FFFFFF'
-    }
-    // marca articulo insertado
-    if (e.data.Insertada) {
-      e.rowElement.style.color = 'green'
-    } else {
-      e.rowElement.style.color = '#000000'
     }
   }
 }  
@@ -620,21 +581,24 @@ onCellPrepared_DataGridUnidades(e){
 
 async itemMenuArticulosClick(e) {
   //if (!e.itemData.items) { alert('The '+e.itemData.text+' item was clicked'); }
-  let articulo:SalidaLinea = this.dgArticulos.objSeleccionado();
+  let articulo:ArticuloStock = this.dgArticulos.objSeleccionado();
   switch (e.itemIndex) {     
-    //cambiar articulo
-    case 0: this.cambiarArticuloSalida(articulo);
+    //Cambiar articulo 
+    case 0: this.cambiarArticulo(articulo);
+    break;    
+    //Eliminar articulo
+    case 1: this.eliminarArticulo(articulo);
     break;
-    //eliminar articulo
-    case 1: this.eliminarArticuloSalida(articulo);
-    break;
-    //añadir articulo
-    case 2: this.anadirArticuloSalida();          
+    //Añadir articulo
+    case 2: this.anadirArticulo();
     break;
     //marcar/desmarcar secundario
     case 3:         
       this.actualizarValorSecunadrio(articulo);          
     break;      
+    //Añadir Familia
+    case 4: this.anadirArticulosFamilia();          
+    break;
     default: break;
   }
 }
@@ -643,9 +607,9 @@ async itemMenuArticulosClick(e) {
 // GRID CONTRATOS AFECTADOS PLANIFICACION
 
 onCellDblClick_DataGridUnidades(e){
-   if (e.rowType=='header' && e.column.cssClass=='cliente') {       
-     this.cambiarContratoSeleccionado(Math.floor(e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
-   }
+  //  if (e.rowType=='header' && e.column.cssClass=='cliente') {       
+  //    this.cambiarContratoSeleccionado(Math.floor(e.columnIndex/3));  // el indice de la columna asociado al array de datos lo retorna multiplicada por 3 (0,3,6,9,...)
+  //  }
  }
 
 onContextMenuPreparing_DataGridUnidades(e) {
@@ -653,13 +617,10 @@ onContextMenuPreparing_DataGridUnidades(e) {
    if (e.target == 'header') {
     // e.items can be undefined
     if (!e.items) e.items = [];
-
-    // añadimos items personalizados del menu segun columna/fila pulsada
-    if (this.oOfertaSeleccionada.Contrato != this.arrayCabeceras[e.columnIndex].Contrato) {
-      e.items.push({ text: 'Seleccionar Contrato', onItemClick: () => { this.cambiarContratoSeleccionado(e.columnIndex); } });
-      e.items.push({ text: 'Planificar/Desplanificar', onItemClick: () => {alert(e.column.caption); } });
-    }
-    e.items.push({ text: 'Ver Observaciones', onItemClick: () => { this.verObservaciones(e.columnIndex); } });
+    // ver observaciones
+    if (!Utilidades.isEmpty(this.arrayCabeceras[e.columnIndex].Observaciones)) {
+      e.items.push({ text: 'Ver Observaciones', onItemClick: () => { this.verObservaciones(e.columnIndex); } });
+    }    
   }
   else {
     e.items = []; 
@@ -674,19 +635,19 @@ itemMenuContratosClick(e) {
 
 //#endgion - Gestion de menus y click asociados a los Grid
 
-async eliminarArticuloSalida(articulo:SalidaLinea){
+async eliminarArticulo(articulo:ArticuloStock){
   let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
   if (!continuar) return;
   else {
-    //alert('eliminar articulo '+articulo.IdArticulo);      
+    Utilidades.ShowDialogAviso('Funcion no implementada');
     // Actualizar SALIDAS_LINEAS
     // Recalcular stock
     // actualizar en array articulos y unidades    
-    this.eliminarArticulo(articulo.IdArticulo,"Eliminado desde planificador");
+    // this.getPlanificacionArticulo();
   }   
 }
 
-anadirArticuloSalida(){
+anadirArticulo(){
   // Seleccionar articulo a añadir
   this.popUpVisibleArticulos=true;
   // pantalla buscar seleccionar articulo
@@ -695,76 +656,66 @@ anadirArticuloSalida(){
     // Insertar en array articulos y unidades
 }
 
-async cambiarArticuloSalida(articulo:SalidaLinea){    
+async cambiarArticulo(articulo:ArticuloStock){    
   //eliminar + añadir
   let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
   if (!continuar) return;
   else {
-    // eliminar
-    this.eliminarArticulo(articulo.IdArticulo,"Eliminado desde planificador");
-    // añadir
-    this.anadirArticuloSalida();
+    Utilidades.ShowDialogAviso('Funcion no implementada');
+    // eliminar articulo array
+    // this.anadirArticulo();
+    // this.getPlanificacionArticulo();
   }      
 }
 
-actualizarValorSecunadrio(articulo:SalidaLinea){
-  let valor : boolean = (articulo.Prioridad) ? false : true;
+anadirArticulosFamilia(){
+  Utilidades.ShowDialogAviso('Funcion no implementada');
+}
+
+actualizarValorSecunadrio(articulo:ArticuloStock){
+  let valor : boolean = (articulo.Secundario) ? false : true;
   this.actulizarArticuloValorSecundario(articulo.IdArticulo,valor);
 }
 
 cerrarSeleccionarArticulo(e){
   if (e != null) {
-    //alert('Articulos seleccionado: ' + e.idArticulo + ' -- unidades: '+ e.unidades)
+    Utilidades.ShowDialogAviso('Funcion no implementada');
     //TODO // comprobar articulo no existe previamente
-    let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.idArticulo);
-    if (index<0) {
-      // añadir articulo en la planificación
-      this.insertarArticulo(e.idArticulo, e.unidades,"Insertado desde el planificador");
-    } else {
-      Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','Artículo ya incluido (No insertado).<br>Modifique unidades manualmente'))
-    }
+    // let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.idArticulo);
+    // if (index<0) {
+    //   // añadir articulo en la planificación
+    //   this.insertarArticuloPlanificador(e.idArticulo, e.unidades,"Insertado desde el planificador");
+    // } else {
+    //   Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','Artículo ya incluido (No insertado).<br>Modifique unidades manualmente'))
+    // }
   }
   this.popUpVisibleArticulos = false;
 }
 
 // -------------------------
 
-async cambiarContratoSeleccionado(index:number){
-  let msgConfirmacion = 'Contrato: '+ this.arrayCabeceras[index].Contrato +'<br>'
-                      + 'Cliente: ' + this.arrayCabeceras[index].IdCliente + ' - ' + this.arrayCabeceras[index].NombreCliente +'<br><br>'
-                      + this.traducir('frm-planificador.MsgCambiarContratoSeleccionado','¿Esta seguro que desea continuar?');
-  let continuar = <boolean>await Utilidades.ShowDialogString(msgConfirmacion, this.traducir('frm-planificador.TituloCambiarContrato', 'Cambiar contrato seleccionado'));  
-  if (!continuar) return
-  else {
-    this._salida = Object.assign({},this.arrayCabeceras[index]);
-    this.limpiarControles(false);           
-    this.getPlanificacion();
-  }
-}
 
 verObservaciones(index:number){
   if (!Utilidades.isEmpty(this.arrayCabeceras[index].Observaciones)) {
-    alert(this.arrayCabeceras[index].Observaciones);
+    this.str_contrato = this.arrayCabeceras[index].Contrato;
+    this.str_observaciones = this.arrayCabeceras[index].Observaciones;
+    this.popUpVisibleObservaciones = true; 
   } 
   else {
-    alert('No hay observaciones asociadas al contrato');
+    Utilidades.ShowDialogInfo('La oferta indicada NO tiene observaciones','Sin Observaciones');
   }   
 }
 
 public limpiarControles(recargar: boolean = true) {
-  // this.arrayArts = null;
-  // this.arrayUnidadesOfertas = null;
-  // this.arrayCabeceras = null;
-  // this.oOfertaSeleccionada = null;
-  // this.fechaAlta_mostrar = null;
+  //this.arrayArts = null;
+  this.arrayCabeceras = null;
+  this.arrayUnidadesOfertas = null;
+  this.colsUnidades = [];
+  this.dgConfigArticulos = new DataGridConfig(null, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+  this.dgConfigUnidades = new DataGridConfig(null, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
 
-  // this.colsUnidades = [];
-
-  // this.dgConfigArticulos = new DataGridConfig(null, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-  // this.dgConfigUnidades = new DataGridConfig(null, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-
-  // if(recargar)
-  //   this.getPlanificacion();
+  if(recargar)
+    this.getPlanificacionArticulo();
 }
 
 obtenerCaptionColumna(texto:string, rellenar:boolean=false): string {
