@@ -35,7 +35,7 @@ export class FrmConfiguracionComponent implements OnInit {
   @ViewChild('formConfig', { static: false }) formConfig: DxFormComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-configuracion.btnSalir', 'Cancelar'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-configuracion.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-configuracion.btnGuaradr', 'Guardar'), posicion: 2, accion: () => {this.guardarDatos()}, tipo: TipoBoton.success },
   ];
 
@@ -67,13 +67,13 @@ export class FrmConfiguracionComponent implements OnInit {
     
     // estados entradas por defecto
     //this.arrayEstadosEntrada = Object.assign({},ConfiGlobal.arrayEstadosEntrada);
-    this.arrayEstadosEntrada.splice(0, 0,{id:0, nombre:'No asignar'});
+    this.arrayEstadosEntrada.push({id:0, nombre:'No asignar'});
     this.arrayEstadosEntrada.push({id:1, nombre:'PENDIENTE'});
     this.arrayEstadosEntrada.push({id:2, nombre:'CONFIRMADO'});
     
     // estados salidas por defecto
     //this.arrayEstadosSalida = Object.assign({},ConfiGlobal.arrayEstadosSalida);
-    this.arrayEstadosSalida.splice(0, 0,{id:0, nombre:'No asignar'});
+    this.arrayEstadosSalida.push({id:0, nombre:'No asignar'});
     this.arrayEstadosSalida.push({id:1, nombre:'PENDIENTE'});
     this.arrayEstadosSalida.push({id:2, nombre:'CONFIRMADO'});
     
@@ -126,7 +126,7 @@ export class FrmConfiguracionComponent implements OnInit {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-configuracion.msgOk_WSActualizarConfiguracion','Configuracion actualizado'));           
           //Actualizamos var ConfigGlobal
-          ConfiGlobal.configLayher = this._config;          
+          ConfiGlobal.configLayher = Object.assign({},this._config);          
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-configuracion.msgError_WSActualizarConfiguracion','Error actualizando configuración')); 
         }

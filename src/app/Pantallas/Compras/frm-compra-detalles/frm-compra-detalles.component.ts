@@ -219,7 +219,8 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getCombos_PantallaSalidas()).subscribe(
+    let filtroAlmacen:number= 0; // todos los almacenes activos
+    (await this.planificadorService.getCombos_PantallaEntradas(filtroAlmacen)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoEntrada = datos.datos.ListaEstados;

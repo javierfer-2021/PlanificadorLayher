@@ -16,6 +16,7 @@ import { Salida, SalidaLineaERP, EstadoSalida } from '../../../Clases/Salida'
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent, DxTextBoxComponent } from 'devextreme-angular';
 import { locale } from 'devextreme/localization';
+import { UtilidadesLayher } from '../../../Utilidades/UtilidadesLayher'
 
 @Component({
   selector: 'app-frm-venta-importar',
@@ -130,7 +131,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // configuracion extra del grid -> mostrar fila total registros + redimensionar
-    this.dg.mostrarFilaSumaryTotal('IdSalidaERP','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Líneas: '),'count');    
+    this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Líneas: '),'count');    
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
       this.contratoValido= false;      
@@ -184,9 +185,9 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
   async cargarCombos(){
     if(this.WSDatos_Validando) return;
-
+    let filtroAlmacen:number= 2; // solo almacenes asociados al usuario 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getCombos_PantallaSalidas()).subscribe(
+    (await this.planificadorService.getCombos_PantallaSalidas(filtroAlmacen)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoSalida = datos.datos.ListaEstados;
@@ -219,16 +220,14 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
           this.str_txtTipoDocumento = this._salida.NombreTipoDocumento;
           this.aviso = (this._salida.Aviso != '');
           this.requerirFechaFin = (this._salida.IdTipoDocumento == 20);
-          this.asignarValoresDefecto();
           
           //Datos Linea
           this.arrayLineasSalida = datos.datos.Lineas;
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
           
+          // Valores por defecto
           this.asignarValoresDefecto();
-          //Foco
-          try {this.formSalida.instance.getEditor('Obra').focus();} catch { }
 
         } else {          
           //this.WSEnvioCsv_Valido = false;
@@ -317,9 +316,18 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   //TODO - Asignar valores segun configuracion
   asignarValoresDefecto(){
     this._salida.FechaAlta = new Date();  //new Date().toLocaleDateString();
-    this._salida.IdEstado = 1;
-    this._salida.IdAlmacen = ConfiGlobal.DatosUsuario.idAlmacenDefecto;
-    this._salida.Planificar = true;
+    this._salida.IdEstado = UtilidadesLayher.salidaEstadoPorDefecto();   
+    this._salida.Planificar = UtilidadesLayher.salidaValorPlanificarPorDefecto();
+
+    let almacenDef = UtilidadesLayher.salidaAlmacenPorDefecto(this._salida.Contrato);
+    if (almacenDef != null) {
+      if (this.arrayAlmacenes.findIndex(e => (e.IdAlmacen === almacenDef)) === -1) {
+        Utilidades.ShowDialogAviso(this.traducir('frm-venta-importar.MsgErrorAlmacenDef','Almacen por defecto NO valido y/o no disponible para el usuario'));
+      } else {
+        this._salida.IdAlmacen = almacenDef;
+      }
+    }
+
     this.setFormFocus('IdEstado');
   }
 

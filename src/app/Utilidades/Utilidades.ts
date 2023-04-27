@@ -1022,6 +1022,19 @@ export class Utilidades {
         });
     }
 
+    public static ShowDialogError(mensaje: string, titulo: string = '', tipo?: TipoDialogo): any {
+        return new Promise(resolve => {
+            
+            if ( (tipo===null) || (tipo===undefined) ) {tipo=TipoDialogo.error}
+            mensaje = this.maquetaMensageDialog(mensaje,tipo);
+            
+            let myDialog = Utilidades.DialogMessageOK(mensaje, titulo,'OK');
+            myDialog.show().then((dialogResult) => {
+                resolve(dialogResult);
+            });
+        });
+    }
+
     public static ShowDialogNotify(nNotify: number, titulo: string = '', tipo?: TipoDialogo): any {
         return new Promise(resolve => {
             let myDialog = Utilidades.DialogNotificacion(nNotify, titulo, tipo);

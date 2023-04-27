@@ -11,10 +11,10 @@
                 <div class="col-4 pt-0 px-1">
                     <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
                 </div>
-                <div class="col-6 pt-1 px-1">
+                <div class="col pt-1 px-1">
                     <!-- <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-articulos-buscar.lblUnidades', 'Unidades')}}</div> -->
                 </div>   
-                <div class="col-2 pt-0 px-1">
+                <div *ngIf="solicitarUnidades" class="col-2 pt-0 px-1">
                     <dx-number-box #txtUnidades class="w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [showClearButton]="false" [height]="30" 
                         [(ngModel)]="str_txtUnidades" 
                         format="#0" min=1 invalidValueMessage="{{traducir('frm-articulos-buscar.str_txtUnidades-ErrorValor', 'Valor de unidades no es valido')}}" 

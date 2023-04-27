@@ -258,13 +258,13 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/entradas/getLineasEntrada', body, Utilidades.getHeaders());
   }  
 
-  async getCombos_PantallaEntradas(): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async getCombos_PantallaEntradas(filtroAlmacen): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
     }
   
-    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdAlmacen:filtroAlmacen } };    
     return this.http.post(ConfiGlobal.URL + '/api/entradas/getCombos_PantallaEntradas', body, Utilidades.getHeaders());
   }   
 
@@ -347,13 +347,13 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/salidas/getLineasSalida', body, Utilidades.getHeaders());
   }  
 
-  async getCombos_PantallaSalidas(): Promise<Observable<any>>{ // Promise<Observable<any>>
+  async getCombos_PantallaSalidas(filtroAlmacen): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {
       await Utilidades.delay(500);
     }
   
-    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdAlmacen:filtroAlmacen } };    
     return this.http.post(ConfiGlobal.URL + '/api/salidas/getCombos_PantallaSalidas', body, Utilidades.getHeaders());
   }   
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentInit, Renderer2 } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
@@ -15,8 +15,8 @@ import { Entrada,EntradaLinea,EstadoEntrada } from '../../../Clases/Entrada';
 import { Almacen} from '../../../Clases/Articulo';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent, DxTextBoxComponent } from 'devextreme-angular';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { locale } from 'devextreme/localization';
+import { UtilidadesLayher } from '../../../Utilidades/UtilidadesLayher'
 
 @Component({
   selector: 'app-frm-compra-importar',
@@ -189,7 +189,8 @@ export class FrmCompraImportarComponent implements OnInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getCombos_PantallaSalidas()).subscribe(
+    let filtroAlmacen:number= 2; // solo almacenes asignados al usuario
+    (await this.planificadorService.getCombos_PantallaEntradas(filtroAlmacen)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposEstadoEntrada = datos.datos.ListaEstados;
@@ -228,7 +229,9 @@ export class FrmCompraImportarComponent implements OnInit {
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasEntrada, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
           
+          // asignar valores por defecto
           this.asignarValoresDefecto();
+
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-compra-importar.msgError_WSobtenerDatosERP','Error: Documento no encontrado')); 
         }
@@ -305,11 +308,21 @@ export class FrmCompraImportarComponent implements OnInit {
 
   asignarValoresDefecto(){
     this._entrada.FechaAlta = new Date() //new Date().toLocaleDateString();
-    this._entrada.IdEstado = 1;
-    this._entrada.IdAlmacen = ConfiGlobal.DatosUsuario.idAlmacenDefecto;
-    this._entrada.Confirmada = false;
+    this._entrada.IdEstado = UtilidadesLayher.entradaEstadoPorDefecto();    
+    this._entrada.Confirmada = UtilidadesLayher.entradaValorConfirmadoPorDefecto();
+    
+    //this._entrada.IdAlmacen = UtilidadesLayher.entradaAlmacenPorDefecto(this._entrada.Contrato);
+    let almacenDef = UtilidadesLayher.entradaAlmacenPorDefecto(this._entrada.Contrato);
+    if (almacenDef != null) {
+      if (this.arrayAlmacenes.findIndex(e => (e.IdAlmacen === almacenDef)) === -1) {
+        Utilidades.ShowDialogAviso(this.traducir('frm-compra-importar.MsgErrorAlmacenDef','Almacen por defecto NO valido y/o no disponible para el usuario'));
+      } else {
+        this._entrada.IdAlmacen = almacenDef;
+      }
+    }
+
     //Foco
-    //try {this.formEntrada.instance.getEditor('IdEstado').focus();} catch { }
+    this.setFormFocus('IdEstado');
   }
 
 
@@ -333,6 +346,14 @@ export class FrmCompraImportarComponent implements OnInit {
   btnSalir() {
     this.location.back();
   }
+
+  setFormFocus(campo:string){
+    try {
+      const editor = this.formEntrada.instance.getEditor(campo);
+      editor.focus();
+    } 
+    catch {} 
+  }  
 
 }
 

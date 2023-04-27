@@ -135,160 +135,161 @@ ConstructorPantalla() {
   ];
 }
 
-ngOnInit(): void {
-  this.getPlanificacionArticulo();
-}
-
-// para actualizar la altura de btnFooter
-async ngAfterViewInit(): Promise<void> {
-  Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-
-  // Actualizar altura de los grids
-  this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 210);
-  this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
-  this.alturaDiv = '210px';
-
-  // eliminar error debug ... expression has changed after it was checked.
-  this.cdref.detectChanges();      
-}
-
-ngAfterContentChecked(): void {
-  // eliminar error debug ... expression has changed after it was checked.
-  this.cdref.detectChanges();   
-}
-
-onResize(event) {
-  this.alturaDiv = '0px';    
-  // this.mostrarEspacio = false;
-  Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-  // Actualizar altura del grid
-  this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima));
-  this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
-  
-  this.alturaDiv = '210px';
-}
-
-LPGen(value : boolean) {
-  Utilidades.VerLPGenerico(value);
-  return value;
-}
-
-traducir(key: string, def: string): string {
-  let traduccion: string = this.translate.instant(key);
-  if (traduccion !== key) {
-    return traduccion;
-  } else {
-    return def;
+  ngOnInit(): void {
+    this.getPlanificacionArticulo();
   }
-}  
 
-mostrarGif_Ok(){
-  this.indicatorUrl = "../../assets/gifs/checkBackground.gif"
-  this.loadingMessage = "Correto";
-  this.loadingVisible = true;
-  setTimeout(() => { this.loadingVisible = false; this.indicatorUrl = ''; }, 2000); 
-}
+  // para actualizar la altura de btnFooter
+  async ngAfterViewInit(): Promise<void> {
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
+
+    // Actualizar altura de los grids
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 210);
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
+    this.alturaDiv = '210px';
+
+    // eliminar error debug ... expression has changed after it was checked.
+    this.cdref.detectChanges();      
+  }
+
+  ngAfterContentChecked(): void {
+    // eliminar error debug ... expression has changed after it was checked.
+    this.cdref.detectChanges();   
+  }
+
+  onResize(event) {
+    this.alturaDiv = '0px';    
+    // this.mostrarEspacio = false;
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
+    // Actualizar altura del grid
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima));
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
+    
+    this.alturaDiv = '210px';
+  }
+
+  LPGen(value : boolean) {
+    Utilidades.VerLPGenerico(value);
+    return value;
+  }
+
+  traducir(key: string, def: string): string {
+    let traduccion: string = this.translate.instant(key);
+    if (traduccion !== key) {
+      return traduccion;
+    } else {
+      return def;
+    }
+  }  
+
+  mostrarGif_Ok(){
+    this.indicatorUrl = "../../assets/gifs/checkBackground.gif"
+    this.loadingMessage = "Correto";
+    this.loadingVisible = true;
+    setTimeout(() => { this.loadingVisible = false; this.indicatorUrl = ''; }, 2000); 
+  }
 
 //#endregion - creación, inicializacion y gestion eventos pantalla
 
 
 //#region - WEB SERVICES
 
-async getPlanificacionArticulo(){
-  if(this.WSDatos_Validando) return;
+  async getPlanificacionArticulo(){
+    if(this.WSDatos_Validando) return;
+    
+    this.limpiarControles(false);
+    if (this._listaIdArticulos.length==0) return;
 
-  this.limpiarControles(false);
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.getDatosPlanificadorArticulos(this._idAlmacen, this._listaIdArticulos)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.WSDatos_Valido = true;
 
-  this.WSDatos_Validando = true;
-  (await this.planificadorService.getDatosPlanificadorArticulos(this._idAlmacen, this._listaIdArticulos)).subscribe(
-    datos => {
-      if(Utilidades.DatosWSCorrectos(datos)) {
-        this.WSDatos_Valido = true;
+          this.arrayArts = this._listaArticulos; // datos.datos.LineasOferta;
+          this.arrayCabeceras = datos.datos.OfertasRel;
+          this.arrayUnidadesOfertas = datos.datos.LineasOfertasRel;
 
-        this.arrayArts = this._listaArticulos; // datos.datos.LineasOferta;
-        this.arrayCabeceras = datos.datos.OfertasRel;
-        this.arrayUnidadesOfertas = datos.datos.LineasOfertasRel;
-
-        // Se configura el grid de artículos
-        this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-        this.dgConfigArticulos.actualizarConfig(true,false,'standard');
-        
-        // Se configura el grid de las unidades
-        let nroCol: number = 0;
-        this.arrayCabeceras.forEach(c => {
-          let newCol: ColumnDataGrid = {
-            dataField: c.NombreCliente,
-            caption: (this.obtenerCaptionColumna(c.NombreCliente,true)+'.'),
-            cssClass: 'cliente',
-            columns: [{
-              dataField: c.Contrato,
-              caption: c.Contrato,
-              cssClass: 'contrato',
+          // Se configura el grid de artículos
+          this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigArticulos.actualizarConfig(true,false,'standard');
+          
+          // Se configura el grid de las unidades
+          let nroCol: number = 0;
+          this.arrayCabeceras.forEach(c => {
+            let newCol: ColumnDataGrid = {
+              dataField: c.NombreCliente,
+              caption: (this.obtenerCaptionColumna(c.NombreCliente,true)+'.'),
+              cssClass: 'cliente',
               columns: [{
-                dataField: c.Obra,
-                caption: this.obtenerCaptionColumna(c.Obra),
-                cssClass: 'otros',
+                dataField: c.Contrato,
+                caption: c.Contrato,
+                cssClass: 'contrato',
                 columns: [{
-                  dataField: c.Referencia,
-                  caption: this.obtenerCaptionColumna(c.Referencia),
+                  dataField: c.Obra,
+                  caption: this.obtenerCaptionColumna(c.Obra),
                   cssClass: 'otros',
                   columns: [{
-                    dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
-                    caption: this.obtenerFecha(c.FechaInicio.toString()),
-                    cssClass: 'fecha',
+                    dataField: c.Referencia,
+                    caption: this.obtenerCaptionColumna(c.Referencia),
+                    cssClass: 'otros',
                     columns: [{
-                      dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
-                      caption: this.obtenerFecha(c.FechaFin.toString()), 
+                      dataField: c.FechaInicio.toString().substring(0, c.FechaInicio.toString().indexOf('T')),
+                      caption: this.obtenerFecha(c.FechaInicio.toString()),
                       cssClass: 'fecha',
                       columns: [{
-                        dataField: c.NombreEstado,
-                        caption: c.NombreEstado,
-                        cssClass: 'estado',
+                        dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
+                        caption: this.obtenerFecha(c.FechaFin.toString()), 
+                        cssClass: 'fecha',
                         columns: [{
-                          dataField: 'C' + nroCol.toString() + '_PEDIDAS',
-                          caption: 'Ped.',
-                          cssClass: 'unidades',
-                          allowSorting: false
-                        },
-                        {
-                          dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
-                          caption: 'Asig.',
-                          cssClass: 'unidades',
-                          allowSorting: false
-                        },
-                        {
-                          dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
-                          caption: 'Dis.',
-                          cssClass: 'unidades',
-                          allowSorting: false
-                        },
-                      ]
+                          dataField: c.NombreEstado,
+                          caption: c.NombreEstado,
+                          cssClass: 'estado',
+                          columns: [{
+                            dataField: 'C' + nroCol.toString() + '_PEDIDAS',
+                            caption: 'Ped.',
+                            cssClass: 'unidades',
+                            allowSorting: false
+                          },
+                          {
+                            dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
+                            caption: 'Asig.',
+                            cssClass: 'unidades',
+                            allowSorting: false
+                          },
+                          {
+                            dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
+                            caption: 'Dis.',
+                            cssClass: 'unidades',
+                            allowSorting: false
+                          },
+                        ]
+                        }]
                       }]
                     }]
                   }]
                 }]
               }]
-            }]
-          }
-          
-          this.colsUnidades.push(newCol);
+            }
+            
+            this.colsUnidades.push(newCol);
 
-          nroCol++;
-        });
+            nroCol++;
+          });
 
-        this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesOfertas, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-        this.dgConfigUnidades.actualizarConfig(true,false,'standard');
-      } else {
-        this.WSDatos_Valido = false;
+          this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesOfertas, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigUnidades.actualizarConfig(true,false,'standard');
+        } else {
+          this.WSDatos_Valido = false;
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router, 'frm-planificador-articulos');  
+        //console.log(error);
       }
-      this.WSDatos_Validando = false;
-    }, error => {
-      this.WSDatos_Validando = false;
-      Utilidades.compError(error, this.router, 'frm-planificador-articulos');  
-      //console.log(error);
-    }
-  );
-}
+    );
+  }
 
 
 // async insertarArticuloPlanificador(idArticulo:string,unidades:number,observaciones:string){
@@ -340,28 +341,28 @@ async getPlanificacionArticulo(){
 //   );
 // }  
 
-async actulizarArticuloValorSecundario(idArticulo:string,valor:boolean){
-  if(this.WSDatos_Validando) return;    
-  if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+  async actulizarArticuloValorSecundario(idArticulo:string,valor:boolean){
+    if(this.WSDatos_Validando) return;    
+    if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
 
-  this.WSDatos_Validando = true;
-  (await this.planificadorService.actualizarArticuloValorSecundario(idArticulo,this._idAlmacen,valor)).subscribe(
-    datos => {
-      if(Utilidades.DatosWSCorrectos(datos)) {
-        Utilidades.MostrarExitoStr(this.traducir('frm-planificador-articulos.msgOk_WSActualizarValorSecunadrio','Artículo Actualizado correctamente'),'success',1000); 
-        let index:number = this.arrayArts.findIndex(e => e.IdArticulo=idArticulo);
-        if (index>=0) { this.arrayArts[index].Secundario = valor; }
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarArticuloValorSecundario(idArticulo,this._idAlmacen,valor)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador-articulos.msgOk_WSActualizarValorSecunadrio','Artículo Actualizado correctamente'),'success',1000); 
+          let index:number = this.arrayArts.findIndex(e => e.IdArticulo=idArticulo);
+          if (index>=0) { this.arrayArts[index].Secundario = valor; }
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-planificador-articulos.msgError_WSActualizarValorSecunadrio','Error WS actualizando valor prioridad artículo')); 
+        }
+      }, error => {        
         this.WSDatos_Validando = false;
-      } else {          
-        this.WSDatos_Validando = false;
-        Utilidades.MostrarErrorStr(this.traducir('frm-planificador-articulos.msgError_WSActualizarValorSecunadrio','Error WS actualizando valor prioridad artículo')); 
+        Utilidades.compError(error, this.router, 'frm-planificador-articulos');        
       }
-    }, error => {        
-      this.WSDatos_Validando = false;
-      Utilidades.compError(error, this.router, 'frm-planificador-articulos');        
-    }
-  );
-} 
+    );
+  } 
 
 //#endregion - WEB SERVICES  
 
@@ -519,58 +520,58 @@ public async onFocusedRowChanged_DataGridUnidades(e): Promise<void>{
   this.dgArticulos.DataGrid.focusedRowIndex = selectedRowIndex;
 }
 
-// color articulos secundarios + añadidos
-onRowPrepared_DataGridArticulos(e){ 
-  if (e.rowType==="data") {      
-    // priosidad -> art. secundario
-    if (e.data.Secundario) { 
-      e.rowElement.style.backgroundColor = '#f2f2f2'
-    } else {
-      e.rowElement.style.backgroundColor = '#FFFFFF'
+  // color articulos secundarios + añadidos
+  onRowPrepared_DataGridArticulos(e){ 
+    if (e.rowType==="data") {      
+      // priosidad -> art. secundario
+      if (e.data.Secundario) { 
+        e.rowElement.style.backgroundColor = '#f2f2f2'
+      } else {
+        e.rowElement.style.backgroundColor = '#FFFFFF'
+      }
     }
-  }
-}  
+  }  
 
-//color celdas unidades
-onCellPrepared_DataGridUnidades(e){     
-  // //console.log(e.rowType+' -> columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
-  // // check filas correspondiente a datos
-  // if ((e.rowType==="data") && (e.rowIndex != undefined)) {
-  //   //console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
-  //   let estilo:string="";
+  //color celdas unidades
+  onCellPrepared_DataGridUnidades(e){     
+    // //console.log(e.rowType+' -> columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
+    // // check filas correspondiente a datos
+    // if ((e.rowType==="data") && (e.rowIndex != undefined)) {
+    //   //console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
+    //   let estilo:string="";
+        
+    //   // determinar si estamos en columna contrato seleccionado
+    //   // 1. valores unidades contrato seleccionado
+    //   if (this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida == this._salida.IdSalida) {
+    //     estilo = "valorUnidades_sel";        
+    //     // und. pendientes_asignar
+    //     if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
+    //         estilo = "valorUndPendientes_sel";
+    //     }
+    //     // stock=0
+    //     if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
+    //         estilo = "valorStockCero"
+    //     }                
+    //   } 
       
-  //   // determinar si estamos en columna contrato seleccionado
-  //   // 1. valores unidades contrato seleccionado
-  //   if (this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida == this._salida.IdSalida) {
-  //     estilo = "valorUnidades_sel";        
-  //     // und. pendientes_asignar
-  //     if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
-  //         estilo = "valorUndPendientes_sel";
-  //     }
-  //     // stock=0
-  //     if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
-  //         estilo = "valorStockCero"
-  //     }                
-  //   } 
-    
-  //   // 2. valores de articulos <> contrato seleccionado
-  //   else {
-  //     estilo = "valorUnidades";
-  //     // und. pendientes_asignar
-  //     if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
-  //       estilo = "valorUndPendientes";
-  //     }
-  //     // stock=0
-  //     if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
-  //         estilo = "valorStockCero"
-  //     }                
-  //   }
+    //   // 2. valores de articulos <> contrato seleccionado
+    //   else {
+    //     estilo = "valorUnidades";
+    //     // und. pendientes_asignar
+    //     if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
+    //       estilo = "valorUndPendientes";
+    //     }
+    //     // stock=0
+    //     if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
+    //         estilo = "valorStockCero"
+    //     }                
+    //   }
 
-  //   e.column.cssClass = estilo;         
-  //   console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}'+' - estilo:'+estilo);
-  // }    
-  
-}    
+    //   e.column.cssClass = estilo;         
+    //   console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}'+' - estilo:'+estilo);
+    // }    
+    
+  }    
 
 //#endregion - Gestion ordenacion simultanea de los grid
 
@@ -636,35 +637,40 @@ itemMenuContratosClick(e) {
 //#endgion - Gestion de menus y click asociados a los Grid
 
 async eliminarArticulo(articulo:ArticuloStock){
-  let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
+  let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador-articulos.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), 
+                                                             this.traducir('frm-planificador-articulos.TituloConfirmar', 'Confirmar'));  
   if (!continuar) return;
   else {
-    Utilidades.ShowDialogAviso('Funcion no implementada');
-    // Actualizar SALIDAS_LINEAS
-    // Recalcular stock
-    // actualizar en array articulos y unidades    
-    // this.getPlanificacionArticulo();
+    //Utilidades.ShowDialogAviso('Funcion no implementada');
+    let index = this._listaArticulos.indexOf(articulo);
+    if (index>=0) {
+      this._listaArticulos.splice(index,1);
+      this.obtenerArrayIDsArticulos();
+      setTimeout(() => { this.getPlanificacionArticulo(); }, 100);
+    }
   }   
 }
 
 anadirArticulo(){
   // Seleccionar articulo a añadir
   this.popUpVisibleArticulos=true;
-  // pantalla buscar seleccionar articulo
-    // Insertar en SALIDAS_LINEAS
-    // Recalcular stock
-    // Insertar en array articulos y unidades
 }
 
 async cambiarArticulo(articulo:ArticuloStock){    
+  // Utilidades.ShowDialogAviso('Funcion no implementada');
   //eliminar + añadir
   let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
   if (!continuar) return;
   else {
-    Utilidades.ShowDialogAviso('Funcion no implementada');
     // eliminar articulo array
-    // this.anadirArticulo();
-    // this.getPlanificacionArticulo();
+    let index = this._listaArticulos.indexOf(articulo);
+    if (index>=0) {
+      this._listaArticulos.splice(index,1);
+      this.obtenerArrayIDsArticulos();
+      setTimeout(() => { this.getPlanificacionArticulo(); }, 100);
+    }
+    // seleccionar y añadir nuevo articulo
+    this.anadirArticulo();
   }      
 }
 
@@ -679,15 +685,17 @@ actualizarValorSecunadrio(articulo:ArticuloStock){
 
 cerrarSeleccionarArticulo(e){
   if (e != null) {
-    Utilidades.ShowDialogAviso('Funcion no implementada');
-    //TODO // comprobar articulo no existe previamente
-    // let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.idArticulo);
-    // if (index<0) {
-    //   // añadir articulo en la planificación
-    //   this.insertarArticuloPlanificador(e.idArticulo, e.unidades,"Insertado desde el planificador");
-    // } else {
-    //   Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','Artículo ya incluido (No insertado).<br>Modifique unidades manualmente'))
-    // }
+    // Utilidades.ShowDialogAviso('Funcion no implementada');
+    // comprobar articulo no existe previamente
+    let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.IdArticulo);
+    if (index<0) {
+      // añadir articulo en la planificación
+      this._listaArticulos.push(e);
+      this.obtenerArrayIDsArticulos();
+      setTimeout(() => { this.getPlanificacionArticulo(); }, 100); 
+    } else {
+      Utilidades.ShowDialogAviso(this.traducir('frm-planificador-articulos.msgError_ArticuloYaExistente','Artículo ya incluido previamente'))     
+    }
   }
   this.popUpVisibleArticulos = false;
 }
@@ -702,7 +710,7 @@ verObservaciones(index:number){
     this.popUpVisibleObservaciones = true; 
   } 
   else {
-    Utilidades.ShowDialogInfo('La oferta indicada NO tiene observaciones','Sin Observaciones');
+    Utilidades.ShowDialogInfo('El contrato indicada NO tiene observaciones','Sin Observaciones');
   }   
 }
 
@@ -731,6 +739,13 @@ obtenerFecha(fecha:string):string {
     let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4);
     return strFecha;
   }    
+}
+
+obtenerArrayIDsArticulos() {
+  this._listaIdArticulos = [];
+  for (let i=0; i<this._listaArticulos.length; i++) {
+    this._listaIdArticulos.push(this._listaArticulos[i].IdArticulo);
+  }
 }
 
 }

@@ -174,7 +174,7 @@
     title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
     contentTemplate="contentSeleccionarArticulo">
     <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
-        <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+        <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" [solicitarUnidades]=true (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
     </div>    
 </dx-popup>
 

@@ -120,7 +120,7 @@
     title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
     contentTemplate="contentSeleccionarArticulo">
     <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
-        <app-frm-articulos-buscar [idAlmacen]="_idAlmacen" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+        <app-frm-articulos-buscar [idAlmacen]="_idAlmacen" [solicitarUnidades]=false (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
     </div>    
 </dx-popup>
 

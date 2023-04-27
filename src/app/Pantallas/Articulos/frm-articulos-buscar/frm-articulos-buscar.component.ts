@@ -31,6 +31,7 @@ export class FrmArticulosBuscarComponent implements OnInit {
   verLabelHtml: boolean = true;
   
   @Input() idAlmacen: number;                                             // parametro de entrada (almacen) 
+  @Input() solicitarUnidades: boolean=true;
   @Output() cerrarPopUp : EventEmitter<any> = new EventEmitter<any>();    // retorno de la pantalla
 
   @ViewChild('container') container: ElementRef;
@@ -216,7 +217,7 @@ export class FrmArticulosBuscarComponent implements OnInit {
       Utilidades.MostrarErrorStr(this.traducir('frm-articulos-buscar.msgErrorSelectLinea','Debe seleccionar un Artículo'));
       return;
     } else {   
-      let retorno:any = {idArticulo:this.dg.objSeleccionado().IdArticulo , unidades:1}   
+      let retorno:any = this.dg.objSeleccionado(); // {idArticulo:this.dg.objSeleccionado().IdArticulo , unidades:1}   
       this.cerrarPopUp.emit(retorno);   
     }
   }
@@ -225,7 +226,7 @@ export class FrmArticulosBuscarComponent implements OnInit {
 
 
   validarUnidades():boolean {
-    if (Utilidades.isEmpty(this.str_txtUnidades)) {
+    if ((this.solicitarUnidades) && (Utilidades.isEmpty(this.str_txtUnidades)) ) {
       Utilidades.MostrarErrorStr(this.traducir('frm-articulos-buscar.msgErrorUnidadesVacias','Debe indicar un numero de unidades a solicitar'));
       setTimeout(() => {this.txtUnidades.instance.focus();}, 1000); 
       return false;

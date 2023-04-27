@@ -844,12 +844,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   cerrarSeleccionarArticulo(e){
     if (e != null) {
-      //alert('Articulos seleccionado: ' + e.idArticulo + ' -- unidades: '+ e.unidades)
-      //TODO // comprobar articulo no existe previamente
-      let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.idArticulo);
+      // comprobar articulo no existe previamente
+      let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.IdArticulo);
       if (index<0) {
         // añadir articulo en la planificación
-        this.insertarArticulo(e.idArticulo, e.unidades,"Insertado desde el planificador");
+        this.insertarArticulo(e.IdArticulo, e.Unidades,"Insertado desde el planificador");
       } else {
         Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','Artículo ya incluido (No insertado).<br>Modifique unidades manualmente'))
       }
