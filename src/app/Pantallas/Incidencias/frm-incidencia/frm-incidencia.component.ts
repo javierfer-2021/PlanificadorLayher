@@ -4,15 +4,18 @@ import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
-import { ConfiGlobal } from '../../Utilidades/ConfiGlobal';
-import { TipoBoton } from '../../Enumeraciones/TipoBoton';
-import { BotonPantalla } from '../../Clases/Componentes/BotonPantalla';
-import { ColumnDataGrid } from '../../Clases/Componentes/ColumnDataGrid';
-import { DataGridConfig } from '../../Clases/Componentes/DataGridConfig';
-import { Utilidades } from '../../Utilidades/Utilidades';
-import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
+import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
+import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
+import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
+import { BotonIcono } from '../../../Clases/Componentes/BotonIcono';
+import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
+import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
+import { Utilidades } from '../../../Utilidades/Utilidades';
+import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Incidencia, TipoIncidencia } from '../../../Clases/Incidencia';
+import { Almacen } from '../../../Clases/Maestros';
 
 @Component({
   selector: 'app-frm-incidencia',
@@ -32,17 +35,26 @@ export class FrmIncidenciaComponent implements OnInit {
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
   
-  @ViewChild('formOferta', { static: false }) formOferta: DxFormComponent;  
+  @ViewChild('formIncidencia', { static: false }) formIncidencia: DxFormComponent;  
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-incidencia.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-incidencia.btnCancelar', 'Cancelar'), posicion: 2, accion: () => {this.btnCancelarOferta()}, tipo: TipoBoton.secondary },
   ];
-  
-  WSDatos_Validando: boolean = false;
-  WSEnvioCsv_Valido: boolean = false;
+    
+  btnIconoInsertar: BotonIcono =  { icono: 'bi bi-search', texto: this.traducir('frm-incidencia.btnCrear', 'Crear'), accion: () => this.btnCrearIncidencia(), nroFilas:1 };
+  btnIconoLimpiar: BotonIcono =  { icono: 'bi bi-x-circle', texto: this.traducir('frm-incidencia.btnLimpiar', 'Limpiar'), accion: () => this.btnLimpiarIncidencia(), nroFilas:1 };
 
+  editandoIncidencia: boolean = false;
+  WSDatos_Validando: boolean = false;
+
+  _incidencia: Incidencia;
+  arrayTiposIncidencia: Array<TipoIncidencia> = [];
+  arrayAlmacenes: Array<Almacen> = [];
+
+  str_txtTipoIncidencia: string;
+  
   //#endregion
 
 
@@ -125,6 +137,12 @@ export class FrmIncidenciaComponent implements OnInit {
 
   //#endregion
   
+  btnCrearIncidencia() {   
+  }
+
+  btnLimpiarIncidencia(){    
+  }  
+
   btnSalir() {
     this.location.back();
   }

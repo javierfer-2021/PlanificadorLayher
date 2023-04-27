@@ -16,7 +16,7 @@ import { FrmVentaDetallesComponent } from './Pantallas/Ventas/frm-venta-detalles
 import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-buscar/frm-usuario-buscar.component';
 import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
 import { FrmArticulosStockComponent } from './Pantallas/Articulos/frm-articulos-stock/frm-articulos-stock.component';
-import { FrmIncidenciaComponent } from './Pantallas/frm-incidencia/frm-incidencia.component';
+import { FrmIncidenciaComponent } from './Pantallas/Incidencias/frm-incidencia/frm-incidencia.component';
 import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
 import { FrmImportarMaestrosComponent } from './Pantallas/Maestros/frm-importar-maestros/frm-importar-maestros.component';
 import { FrmFamiliasComponent } from './Pantallas/Maestros/frm-familias/frm-familias.component';
