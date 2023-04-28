@@ -20,6 +20,7 @@ import { Almacen } from 'src/app/Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 import { DxPopupComponent } from 'devextreme-angular';
+import { Incidencia } from 'src/app/Clases/Incidencia';
 
 @Component({
   selector: 'app-frm-incidencia-buscar',
@@ -42,18 +43,18 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
   @ViewChild('sbAlmacenes', { static: false }) sbAlmacenes: CmdSelectBoxComponent; 
 
   btnAciones: BotonPantalla[] = [
-    // { icono: '', texto: this.traducir('frm-venta-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
-    // { icono: '', texto: this.traducir('frm-venta-buscar.btnDetalles', 'Ver Detalles'), posicion: 2, accion: () => {this.verDetallesOferta()}, tipo: TipoBoton.secondary },
-    // { icono: '', texto: this.traducir('frm-venta-buscar.btnPlanificador', 'Ver Planificador'), posicion: 3, accion: () => {this.verPlanificador()}, tipo: TipoBoton.secondary },
-    // { icono: '', texto: this.traducir('frm-venta-buscar.btnImportar', 'Importar'), posicion: 4, accion: () => {this.verPantallaImportar()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-incidencia-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-incidencia-buscar.btnVerIncidencia', 'Ver Incidencia'), posicion: 2, accion: () => {this.btnVerDetallesIncidencia()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-incidencia-buscar.btnCrearIncidencia', 'Crear Incidencia'), posicion: 3, accion: () => {this.btnCrearIncidencia()}, tipo: TipoBoton.success },
   ];
 
   WSDatos_Validando: boolean = false;
 
   // grid lista ofertas
-  // [IdSalida, IdSalidaERP, Contrato, Referencia, FechaAlta, FechaInicio, FechaFin, IdEstado, NombreEstado, IdCliente, IdClienteERP, NombreCliente,
-  //  Obra, Observaciones, IdAlmacen, NombreAlmacen, IdTipoDocumento, NombreTipoDocumento, Planificar, NumLineas, Aviso]
-  arraySalidas: Array<Salida>;
+  // IdIncidencia, FechaAlta, FechaIncidencia, IdTipoIncidencia, NombreTipoIncidencia, IdAlmacen, NombreAlmacen, IdTipoDocumento, NombreTipoDocumento,
+  // Contrato, IdArticulo, NombreArticulo, Unidades, Observaciones
+
+  arrayIncidencias: Array<Incidencia>;
   cols: Array<ColumnDataGrid> = [
     {
       dataField: '',
@@ -68,114 +69,110 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
         { icon: "info",
           hint: "Ver detalles salida",
           onClick: (e) => { 
-            //this.btnMostrarOferta(e.row.data); 
+            this.btnGridVerDetallesIncidencia(e.row.data); 
           }
         },
       ]
     },
     {
-      dataField: 'IdSalida',
-      caption: this.traducir('frm-venta-buscar.colIdSalida','Id.Salida'),
-      visible: false,
-    },      
+      dataField: 'IdIncidencia',
+      caption: this.traducir('frm-incidencia-buscar.colIdIncidencia','Id.Incidencia'),
+      visible: true,
+    },    
     {
-      dataField: 'IdSalidaERP',
-      caption: this.traducir('frm-venta-buscar.colIdSalidaERP','Id.Salida ERP'),
+      dataField: 'FechaAlta',
+      caption: this.traducir('frm-incidencia-buscar.colFechaAlta','Fecha Alta'),
       visible: false,
-    },      
-    {
-      dataField: 'Contrato',
-      caption: this.traducir('frm-venta-buscar.colContrato','Contrato'),
-      visible: true,      
+      dataType: 'date',
     },
     {
-      dataField: 'IdTipoDocumento',
-      caption: this.traducir('frm-venta-buscar.colIdTipoDocumento','IdTipoDocumento'),
+      dataField: 'FechaIncidencia',
+      caption: this.traducir('frm-incidencia-buscar.colFechaIncidencia','Fec.Incidencia'),
+      visible: true,
+      dataType: 'date',
+    },
+    {
+      dataField: 'Descripcion',
+      caption: this.traducir('frm-incidencia-buscar.colDescripcion','Descripción'),
+      visible: true,
+    },    
+    {
+      dataField: 'IdTipoIncidencia',
+      caption: this.traducir('frm-incidencia-buscar.colIdTipoIncidencia','IdTipoIncidencia'),
       visible: false,
     },
     {
-      dataField: 'NombreTipoDocumento',
-      caption: this.traducir('frm-venta-buscar.colNombreTipoDocumento','Tipo Contrato'),
+      dataField: 'NombreTipoIncidencia',
+      caption: this.traducir('frm-incidencia-buscar.colNombreTipoIncidencia','TipoIncidencia'),
       visible: true,
-    },   
-    {
-      dataField: 'Planificar',
-      caption: this.traducir('frm-venta-buscar.colPlanificar','Planificar'),
-      visible: true,
-    },      
+    },
     {
       dataField: 'IdAlmacen',
-      caption: this.traducir('frm-venta-buscar.colIdAlmacen','IdAlmacen'),
+      caption: this.traducir('frm-incidencia-buscar.colIdAlmacen','IdAlmacen'),
       visible: false,
     },
     {
       dataField: 'NombreAlmacen',
-      caption: this.traducir('frm-venta-buscar.colAlmacen','Almacen'),
+      caption: this.traducir('frm-incidencia-buscar.colAlmacen','Almacen'),
       visible: true,
-    },   
+    },  
     {
-      dataField: 'Referencia',
-      caption: this.traducir('frm-venta-buscar.colReferencia','Referencia'),
-      visible: true,
-    },
-    {
-      dataField: 'IdCliente',
-      caption: this.traducir('frm-venta-buscar.colIdCliente','Id.Cliente'),      
+      dataField: 'IdTipoDocumento',
+      caption: this.traducir('frm-incidencia-buscar.colIdTipoDocumento','IdTipoDocumento'),
       visible: false,
     },
     {
-      dataField: 'IdClienteERP',
-      caption: this.traducir('frm-venta-buscar.colIdClienteERP','Id.Cliente ERP'),      
+      dataField: 'NombreTipoDocumento',
+      caption: this.traducir('frm-incidencia-buscar.colNombreTipoDocumento','Tipo Contrato'),
+      visible: true,
+    },   
+    {
+      dataField: 'Contrato',
+      caption: this.traducir('frm-incidencia-buscar.colContrato','Contrato'),
+      visible: true,      
+    },    
+    {
+      dataField: 'IdCliProv',
+      caption: this.traducir('frm-incidencia-buscar.colIdCliProv','Id.Cli/Prov'),
+      visible: true,
+    },
+    {
+      dataField: 'NombreCliProv',
+      caption: this.traducir('frm-incidencia-buscar.colNombreCliProv','Nombre Cli/Prov'),
+      visible: true,
+    },
+    {
+      dataField: 'IdArticulo',
+      caption: this.traducir('frm-incidencia-buscar.colIdArticulo','IdArticulo'),
+      visible: true,
+    },
+    {
+      dataField: 'NombreArticulo',
+      caption: this.traducir('frm-incidencia-buscar.colNombreArticulo','NombreArticulo'),      
+      visible: false,
+    },
+    {
+      dataField: 'Unidades',
+      caption: this.traducir('frm-incidencia-buscar.colUnidades','Unidades'),      
       visible: true,
     },
     {
       dataField: 'NombreCliente',
-      caption: this.traducir('frm-venta-buscar.colNombreCliente','Nombre Cliente'),      
+      caption: this.traducir('frm-incidencia-buscar.colNombreCliente','Nombre Cliente'),      
       visible: true,
     },    
     {
-      dataField: 'IdEstado',
-      caption: this.traducir('frm-venta-buscar.colIdEstado','IdEstado'),
-      visible: false,
-    },
-    {
-      dataField: 'NombreEstado',
-      caption: this.traducir('frm-venta-buscar.colEstado','Estado'),
-      visible: true,
-    },
-    {
-      dataField: 'FechaAlta',
-      caption: this.traducir('frm-venta-buscar.colFechaAlta','Fecha Alta'),
-      visible: false,
-      dataType: 'date',
-    },
-    {
-      dataField: 'FechaInicio',
-      caption: this.traducir('frm-venta-buscar.colFechaInicio','Fecha Inicio'),
-      visible: true,
-      dataType: 'date',
-    },
-    {
-      dataField: 'FechaFin',
-      caption: this.traducir('frm-venta-buscar.colFechaFin','Fecha Fin'),
-      visible: true,
-      dataType: 'date',
-    },
-    {
-      dataField: 'Obra',
-      caption: this.traducir('frm-venta-buscar.colObra','Obra'),
-      visible: true,
-    },
-    {
       dataField: 'Observaciones',
-      caption: this.traducir('frm-venta-buscar.colObservaciones','Observaciones'),
-      visible: false,
+      caption: this.traducir('frm-incidencia-buscar.colObservaciones','Observaciones'),
+      width: 250,
+      visible: true,      
     },
     {
-      dataField: 'NumLineas',
-      caption: this.traducir('frm-venta-buscar.colNumLineas','Num.Lineas'),
-      visible: true,
-    },             
+      dataField: 'IdUsuario',
+      caption: this.traducir('frm-incidencia-buscar.colIdUsuario','IdUsuario'),
+      visible: false,
+    },
+
   ];
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
 
@@ -185,12 +182,6 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
   almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
   sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
   
-  //popUp Filtros Adicionales
-  @ViewChild('popUpFiltros', { static: false }) popUpFiltros: DxPopupComponent;
-  popUpVisibleFiltros:boolean = false;
-  filtrosAdicionales:filtrosBusqueda; 
-  filtrosActivos:boolean = false;
-
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -204,15 +195,10 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
   { 
     // Asignar localizacion ESPAÑA
     locale('es');
-    // inicializacion filtros 
-    this.filtrosAdicionales= new filtrosBusqueda();
-    this.filtrosAdicionales.IdFamilia=0;
-    this.filtrosAdicionales.IdSubfamilia=0;
-    this.filtrosAdicionales.otros='';
   }
 
   ngOnInit(): void {
-    //this.cargarSalidas(-1);
+    //this.cargarIncidencias(-1);  -> se carga en evento change de combo almacenes
   }
 
 
@@ -220,7 +206,7 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // configuracion extra del grid -> mostrar fila total registros
-    this.dg.mostrarFilaSumaryTotal('IdSalida','Contrato',this.traducir('frm-venta-buscar.TotalRegistros','Total Salidas: '),'count');
+    this.dg.mostrarFilaSumaryTotal('IdIncidencia','IdIncidencia',this.traducir('frm-incidencia-buscar.TotalRegistros','Total Incidencias: '),'count');
     this.dg.habilitarExportar('Ventas_Planificador.xlsx');
     
     // redimensionar grid, popUp
@@ -265,8 +251,72 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
   //#endregion
 
   //#region -- web service --
+
+  async cargarIncidencias(almacen=-1){
+    if (this.WSDatos_Validando) return;
+    
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.getIncidenciasAlmacen(almacen)).subscribe(
+      (datos) => {
+
+        if (Utilidades.DatosWSCorrectos(datos)) {
+          // asignar valores devuletos
+          this.arrayIncidencias = datos.datos;
+          this.dgConfig = new DataGridConfig(this.arrayIncidencias, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          if (this.arrayIncidencias.length>0) { this.dgConfig.actualizarConfig(true,false, 'virtual',true, true);}
+          else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
+        }
+        else {
+          Utilidades.MostrarErrorStr(this.traducir('frm-incidencias-buscar.msgErrorWS_CargarIncidencias','Error web-service obtener Lista Incidencias')); 
+        }
+        this.WSDatos_Validando = false;
+      }, (error) => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-incidencias-buscar');
+      }
+    );
+  }
+
   //#endregion
 
+
+  //#region -- botones de opciones principales
+
+  salir() {
+    this.location.back();
+  }
+
+  btnVerDetallesIncidencia(){
+    this.selectedRowsData = this.dg.DataGrid.instance.getSelectedRowsData();
+    if ((this.selectedRowsData === null) || (this.selectedRowsData.length === 0)) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-incidencia-buscar.msgErrorSelectLinea','Debe seleccionar una Incidencia'));
+      return;
+    }
+    let vIncidencia : Salida =  this.dg.objSeleccionado();    
+    const navigationExtras: NavigationExtras = {
+      state: { PantallaAnterior: 'frm-incidencia-buscar', incidencia: vIncidencia }
+    };
+    this.router.navigate(['incidencia'], navigationExtras);
+  }
+
+  btnCrearIncidencia(){
+    const navigationExtras: NavigationExtras = {
+      state: { PantallaAnterior: 'frm-incidencia-buscar', incidencia: null }
+    };
+    this.router.navigate(['incidencia'], navigationExtras); 
+  }
+
+
+  btnGridVerDetallesIncidencia(data:any){
+    // ICONO DEL GRID. oculto no implementado -> se usa boton Ver Detalles Oefrta
+  }
+
+  //#endregion
+
+
+  onDoubleClick_DataGrid(){
+    this.btnVerDetallesIncidencia();
+  }
 
   seleccionarAlmacenDefecto(){
     if ((this.almacenes.findIndex(x => x.IdAlmacen == ConfiGlobal.DatosUsuario.idAlmacenDefecto))<0) {
@@ -278,7 +328,7 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
   }  
 
   onValueChanged_ComboAlmacen(){
-    //this.cargarSalidas(this.sbAlmacenes.SelectBox.value);
+    this.cargarIncidencias(this.sbAlmacenes.SelectBox.value);
   }  
 
 

@@ -39,12 +39,12 @@ export class FrmIncidenciaComponent implements OnInit {
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-incidencia.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-incidencia.btnCancelar', 'Cancelar'), posicion: 2, accion: () => {this.btnCancelarOferta()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-incidencia.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-incidencia.btnGuardar', 'Guardar'), posicion: 2, accion: () => {this.btnGuardarIncidencia()}, tipo: TipoBoton.success },
   ];
     
-  btnIconoInsertar: BotonIcono =  { icono: 'bi bi-search', texto: this.traducir('frm-incidencia.btnCrear', 'Crear'), accion: () => this.btnCrearIncidencia(), nroFilas:1 };
-  btnIconoLimpiar: BotonIcono =  { icono: 'bi bi-x-circle', texto: this.traducir('frm-incidencia.btnLimpiar', 'Limpiar'), accion: () => this.btnLimpiarIncidencia(), nroFilas:1 };
+  // btnIconoInsertar: BotonIcono =  { icono: 'bi bi-search', texto: this.traducir('frm-incidencia.btnCrear', 'Crear'), accion: () => this.btnCrearIncidencia(), nroFilas:1 };
+  // btnIconoLimpiar: BotonIcono =  { icono: 'bi bi-x-circle', texto: this.traducir('frm-incidencia.btnLimpiar', 'Limpiar'), accion: () => this.btnLimpiarIncidencia(), nroFilas:1 };
 
   editandoIncidencia: boolean = false;
   WSDatos_Validando: boolean = false;
@@ -53,8 +53,39 @@ export class FrmIncidenciaComponent implements OnInit {
   arrayTiposIncidencia: Array<TipoIncidencia> = [];
   arrayAlmacenes: Array<Almacen> = [];
 
-  str_txtTipoIncidencia: string;
+  //str_txtTipoIncidencia: string;
   
+
+  contratoOptions: any = {
+    disabled: false,
+    buttons: [
+      {
+        name: 'buscarContrato',
+        location: 'after',
+        options: {
+          icon: 'find',
+          type: 'default',
+          onClick: () => this.buscarContrato(),
+        },
+      },
+    ],
+  };
+
+  articuloOptions: any = {
+    disabled: false,
+    buttons: [
+      {
+        name: 'buscarArticulo',
+        location: 'after',
+        options: {
+          icon: 'find',
+          type: 'default',
+          onClick: () => this.buscarArticulo(),
+        },
+      },
+    ],
+  };
+
   //#endregion
 
 
@@ -68,15 +99,23 @@ export class FrmIncidenciaComponent implements OnInit {
               )  
     { 
       // obtenemos dato identificacion de envio del routing
-      // const nav = this.router.getCurrentNavigation().extras.state;      
-      // if (( nav.oferta !== null) && ( nav.oferta !== undefined)) {
-      //   this._oferta= nav.oferta;
-      // }
+      const nav = this.router.getCurrentNavigation().extras.state;      
+      if (( nav.incidencia !== null) && ( nav.incidencia !== undefined)) {
+        this._incidencia = nav.incidencia;
+        this.editandoIncidencia = false;
+        // personalizar botones formulario
+        BotonPantalla[0].texto=this.traducir('frm-incidencia.btnSalir', 'Salir');
+        BotonPantalla[1].visible=false;
+      } else {
+        this._incidencia = new(Incidencia);
+        this.editandoIncidencia = true;
+        this._incidencia.FechaAlta = new Date();
+      }
     }
 
 
   ngOnInit(): void {
-    // this.cargarCombos();
+    this.cargarCombos();
     // setTimeout(() => {this.cargarLineasOferta();},1000);
   }
 
@@ -118,21 +157,22 @@ export class FrmIncidenciaComponent implements OnInit {
   async cargarCombos(){
     if(this.WSDatos_Validando) return;
 
-    // this.WSDatos_Validando = true;
-    // (await this.planificadorService.getCombos_PantallaSalidas()).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       this.arrayTiposEstadoOferta = datos.datos.ListaEstados;
-    //       this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
-    //     } else {          
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-ofertas-detalles.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, error => {
-    //     this.WSDatos_Validando = false;
-    //     console.log(error);
-    //   }
-    // );
+    this.WSDatos_Validando = true;
+    let filtroAlmacen:number= 0; // todos los almacenes activos
+    (await this.planificadorService.getCombos_PantallaIncidencias(filtroAlmacen)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.arrayTiposIncidencia = datos.datos.ListaTipos;
+          this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-incidencias.msgError_WSCargarCombos','Error cargando valores Tipos Incidencia/Almacenes')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        console.log(error);
+      }
+    );
   }  
 
   //#endregion
@@ -147,10 +187,17 @@ export class FrmIncidenciaComponent implements OnInit {
     this.location.back();
   }
 
-  btnCancelarOferta(){
+  btnGuardarIncidencia(){
     alert('Función no implementada')
   }
+  
+  buscarContrato(){
+    Utilidades.ShowDialogAviso('Buscar Contrato -> Funcion no implementada')
+  }
+
+  buscarArticulo(){
+    Utilidades.ShowDialogAviso('Buscar Artículo -> Funcion no implementada')
+  }
+
 }
-
-
 

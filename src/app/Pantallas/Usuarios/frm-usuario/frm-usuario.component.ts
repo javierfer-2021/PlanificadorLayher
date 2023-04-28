@@ -107,15 +107,16 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
         buttons: [
           { name:'pass',
             location:'after',
-            icon: 'info',
-            text: 'V',
-            hint: 'Ver password',
-            onClick:(e) => { alert('boton ver password');}
+            options: {
+              icon: 'info',
+              type: 'default',
+              hint: 'Ver password',
+              onClick: () => this.btnVerPassword(),
+            },            
           }
         ]
       }
 
-      
       // // gestion boton ver password      
       // this.passwordMode = 'password';
       // this.passwordButton = {
@@ -372,6 +373,13 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     catch {} 
   }
 
+  btnVerPassword(){
+    let editor = this.formUsuario.instance.getEditor('Password');
+    editor.option(
+      'mode',
+      editor.option('mode') === 'text' ? 'password' : 'text',
+    );        
+  }
 }
 
 

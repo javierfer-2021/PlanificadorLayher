@@ -59,7 +59,7 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonVentaImportar.accion = () => { this.router.navigate(['venta_importar']); };
     this.botonComprasBuscar.accion = () => { this.router.navigate(['compra_buscar']); };
     this.botonComprasImportar.accion = () => { this.router.navigate(['compra_importar']); };
-    this.botonIncidencias.accion = () => { this.router.navigate(['incidencia']); };
+    this.botonIncidencias.accion = () => { this.router.navigate(['incidencia-buscar']); };
     this.botonStock.accion = () => { this.router.navigate(['articulos_stock']); };
     this.botonUsuarios.accion = () => { this.router.navigate(['usuario_buscar']); };
     this.botonConfiguracion.accion = () => { this.router.navigate(['configuracion']); };

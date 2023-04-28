@@ -4,23 +4,29 @@ export class Incidencia {
     FechaAlta: Date;
     FechaIncidencia: Date;
     IdTipoIncidencia: number;
+    Descripcion: string;
     NombreTipoIncidencia: string;
+    NombreCortoTipoIncidencia: string;
     IdAlmacen: number;
-    Almacen: string;
+    NombreAlmacen: string;
     IdDocumento: number;
     IdTipoDocumento: number;        
     NombreTipoDocumento: string;
-    Contrato: number;
+    Contrato: string;
+    IdCliProv: string;
+    NombreCliProv: string;
     IdArticulo: string;
     NombreArticulo: string;
     Unidades: number; 
     Observaciones: string;   
+    IdUsuario: number;
   }
 
   export class TipoIncidencia {
     IdTipoIncidencia: number;
     NombreTipoIncidencia: string;
     NombreCorto: string;
+    Descripcion: string;
     RequiereDocumento:boolean;
     TipoDocumento:number;
     Activo:boolean;

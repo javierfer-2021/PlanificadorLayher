@@ -468,7 +468,32 @@ export class PlanificadorService {
 
   //#endregion
   
+
+  //#region - GESTION DE INCIDENCIAS
+
+  async getIncidenciasAlmacen(almacen): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, datos: {IdAlmacen:almacen } };    
+    return this.http.post(ConfiGlobal.URL + '/api/incidencias/getListaIncidenciasAlmacen', body, Utilidades.getHeaders());
+  }  
+
+  async getCombos_PantallaIncidencias(filtroAlmacen): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
   
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdAlmacen:filtroAlmacen } };    
+    return this.http.post(ConfiGlobal.URL + '/api/incidencias/getCombos_PantallaIncidencias', body, Utilidades.getHeaders());
+  }   
+
+  //#endregion
+
+
+
   // -------------------------------------------
   //#region -- DESCATALOGADOS, SIN USO, EJEMOLOS --
   async cargarDatos_ficheroCSV(fileToUpload: File): Promise<Observable<any>> {
