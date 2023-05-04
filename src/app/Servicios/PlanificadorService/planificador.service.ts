@@ -480,6 +480,29 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/incidencias/getListaIncidenciasAlmacen', body, Utilidades.getHeaders());
   }  
 
+
+  async insertarIncidencia(idTipoIncidencia,fechaAlta,fechaIncidencia,descripcion,idAlmacen,idDocumento,idTipoDocumento,contrato,idCliProv,nombreCliProv,idArticulo,unidades,observaciones): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, 
+                   datos: { IdTipoIncidencia: idTipoIncidencia, 
+                            FechaAlta: fechaAlta, 
+                            FechaIncidencia: fechaIncidencia,
+                            Descripcion: descripcion,
+                            IdAlmacen: idAlmacen,
+                            IdDocumento: idDocumento,
+                            IdTipoDocumento: idTipoDocumento,
+                            Contrato: contrato,
+                            IdClienteProveedor: idCliProv,
+                            NombreCienteProveedor: nombreCliProv,
+                            IdArticulo: idArticulo,
+                            Unidades: unidades,
+                            Observaciones: observaciones } };    
+    return this.http.post(ConfiGlobal.URL + '/api/incidencias/insertarIncidencia', body, Utilidades.getHeaders());
+  } 
+
   async getCombos_PantallaIncidencias(filtroAlmacen): Promise<Observable<any>>{ // Promise<Observable<any>>
     //await Utilidades.establecerConexion();
     while (ConfiGlobal.principalValidando) {

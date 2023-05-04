@@ -20,6 +20,8 @@ export class Incidencia {
     Unidades: number; 
     Observaciones: string;   
     IdUsuario: number;
+    SeleccionarArticuloDocumento: boolean;
+    CoincideAlmacen: boolean;    
   }
 
   export class TipoIncidencia {
@@ -29,5 +31,19 @@ export class Incidencia {
     Descripcion: string;
     RequiereDocumento:boolean;
     TipoDocumento:number;
+    SeleccionarArticuloDocumento: boolean;
+    CoincideAlmacen: boolean;    
     Activo:boolean;
   }  
+
+
+  /*
+  export class DocumentoIncidencia {
+    IdDocumento: number;
+    IdTipoDocumento: number;        
+    NombreTipoDocumento: string;
+    Contrato: string;
+    IdCliProv: string;
+    NombreCliProv: string;
+  } 
+  */ 

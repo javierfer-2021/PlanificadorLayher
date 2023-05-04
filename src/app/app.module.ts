@@ -56,6 +56,8 @@ import { FrmPlanificadorUndComponent } from './Pantallas/Planificador/frm-planif
 import { FrmFamiliasComponent } from './Pantallas/Maestros/frm-familias/frm-familias.component';
 import { FrmSubfamiliasComponent } from './Pantallas/Maestros/frm-subfamilias/frm-subfamilias.component';
 import { FrmIncidenciaBuscarComponent } from './Pantallas/Incidencias/frm-incidencia-buscar/frm-incidencia-buscar.component';
+import { FrmIncidenciaBuscarDocComponent } from './Pantallas/Incidencias/frm-incidencia-buscar-doc/frm-incidencia-buscar-doc.component';
+import { FrmIncidenciaBuscarArtComponent } from './Pantallas/Incidencias/frm-incidencia-buscar-art/frm-incidencia-buscar-art.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -99,7 +101,9 @@ function initializeApp(appConfig: ConfigService) {
     FrmPlanificadorUndComponent,
     FrmFamiliasComponent,
     FrmSubfamiliasComponent,
-    FrmIncidenciaBuscarComponent
+    FrmIncidenciaBuscarComponent,
+    FrmIncidenciaBuscarDocComponent,
+    FrmIncidenciaBuscarArtComponent
 
   ],
   imports: [

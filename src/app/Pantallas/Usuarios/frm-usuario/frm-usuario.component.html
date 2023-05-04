@@ -43,17 +43,6 @@
                         <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled:false}" [colSpan]="2"></dxi-item>
                     </dxi-item>         
                     
-                    <!-- editorType="dxTexttBox" [template]="'passwordBox'"> -->
-                    <!-- <div *dxTemplate="let data of 'passwordBox'">
-                        <dx-text-box [(mode)]="passwordMode" disabled='false' (readOnly)="!modoEdicion">
-                           <dxi-button
-                            name="pass"
-                            location="after"
-                            [options]="passwordButton">
-                          </dxi-button>
-                        </dx-text-box>
-                    </div> -->
-
                     <dxi-item itemType="group" caption="Permisos" [colCount]="1" [colSpan]="1">
                         <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
                         <dxi-item dataField="VerAlmacenes" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
@@ -63,13 +52,6 @@
                 </dx-form>
             </div>
         </div>
-<!-- 
-        <dx-context-menu
-            [dataSource]="itemsMenuVerClave"
-            [width]="200"
-            target="#tbPassword"
-            (onItemClick)="itemMenuVerClave($event)">
-        </dx-context-menu> -->
 
         <span class="dx-widget dx-form-group-caption pt-2">{{traducir('frm-usuario.lblAlmacenesAsignados', 'Almacenes asignados para planificación')}} </span>
         <!-- grid lineas cargadas del CSVs -->    

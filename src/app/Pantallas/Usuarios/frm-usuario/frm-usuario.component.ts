@@ -60,16 +60,11 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   arrayAlmacenesAsignados: Array<Almacen> = new Array<Almacen>();    //[];
 
   checkBoxBajaOptions: any;
-  modoEdicion: boolean = false;
-  nuevoUsuario: boolean = false;
- 
-  //TODO - limpiar no valido + html
-
-  // passwordMode: string;
-  // passwordButton: any;
   textBoxPasswordOptions: any;
 
-  // itemsMenuVerClave: any;
+  modoEdicion: boolean = false;
+  nuevoUsuario: boolean = false;
+
   //#endregion
 
   
@@ -82,8 +77,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
               public planificadorService: PlanificadorService
               )  
     { 
-      // this.itemsMenuVerClave =  [{text: 'Reemplazar artículo' }];
-     
       // gestion dinamica checkBox campo BAJA del form
       this.checkBoxBajaOptions = {
         // text: 'Baja',
@@ -99,7 +92,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
           }
         },
       }; 
-
       // gestion boton ver password  
       this.textBoxPasswordOptions = {
         disabled: false,
@@ -116,16 +108,6 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
           }
         ]
       }
-
-      // // gestion boton ver password      
-      // this.passwordMode = 'password';
-      // this.passwordButton = {
-      //   icon: 'edit',
-      //   type: 'default',
-      //   onClick: () => {
-      //     this.passwordMode = (this.passwordMode === 'text') ? 'password' : 'text';
-      //   },
-      // };
 
       // obtenemos dato identificacion de envio del routing
       const nav = this.router.getCurrentNavigation().extras.state;      

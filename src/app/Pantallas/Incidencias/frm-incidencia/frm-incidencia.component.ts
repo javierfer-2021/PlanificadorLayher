@@ -3,19 +3,14 @@ import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
-import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
-import { BotonIcono } from '../../../Clases/Componentes/BotonIcono';
-import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
-import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent,DxTextBoxComponent, DxPopupComponent, DxTextAreaModule, DxSelectBoxComponent } from 'devextreme-angular';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Incidencia, TipoIncidencia } from '../../../Clases/Incidencia';
 import { Almacen } from '../../../Clases/Maestros';
+import { DxFormComponent, DxPopupComponent } from 'devextreme-angular';
+import { ConfiGlobal } from 'src/app/Utilidades/ConfiGlobal';
 
 @Component({
   selector: 'app-frm-incidencia',
@@ -36,16 +31,12 @@ export class FrmIncidenciaComponent implements OnInit {
   @ViewChild('pantalla') pantalla: ElementRef;
   
   @ViewChild('formIncidencia', { static: false }) formIncidencia: DxFormComponent;  
-  @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-incidencia.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-incidencia.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-incidencia.btnGuardar', 'Guardar'), posicion: 2, accion: () => {this.btnGuardarIncidencia()}, tipo: TipoBoton.success },
   ];
     
-  // btnIconoInsertar: BotonIcono =  { icono: 'bi bi-search', texto: this.traducir('frm-incidencia.btnCrear', 'Crear'), accion: () => this.btnCrearIncidencia(), nroFilas:1 };
-  // btnIconoLimpiar: BotonIcono =  { icono: 'bi bi-x-circle', texto: this.traducir('frm-incidencia.btnLimpiar', 'Limpiar'), accion: () => this.btnLimpiarIncidencia(), nroFilas:1 };
-
   editandoIncidencia: boolean = false;
   WSDatos_Validando: boolean = false;
 
@@ -53,11 +44,19 @@ export class FrmIncidenciaComponent implements OnInit {
   arrayTiposIncidencia: Array<TipoIncidencia> = [];
   arrayAlmacenes: Array<Almacen> = [];
 
-  //str_txtTipoIncidencia: string;
-  
+  //{disabled:false, dataSource:arrayTiposIncidencia, displayExpr:'NombreTipoIncidencia', valueExpr:'IdTipoIncidencia', searchEnabled: true }
+  tipoIncidenciaOptions: any = {
+    disabled:false, 
+    dataSource: 'arrayTiposIncidencia', 
+    displayExpr:'NombreTipoIncidencia', 
+    valueExpr:'IdTipoIncidencia', 
+    searchEnabled: true, 
+    onValueChanged: (e) => { this.onValueChanged_ComboTipoIncidencia(e) }
+  }
 
   contratoOptions: any = {
     disabled: false,
+    showClearButton: true,
     buttons: [
       {
         name: 'buscarContrato',
@@ -73,6 +72,7 @@ export class FrmIncidenciaComponent implements OnInit {
 
   articuloOptions: any = {
     disabled: false,
+    showClearButton: true,
     buttons: [
       {
         name: 'buscarArticulo',
@@ -85,6 +85,14 @@ export class FrmIncidenciaComponent implements OnInit {
       },
     ],
   };
+
+  //popUp Seleccionar Documento
+  @ViewChild('popUpDocumentos', { static: false }) popUpDocumentos: DxPopupComponent;
+  popUpVisibleDocumentos:boolean = false;
+
+  //popUp Seleccion de Articulos
+  @ViewChild('popUpArticulos', { static: false }) popUpArticulos: DxPopupComponent;
+  popUpVisibleArticulos:boolean = false;
 
   //#endregion
 
@@ -104,12 +112,15 @@ export class FrmIncidenciaComponent implements OnInit {
         this._incidencia = nav.incidencia;
         this.editandoIncidencia = false;
         // personalizar botones formulario
-        BotonPantalla[0].texto=this.traducir('frm-incidencia.btnSalir', 'Salir');
-        BotonPantalla[1].visible=false;
+        this.btnAciones[0].texto = this.traducir('frm-incidencia.btnSalir', 'Salir');
+        this.btnAciones[0].accion = () => {this.btnSalir()}
+        this.btnAciones[1].visible = false;
       } else {
         this._incidencia = new(Incidencia);
         this.editandoIncidencia = true;
+        this._incidencia.IdUsuario = ConfiGlobal.DatosUsuario.IdUsuario;
         this._incidencia.FechaAlta = new Date();
+        this._incidencia.FechaIncidencia = this._incidencia.FechaAlta;
       }
     }
 
@@ -163,7 +174,8 @@ export class FrmIncidenciaComponent implements OnInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayTiposIncidencia = datos.datos.ListaTipos;
-          this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
+          this.tipoIncidenciaOptions = { dataSource: this.arrayTiposIncidencia }
+          this.arrayAlmacenes = datos.datos.ListaAlmacenes;  
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-incidencias.msgError_WSCargarCombos','Error cargando valores Tipos Incidencia/Almacenes')); 
         }
@@ -174,6 +186,29 @@ export class FrmIncidenciaComponent implements OnInit {
       }
     );
   }  
+
+  async insertarIncidencia(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.insertarIncidencia(this._incidencia.IdTipoIncidencia,this._incidencia.FechaAlta,this._incidencia.FechaIncidencia,this._incidencia.Descripcion,
+                                                       this._incidencia.IdAlmacen,this._incidencia.IdDocumento,this._incidencia.IdTipoDocumento,this._incidencia.Contrato,
+                                                       this._incidencia.IdCliProv,this._incidencia.NombreCliProv,this._incidencia.IdArticulo,this._incidencia.Unidades,this._incidencia.Observaciones )).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-incidencias.msgOk_WSInsertandoIncidencia','Incidencia Insertada Correctamente'));           
+          //this._incidencia = datos.datos[0];
+          this.location.back();          
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-incidencias.msgError_WSInsertandoIncidencia','Error Insertando Incidencia')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        console.log(error);
+      }
+    );
+  } 
 
   //#endregion
   
@@ -187,17 +222,119 @@ export class FrmIncidenciaComponent implements OnInit {
     this.location.back();
   }
 
+  async btnCancelar() {
+    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-incidencias.MsgConfirmarCancelar', '¿Esta seguro que Cancelar el registro de la incidencia actual?'), 
+                                                              this.traducir('frm-incidencias.TituloCancelar', 'Cancelar Incidencia'));  
+    if (!confirmar) return;
+    else {
+      this.location.back();
+    }   
+  } 
+  
+  
   btnGuardarIncidencia(){
-    alert('Función no implementada')
+    // validar formulario
+    if (!this.validarFormulario()) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-incidencia.msgError_ErrorValidacionDatos','Faltan datos y/o Datos incorrectos. Revise el formulario'));
+      return;
+    }
+    else {
+      // validacion especifica adicional de datos
+      if (this.validarDatosFormulario()) {
+        this.insertarIncidencia();
+      }
+    }     
   }
   
   buscarContrato(){
-    Utilidades.ShowDialogAviso('Buscar Contrato -> Funcion no implementada')
+    //Utilidades.ShowDialogAviso('Buscar Contrato -> Funcion no implementada')
+    if (Utilidades.isEmpty(this._incidencia.IdTipoIncidencia)){
+      Utilidades.MostrarErrorStr(this.traducir('frm-incidencia.msgError_SeleccinarTipoIncidencia','Seleccione primero el tipo de incidencia'));
+      this.setFormFocus('IdTipoIncidencia');
+      return;
+    } else if ((Utilidades.isEmpty(this._incidencia.IdTipoDocumento)) || (this._incidencia.IdTipoDocumento == 0)){
+      Utilidades.MostrarErrorStr(this.traducir('frm-incidencia.msgError_NoContratoAsociado','El tipo incidencia no requiere contrato asociado'));
+      this.setFormFocus('IdTipoIncidencia');
+      return;
+    } else {
+      this.popUpVisibleDocumentos = true;
+    }    
+  }
+
+  cerrarSeleccionarDocumento(datos:any){
+    if (datos != null) {
+      // actualizamos info
+    }
+    this.popUpVisibleDocumentos = false;
   }
 
   buscarArticulo(){
-    Utilidades.ShowDialogAviso('Buscar Artículo -> Funcion no implementada')
+    // comprobar si requiere contrato asociado
+    if ( (!Utilidades.isEmpty(this._incidencia.IdTipoDocumento)) && (this._incidencia.IdTipoDocumento != 0) && (Utilidades.isEmpty(this._incidencia.IdDocumento)) ) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-incidencia.msgError_SeleccinarDocumentoIncidencia','Seleccione primero el documento/contrato asociado a la incidencia'));
+      this.setFormFocus('Contrato');
+      return;
+    }
+    this.popUpVisibleArticulos = true;
   }
+
+  cerrarSeleccionarArticulo(datos:any){
+    if (datos != null) {
+      this.setFormFocus('Unidades');
+    }
+    this.popUpVisibleArticulos = false;
+  }  
+
+
+
+  // validacion estandar del formulario
+  validarFormulario():boolean{
+    const res = this.formIncidencia.instance.validate();
+    // res.status === "pending" && res.complete.then((r) => {
+    //   console.log(r.status);
+    // });
+    return (res.isValid);
+  }
+
+  // validacion complementaria datos del formulario
+  validarDatosFormulario():boolean{      
+    // if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
+    //   Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
+    //   return false;
+    // }
+    return true;
+  }  
+
+  setFormFocus(campo:string){
+    try {
+      const editor = this.formIncidencia.instance.getEditor(campo);
+      editor.focus();
+    } 
+    catch {} 
+  }
+
+  onValueChanged_ComboTipoIncidencia(e){
+    // limpiamos referencias si se ha cambiado tipo doc. asociado
+    if (e.previousValue != e.value) {      
+      this._incidencia.IdDocumento=null;
+      this._incidencia.Contrato=null;
+      this._incidencia.IdTipoDocumento=null;      
+      this._incidencia.NombreTipoDocumento=null;
+      this._incidencia.IdCliProv=null;
+      this._incidencia.NombreCliProv=null;
+      this._incidencia.SeleccionarArticuloDocumento=null;
+      this._incidencia.CoincideAlmacen=null;
+    }
+    // asignamos tipo documento requerido por el tipo incidencia seleccionado    
+    if (e.value != null) {
+      let index = this.arrayTiposIncidencia.findIndex( x => x.IdTipoIncidencia === e.value);
+      if (index>=0) {
+        this._incidencia.IdTipoDocumento = this.arrayTiposIncidencia[index].TipoDocumento;
+        this._incidencia.SeleccionarArticuloDocumento = this.arrayTiposIncidencia[index].SeleccionarArticuloDocumento;
+        this._incidencia.CoincideAlmacen = this.arrayTiposIncidencia[index].CoincideAlmacen;
+      } 
+    }
+  } 
 
 }
 

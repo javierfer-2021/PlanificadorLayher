@@ -43,14 +43,14 @@
                 <div id="form-container" class="formulario">
                     <dx-form id="formIncidencia" #formIncidencia [colCount]="4" [formData]="_incidencia" [readOnly]="!editandoIncidencia" labelMode='static' labelLocation="left">
 
-                        <dxi-item itemType="group" caption="Identificacion Incidencia" [colCount]="4" [colSpan]="4">
+                        <dxi-item itemType="group" caption="Identificación Incidencia" [colCount]="4" [colSpan]="4">
                             <dxi-item dataField="IdIncidencia" [editorOptions]="{disabled: true}">
                             </dxi-item>
                             <dxi-item dataField="FechaAlta" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ALTA"></dxi-validation-rule>
                             </dxi-item> 
                             <dxi-item dataField="IdTipoIncidencia" [label]="{text:'Tipo Incidencia'}" [colSpan]="2" editorType="dxSelectBox" 
-                                [editorOptions]="{ disabled:false, dataSource:arrayTiposIncidencia, displayExpr:'NombreTipoIncidencia', valueExpr:'IdTipoIncidencia', searchEnabled: true }">
+                                [editorOptions]="tipoIncidenciaOptions">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo TIPO INCIDENCIA"></dxi-validation-rule>
                             </dxi-item>
                             
@@ -65,9 +65,8 @@
                             </dxi-item>                                                        
                         </dxi-item>
 
-                        <dxi-item itemType="group" caption="Identificacion Contrato" [colCount]="4" [colSpan]="4">
-                            <dxi-item dataField="Contrato" [editorOptions]="contratoOptions">
-                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
+                        <dxi-item itemType="group" caption="Identificación Contrato" readOnly="false" [colCount]="4" [colSpan]="4">
+                            <dxi-item dataField="Contrato" editorType="dxTextBox" [editorOptions]="contratoOptions">
                             </dxi-item>
                             <dxi-item dataField="IdDocumento" [editorOptions]="{disabled: true}">
                             </dxi-item>
@@ -81,7 +80,7 @@
                             </dxi-item>
                         </dxi-item>
 
-                        <dxi-item itemType="group" caption="Identificacion Artículo" [colCount]="4" [colSpan]="4">
+                        <dxi-item itemType="group" caption="Identificación Artículo" readOnly="false" [colCount]="4" [colSpan]="4">
                             <dxi-item dataField="IdArticulo" [editorOptions]="articuloOptions">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID ARTICULO"></dxi-validation-rule>
                             </dxi-item>
@@ -108,3 +107,25 @@
 <div #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
+
+<!-- popUp para busqueda y seleccion documento (compra/venta) asociado a la incidencia  -->
+<dx-popup *ngIf="popUpVisibleDocumentos" #popUpDocumentos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleDocumentos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencias-buscar.str_txtPopupDocumentos', 'Selección Contrato')}}"
+    contentTemplate="contentSeleccionarContrato">
+    <div *dxTemplate="let data of 'contentSeleccionarContrato'">
+        <app-frm-incidencia-buscar-doc [incidencia]="_incidencia" (cerrarPopUp)="cerrarSeleccionarDocumento($event)"></app-frm-incidencia-buscar-doc>
+    </div>    
+</dx-popup>
+
+<!-- popUp para seleccion de articulo  -->
+<dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    contentTemplate="contentSeleccionarArticulo">
+    <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
+        <app-frm-incidencia-buscar-art [incidencia]="_incidencia" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-incidencia-buscar-art>
+    </div>    
+</dx-popup>
