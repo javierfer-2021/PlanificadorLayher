@@ -19,6 +19,15 @@
                       [dataSource]="arrayFamilias"
                       keyExpr="IdFamilia"
                       [showBorders]="true"
+                      (onEditingStart)="onEditingStart($event)"
+                      (onRowUpdated)="onRowUpdated($event)"
+                      (onRowRemoved)="onRowRemoved($event)"
+                      (onInitNewRow)="onInitNewRow($event)"
+                      (onRowInserting)="onRowInserting($event)"
+                      (onRowInserted)="onRowInserted($event)"
+                      (onRowUpdating)="onRowUpdating($event)"
+                      (onRowRemoving)="onRowRemoving($event)"
+                      (onSaving)="onSaving($event)"
                     >
                       <dxo-paging [enabled]="false"></dxo-paging>
                       <dxo-editing
@@ -49,9 +58,9 @@
                         <dxo-form>
                           <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
                             <dxi-item dataField="IdFamilia"></dxi-item>
-                            <dxi-item dataField="FechaActualizacion" readOnly="true"></dxi-item>
+                            <dxi-item dataField="FechaActualizacion" disabled="true" readOnly="true"></dxi-item>
                             <dxi-item dataField="CodFamilia"></dxi-item>
-                            <dxi-item dataField="Importado" readOnly="true"></dxi-item>                            
+                            <dxi-item dataField="Importado" disabled="true" readOnly="true"></dxi-item>                            
                             <dxi-item dataField="NombreFamilia" [colSpan]="2"></dxi-item>
                             <dxi-item dataField="UsoFiltro"></dxi-item>
                           </dxi-item>

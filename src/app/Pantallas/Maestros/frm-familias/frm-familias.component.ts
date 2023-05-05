@@ -144,4 +144,45 @@ export class FrmFamiliasComponent implements OnInit {
   }  
 
 
+  onRowUpdated(data) {
+    //console.log(data);
+  }
+
+  onRowRemoved(data) {
+    //console.log(data);
+  }
+
+  onRowInserted(data) {
+    // console.log(data);
+  }
+
+  onEditingStart(data) {
+    // console.log(data);
+  }
+
+  onInitNewRow(e) {
+    // console.log(data);
+    e.data.FechaActualizacion = new(Date);
+    e.data.Importado = false;
+    e.data.UsoFiltro = true;
+  }
+
+  onRowInserting(data) {
+    //console.log(data);
+  }
+
+  onRowUpdating(data) {
+    //console.log(data);
+  }
+
+  onRowRemoving(data) {
+    //console.log(data);
+  }
+
+  onSaving(data) {
+    //console.log(data);
+  }
+
+
+
 }
