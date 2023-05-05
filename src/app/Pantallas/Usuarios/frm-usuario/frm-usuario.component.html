@@ -34,10 +34,10 @@
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo PASSWORD"></dxi-validation-rule>
                         </dxi-item>  
 
-                        <dxi-item dataField="IdIdioma" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayIdiomas, displayExpr:'NombreIdioma', valueExpr:'IdIdioma', searchEnabled: true }">
+                        <dxi-item dataField="IdIdioma" [label]="{text:'Idioma'}" editorType="dxSelectBox" [editorOptions]="{ disabled:true, dataSource:arrayIdiomas, displayExpr:'NombreIdioma', valueExpr:'IdIdioma', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo IDIOMA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="idAlmacenDefecto" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                        <dxi-item dataField="idAlmacenDefecto" [label]="{text:'Almacen Defecto'}" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                         </dxi-item>
                         <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled:false}" [colSpan]="2"></dxi-item>
@@ -68,6 +68,7 @@
                     [disabled]="!modoEdicion"
                     [dataSource]="arrayAlmacenesDisponibles"
                     [repaintChangesOnly]="true"
+                    noDataText="No hay Almacenes Disponibles"
                     keyExpr="IdAlmacen"
                     displayExpr="NombreAlmacen">
                         <dxo-item-dragging
@@ -87,6 +88,7 @@
                     [disabled]="!modoEdicion"
                     [dataSource]="arrayAlmacenesAsignados"
                     [repaintChangesOnly]="true"
+                    noDataText="Sin Almacenes asignados"
                     keyExpr="IdAlmacen"
                     displayExpr="NombreAlmacen">
                         <dxo-item-dragging

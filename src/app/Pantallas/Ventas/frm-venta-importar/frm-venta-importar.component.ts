@@ -327,8 +327,14 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
         this._salida.IdAlmacen = almacenDef;
       }
     }
-
-    this.setFormFocus('IdEstado');
+    // enviar foco a primer elemento vacio
+    setTimeout(() => {
+      if (Utilidades.isEmpty(this._salida.IdEstado)) this.setFormFocus('IdEstado');
+      else if (Utilidades.isEmpty(this._salida.Referencia)) this.setFormFocus('Referencia');
+      else if (Utilidades.isEmpty(this._salida.Obra)) this.setFormFocus('Obra');
+      else if (Utilidades.isEmpty(this._salida.IdAlmacen)) this.setFormFocus('IdAlmacen');
+      else this.setFormFocus('FechaInicio');        
+    }, 1000);
   }
 
   validarFormulario():boolean{
@@ -368,6 +374,10 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   }
 
   
+  formReady(){
+    //alert('form listo');
+  }
+
   setFormFocus(campo:string){
     try {
       const editor = this.formSalida.instance.getEditor(campo);
@@ -376,6 +386,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     catch {} 
   }
 
+    
 }
 
 

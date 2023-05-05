@@ -59,6 +59,9 @@ export class FrmIncidenciaComponent implements OnInit {
     showClearButton: true,
     buttons: [
       {
+        name: 'clear'
+      },      
+      {
         name: 'buscarContrato',
         location: 'after',
         options: {
@@ -74,6 +77,9 @@ export class FrmIncidenciaComponent implements OnInit {
     disabled: false,
     showClearButton: true,
     buttons: [
+      {
+        name: 'clear'
+      },          
       {
         name: 'buscarArticulo',
         location: 'after',
@@ -121,6 +127,7 @@ export class FrmIncidenciaComponent implements OnInit {
         this._incidencia.IdUsuario = ConfiGlobal.DatosUsuario.IdUsuario;
         this._incidencia.FechaAlta = new Date();
         this._incidencia.FechaIncidencia = this._incidencia.FechaAlta;
+        this._incidencia.IdAlmacen = ConfiGlobal.DatosUsuario.idAlmacenDefecto;
       }
     }
 
@@ -140,7 +147,9 @@ export class FrmIncidenciaComponent implements OnInit {
 
   ngAfterContentChecked(): void {   
     // eliminar error debug ... expression has changed after it was checked.
-    this.cdref.detectChanges();    
+    this.cdref.detectChanges(); 
+    // foco del form
+    if (this.editandoIncidencia) this.setFormFocus('IdTipoIncidencia');
   }
 
   onResize(event) {

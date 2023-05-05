@@ -73,16 +73,9 @@
     </div>
 </div>
 
-<!-- <div #btnFooter>
-    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
-</div> -->
-
-<div *ngIf="modoEdicion" #btnFooter>
-    <app-cmp-botones-pantallas [botones]="btnAcionesEdicion"></app-cmp-botones-pantallas>
-</div>
-
-<div *ngIf="!modoEdicion" #btnFooter>
+<div #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
+
 
 

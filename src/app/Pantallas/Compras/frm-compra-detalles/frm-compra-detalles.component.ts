@@ -40,16 +40,10 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-compra-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-compra-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarEntrada()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Cancelar'), posicion: 3, accion: () => {this.btnCancelarSalida()}, tipo: TipoBoton.success },    
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Marcar Cancelado'), posicion: 3, accion: () => {this.btnCancelarEntrada()}, tipo: TipoBoton.success },    
     { icono: '', texto: this.traducir('frm-compra-detalles.btnConfirmar', 'Confirmar'), posicion: 4, accion: () => {this.btnConfirmarEntrada()}, tipo: TipoBoton.success },
   ];
   
-  btnAcionesEdicion: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-usuario.btnGuardar', 'Guardar'), posicion: 2, accion: () => {this.btnGuardar()}, tipo: TipoBoton.success },
-  ];
-
-
   WSDatos_Validando: boolean = false;
   WSEnvioCsv_Valido: boolean = false;
 
@@ -174,7 +168,6 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
 
     // redimensionar grid, popUp
     setTimeout(() => {
@@ -193,7 +186,6 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
 
   onResize(event) {
     Utilidades.BtnFooterUpdate(this.pantalla,this.container,this.btnFooter,this.btnAciones,this.renderer);
-    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
     this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
   }
 
@@ -304,14 +296,24 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     this.modoEdicion = editar;
     this.cols[0].visible = editar;        
     this.dg.DataGrid.instance.option('columns',this.cols);
-    setTimeout(() => {
-      if (editar) {
-          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer,false);
-      }
-      else {
-          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
-      }
-      }, 200); 
+
+    // ajuste dinamico de botones acciones segun modo edicion    
+    if (editar) {
+      this.btnAciones[0].texto = this.traducir('frm-compra-detalles.btnCancelar', 'Cancelar');      
+      this.btnAciones[0].accion = () => {this.btnCancelar()};
+      this.btnAciones[1].texto = this.traducir('frm-compra-detalles.btnGuardar', 'Guardar');
+      this.btnAciones[1].accion = () => {this.btnGuardar()};
+      this.btnAciones[1].tipo= TipoBoton.success;
+    } else {
+      this.btnAciones[0].texto = this.traducir('frm-compra-detalles.btnSalir', 'Salir');
+      this.btnAciones[0].accion = () => {this.btnSalir()};
+      this.btnAciones[1].texto = this.traducir('frm-compra-detalles.btnEditar', 'Editar');
+      this.btnAciones[1].accion = () => {this.btnEditarEntrada()};
+      this.btnAciones[1].tipo= TipoBoton.secondary;
+      this.personalizarBotonesAccion();
+    }
+    this.btnAciones[2].visible = !editar;
+    this.btnAciones[3].visible = !editar;
   }
 
   btnCancelar(){
@@ -335,7 +337,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     }      
   }
 
-  async btnCancelarSalida(){
+  async btnCancelarEntrada(){
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgCancelar', '¿Esta seguro que desea CANCELAR el contrato de Entrada seleccionado?<br>Aviso: Se realizara re-planificación de las salidas'), this.traducir('frm-compra-detalles.TituloCancelar', 'Cancelar Entrada'));  
     if (!continuar) return;
     else {
@@ -345,18 +347,33 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     }     
   }
 
-  async btnDesCancelarSalida(){
+  async btnDesCancelarEntrada(){
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgDesCancelar', '¿Esta seguro que desea ACTIVAR el contrato de Entrada seleccionado?<br>Aviso: Se realizara re-planificación de las salidas'), this.traducir('frm-compra-detalles.TituloDESCancelar', 'DES-Cancelar Entrada'));  
     if (!continuar) return;
     else {
       this._entrada.IdEstado=1;
       this.ActualizarEntrada();
     }      
-    alert('Función no implementada')
   }
 
-  btnConfirmarEntrada(){
-    alert('Función no implementada')
+  async btnConfirmarEntrada(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgConfirmar', '¿Esta seguro que desea CONFIRMAR con fecha de hoy el contrato de Entrada seleccionado?'), this.traducir('frm-compra-detalles.TituloConfirmar', 'Confirmar Entrada'));  
+    if (!continuar) return;
+    else {
+      this._entrada.Confirmada=true;
+      this._entrada.FechaConfirmada= new Date();
+      this.ActualizarEntrada();
+    }     
+  }
+
+  async btnDesConfirmarEntrada(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgDesConfirmar', '¿Esta seguro que desea DES-Confirmar el contrato de Entrada seleccionado?'), this.traducir('frm-compra-detalles.TituloDESConfirmar', 'DES-Confirmar Entrada'));  
+    if (!continuar) return;
+    else {
+      this._entrada.Confirmada=false;
+      this._entrada.FechaConfirmada=null;
+      this.ActualizarEntrada();
+    }       
   }
 
   btnEditarLineaEntrada(index:number){    
@@ -374,7 +391,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
 
   // validacion complementaria datos del formulario
   validarDatosFormulario():boolean{
-    
+    // confirmda -> requiere fecha confirmación
     if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
       Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
       return false;
@@ -386,21 +403,20 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     // personalizacion boton Cancelar/DEScancelar segun valor estado salida mostrada
     if (this._entrada.IdEstado==99) {
       this.btnAciones[2].texto='DES-Cancelar';
-      this.btnAciones[2].accion= () => {this.btnDesCancelarSalida()}      
+      this.btnAciones[2].accion= () => {this.btnDesCancelarEntrada()}      
     } else {
-      this.btnAciones[2].texto='Cancelar';
-      this.btnAciones[2].accion = () => {this.btnCancelarSalida()}
+      this.btnAciones[2].texto='Marcar Cancelado';
+      this.btnAciones[2].accion = () => {this.btnCancelarEntrada()}
     }
 
-    //TODO - Eliminar
-    // // personalizacion boton Planificar/DESplanificar segun valor planificar salida mostrada
-    // if (this._entrada.Confirmada) {
-    //   this.btnAciones[3].texto='DES-Confirmar';
-    //   this.btnAciones[3].accion= () => {this.btnDesPlanificarSalida()}      
-    // } else {
-    //   this.btnAciones[3].texto='Confirmar';
-    //   this.btnAciones[3].accion = () => {this.btnPlanificarSalida()}
-    // }    
+    // personalizacion boton Planificar/DESplanificar segun valor planificar salida mostrada
+    if (this._entrada.Confirmada) {
+      this.btnAciones[3].texto='DES-Confirmar';
+      this.btnAciones[3].accion= () => {this.btnDesConfirmarEntrada()}      
+    } else {
+      this.btnAciones[3].texto='Confirmar';
+      this.btnAciones[3].accion = () => {this.btnConfirmarEntrada()}
+    }    
   }
 
   setFormFocus(campo:string){

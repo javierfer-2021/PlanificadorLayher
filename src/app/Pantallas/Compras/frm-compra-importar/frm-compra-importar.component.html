@@ -42,7 +42,7 @@
             <!-- Formulario Datos Entrada (Compra) -->
             <div class="row pt-2">
                 <div id="form-container" class="formulario">
-                    <dx-form id="formEntrada" #formEntrada [colCount]="3" [formData]="_entrada" labelMode='static' labelLocation="left">
+                    <dx-form id="formEntrada" #formEntrada [colCount]="3" [formData]="_entrada" labelMode='static' labelLocation="left" (onContentReady)="formReady()">
 
                         <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
 

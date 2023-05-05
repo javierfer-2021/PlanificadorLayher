@@ -65,18 +65,18 @@
                             </dxi-item>                                                        
                         </dxi-item>
 
-                        <dxi-item itemType="group" caption="Identificación Contrato" readOnly="false" [colCount]="4" [colSpan]="4">
+                        <dxi-item itemType="group" #grDocumento id="grDocumento" caption="Identificación Contrato" readOnly="false" [colCount]="4" [colSpan]="4">
                             <dxi-item dataField="Contrato" editorType="dxTextBox" [editorOptions]="contratoOptions">
                             </dxi-item>
-                            <dxi-item dataField="IdDocumento" [editorOptions]="{disabled: true}">
+                            <dxi-item dataField="IdDocumento" [editorOptions]="{disabled:true, readOnly:true}">
                             </dxi-item>
                             <dxi-item itemType="empty" [colSpan]="2"></dxi-item>
 
-                            <dxi-item dataField="NombreTipoDocumento" [label]="{text:'Tipo Doc.'}" [editorOptions]="{disabled: true}">
+                            <dxi-item dataField="NombreTipoDocumento" [label]="{text:'Tipo Doc.'}" [editorOptions]="{disabled: true, readOnly:true}">
                             </dxi-item>
-                            <dxi-item dataField="IdCliProv" [label]="{text:'Id.Cli/Prov.'}" [editorOptions]="{disabled: true}">
+                            <dxi-item dataField="IdCliProv" [label]="{text:'Id.Cli/Prov.'}" [editorOptions]="{disabled: true, readOnly:true}">
                             </dxi-item>
-                            <dxi-item dataField="NombreCliProv" [label]="{text:'Nombre'}" [colSpan]="2" [editorOptions]="{disabled: true}">
+                            <dxi-item dataField="NombreCliProv" [label]="{text:'Nombre'}" [colSpan]="2" [editorOptions]="{disabled: true, readOnly:true}">
                             </dxi-item>
                         </dxi-item>
 
@@ -84,7 +84,7 @@
                             <dxi-item dataField="IdArticulo" [editorOptions]="articuloOptions">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID ARTICULO"></dxi-validation-rule>
                             </dxi-item>
-                            <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{ disabled:true }">
+                            <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{ disabled:true, readOnly:true }">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE ARTICULO"></dxi-validation-rule>
                             </dxi-item>
                             <dxi-item dataField="Unidades" [editorOptions]="{disabled: false}">

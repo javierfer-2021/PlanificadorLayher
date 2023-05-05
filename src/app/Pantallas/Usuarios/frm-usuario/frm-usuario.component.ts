@@ -40,7 +40,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-usuario.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-usuario.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarUsuario()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-usuario.btnNuevo', 'Nuevo'), posicion: 3, accion: () => {this.btnNuevoUsuario()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-usuario.btnNuevo', 'Nuevo'), visible:false, posicion: 3, accion: () => {this.btnNuevoUsuario()}, tipo: TipoBoton.secondary },
   ];
   
   btnAcionesEdicion: BotonPantalla[] = [
@@ -127,19 +127,18 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   }
 
   ngAfterViewInit(): void {
+    // actualizacion tamaño footer
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer);
-   
-    // foco 
-    this.setFormFocus('Referencia');
-   
+    Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer); 
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
 
   ngAfterContentChecked(): void {   
     // eliminar error debug ... expression has changed after it was checked.
-    this.cdref.detectChanges();    
+    this.cdref.detectChanges();  
+    // foco en modo insercion
+    if (this._usuario.IdUsuario == -1) { this.setFormFocus('NombreUsuario')}
   }
 
   onResize(event) {
@@ -265,6 +264,10 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     this._usuario.IdIdioma = 1;
     // edicion
     this.setModoEdicion(true);
+    // enviar foco a primer elemento vacio
+    setTimeout(() => {
+      this.setFormFocus('NombreUsuario');        
+    }, 1000);    
   }
 
   btnCancelar(){

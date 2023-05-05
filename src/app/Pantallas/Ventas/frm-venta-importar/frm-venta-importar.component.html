@@ -42,7 +42,7 @@
             <!-- Formulario Datos Salida (Venta-Alquiler) -->
             <div class="row pt-2">
                 <div id="form-container" class="formulario">
-                    <dx-form id="formSalida" #formSalida [colCount]="3" [formData]="_salida" labelMode='static' labelLocation="left">
+                    <dx-form id="formSalida" #formSalida [colCount]="3" [formData]="_salida" labelMode='static' labelLocation="left" (onContentReady)="formReady()">
 
                         <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
 

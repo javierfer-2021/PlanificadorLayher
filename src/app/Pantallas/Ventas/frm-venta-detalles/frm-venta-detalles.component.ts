@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
+import { ChangeDetectorRef} from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
@@ -38,17 +38,12 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarSalida()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Cancelar'), posicion: 3, accion: () => {this.btnCancelarSalida()}, tipo: TipoBoton.success },    
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnPlanificar', 'Planificar'), posicion: 4, accion: () => {this.btnPlanificarSalida()}, tipo: TipoBoton.success },
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnSalir', 'Salir'), visible:true, posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnEditar', 'Editar'), visible:true, posicion: 2, accion: () => {this.btnEditarSalida()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Marcar Cancelado'), visible:true, posicion: 3, accion: () => {this.btnCancelarSalida()}, tipo: TipoBoton.success },    
+    { icono: '', texto: this.traducir('frm-venta-detalles.btnPlanificar', 'Planificar'), visible:true, posicion: 4, accion: () => {this.btnPlanificarSalida()}, tipo: TipoBoton.success },
   ];
-
-  btnAcionesEdicion: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-usuario.btnCancelar', 'Cancelar'), posicion: 1, accion: () => {this.btnCancelar()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-usuario.btnGuardar', 'Guardar'), posicion: 2, accion: () => {this.btnGuardar()}, tipo: TipoBoton.success },
-  ];
-  
+ 
   WSDatos_Validando: boolean = false;
   
   _salida: Salida = new(Salida);
@@ -278,7 +273,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     this.setModoEdicion(false);      
   }
 
-  btnGuardar(){
+  async btnGuardar(){
     // validar formulario
     if (!this.validarFormulario()) {
       Utilidades.MostrarErrorStr(this.traducir('frm-venta-detalles.msgError_ErrorValidacionDatos','Faltan datos y/o Datos incorrectos. Revise el formulario'));
@@ -287,9 +282,27 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     else {
       // validacion especifica adicional de datos
       if (this.validarDatosFormulario()) {
-        alert('llamar web-service actualizar datos');
-        this.ActualizarSalida();
-        this.setModoEdicion(false);
+
+        // confirmación si requiere replanificación, true en caso contrario
+        if (this._salida.Planificar) {
+          // control cambio fechas inicio-fin
+          if ((this._salida.FechaInicio != this._salidaCopia.FechaInicio) || (this._salida.FechaFin != this._salidaCopia.FechaFin)) {
+            let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgConfirmarCambioFechas', 'Se han modificado las fechas de inicio y/o fin.<br>Si guarda los cambios se realizará una replanificacion<br>¿Esta seguro que desea continuar?'), 
+                                                                       this.traducir('frm-ventas-detalles.TituloConfirmarCambioFechas', 'Confirmar Replanificación'));  
+            if (confirmar) {
+              this.ActualizarSalida();
+              this.setModoEdicion(false);                
+            } else return;
+          } 
+          else {
+            this.ActualizarSalida();
+            this.setModoEdicion(false);              
+          }
+        } 
+        else {
+          this.ActualizarSalida();
+          this.setModoEdicion(false);  
+        } 
       }
     }      
   }
@@ -318,7 +331,6 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       this.ActualizarSalida();
     }   
   }
-
 
   async btnCancelarSalida(){
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgCancelar', '¿Esta seguro que desea CANCELAR el contrato seleccionado?'), this.traducir('frm-ventas-detalles.TituloCancelar', 'Cancelar Contrato Salida'));  
@@ -356,11 +368,13 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }
 
   // validacion complementaria datos del formulario
-  validarDatosFormulario():boolean{      
-    // if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
-    //   Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
-    //   return false;
-    // }
+  validarDatosFormulario():boolean{    
+    // Control fecha Fin > fecha Inicio
+    if ((!Utilidades.isEmpty(this._salida.FechaFin)) && (this._salida.FechaFin <= this._salida.FechaInicio)) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-venta-detalles.msgError_FechaFinMayorFechaInicio','La fecha FIN debe ser MAYOR que la fecha INICIO'));
+      this.setFormFocus('FechaFin');
+      return false;
+    }
     return true;
   }
 
@@ -368,14 +382,23 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     this.modoEdicion = editar;
     this.cols[0].visible = editar;        
     this.dg.DataGrid.instance.option('columns',this.cols);
-    setTimeout(() => {
-      if (editar) {
-          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer,false);
-      }
-      else {
-          Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer,false);
-      }
-      }, 100); 
+    // ajuste dinamico de botones acciones segun modo edicion    
+    if (editar) {
+      this.btnAciones[0].texto = this.traducir('frm-venta-detalles.btnCancelar', 'Cancelar');      
+      this.btnAciones[0].accion = () => {this.btnCancelar()};
+      this.btnAciones[1].texto = this.traducir('frm-venta-detalles.btnGuardar', 'Guardar');
+      this.btnAciones[1].accion = () => {this.btnGuardar()};
+      this.btnAciones[1].tipo= TipoBoton.success;
+    } else {
+      this.btnAciones[0].texto = this.traducir('frm-venta-detalles.btnSalir', 'Salir');
+      this.btnAciones[0].accion = () => {this.btnSalir()};
+      this.btnAciones[1].texto = this.traducir('frm-venta-detalles.btnEditar', 'Editar');
+      this.btnAciones[1].accion = () => {this.btnEditarSalida()};
+      this.btnAciones[1].tipo= TipoBoton.secondary;
+      this.personalizarBotonesAccion();
+    }
+    this.btnAciones[2].visible = !editar;
+    this.btnAciones[3].visible = !editar;
   }
 
   personalizarBotonesAccion(){
@@ -384,7 +407,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       this.btnAciones[2].texto='DES-Cancelar';
       this.btnAciones[2].accion= () => {this.btnDesCancelarSalida()}      
     } else {
-      this.btnAciones[2].texto='Cancelar';
+      this.btnAciones[2].texto='Marcar Cancelado';
       this.btnAciones[2].accion = () => {this.btnCancelarSalida()}
     }
 
@@ -409,7 +432,6 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       }
     }
   }    
-
   
   setFormFocus(campo:string){
     try {

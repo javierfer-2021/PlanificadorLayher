@@ -321,8 +321,13 @@ export class FrmCompraImportarComponent implements OnInit {
       }
     }
 
-    //Foco
-    this.setFormFocus('IdEstado');
+    // enviar foco a primer elemento vacio
+    setTimeout(() => {
+      if (Utilidades.isEmpty(this._entrada.IdEstado)) this.setFormFocus('IdEstado');
+      else if (Utilidades.isEmpty(this._entrada.Referencia)) this.setFormFocus('Referencia');
+      else if (Utilidades.isEmpty(this._entrada.IdAlmacen)) this.setFormFocus('IdAlmacen');
+      else this.setFormFocus('FechaPrevista');        
+    }, 1000);    
   }
 
 
@@ -345,6 +350,11 @@ export class FrmCompraImportarComponent implements OnInit {
     
   btnSalir() {
     this.location.back();
+  }
+
+  
+  formReady(){
+    //alert('form listo');
   }
 
   setFormFocus(campo:string){

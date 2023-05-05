@@ -14,7 +14,7 @@ export class UtilidadesLayher {
     public static entradaAlmacenPorDefecto(contrato:string):any {
         let valor;
         switch (ConfiGlobal.configLayher.EntradaAlmacenDefecto) {
-            case 1 : valor=ConfiGlobal.DatosUsuario.idAlmacenDefecto;;
+            case 1 : valor=ConfiGlobal.DatosUsuario.idAlmacenDefecto;
             break;
             case 2 : valor= this.calcularAlmacen(contrato);
             break;
