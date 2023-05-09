@@ -199,6 +199,82 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/articulostock/actualizarArticuloValorSecundario', body, Utilidades.getHeaders());
   }   
 
+
+  async actualizarFamilia(idFamilia,codFamiliaERP,nombreFamilia,importado,usoFiltro,fecha): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdFamilia:idFamilia,
+                                                           CondFamiliaERP:codFamiliaERP,
+                                                           NombreFamilia:nombreFamilia, 
+                                                           Importado:importado,
+                                                           UsoFiltro:usoFiltro,
+                                                           FechaActualizacion:fecha} };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/actualizarFamilia', body, Utilidades.getHeaders());
+  }   
+
+  async insertarFamilia(idFamilia,codFamiliaERP,nombreFamilia,importado,usoFiltro,fecha): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdFamilia:idFamilia,
+                                                           CondFamiliaERP:codFamiliaERP,
+                                                           NombreFamilia:nombreFamilia, 
+                                                           Importado:importado,
+                                                           UsoFiltro:usoFiltro,
+                                                           FechaActualizacion:fecha} };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/insertarFamilia', body, Utilidades.getHeaders());
+  }     
+
+  async eliminarFamilia(idFamilia): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdFamilia:idFamilia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/eliminarFamilia', body, Utilidades.getHeaders());
+  }     
+
+
+  async actualizarSubFamilia(idSubfamilia,idFamilia,nombreSubfamilia): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSubfamilia:idSubfamilia,
+                                                           IdFamilia:idFamilia,
+                                                           NombreSubfamilia:nombreSubfamilia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/actualizarSubFamilia', body, Utilidades.getHeaders());
+  }   
+
+  async insertarSubFamilia(idSubfamilia,idFamilia,nombreSubfamilia): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSubfamilia:idSubfamilia,
+                                                           IdFamilia:idFamilia,
+                                                           NombreSubfamilia:nombreSubfamilia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/insertarSubFamilia', body, Utilidades.getHeaders());
+  }     
+
+  async eliminarSubFamilia(idSubfamilia): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }
+  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSubfamilia:idSubfamilia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/articulostock/eliminarSubFamilia', body, Utilidades.getHeaders());
+  }     
+
   //#endregion
 
 

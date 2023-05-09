@@ -19,6 +19,16 @@
                       [dataSource]="arraySubfamilias"
                       keyExpr="IdSubfamilia"
                       [showBorders]="true"
+                      (onEditingStart)="onEditingStart($event)"
+                      (onRowUpdated)="onRowUpdated($event)"
+                      (onRowRemoved)="onRowRemoved($event)"
+                      (onInitNewRow)="onInitNewRow($event)"
+                      (onRowInserting)="onRowInserting($event)"
+                      (onRowInserted)="onRowInserted($event)"
+                      (onRowUpdating)="onRowUpdating($event)"
+                      (onRowRemoving)="onRowRemoving($event)"
+                      (onSaving)="onSaving($event)"
+                      (onRowValidating)="onRowValidating($event)"                      
                     >
                       <dxo-paging [enabled]="false"></dxo-paging>
                       <dxo-editing
@@ -43,28 +53,29 @@
                           title="{{traducir('frm-familias.lblPopUpSubfamilia', 'Datos Sub-Familia')}}"
                           [showTitle]="true"
                           [width]="600"
-                          [height]="250"
+                          [height]="300"
                         >
                         </dxo-popup>                        
                         <dxo-form>
                           <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
-                            <dxi-item dataField="IdSubfamilia"></dxi-item>
-                            <dxi-item dataField="IdFamilia"></dxi-item>
-                            <dxi-item dataField="NombreSubfamilia" [colSpan]="2"></dxi-item>
-                            <!-- <dxi-item dataField="FechaActualizacion" readOnly="true"></dxi-item> -->
-                            <!-- <dxi-item dataField="CodFamilia"></dxi-item> -->
-                            <!-- <dxi-item dataField="Importado" readOnly="true"></dxi-item>                             -->
-                            <!-- <dxi-item dataField="UsoFiltro"></dxi-item> -->
+                            <dxi-item dataField="IdSubfamilia">
+                              <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID.SUB-FAMILIA"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item itemType="empty"></dxi-item>
+                            <dxi-item dataField="IdFamilia" [colSpan]="2" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayFamilias, displayExpr:'NombreFamilia', valueExpr:'IdFamilia', searchEnabled: true }">
+                              <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID.FAMILIA"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="NombreSubfamilia" [colSpan]="2">
+                              <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE SUB-FAMILIA"></dxi-validation-rule>
+                            </dxi-item>
                           </dxi-item>
                         </dxo-form>
                       </dxo-editing>
                   
                       <dxi-column dataField="IdSubfamilia" caption="ID Sub-Familia" dataType="number" [width]="130"></dxi-column>
-                      <dxi-column dataField="IdFamilia" caption="ID Familia" dataType="number" [width]="120"></dxi-column>
                       <dxi-column dataField="NombreSubfamilia" caption="Nombre Sub-Familia"></dxi-column>
-                      <!-- <dxi-column dataField="UsoFiltro" caption="Uso Filtros" dataType="boolean"> </dxi-column> -->
-                      <!-- <dxi-column dataField="Importado" caption="Importado" dataType="boolean"> </dxi-column> -->
-                      <!-- <dxi-column dataField="FechaActualizacion" caption="Fec.Actualización" dataType="date"> </dxi-column> -->
+                      <dxi-column dataField="IdFamilia" caption="ID Familia" dataType="number" [width]="120"></dxi-column>
+                      <dxi-column dataField="NombreFamilia" caption="Nombre Familia"></dxi-column>
                     </dx-data-grid>
                 </div>
             </div>

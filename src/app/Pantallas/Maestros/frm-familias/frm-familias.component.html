@@ -28,6 +28,7 @@
                       (onRowUpdating)="onRowUpdating($event)"
                       (onRowRemoving)="onRowRemoving($event)"
                       (onSaving)="onSaving($event)"
+                      (onRowValidating)="onRowValidating($event)"
                     >
                       <dxo-paging [enabled]="false"></dxo-paging>
                       <dxo-editing
@@ -54,15 +55,26 @@
                           [width]="600"
                           [height]="350"
                         >
-                        </dxo-popup>                        
-                        <dxo-form>
+                        </dxo-popup>   
+
+                        <dxo-form id="formFamilia" #formFamilia>
                           <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
-                            <dxi-item dataField="IdFamilia"></dxi-item>
-                            <dxi-item dataField="FechaActualizacion" disabled="true" readOnly="true"></dxi-item>
-                            <dxi-item dataField="CodFamilia"></dxi-item>
-                            <dxi-item dataField="Importado" disabled="true" readOnly="true"></dxi-item>                            
-                            <dxi-item dataField="NombreFamilia" [colSpan]="2"></dxi-item>
-                            <dxi-item dataField="UsoFiltro"></dxi-item>
+                            <dxi-item dataField="IdFamilia">
+                              <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID.FAMILIA"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="FechaActualizacion" disabled="true" readOnly="true">
+                              <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ACTUALIZACION"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="CodFamilia" [label]="{text:'Cod.Familia ERP'}"></dxi-item>
+                            <dxi-item dataField="Importado" disabled="true" readOnly="true">
+                              <!-- <dxi-validation-rule type="required" message="Debe indicar un valor para el campo IMPORTADO"></dxi-validation-rule> -->
+                            </dxi-item>                            
+                            <dxi-item dataField="NombreFamilia" [colSpan]="2">
+                              <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE FAMILIA"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="UsoFiltro" [label]="{text:'Usar en Filtros'}">
+                              <dxi-validation-rule type="required" message="Debe indicar un valor para el campo USO EN FILTROS"></dxi-validation-rule>
+                            </dxi-item>
                           </dxi-item>
                         </dxo-form>
                       </dxo-editing>
@@ -70,15 +82,14 @@
                       <dxi-column dataField="IdFamilia" caption="ID Familia" dataType="number" [width]="120"></dxi-column>
                       <dxi-column dataField="CodFamilia" caption="Cod.Familia"></dxi-column>
                       <dxi-column dataField="NombreFamilia" caption="Nombre Familia"></dxi-column>
-                      <dxi-column dataField="UsoFiltro" caption="Uso Filtros" dataType="boolean"> </dxi-column>
-                      <dxi-column dataField="Importado" caption="Importado" dataType="boolean"> </dxi-column>
-                      <dxi-column dataField="FechaActualizacion" caption="Fec.Actualización" dataType="date"> </dxi-column>
+                      <dxi-column dataField="UsoFiltro" caption="Uso Filtros" dataType="boolean"></dxi-column>
+                      <dxi-column dataField="Importado" caption="Importado" dataType="boolean"></dxi-column>
+                      <dxi-column dataField="FechaActualizacion" caption="Fec.Actualización" dataType="date"></dxi-column>
+
                     </dx-data-grid>
                 </div>
             </div>
-        </div>             
-
-        
+        </div>                    
     </div>
 </div>
 

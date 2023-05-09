@@ -39,7 +39,7 @@ export class FrmSubfamiliasComponent implements OnInit {
   WSDatos_Validando: boolean = false;
   
   arraySubfamilias: Array<ArticuloSubfamilia> = [];
-  
+  arrayFamilias: Array<ArticuloFamilia> = [];
   
   //#endregion - declaracion de cte y variables 
 
@@ -55,7 +55,8 @@ export class FrmSubfamiliasComponent implements OnInit {
   { }
 
   ngOnInit(): void {
-    this.cargarFamilias();    
+    this.cargarSubFamilias();    
+    setTimeout(() => { this.cargarArrayFamilias() }, 2000);
   }
 
 
@@ -90,7 +91,27 @@ export class FrmSubfamiliasComponent implements OnInit {
 
   //#region - web_services
 
-  async cargarFamilias(){
+  async cargarArrayFamilias(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.getListaFamilias()).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.arrayFamilias = datos.datos;
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-subfamilias.msgError_WSCargarfamilias','Error cargando lista familias')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-subfamilias');
+      }
+    );
+  }   
+  
+
+  async cargarSubFamilias(){
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
@@ -98,7 +119,6 @@ export class FrmSubfamiliasComponent implements OnInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arraySubfamilias = datos.datos;
-          //this.arraySubfamilias = datos.datos.Subfamilias;
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-subfamilias.msgError_WSCargarSubfamilias','Error importando/actualizando maestro de Sub-familias')); 
         }
@@ -110,16 +130,16 @@ export class FrmSubfamiliasComponent implements OnInit {
     );
   }   
 
-  async importarFamilias(){
+  async importarSubFamilias(){
     // if(this.WSDatos_Validando) return;
 
     // this.WSDatos_Validando = true;
     // (await this.planificadorService.importarArticulos()).subscribe(
     //   datos => {
     //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       Utilidades.MostrarExitoStr(this.traducir('frm-subfamilias.msgOk_WSImportarFamilias','Maestro familias actualizado correctamente'));           
+    //       Utilidades.MostrarExitoStr(this.traducir('frm-subfamilias.msgOk_WSImportarsubfamilias','Maestro subfamilias actualizado correctamente'));           
     //     } else {          
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-subfamilias.msgError_WSImportarFamilias','Error importando/actualizando maestro de familias')); 
+    //       Utilidades.MostrarErrorStr(this.traducir('frm-subfamilias.msgError_WSImportarsubfamilias','Error importando/actualizando maestro de subfamilias')); 
     //     }
     //     this.WSDatos_Validando = false;
     //   }, error => {
@@ -129,18 +149,133 @@ export class FrmSubfamiliasComponent implements OnInit {
     // );
   }  
 
+
+  async actualizarSubFamilias(subfamilia:ArticuloSubfamilia){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarSubFamilia(subfamilia.IdSubfamilia,subfamilia.IdFamilia,subfamilia.NombreSubfamilia)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-subfamilias.msgOk_WSActualizarFamilia','Maestro subfamilias actualizado correctamente'));           
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-subfamilias.msgError_WSActualizarFamilia','Error importando/actualizando maestro de subfamilias')); 
+          this.cargarSubFamilias();
+        }        
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-subfamilias');
+        this.cargarSubFamilias();
+      }
+    );
+  }  
+
+  async insertarSubFamilias(subfamilia:ArticuloSubfamilia){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.insertarSubFamilia(subfamilia.IdSubfamilia,subfamilia.IdFamilia,subfamilia.NombreSubfamilia)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-subfamilias.msgOk_WSInsertarFamilia','Maestro subfamilias actualizado correctamente'));           
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-subfamilias.msgError_WSInsertarFamilia','Error insertando nueva subfamilia')); 
+          this.cargarSubFamilias();
+        }        
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-subfamilias');
+        this.cargarSubFamilias();
+      }
+    );
+  } 
+
+  async eliminarSubFamilias(subfamilia:ArticuloSubfamilia){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.eliminarSubFamilia(subfamilia.IdSubfamilia)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-subfamilias.msgOk_WSEliminarFamilia','Maestro subfamilias actualizado correctamente'));           
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-subfamilias.msgError_WSEliminarFamilia','Error eliminando subfamilia')); 
+          this.cargarSubFamilias();
+        }        
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-subfamilias');
+        this.cargarSubFamilias();
+      }
+    );
+  } 
+
+
   //#endregion
 
   async btnImportarSubfamilias() {
     let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-subfamilias.dlgImportarArticulosMensaje','Recuerde que los datos de stock no son actualizados<br>¿Seguro que desea actualizar el maestro de Artículos?'), 
                                                                this.traducir('frm-subfamilias.dlgImportarArticulosTitulo', 'Importar Artículos'));
     if (confirmar) {
-      this.importarFamilias();  
+      this.importarSubFamilias();  
     }     
   }
 
   salir() {
     this.location.back();
+  }  
+
+
+  onRowUpdated(data) {
+    //console.log(data);
+    this.actualizarSubFamilias(data.data);
+  }
+
+  onRowRemoved(data) {
+    //console.log(data);
+    this.eliminarSubFamilias(data.data);
+  }
+
+  onRowInserted(data) {
+    //console.log(data);
+    this.insertarSubFamilias(data.data);
+  }
+
+  onInitNewRow(e) {
+    // console.log(data);
+    // e.data.FechaActualizacion = new(Date);
+    // e.data.Importado = false;
+    // e.data.UsoFiltro = true;
+  }
+
+  onEditingStart(data) {
+    // console.log(data);
+  }
+
+  onRowInserting(data) {
+    //console.log(data);
+  }
+
+  onRowUpdating(data) {
+    //console.log(data);
+  }
+
+  onRowRemoving(data) {
+    //console.log(data);
+  }
+
+  onSaving(data) {
+    //console.log(data);
+  }
+
+  onRowValidating(e){    
+    //console.log();
   }  
 
 }

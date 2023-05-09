@@ -22,13 +22,14 @@ export class ArticuloFamilia {
   NombreFamilia: string;
   Importado: boolean;
   FechaActualizacion: Date;
-  UsoFiltro:boolean;
+  UsoFiltro: boolean;
 }
 
 export class ArticuloSubfamilia {
   IdSubfamilia: number;
   IdFamilia: number;
   NombreSubfamilia: string;
+  NombreFamilia: string;
 }
 
   export class Almacen {

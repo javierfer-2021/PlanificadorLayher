@@ -9,7 +9,7 @@ import { BotonMenu } from '../../../Clases/Componentes/BotonMenu';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { ArticuloFamilia } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-
+import { DxFormComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-frm-familias',
@@ -26,6 +26,8 @@ export class FrmFamiliasComponent implements OnInit {
   @ViewChild('container') container: ElementRef;
   @ViewChild('btnFooter') btnFooter: ElementRef;
   @ViewChild('pantalla') pantalla: ElementRef;
+
+  @ViewChild('formFamilia', { static: false }) formFamilia: DxFormComponent;  
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-familias.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
@@ -129,6 +131,72 @@ export class FrmFamiliasComponent implements OnInit {
     // );
   }  
 
+  async actualizarFamilias(familia:ArticuloFamilia){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarFamilia(familia.IdFamilia,familia.CodFamilia,familia.NombreFamilia,familia.Importado,familia.UsoFiltro,familia.FechaActualizacion)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-familias.msgOk_WSActualizarFamilia','Maestro familias actualizado correctamente'));           
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-familias.msgError_WSActualizarFamilia','Error importando/actualizando maestro de familias')); 
+          this.cargarFamilias();
+        }        
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-familias');
+        this.cargarFamilias();
+      }
+    );
+  }  
+
+  async insertarFamilias(familia:ArticuloFamilia){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.insertarFamilia(familia.IdFamilia,familia.CodFamilia,familia.NombreFamilia,familia.Importado,familia.UsoFiltro,familia.FechaActualizacion)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-familias.msgOk_WSInsertarFamilia','Maestro familias actualizado correctamente'));           
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-familias.msgError_WSInsertarFamilia','Error insertando nueva familia')); 
+          this.cargarFamilias();
+        }        
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-familias');
+        this.cargarFamilias();
+      }
+    );
+  } 
+
+  async eliminarFamilias(familia:ArticuloFamilia){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.eliminarFamilia(familia.IdFamilia)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-familias.msgOk_WSEliminarFamilia','Maestro familias actualizado correctamente'));           
+          this.WSDatos_Validando = false;
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-familias.msgError_WSEliminarFamilia','Error eliminando familia')); 
+          this.cargarFamilias();
+        }        
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-familias');
+        this.cargarFamilias();
+      }
+    );
+  } 
+  
   //#endregion
 
   async btnImportarFamilias() {
@@ -146,18 +214,17 @@ export class FrmFamiliasComponent implements OnInit {
 
   onRowUpdated(data) {
     //console.log(data);
+    this.actualizarFamilias(data.data);
   }
 
   onRowRemoved(data) {
     //console.log(data);
+    this.eliminarFamilias(data.data);
   }
 
   onRowInserted(data) {
-    // console.log(data);
-  }
-
-  onEditingStart(data) {
-    // console.log(data);
+    //console.log(data);
+    this.insertarFamilias(data.data);
   }
 
   onInitNewRow(e) {
@@ -165,6 +232,10 @@ export class FrmFamiliasComponent implements OnInit {
     e.data.FechaActualizacion = new(Date);
     e.data.Importado = false;
     e.data.UsoFiltro = true;
+  }
+
+  onEditingStart(data) {
+    // console.log(data);
   }
 
   onRowInserting(data) {
@@ -183,6 +254,7 @@ export class FrmFamiliasComponent implements OnInit {
     //console.log(data);
   }
 
-
-
+  onRowValidating(e){    
+    //console.log();
+  }
 }
