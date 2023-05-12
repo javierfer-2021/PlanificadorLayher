@@ -1,0 +1,52 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
+                    {{traducir('frm-compra-lineas.lblTitulo', 'Excepciones linea entrada material')}}
+                </div>
+            </div>   
+        </div>         
+
+        <!-- Formulario Datos Linea Entrada (Compra) -->
+        <div class="row pt-2">
+            <div id="form-container" class="formulario">
+                <dx-form id="formEntradaLinea" #formEntradaLinea [colCount]="3" [formData]="_lineaEntrada" labelMode='static' labelLocation="left" [readOnly]="false">
+
+                    <dxi-item dataField="IdArticulo" [colSpan]="1" [editorOptions]="{disabled: true}">
+                        <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID PROVEEDOR"></dxi-validation-rule>
+                    </dxi-item>                            
+                    <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{disabled: true}">
+                        <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE PROVEEDOR"></dxi-validation-rule>
+                    </dxi-item>                            
+
+                    <dxi-item dataField="FechaPrevista" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                        <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA PREVISTA"></dxi-validation-rule>
+                    </dxi-item>
+                    <dxi-item dataField="FechaConfirmacion" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                        <!-- <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA CONFIRMACION"></dxi-validation-rule> -->
+                    </dxi-item>
+                    <dxi-item dataField="FechaActualizacion" editorType="dxDateBox" [editorOptions]="{disabled: true, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                        <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ACTUALIZACION"></dxi-validation-rule>
+                    </dxi-item>
+                        
+                    <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
+
+                </dx-form>
+            </div>
+        </div>                 
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+
+
+

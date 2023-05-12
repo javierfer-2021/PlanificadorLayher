@@ -31,6 +31,8 @@ export class Entrada {
     CantidadConfirmada: number;
     CantidadCancelada: number;
     FechaActualizacion: Date;
+    FechaPrevista: Date;
+    FechaConfirmada: Date;
   }
 
   export class EntradaLineaERP {

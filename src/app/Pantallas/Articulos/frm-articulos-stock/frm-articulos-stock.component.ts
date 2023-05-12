@@ -148,7 +148,6 @@ export class FrmArticulosStockComponent implements OnInit {
   //popUp Filtros Adicionales
   @ViewChild('popUpVisibleEditar', { static: false }) popUpEditar: DxPopupComponent;
   popUpVisibleEditar:boolean = false;
-  //articuloSeleccionado: Articulo = new Articulo();
   articuloSeleccionado: ArticuloStock = new ArticuloStock();
 
   //#endregion

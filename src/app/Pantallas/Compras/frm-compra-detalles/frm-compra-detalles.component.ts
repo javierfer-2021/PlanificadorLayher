@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
@@ -14,7 +14,7 @@ import { Entrada, EntradaLinea, EstadoEntrada } from '../../../Clases/Entrada';
 import { Almacen } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent } from 'devextreme-angular';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DxPopupComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-frm-compra-detalles',
@@ -40,7 +40,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-compra-detalles.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-compra-detalles.btnEditar', 'Editar'), posicion: 2, accion: () => {this.btnEditarEntrada()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-venta-detalles.btnCancelar', 'Marcar Cancelado'), posicion: 3, accion: () => {this.btnCancelarEntrada()}, tipo: TipoBoton.success },    
+    { icono: '', texto: this.traducir('frm-compra-detalles.btnCancelar', 'Marcar Cancelado'), posicion: 3, accion: () => {this.btnCancelarEntrada()}, tipo: TipoBoton.success },    
     { icono: '', texto: this.traducir('frm-compra-detalles.btnConfirmar', 'Confirmar'), posicion: 4, accion: () => {this.btnConfirmarEntrada()}, tipo: TipoBoton.success },
   ];
   
@@ -126,6 +126,11 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   // botones acciones formulario
   confirmarButtonOptions: any;
   cancelarButtonOptions: any;
+
+  //popUp Editar Lineas
+  @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
+  popUpVisibleEditarLinea:boolean = false;
+  lineaSeleccionada: EntradaLinea = new EntradaLinea();
 
   //#endregion
 
@@ -232,7 +237,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getLineasSalida(this._entrada.IdEntrada)).subscribe(
+    (await this.planificadorService.getLineasEntrada(this._entrada.IdEntrada)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayLineasEntrada = datos.datos;
@@ -273,7 +278,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        Utilidades.compError(error, this.router,'frm-ventas-detalles');
+        Utilidades.compError(error, this.router,'frm-compra-detalles');
       }
     );
   } 
@@ -377,9 +382,21 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   }
 
   btnEditarLineaEntrada(index:number){    
-    alert('pendiente de implementar');
+    //alert('pendiente de implementar');
+    this.lineaSeleccionada = this.arrayLineasEntrada[index];
+    this.popUpVisibleEditarLinea = true;
   }
 
+  cerrarEditarLinea(e){
+    if (e != null) {     
+      // Actualizar info del grid    
+      alert('actualizar info grid');
+      //this.cargarStock(this.sbAlmacenes.SelectBox.value);
+    }
+    this.popUpVisibleEditarLinea = false;    
+  }
+  
+  
   // validacion estandar del formulario
   validarFormulario():boolean{
     const res = this.formEntrada.instance.validate();

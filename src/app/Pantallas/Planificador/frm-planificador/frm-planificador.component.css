@@ -87,18 +87,13 @@
 
 ::ng-deep .dx-header-row .unidades_sel,
 ::ng-deep .dx-header-row .undPedidas_sel,
-::ng-deep .dx-header-row .undStock_sel
- {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    color: black;
-}
-
+::ng-deep .dx-header-row .undStock_sel,
 ::ng-deep .dx-header-row .undAsignadas_sel {
     background-color: #f2f2f2;
     font-weight: bold;
     color: black;
 }
+
 
 
 
@@ -141,11 +136,7 @@
 
 ::ng-deep .dx-header-row .unidades,
 ::ng-deep .dx-header-row .undPedidas,
-::ng-deep .dx-header-row .undStock {
-    background-color: #f2f2f2;
-}
-
-
+::ng-deep .dx-header-row .undStock,
 ::ng-deep .dx-header-row .undAsignadas {
     background-color: #f2f2f2;
 }

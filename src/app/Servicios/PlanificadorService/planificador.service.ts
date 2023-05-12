@@ -363,6 +363,21 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/entradas/actualizarEntrada', body, Utilidades.getHeaders());
   }   
 
+  async actualizarLineaEntrada(idEntrada,idLinea,idArticulo,fechaPrevista,fechaConfirmada,fechaActualizacion): Promise<Observable<any>>{ // Promise<Observable<any>>
+    //await Utilidades.establecerConexion();
+    while (ConfiGlobal.principalValidando) {
+      await Utilidades.delay(500);
+    }    
+    const body = { usuario : ConfiGlobal.Usuario, 
+                   datos: { IdEntrada: idEntrada,
+                            IdLinea: idLinea,
+                            IdArticulo: idArticulo,
+                            FechaPrevista: fechaPrevista, 
+                            FechaConfirmada: fechaConfirmada, 
+                            FechaActualizacion: fechaActualizacion } };    
+    return this.http.post(ConfiGlobal.URL + '/api/entradas/actualizarLineaEntrada', body, Utilidades.getHeaders());
+  }     
+
   //#endregion
 
   

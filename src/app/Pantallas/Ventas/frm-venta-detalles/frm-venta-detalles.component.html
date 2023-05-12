@@ -77,5 +77,15 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
+<!-- popUp Editar Linea Entrada -->
+<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="300px" width="960px"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleEditarLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-detalles.str_txtPopupEditarLinea', 'Editar Línea Salida')}}"
+    contentTemplate="contentEditarLinea">
+    <div *dxTemplate="let data of 'contentEditarLinea'">
+        <app-frm-venta-lineas [linea]="lineaSeleccionada" (cerrarPopUp)="cerrarEditarLinea($event)"></app-frm-venta-lineas>
+    </div>    
+</dx-popup>
 
 

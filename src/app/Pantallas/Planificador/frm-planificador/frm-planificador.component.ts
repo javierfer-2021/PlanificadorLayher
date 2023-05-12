@@ -42,11 +42,14 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   ];
 
   _salida: Salida;
-  oOfertaSeleccionada: Salida;  
+  oOfertaSeleccionada: Salida = new (Salida);   
   arrayArts: Array<SalidaLinea> = [];
   arrayCabeceras: Array<Salida> = [];
   arrayUnidadesOfertas = [];
   
+  salidaSel_BtnPlanificar:boolean = true;
+  salidaSel_BtnObservaciones:boolean = true;
+
   idOferta_mostrar: string;
   fechaAlta_mostrar: string;
   fechaInicio_mostrar: string;
@@ -76,6 +79,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     { dataField: 'CantidadDisponible',
       caption: 'Cantidad Disponible',
       cssClass: 'blanco',
+      visible: false
     },
     { dataField: 'CantidadPedida',
       caption: 'Cantidad Pedida',
@@ -165,7 +169,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     if(Utilidades.isEmpty(nav)) return;
     this._salida = nav.salida;
     this.oOfertaSeleccionada = this._salida;
-    
+    this.salidaSel_BtnPlanificar = !this.oOfertaSeleccionada.Planificar;
+    this.salidaSel_BtnObservaciones = Utilidades.isEmpty(this.oOfertaSeleccionada.Observaciones);
+
     //configuración menu articulos
     this.itemsMenuArticulos= [{ text: 'Reemplazar artículo' },
                               { text: 'Eliminar artículo' },
@@ -257,6 +263,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           this.obra_mostrar = this.oOfertaSeleccionada.Obra;
           this.referencia_mostrar = this.oOfertaSeleccionada.Referencia;
 
+          this.salidaSel_BtnPlanificar = !this.oOfertaSeleccionada.Planificar;
+          this.salidaSel_BtnObservaciones = Utilidades.isEmpty(this.oOfertaSeleccionada.Observaciones);
+      
           this.arrayArts = datos.datos.LineasOferta;
           this.arrayCabeceras = datos.datos.OfertasRel;
           this.arrayUnidadesOfertas = datos.datos.LineasOfertasRel;
@@ -654,65 +663,30 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     }
   }  
 
-  //color celdas unidades
+  //propiedades estilos columnas unidades segun valores celdas.
   onCellPrepared_DataGridUnidades(e){     
-    //TODO - revisar asignacion estilo: se asigna a linea+1
-    /*
-    //console.log(e.rowType+' -> columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
+    //console.log(e.rowType+' -> columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}'); 
+
     // check filas correspondiente a datos
-    if ((e.rowType==="data") && (e.rowIndex != undefined)) {
-      //console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}');
-      let estilo:string="";
-        
-      // determinar si estamos en columna contrato seleccionado
-      // 1. valores unidades contrato seleccionado
+    if ((e.rowType==="data") && (e.rowIndex != undefined)) {        
+      // determinar si estamos en columna contrato seleccionado vs otros contratos      
+      // 1. CONTRATO SELECCIONADO --> font-weight=bold 
       if (this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida == this._salida.IdSalida) {
-        estilo = "valorUnidades_sel";        
-        // und. pendientes_asignar
-        if (((e.columnIndex % 3) == 1) && (e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
-            estilo = "valorUndPendientes_sel";
-        }
-        // stock=0
-        else if (((e.columnIndex % 3) == 2) && (e.values[e.columnIndex] == 0)) {
-            estilo = "valorStockCero"
-        } 
-        e.column.cssClass = estilo;               
+        e.cellElement.style.fontWeight = "bold";
       } 
       
-      // 2. valores de articulos <> contrato seleccionado
-      else {
-        estilo = "valorUnidades";
-        if (e.columnIndex>0) {
-          if ((e.columnIndex % 3) == 0) {
-            e.column.cssClass = "valorUnidades";
-          }
-          //console.log(e.columnIndex+' - '+(e.columnIndex % 3) +' --> '+ e.values[e.columnIndex] +','+ e.values[e.columnIndex-1]);
-          // und. pendientes_asignar
-          else if ((e.columnIndex % 3) == 1) {
-            if ((e.values[e.columnIndex] < e.values[e.columnIndex-1])) {
-              console.log('pedidas < asignadas --> '+e.values[e.columnIndex] +','+ e.values[e.columnIndex-1]);
-              e.column.cssClass = "valorUndPendientes";
-            } else {
-              e.column.cssClass = "valorUnidades";
-            }
-          }
-          // stock=0
-          else if ((e.columnIndex % 3) == 2) {
-            if ((e.values[e.columnIndex] == 0)) {
-              console.log('disponibles = 0 -->'+e.values[e.columnIndex]);
-              e.column.cssClass = "valorStockCero"
-            } else {
-              e.column.cssClass = "valorUnidades";
-            }
-          }
-        }
-        //e.column.cssClass = estilo;
-      } 
+      // 2. COMPROBACION VALORES COLUMNAS PARA CAMBIO COLOR SEGUN VALOR UNIDADES
+      // und. pendientes_asignar
+      if ( ((e.columnIndex % 3) == 1) && ((e.values[e.columnIndex] < e.values[e.columnIndex-1])) ){
+          //console.log('pedidas < asignadas --> '+e.values[e.columnIndex] +','+ e.values[e.columnIndex-1]);
+          e.cellElement.style.backgroundColor="lightpink"; 
+      }
+      // stock=0
+      else if ( ((e.columnIndex % 3) == 2) && ((e.values[e.columnIndex] == 0)) ) {
+        e.cellElement.style.color="red";
+      }
+    }  
 
-      //e.column.cssClass = estilo;   
-      //console.log('columnIndex:'+e.columnIndex+' - rowIndex:'+e.rowIndex+' | value:'+e.value+ ' {'+e.values+'}'+' - estilo:'+estilo);
-    }    
-    */    
   }    
 
 //#endregion - Gestion ordenacion simultanea de los grid

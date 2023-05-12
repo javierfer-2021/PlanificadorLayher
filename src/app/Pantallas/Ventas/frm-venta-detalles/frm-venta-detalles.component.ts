@@ -14,7 +14,8 @@ import { Salida, SalidaLinea, EstadoSalida } from '../../../Clases/Salida';
 import { Almacen } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent } from 'devextreme-angular';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DxPopupComponent } from 'devextreme-angular';
+
 
 @Component({
   selector: 'app-frm-venta-detalles',
@@ -121,6 +122,11 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     },       
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
+
+  //popUp Editar Lineas
+  @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
+  popUpVisibleEditarLinea:boolean = false;
+  lineaSeleccionada: SalidaLinea = new SalidaLinea();
 
   //#endregion
 
@@ -354,8 +360,19 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }
 
 
-  btnEditarLineaSalida(index:number){    
-    alert('pendiente de implementar');
+  btnEditarLineaSalida(index:number){  
+    this.lineaSeleccionada = this.arrayLineasSalida[index];
+    this.popUpVisibleEditarLinea = true;      
+  }
+
+
+  cerrarEditarLinea(e){
+    if (e != null) {     
+      // Actualizar info del grid    
+      alert('actualizar info grid');
+      //this.cargarStock(this.sbAlmacenes.SelectBox.value);
+    }
+    this.popUpVisibleEditarLinea = false;    
   }
 
   // validacion estandar del formulario

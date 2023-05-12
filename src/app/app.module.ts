@@ -58,6 +58,8 @@ import { FrmSubfamiliasComponent } from './Pantallas/Maestros/frm-subfamilias/fr
 import { FrmIncidenciaBuscarComponent } from './Pantallas/Incidencias/frm-incidencia-buscar/frm-incidencia-buscar.component';
 import { FrmIncidenciaBuscarDocComponent } from './Pantallas/Incidencias/frm-incidencia-buscar-doc/frm-incidencia-buscar-doc.component';
 import { FrmIncidenciaBuscarArtComponent } from './Pantallas/Incidencias/frm-incidencia-buscar-art/frm-incidencia-buscar-art.component';
+import { FrmCompraLineasComponent } from './Pantallas/Compras/frm-compra-lineas/frm-compra-lineas.component';
+import { FrmVentaLineasComponent } from './Pantallas/Ventas/frm-venta-lineas/frm-venta-lineas.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -103,7 +105,9 @@ function initializeApp(appConfig: ConfigService) {
     FrmSubfamiliasComponent,
     FrmIncidenciaBuscarComponent,
     FrmIncidenciaBuscarDocComponent,
-    FrmIncidenciaBuscarArtComponent
+    FrmIncidenciaBuscarArtComponent,
+    FrmCompraLineasComponent,
+    FrmVentaLineasComponent
 
   ],
   imports: [

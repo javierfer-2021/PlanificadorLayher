@@ -84,7 +84,7 @@
                         <div class="row mt-1">
                             <div class="col-2 mt-0">&nbsp;</div>  
 
-                            <div *ngIf="oOfertaSeleccionada.Planificar; then btnDESplanificarBlock else btnPlanificarBlock"></div>
+                            <div *ngIf="salidaSel_BtnPlanificar; then btnPlanificarBlock else btnDESplanificarBlock"></div>
                                 <ng-template #btnPlanificarBlock>
                                     <div class="col-5 px-0">
                                         <button type="button" class="btn btn-outline-success btn-sm w-100" style="font-size:0.8em;" (click)="btnPlanificarContrato()">
@@ -102,7 +102,7 @@
                                     </div>
                                 </ng-template>                            
 
-                                <div *ngIf="oOfertaSeleccionada.Observaciones!=''" class="col-5" style="padding:0px 0px 0px 8px;">
+                                <div *ngIf="salidaSel_BtnObservaciones" class="col-5" style="padding:0px 0px 0px 8px;">
                                     <button type="button" class="btn btn-outline-secondary btn-sm w-100" style="font-size:0.8em;" (click)="btnMostrarObservaciones()">
                                         <i class="bi bi-chat-fill"></i>&nbsp;&nbsp;
                                         {{traducir('frm-venta-buscar.lblBtnObservaciones', 'Ver Observaciones')}}

@@ -36,6 +36,8 @@ export class Salida {
     Eliminada: boolean;
     Insertada: boolean;
     Observaciones: string;
+    FechaInicio: Date;
+    FechaFin: Date;               
   }
 
 
