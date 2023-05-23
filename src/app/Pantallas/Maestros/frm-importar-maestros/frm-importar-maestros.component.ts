@@ -25,8 +25,12 @@ export class FrmImportarMaestrosComponent implements OnInit {
 
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
+  loadingVisible = false;
+  indicatorUrl = "";
+  loadingMessage = 'Cargando...'  
   clickNoPeticion: boolean = false;
   verLabelHtml: boolean = true;
+
 
   @ViewChild('container') container: ElementRef;
   @ViewChild('btnFooter') btnFooter: ElementRef;
@@ -153,16 +157,18 @@ export class FrmImportarMaestrosComponent implements OnInit {
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;
+    this.mostrarPanelProceso();
     (await this.planificadorService.iniciarEjercicio()).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          Utilidades.MostrarExitoStr(this.traducir('frm-importar-maestros.msgOk_WSiniciarEjercicio','Nuevo EJERCICIO Iniciado correctamente'));           
+          this.ocultarPanelProceso_Exito(this.traducir('frm-importar-maestros.msgOk_WSiniciarEjercicio','Nuevo EJERCICIO Iniciado correctamente'));
         } else {          
-          Utilidades.MostrarErrorStr(this.traducir('frm-importar-maestros.msgError_WSiniciarEjercicio','Error iniciando nuevo ejercicio')); 
+          this.ocultarPanelProceso_Fallo(this.traducir('frm-importar-maestros.msgError_WSiniciarEjercicio','Error iniciando nuevo ejercicio')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
+        this.ocultarPanelProceso();
         Utilidades.compError(error, this.router,'frm-importar-maestros');
       }
     );
@@ -197,5 +203,40 @@ export class FrmImportarMaestrosComponent implements OnInit {
   salir() {
     this.location.back();
   }  
+
+  //#region -- gestion loadPanel
+
+  async mostrarPanelProceso (mensaje?:string) {
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      this.loadingMessage = mensaje;
+    }
+    this.loadingVisible = true;
+  }
+
+  async ocultarPanelProceso () {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+  }
+
+  async ocultarPanelProceso_Exito (mensaje?:string) {
+    this.indicatorUrl = "../../assets/gifs/checkBackground.gif";
+    await Utilidades.delay(1000);
+    this.loadingVisible = false;
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarExitoStr(mensaje,'success',3000);
+    }
+  }
+
+  async ocultarPanelProceso_Fallo (mensaje?:string) {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarErrorStr(mensaje);
+    }    
+  }  
+
+  //#endregion
 
 }

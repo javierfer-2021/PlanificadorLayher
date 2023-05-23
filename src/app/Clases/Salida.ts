@@ -24,33 +24,40 @@ export class Salida {
   }
 
   export class SalidaLinea {
+    IdSalidaERP: string;  //imp ERP
     IdSalida: number;
     IdLinea: number;
+    IdArticuloERP: string;  //imp ERP
     IdArticulo: string;
     NombreArticulo: string;
     CantidadPedida: number;
     CantidadReservada: number;
     CantidadDisponible: number;
     FechaActualizacion: Date;
+    Cualidad: number;   //imp ERP
     Prioridad: boolean;
     Eliminada: boolean;
     Insertada: boolean;
     Observaciones: string;
     FechaInicio: Date;
-    FechaFin: Date;               
+    FechaFin: Date; 
+    Modificada: boolean = false;
+    Excepcion: boolean = false;    
+    Aviso: string;  //imp ERP             
   }
 
-
-  export class SalidaLineaERP {
+  /*
+  class SalidaLineaERP {
     IdSalidaERP: string;
     IdLinea: number;
-    IdArticuloERP: string
+    IdArticuloERP: string;
     IdArticulo: string;
     NombreArticulo: string;
     Cantidad: number;
     Cualidad: number;
     Aviso: string;
   }
+  */
 
   export class EstadoSalida {
     IdEstado: number;

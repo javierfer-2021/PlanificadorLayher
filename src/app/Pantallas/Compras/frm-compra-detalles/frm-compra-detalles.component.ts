@@ -119,7 +119,14 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
       dataField: 'FechaActualizacion',
       caption: this.traducir('frm-compra-detalles.colAvisos','Fec.Actualización'),
       visible: false,
-    },       
+    }, 
+    {
+      dataField: 'Modificada',
+      caption: this.traducir('frm-compra-importar.colModificada','!!!'),
+      dataType: 'boolean',
+      visible: true,
+      width: 50,
+    },          
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
@@ -131,6 +138,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
   popUpVisibleEditarLinea:boolean = false;
   lineaSeleccionada: EntradaLinea = new EntradaLinea();
+  lineaSeleccionadaIndex: number = null;
 
   //#endregion
 
@@ -241,6 +249,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayLineasEntrada = datos.datos;
+          for(let i=0; i<this.arrayLineasEntrada.length; i++) {this.arrayLineasEntrada[i].Modificada=false;}
           // Se configura el grid
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasEntrada, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
@@ -382,18 +391,26 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   }
 
   btnEditarLineaEntrada(index:number){    
-    //alert('pendiente de implementar');
-    this.lineaSeleccionada = this.arrayLineasEntrada[index];
-    this.popUpVisibleEditarLinea = true;
+    this.lineaSeleccionadaIndex= index; 
+    this.lineaSeleccionada = this.arrayLineasEntrada[index];         
+    this.lineaSeleccionada.Modificada = false;     
+    this.popUpVisibleEditarLinea = true;    
   }
 
   cerrarEditarLinea(e){
     if (e != null) {     
-      // Actualizar info del grid    
-      alert('actualizar info grid');
-      //this.cargarStock(this.sbAlmacenes.SelectBox.value);
+      // Actualizar info del grid          
+      if (!Utilidades.isEmpty(e.FechaPrevista)) {
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
+      }
+      if (!Utilidades.isEmpty(e.FechaConfirmada)) {
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
+      }
     }
-    this.popUpVisibleEditarLinea = false;    
+    this.lineaSeleccionada = null;
+    this.popUpVisibleEditarLinea = false;        
   }
   
   

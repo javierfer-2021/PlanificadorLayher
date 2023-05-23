@@ -108,3 +108,8 @@
 <div #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
+    [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" 
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

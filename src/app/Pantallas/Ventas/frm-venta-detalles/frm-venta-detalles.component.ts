@@ -119,7 +119,14 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       dataField: 'FechaActualizacion',
       caption: this.traducir('frm-venta-detalles.colAvisos','Fec.Actualización'),
       visible: false,
-    },       
+    },
+    {
+      dataField: 'Modificada',
+      caption: this.traducir('frm-venta-importar.colModificada','!!!'),
+      dataType: 'boolean',
+      visible: true,
+      width: 50,
+    },           
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
@@ -127,6 +134,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
   popUpVisibleEditarLinea:boolean = false;
   lineaSeleccionada: SalidaLinea = new SalidaLinea();
+  lineaSeleccionadaIndex: number = null;
 
   //#endregion
 
@@ -361,18 +369,28 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
 
 
   btnEditarLineaSalida(index:number){  
-    this.lineaSeleccionada = this.arrayLineasSalida[index];
-    this.popUpVisibleEditarLinea = true;      
+    this.lineaSeleccionadaIndex= index; 
+    this.lineaSeleccionada = this.arrayLineasSalida[index];         
+    this.lineaSeleccionada.Modificada = false;     
+    this.popUpVisibleEditarLinea = true;            
   }
 
 
   cerrarEditarLinea(e){
+    this.popUpVisibleEditarLinea = false;
     if (e != null) {     
-      // Actualizar info del grid    
-      alert('actualizar info grid');
-      //this.cargarStock(this.sbAlmacenes.SelectBox.value);
+      // Actualizar info del grid          
+      if (!Utilidades.isEmpty(e.FechaInicio)) {
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      }
+      if (!Utilidades.isEmpty(e.FechaFin)) {
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      }
     }
-    this.popUpVisibleEditarLinea = false;    
+    this.lineaSeleccionada = null;
+    this.popUpVisibleEditarLinea = false;          
   }
 
   // validacion estandar del formulario

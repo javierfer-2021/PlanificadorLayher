@@ -23,18 +23,25 @@ export class Entrada {
   }
 
   export class EntradaLinea {
+    IdEntradaERP: string;
     IdEntrada: number;
     IdLinea: number;
+    IdArticuloERP: string
     IdArticulo: string;
     NombreArticulo: string;
+    Cualidad: number;
     CantidadPedida: number;
     CantidadConfirmada: number;
     CantidadCancelada: number;
     FechaActualizacion: Date;
     FechaPrevista: Date;
     FechaConfirmada: Date;
+    Modificada: boolean = false;
+    Excepcion: boolean = false;
+    Aviso: string;
   }
 
+  /*
   export class EntradaLineaERP {
     IdEntradaERP: string;
     IdLinea: number;
@@ -45,7 +52,8 @@ export class Entrada {
     Cualidad: number;
     Aviso: string;
   }
-
+  */
+ 
   export class EstadoEntrada {
     IdEstado: number;
     NombreEstado: string;

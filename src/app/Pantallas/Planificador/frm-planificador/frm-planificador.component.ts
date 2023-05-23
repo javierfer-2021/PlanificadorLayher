@@ -170,7 +170,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this._salida = nav.salida;
     this.oOfertaSeleccionada = this._salida;
     this.salidaSel_BtnPlanificar = !this.oOfertaSeleccionada.Planificar;
-    this.salidaSel_BtnObservaciones = Utilidades.isEmpty(this.oOfertaSeleccionada.Observaciones);
+    this.salidaSel_BtnObservaciones = !Utilidades.isEmpty(this.oOfertaSeleccionada.Observaciones);
 
     //configuración menu articulos
     this.itemsMenuArticulos= [{ text: 'Reemplazar artículo' },
@@ -246,6 +246,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
     this.limpiarControles(false);
 
+    this.mostrarPanelProceso('procesando');
     this.WSDatos_Validando = true;
     (await this.planificadorService.getDatosPlanificador(this._salida.IdSalida)).subscribe(
       datos => {
@@ -264,7 +265,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           this.referencia_mostrar = this.oOfertaSeleccionada.Referencia;
 
           this.salidaSel_BtnPlanificar = !this.oOfertaSeleccionada.Planificar;
-          this.salidaSel_BtnObservaciones = Utilidades.isEmpty(this.oOfertaSeleccionada.Observaciones);
+          this.salidaSel_BtnObservaciones = !Utilidades.isEmpty(this.oOfertaSeleccionada.Observaciones);
       
           this.arrayArts = datos.datos.LineasOferta;
           this.arrayCabeceras = datos.datos.OfertasRel;
@@ -343,12 +344,19 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
           });
           this.dgConfigUnidades = new DataGridConfig(this.arrayUnidadesOfertas, this.colsUnidades, this.dgConfigUnidades.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigUnidades.actualizarConfig(true,false,'standard');
+          
+          // fin exito
+          this.ocultarPanelProceso_Exito();
+
         } else {
           this.WSDatos_Valido = false;
+          this.ocultarPanelProceso();
         }
         this.WSDatos_Validando = false;
+
       }, error => {
         this.WSDatos_Validando = false;
+        this.ocultarPanelProceso();
         Utilidades.compError(error, this.router, 'frm-planificador');  
         //console.log(error);
       }
@@ -988,6 +996,42 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     if (seleccionado) { estilo = estilo + '_sel'; }
     return estilo;
   }
+
+
+  //#region -- gestion loadPanel
+
+  async mostrarPanelProceso (mensaje?:string) {
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      this.loadingMessage = mensaje;
+    }
+    this.loadingVisible = true;
+  }
+
+  async ocultarPanelProceso () {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+  }
+
+  async ocultarPanelProceso_Exito (mensaje?:string) {
+    this.indicatorUrl = "../../assets/gifs/checkBackground.gif";
+    await Utilidades.delay(1000);
+    this.loadingVisible = false;
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarExitoStr(mensaje);
+    }
+  }
+
+  async ocultarPanelProceso_Fallo (mensaje?:string) {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarErrorStr(mensaje);
+    }    
+  }  
+  
+  //#endregion
 
 }
 

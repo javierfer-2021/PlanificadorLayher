@@ -12,9 +12,9 @@ import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Almacen } from '../../../Clases/Maestros'
-import { Salida, SalidaLineaERP, EstadoSalida } from '../../../Clases/Salida'
+import { Salida, EstadoSalida, SalidaLinea } from '../../../Clases/Salida'
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent, DxTextBoxComponent } from 'devextreme-angular';
+import { DxFormComponent, DxTextBoxComponent, DxPopupComponent } from 'devextreme-angular';
 import { locale } from 'devextreme/localization';
 import { UtilidadesLayher } from '../../../Utilidades/UtilidadesLayher'
 
@@ -27,6 +27,9 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
+  loadingVisible = false;
+  indicatorUrl = "";
+  loadingMessage = 'Cargando...'    
   clickNoPeticion: boolean = false;
   verLabelHtml: boolean = true;
   PantallaAnterior: string = '';
@@ -65,8 +68,26 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
   // grid lista articulos cargados ERP
   // [IdSalidaERP, Cantidad, Cualidad, IdArticuloERP, IdArticulo, NombreArticulo, Aviso]
-  arrayLineasSalida: Array<SalidaLineaERP>;
+  arrayLineasSalida: Array<SalidaLinea>;
   cols: Array<ColumnDataGrid> = [
+    {
+      dataField: '',
+      caption: '',
+      visible: true,
+      type: "buttons",
+      width: 40,
+      //alignment: "center",
+      fixed: true,
+      fixedPosition: "right",
+      buttons: [ 
+        { icon: "edit",
+          hint: "Editar Linea",
+          onClick: (e) => { 
+            this.btnEditarLineaSalida(e.row.rowIndex); 
+          }
+        },
+      ]
+    },      
     {
       dataField: 'IdSalidaERP',
       caption: this.traducir('frm-venta-importar.colIdSalidaERP','IdSalidaERP'),
@@ -93,7 +114,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
       visible: true,
     },    
     {
-      dataField: 'Cantidad',
+      dataField: 'CantidadPedida',
       caption: this.traducir('frm-venta-importar.colUndPedidas','Cantidad'),      
       visible: true,
       width: 150,
@@ -105,6 +126,11 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     },       
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 400, '' );
+
+  //popUp Editar Lineas
+  @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
+  popUpVisibleEditarLinea:boolean = false;
+  lineaSeleccionada: SalidaLinea = new SalidaLinea();
 
   //#endregion
 
@@ -386,6 +412,60 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     catch {} 
   }
 
+  //#region - Edicion lineas de importacion
+  
+  btnEditarLineaSalida(index:number){    
+    alert('pendiente de implementar');
+    // trasformar entradaLineaERP -> EntradaLinea
+    // this.lineaSeleccionada = this.arrayLineasEntrada[index];    
+    // this.popUpVisibleEditarLinea = true;
+  }  
+
+  cerrarEditarLinea(e){
+    if (e != null) {     
+      // Actualizar info del grid    
+      alert('actualizar info grid');
+      //this.cargarStock(this.sbAlmacenes.SelectBox.value);
+    }
+    this.popUpVisibleEditarLinea = false;    
+  }
+
+  //#endregion  
+
+  //#region -- gestion loadPanel
+
+  async mostrarPanelProceso (mensaje?:string) {
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      this.loadingMessage = mensaje;
+    }
+    this.loadingVisible = true;
+  }
+
+  async ocultarPanelProceso () {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+  }
+
+  async ocultarPanelProceso_Exito (mensaje?:string) {
+    this.indicatorUrl = "../../assets/gifs/checkBackground.gif";
+    await Utilidades.delay(1000);
+    this.loadingVisible = false;
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarExitoStr(mensaje,'success',3000);
+    }
+  }
+
+  async ocultarPanelProceso_Fallo (mensaje?:string) {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarErrorStr(mensaje);
+    }    
+  }  
+
+  //#endregion
     
 }
 

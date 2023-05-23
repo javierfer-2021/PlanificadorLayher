@@ -521,7 +521,7 @@ export class Utilidades {
 
     public static MostrarExitoStr(mensaje: string, tipo: string = 'success', duracion: number = 2000) {
         if (!Utilidades.isEmpty(mensaje)) {
-            notify({position: { at: 'top center', my: 'top center', offset: '0 20'}, message: mensaje}, tipo, duracion);
+            notify({position: { at: 'top center', my: 'top center', offset: '0 60'}, message: mensaje}, tipo, duracion);
         }
     }
 

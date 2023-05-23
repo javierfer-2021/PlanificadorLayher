@@ -14,7 +14,7 @@ import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Entrada,EntradaLinea,EstadoEntrada } from '../../../Clases/Entrada';
 import { Almacen} from '../../../Clases/Articulo';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent, DxTextBoxComponent } from 'devextreme-angular';
+import { DxFormComponent, DxTextBoxComponent, DxPopupComponent } from 'devextreme-angular';
 import { locale } from 'devextreme/localization';
 import { UtilidadesLayher } from '../../../Utilidades/UtilidadesLayher'
 
@@ -27,6 +27,9 @@ export class FrmCompraImportarComponent implements OnInit {
 
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
+  loadingVisible = false;
+  indicatorUrl = "";
+  loadingMessage = 'Cargando...'  
   clickNoPeticion: boolean = false;
   verLabelHtml: boolean = true;
   PantallaAnterior: string = '';
@@ -68,6 +71,24 @@ export class FrmCompraImportarComponent implements OnInit {
   arrayLineasEntrada: Array<EntradaLinea>;
   cols: Array<ColumnDataGrid> = [
     {
+      dataField: '',
+      caption: '',
+      visible: true,
+      type: "buttons",
+      width: 40,
+      //alignment: "center",
+      fixed: true,
+      fixedPosition: "right",
+      buttons: [ 
+        { icon: "edit",
+          hint: "Editar Linea",
+          onClick: (e) => { 
+            this.btnEditarLineaEntrada(e.row.rowIndex); 
+          }
+        },
+      ]
+    },    
+    {
       dataField: 'IdEntradaERP',
       caption: this.traducir('frm-compra-importar.colIdEntradaERP','IdEntradaERP'),
       visible: false,
@@ -93,7 +114,7 @@ export class FrmCompraImportarComponent implements OnInit {
       visible: true,
     },    
     {
-      dataField: 'Cantidad',
+      dataField: 'CantidadPedida',
       caption: this.traducir('frm-compra-importar.colUndPedidas','Cantidad'),      
       visible: true,
       width: 150,
@@ -102,12 +123,28 @@ export class FrmCompraImportarComponent implements OnInit {
       dataField: 'Aviso',
       caption: this.traducir('frm-compra-importar.colAvisos','Aviso'),
       visible: false,
-    },       
+    },
+    {
+      dataField: 'Modificada',
+      caption: this.traducir('frm-compra-importar.colModificada','!!!'),
+      dataType: 'boolean',
+      visible: true,
+      width: 50,
+    },    
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 300, '', );
 
+
+  //popUp Editar Lineas
+  @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
+  popUpVisibleEditarLinea:boolean = false;
+  //lineaSeleccionada: {Index:number, Linea:EntradaLinea } = {Index:null, Linea:new EntradaLinea()} ;  //  = new EntradaLinea()};
+  lineaSeleccionada: EntradaLinea = new EntradaLinea(); 
+  lineaSeleccionadaIndex: number = null;
+    
   //#endregion
 
+  
   //#region - constructores y eventos inicialización
   constructor(private cdref: ChangeDetectorRef,
               private renderer: Renderer2,
@@ -137,9 +174,6 @@ export class FrmCompraImportarComponent implements OnInit {
       this.contratoValido= false;
     }, 200);    
     
-    // foco 
-    // try {this.formEntrada.instance.getEditor('IdEstado').focus(); } catch {}
-
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -226,6 +260,7 @@ export class FrmCompraImportarComponent implements OnInit {
                     
           //Datos Linea
           this.arrayLineasEntrada = datos.datos.Lineas;
+          for(let i=0; i<this.arrayLineasEntrada.length; i++) {this.arrayLineasEntrada[i].Modificada=false;}
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasEntrada, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
           
@@ -364,6 +399,70 @@ export class FrmCompraImportarComponent implements OnInit {
     } 
     catch {} 
   }  
+
+  //#region - Edicion lineas de importacion
+  
+  btnEditarLineaEntrada(index:number){    
+    this.lineaSeleccionadaIndex= index; 
+    this.lineaSeleccionada = this.arrayLineasEntrada[index];         
+    this.lineaSeleccionada.Modificada = false;     
+    this.popUpVisibleEditarLinea = true;
+  }  
+
+  cerrarEditarLinea(e){
+    if (e != null) {     
+      // Actualizar info del grid          
+      if (!Utilidades.isEmpty(e.FechaPrevista)) {
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
+      }
+      if (!Utilidades.isEmpty(e.FechaConfirmada)) {
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
+      }
+    }
+    this.lineaSeleccionada = null;
+    this.popUpVisibleEditarLinea = false;    
+  }
+
+  //#endregion
+
+
+  //#region -- gestion loadPanel
+
+  async mostrarPanelProceso (mensaje?:string) {
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      this.loadingMessage = mensaje;
+    }
+    this.loadingVisible = true;
+  }
+
+  async ocultarPanelProceso () {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+  }
+
+  async ocultarPanelProceso_Exito (mensaje?:string) {
+    this.indicatorUrl = "../../assets/gifs/checkBackground.gif";
+    await Utilidades.delay(1000);
+    this.loadingVisible = false;
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarExitoStr(mensaje,'success',3000);
+    }
+  }
+
+  async ocultarPanelProceso_Fallo (mensaje?:string) {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarErrorStr(mensaje);
+    }    
+  }  
+
+  //#endregion
+
 
 }
 
