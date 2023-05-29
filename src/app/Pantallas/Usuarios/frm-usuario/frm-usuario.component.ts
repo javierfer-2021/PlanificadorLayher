@@ -132,13 +132,13 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAcionesEdicion, this.renderer); 
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
+    // foco en modo insercion -> nombre usuario
+    setTimeout(() => { this.setFormFocus('NombreUsuario');}, 300);  
   }
 
   ngAfterContentChecked(): void {   
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();  
-    // foco en modo insercion
-    if (this._usuario.IdUsuario == -1) { this.setFormFocus('NombreUsuario')}
   }
 
   onResize(event) {

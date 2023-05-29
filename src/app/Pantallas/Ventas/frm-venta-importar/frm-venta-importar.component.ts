@@ -75,7 +75,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
       caption: '',
       visible: true,
       type: "buttons",
-      width: 40,
+      width: 95,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
@@ -86,6 +86,12 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
             this.btnEditarLineaSalida(e.row.rowIndex); 
           }
         },
+        { icon: "trash",
+          hint: "Eliminar Línea",
+          onClick: (e) => { 
+            this.btnEliminarLineaSalida(e.row.rowIndex); 
+          }
+        },        
       ]
     },      
     {
@@ -131,6 +137,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
   popUpVisibleEditarLinea:boolean = false;
   lineaSeleccionada: SalidaLinea = new SalidaLinea();
+  lineaSeleccionadaIndex: number = null;
 
   //#endregion
 
@@ -155,16 +162,16 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
   ngAfterViewInit(): void {    
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-
     // configuracion extra del grid -> mostrar fila total registros + redimensionar
     this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Líneas: '),'count');    
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
       this.contratoValido= false;      
     }, 200);    
-
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
+    // foco
+    setTimeout(() => { this.txtContrato.instance.focus(); }, 300);    
   }
 
   ngAfterContentChecked(): void {   
@@ -415,20 +422,35 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   //#region - Edicion lineas de importacion
   
   btnEditarLineaSalida(index:number){    
-    alert('pendiente de implementar');
-    // trasformar entradaLineaERP -> EntradaLinea
-    // this.lineaSeleccionada = this.arrayLineasEntrada[index];    
-    // this.popUpVisibleEditarLinea = true;
+    this.lineaSeleccionadaIndex= index; 
+    this.lineaSeleccionada = this.arrayLineasSalida[index];         
+    this.lineaSeleccionada.Modificada = false;     
+    this.popUpVisibleEditarLinea = true;
   }  
 
   cerrarEditarLinea(e){
     if (e != null) {     
-      // Actualizar info del grid    
-      alert('actualizar info grid');
-      //this.cargarStock(this.sbAlmacenes.SelectBox.value);
+      // Actualizar info del grid          
+      if (!Utilidades.isEmpty(e.FechaInicio)) {
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      }
+      if (!Utilidades.isEmpty(e.FechaFin)) {
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      }
     }
-    this.popUpVisibleEditarLinea = false;    
+    this.lineaSeleccionada = null;
+    this.popUpVisibleEditarLinea = false;      
   }
+
+  async btnEliminarLineaSalida(index:number){
+    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-venta-importar.dlgEliminarLineaMensaje','La línea seleccionada será eliminada y NO IMPORTADA al planificador.<br>¿Seguro que desea continuar?'), 
+                                                               this.traducir('frm-venta-importar.dlgEliminarLineaTitulo', 'Eliminar Línea'));
+    if (confirmar) {
+      this.arrayLineasSalida.splice(index,1);
+    }
+  }  
 
   //#endregion  
 

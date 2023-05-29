@@ -43,6 +43,7 @@ export class FrmIncidenciaComponent implements OnInit {
   _incidencia: Incidencia;
   arrayTiposIncidencia: Array<TipoIncidencia> = [];
   arrayAlmacenes: Array<Almacen> = [];
+  requerirContrato:boolean = false;
 
   //{disabled:false, dataSource:arrayTiposIncidencia, displayExpr:'NombreTipoIncidencia', valueExpr:'IdTipoIncidencia', searchEnabled: true }
   tipoIncidenciaOptions: any = {
@@ -50,7 +51,7 @@ export class FrmIncidenciaComponent implements OnInit {
     dataSource: 'arrayTiposIncidencia', 
     displayExpr:'NombreTipoIncidencia', 
     valueExpr:'IdTipoIncidencia', 
-    searchEnabled: true, 
+    searchEnabled: false, 
     onValueChanged: (e) => { this.onValueChanged_ComboTipoIncidencia(e) }
   }
 
@@ -128,28 +129,29 @@ export class FrmIncidenciaComponent implements OnInit {
         this._incidencia.FechaAlta = new Date();
         this._incidencia.FechaIncidencia = this._incidencia.FechaAlta;
         this._incidencia.IdAlmacen = ConfiGlobal.DatosUsuario.idAlmacenDefecto;
+        this._incidencia.IdDocumento = null;
+        this._incidencia.IdArticulo = null;
+        this._incidencia.Unidades = null;
+        this._incidencia.Observaciones = null;
       }
     }
 
 
   ngOnInit(): void {
     this.cargarCombos();
-    // setTimeout(() => {this.cargarLineasOferta();},1000);
   }
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-    // foco 
-
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
+    // foco del form
+    if (this.editandoIncidencia) { setTimeout(() => { this.setFormFocus('IdTipoIncidencia');}, 300); }
   }
 
   ngAfterContentChecked(): void {   
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges(); 
-    // foco del form
-    if (this.editandoIncidencia) this.setFormFocus('IdTipoIncidencia');
   }
 
   onResize(event) {
@@ -289,6 +291,15 @@ export class FrmIncidenciaComponent implements OnInit {
 
   cerrarSeleccionarArticulo(datos:any){
     if (datos != null) {
+      if ((this._incidencia.IdTipoDocumento == null) || (this._incidencia.IdTipoDocumento == undefined)) {
+        this._incidencia.Unidades=0;
+      }
+      if (this._incidencia.IdTipoDocumento<30) {
+        this._incidencia.Unidades=datos.CantidadReservada;
+      }
+      else if (this._incidencia.IdTipoDocumento == 30) {
+        this._incidencia.Unidades=datos.CantidadPedida;
+      }
       this.setFormFocus('Unidades');
     }
     this.popUpVisibleArticulos = false;
@@ -333,6 +344,9 @@ export class FrmIncidenciaComponent implements OnInit {
       this._incidencia.NombreCliProv=null;
       this._incidencia.SeleccionarArticuloDocumento=null;
       this._incidencia.CoincideAlmacen=null;
+      this._incidencia.IdArticulo=null;
+      this._incidencia.NombreArticulo=null;
+      this._incidencia.Unidades=null;
     }
     // asignamos tipo documento requerido por el tipo incidencia seleccionado    
     if (e.value != null) {
@@ -341,6 +355,7 @@ export class FrmIncidenciaComponent implements OnInit {
         this._incidencia.IdTipoDocumento = this.arrayTiposIncidencia[index].TipoDocumento;
         this._incidencia.SeleccionarArticuloDocumento = this.arrayTiposIncidencia[index].SeleccionarArticuloDocumento;
         this._incidencia.CoincideAlmacen = this.arrayTiposIncidencia[index].CoincideAlmacen;
+        this.requerirContrato = this.arrayTiposIncidencia[index].RequiereDocumento;
       } 
     }
   } 

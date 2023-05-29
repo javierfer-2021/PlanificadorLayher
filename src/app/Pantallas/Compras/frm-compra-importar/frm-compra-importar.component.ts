@@ -75,17 +75,23 @@ export class FrmCompraImportarComponent implements OnInit {
       caption: '',
       visible: true,
       type: "buttons",
-      width: 40,
+      width: 95,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
       buttons: [ 
         { icon: "edit",
-          hint: "Editar Linea",
+          hint: "Editar Línea",
           onClick: (e) => { 
             this.btnEditarLineaEntrada(e.row.rowIndex); 
           }
         },
+        { icon: "trash",
+          hint: "Eliminar Línea",
+          onClick: (e) => { 
+            this.btnEliminarLineaEntrada(e.row.rowIndex); 
+          }
+        },         
       ]
     },    
     {
@@ -166,16 +172,16 @@ export class FrmCompraImportarComponent implements OnInit {
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-
     // configuracion extra del grid -> mostrar fila total registros + redimensionar
     this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Líneas: '),'count');    
     setTimeout(() => {      
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));      
       this.contratoValido= false;
-    }, 200);    
-    
+    }, 200);       
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
+    // foco
+    setTimeout(() => { this.txtContrato.instance.focus(); }, 300);       
   }
 
   ngAfterContentChecked(): void {   
@@ -423,6 +429,14 @@ export class FrmCompraImportarComponent implements OnInit {
     }
     this.lineaSeleccionada = null;
     this.popUpVisibleEditarLinea = false;    
+  }
+
+  async btnEliminarLineaEntrada(index:number){
+    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-importar.dlgEliminarLineaMensaje','La línea seleccionada será eliminada y NO IMPORTADA al planificador.<br>¿Seguro que desea continuar?'), 
+                                                               this.traducir('frm-compra-importar.dlgEliminarLineaTitulo', 'Eliminar Línea'));
+    if (confirmar) {
+      this.arrayLineasEntrada.splice(index,1);
+    }
   }
 
   //#endregion
