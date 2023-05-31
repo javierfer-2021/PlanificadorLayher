@@ -102,7 +102,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       visible: false
     },   
     { dataField: 'Prioridad',
-      caption: 'Prioridad',
+      caption: 'Secundario',
       visible: false
     },    
     { dataField: 'Eliminada',
@@ -420,7 +420,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           //Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSActualizarValorSecunadrio','Artículo Actualizado correctamente')); 
-          let index:number = this.arrayArts.findIndex(e => e.IdArticulo=idArticulo);
+          let index:number = this.arrayArts.findIndex(e => e.IdArticulo==idArticulo);
           if (index>=0) { this.arrayArts[index].Prioridad = valor; }
           this.WSDatos_Validando = false;
         } else {          
