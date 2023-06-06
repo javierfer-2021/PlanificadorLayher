@@ -21,7 +21,7 @@ import { GS1DATOSDECO } from '../Clases/ean128/GS1DATOSDECO';
 import { TipoLectura } from '../Enumeraciones/TipoLectura';
 import { TipoDialogo } from '../Enumeraciones/TipoDialogo';
 import { Log } from '../Clases/Log';
-import { TipoDocumento } from '../Enumeraciones/TipoDocumento';
+//import { TipoDocumento } from '../Enumeraciones/TipoDocumento';
 
 import * as fs from 'fs-web';
 import { ConfiGlobal } from './ConfiGlobal';
@@ -1553,16 +1553,6 @@ export class Utilidades {
         let pal1 = parseInt(str1);
         let pal2 = pal1 === 0 ? parseInt(str2).toString() : str2;
         return (pal1 === 0 ? pal2 : pal1.toString() + pal2);
-    }
-
-    public static FormatContendorToNumber(contenedor: string, tipo: TipoDocumento): string {
-        if (contenedor === undefined || contenedor === null || contenedor.length === 0) return '';
-        
-        // posible formato dependiendo del tipo documento. por ahora solo tarea conversion str2int
-        if(isNaN(Number(contenedor)))
-            return '';
-        else
-            return  parseInt(contenedor).toString();
     }
 
     public static validacionFechaDDMMYYYY(strFecha): Date {
