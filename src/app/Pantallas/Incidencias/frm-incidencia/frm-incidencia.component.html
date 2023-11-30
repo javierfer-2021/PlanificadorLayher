@@ -38,7 +38,7 @@
                             </dxi-item>                                                        
                         </dxi-item>
 
-                        <dxi-item itemType="group" #grDocumento id="grDocumento" caption="Identificación Contrato" [colCount]="4" [colSpan]="4">
+                        <dxi-item itemType="group" #grDocumento id="grDocumento" caption="Identificación Contrato" [colCount]="4" [colSpan]="4" [disabled]="!requerirContrato">
                             <dxi-item dataField="Contrato" editorType="dxTextBox" [editorOptions]="contratoOptions">
                                 <dxi-validation-rule *ngIf="requerirContrato" type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>                                
                             </dxi-item>

@@ -43,7 +43,7 @@ export class FrmIncidenciaComponent implements OnInit {
   _incidencia: Incidencia;
   arrayTiposIncidencia: Array<TipoIncidencia> = [];
   arrayAlmacenes: Array<Almacen> = [];
-  requerirContrato:boolean = false;
+  requerirContrato:boolean = true;
 
   //{disabled:false, dataSource:arrayTiposIncidencia, displayExpr:'NombreTipoIncidencia', valueExpr:'IdTipoIncidencia', searchEnabled: true }
   tipoIncidenciaOptions: any = {
@@ -133,6 +133,7 @@ export class FrmIncidenciaComponent implements OnInit {
         this._incidencia.IdArticulo = null;
         this._incidencia.Unidades = null;
         this._incidencia.Observaciones = null;
+        this.requerirContrato = false;
       }
     }
 
@@ -335,7 +336,7 @@ export class FrmIncidenciaComponent implements OnInit {
 
   onValueChanged_ComboTipoIncidencia(e){
     // limpiamos referencias si se ha cambiado tipo doc. asociado
-    if (e.previousValue != e.value) {      
+    if ((e.previousValue != e.value) && (e.previousValue != null) ) {      
       this._incidencia.IdDocumento=null;
       this._incidencia.Contrato=null;
       this._incidencia.IdTipoDocumento=null;      
