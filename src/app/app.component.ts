@@ -5,6 +5,11 @@ import { DxLoadPanelComponent } from 'devextreme-angular';
 import { Utilidades } from './Utilidades/Utilidades';
 import { environment } from '../environments/environment';
 
+// Dictionaries for Spanish language
+import esMessagges from "devextreme/localization/messages/es.json";
+import { locale, loadMessages } from "devextreme/localization";
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,8 +25,14 @@ export class AppComponent {
 
   indicatorUrl = "../assets/gifs/wifi.gif";
 
-  constructor(private renderer: Renderer2, public translate: TranslateService, public resolver: ComponentFactoryResolver, private titleServicio: Title) {
+  constructor(private renderer: Renderer2, 
+              public translate: TranslateService, 
+              public resolver: ComponentFactoryResolver, 
+              private titleServicio: Title) {                
     titleServicio.setTitle(environment.titulo);
+    // cargar diccionarios en español
+    loadMessages(esMessagges);
+    locale(navigator.language || 'es');        
   }
 
   ngAfterViewInit(): void {
