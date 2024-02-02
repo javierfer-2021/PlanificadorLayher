@@ -23,6 +23,9 @@ import { FrmImportarMaestrosComponent } from './Pantallas/Maestros/frm-importar-
 import { FrmFamiliasComponent } from './Pantallas/Maestros/frm-familias/frm-familias.component';
 import { FrmSubfamiliasComponent } from './Pantallas/Maestros/frm-subfamilias/frm-subfamilias.component';
 
+import { FrmImportarCsvComponent } from './Pantallas/Ventas/frm-importar-csv/frm-importar-csv.component';
+import { FrmSimulacionPlanificadorComponent } from './Pantallas/Planificador/frm-simulacion-planificador/frm-simulacion-planificador.component'
+
 const routes: Routes = [
   { path: '', component: FrmLoginComponent },
   { path: 'inicio', component: FrmPrincipalComponent, canActivate: [AuthGuard] },
@@ -30,6 +33,8 @@ const routes: Routes = [
   { path: 'venta_buscar', component: FrmVentaBuscarComponent, canActivate: [AuthGuard] },
   { path: 'venta_importar', component: FrmVentaImportarComponent, canActivate: [AuthGuard] },
   { path: 'venta_detalle', component: FrmVentaDetallesComponent, canActivate: [AuthGuard] },
+
+  { path: 'venta_importar_csv', component: FrmImportarCsvComponent, canActivate: [AuthGuard] },
 
   { path: 'compra_buscar', component: FrmCompraBuscarComponent, canActivate: [AuthGuard] },
   { path: 'compra_importar', component: FrmCompraImportarComponent, canActivate: [AuthGuard] },
@@ -42,6 +47,7 @@ const routes: Routes = [
 
   { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard] },
   { path: 'planificador_articulos', component: FrmPlanificadorArticulosComponent, canActivate: [AuthGuard] },
+  { path: 'simulador_planificador', component: FrmSimulacionPlanificadorComponent, canActivate: [AuthGuard] },
   
   { path: 'usuario_buscar', component: FrmUsuarioBuscarComponent, canActivate: [AuthGuard] },
   { path: 'usuario', component: FrmUsuarioComponent, canActivate: [AuthGuard] }, 

@@ -40,7 +40,9 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   botonUsuarios: BotonMenu = { icono: './assets/icons/usuario.svg', texto: 'Gestión Usuarios', ruta: '', nombre: 'botonUsuarios', notificacion: 0, desactivado: false, accion: () => { } };
   botonConfiguracion: BotonMenu = { icono: './assets/icons/configuracion.svg', texto: 'Configuración', ruta: '', nombre: 'botonConfiguracion', notificacion: 0, desactivado: false, accion: () => { } };
   botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Ejercicio y Gestión Maestros', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, accion: () => { } };
-  
+
+  botonImportarVentaCSV: BotonMenu = { icono: './assets/icons/archivo-csv.svg', texto: 'Pre-Importar CSV', ruta: '', nombre: 'botonImportarVentaCSV', notificacion: 0, desactivado: false, accion: () => { } };
+
   btnAciones: BotonPantalla[] =  [
     { icono :'', texto: this.traducir('frm-principal.btnSalir', 'Salir'), posicion: 1, accion: () => {this.cerrarSesion();}, tipo: TipoBoton.danger, activo: true, visible: true } 
   ];
@@ -64,7 +66,9 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonUsuarios.accion = () => { this.router.navigate(['usuario_buscar']); };
     this.botonConfiguracion.accion = () => { this.router.navigate(['configuracion']); };
     this.botonIniciarPeriodo.accion = () => { this.router.navigate(['importar_maestros']); };
-    
+
+    this.botonImportarVentaCSV.accion = () => { this.router.navigate(['venta_importar_csv']); };
+
     this.loadingPrincipalVisible = Utilidades.VarStatic.LoadPrincipal;
     this._usuario = ConfiGlobal.DatosUsuario;
   }

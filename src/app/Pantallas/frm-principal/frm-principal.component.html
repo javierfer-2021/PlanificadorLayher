@@ -20,7 +20,27 @@
     <mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSGetInci_Validando)"></mat-progress-bar>
     <div class="container">
 
+        <!-- Pre-importacion CSV (simulacion planificador) -->
         <div class="row">
+            <!-- Incidencias -->
+            <!-- <div class="col-3"></div> -->
+            <div class="col-6">               
+                <div class="card" style="margin-top: 20px;">
+                    <h5 class="card-header" style="font-size: 0.9em;">Simulación Planificación a traves de fichero CSV</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                                <app-boton-menu [btnMenu]="botonImportarVentaCSV"></app-boton-menu>                      
+                            </div>
+                        </div>
+                    </div>
+                    </div>                
+            </div>
+            <div class="col-6"></div>
+        </div> 
+
+        <!-- GESTION DE ENTRADAS Y SALIDAS -->
+        <div *ngIf="_usuario.IdPerfil!=3" class="row">
             <!-- Entradas Material -->
             <div class="col-6">               
                 <div class="card" style="margin-top: 20px;">
@@ -55,10 +75,10 @@
             </div>
         </div>   
 
-
-        <div class="row">
+        <!-- GESTION INCIDENCIAS Y MAESTRO ARTICULOS -->
+        <div *ngIf="_usuario.IdPerfil!=3" class="row">
             <!-- Incidencias -->
-            <div class="col-6">               
+            <div class="col">               
                 <div class="card" style="margin-top: 20px;">
                     <h5 class="card-header" style="font-size: 0.9em;">Gestión de INCIDENCIAS y Excepciones</h5>
                     <div class="card-body">
@@ -71,7 +91,7 @@
                   </div>                
             </div>
             <!-- Maestro de Articulos-->
-            <div class="col-6">
+            <div class="col">
                 <div class="card" style="margin-top: 20px;">
                     <h5 class="card-header" style="font-size: 0.9em;">Maestro de Articulos y Stock</h5>
                     <div class="card-body">
@@ -84,6 +104,33 @@
                   </div>                
             </div>
         </div>   
+
+        <!-- GESTION GRUPO ADMINISTRADOR DE LA APLICACIÓN -->
+        <div *ngIf="_usuario.Administrador && _usuario.IdPerfil!=3" class="card" style="margin-top: 20px;">
+            <h5 class="card-header" style="font-size: 0.9em;">Opciones de Administración de la Aplicación</h5>
+            <div class="card-body">
+                <!-- <div class="container"> -->
+                <div class="row">
+                    <div class="col-4 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonUsuarios"></app-boton-menu>                        
+                    </div>
+                    <div class="col-4 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonConfiguracion"></app-boton-menu>                        
+                    </div>
+                    <div class="col-4 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonIniciarPeriodo"></app-boton-menu>                        
+                    </div>                    
+                </div>
+                <!-- <div class="row">
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                        <app-boton-menu [btnMenu]="botonInciarPeriodo"></app-boton-menu>                        
+                    </div>
+                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
+                    </div>
+                </div>                     -->
+                <!-- </div> -->
+            </div>
+        </div>
 
 
         <!-- 
@@ -152,36 +199,10 @@
         </div> 
         -->
 
-
-        <!-- grupo de Administración aplicación -->
-        <div *ngIf="_usuario.Administrador" class="card" style="margin-top: 20px;">
-            <h5 class="card-header" style="font-size: 0.9em;">Opciones de Administración de la Aplicación</h5>
-            <div class="card-body">
-                <!-- <div class="container"> -->
-                <div class="row">
-                    <div class="col-4 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonUsuarios"></app-boton-menu>                        
-                    </div>
-                    <div class="col-4 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonConfiguracion"></app-boton-menu>                        
-                    </div>
-                    <div class="col-4 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonIniciarPeriodo"></app-boton-menu>                        
-                    </div>                    
-                </div>
-                <!-- <div class="row">
-                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                        <app-boton-menu [btnMenu]="botonInciarPeriodo"></app-boton-menu>                        
-                    </div>
-                    <div class="col-6 pt-1 pt-md-2 px-1 px-sm-3 px-md-3 px-lg-4 px-xl-5" style="min-height: 75px;">
-                    </div>
-                </div>                     -->
-                <!-- </div> -->
-            </div>
-        </div>
-
     </div>
 </div>
+
+
 
 <!-- <div style="position: fixed; left: 0; bottom: 0; width: 100%; text-align: center;">
     <button type="button" class="btn btn-danger">{{traducir('frm-principal.btnSalir', 'Salir')}}</button>

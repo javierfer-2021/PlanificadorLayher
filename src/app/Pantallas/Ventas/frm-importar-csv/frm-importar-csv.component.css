@@ -1,0 +1,14 @@
+input {
+    margin-top: 0px;
+  }
+  
+  input::file-selector-button {
+    /*font-weight: bold;*/
+    font-size: 12px;
+    color: dodgerblue;
+    padding: 0.5em;
+    border: thin solid grey;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+

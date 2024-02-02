@@ -35,7 +35,7 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/getAlmacenesUsuario', body, Utilidades.getHeaders());
   } 
 
-  async insertarUsuario(login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal,almacenesAsignados): Promise<Observable<any>>{ 
+  async insertarUsuario(login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal,almacenesAsignados,notificacionesEmail): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/usuarios/insertarUsuario')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); } 
     const body = { usuario : ConfiGlobal.Usuario, datos: {Login: login,
@@ -53,11 +53,12 @@ export class PlanificadorService {
                                                           Perfil: perfil,
                                                           IdPersonal: idPersonal,
                                                           AlmacenesAsignados: almacenesAsignados,
+                                                          NotificacionesEmail:notificacionesEmail
     } };    
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/insertarUsuario', body, Utilidades.getHeaders());
   }  
 
-  async actualizarUsuario(idUsuario,login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal,almacenesAsignados): Promise<Observable<any>>{ 
+  async actualizarUsuario(idUsuario,login,password,nombreUsuario,email,idIdioma,fechaAlta,fechaBaja,baja,administrador,verAlmacenes,idAlmacenDefecto,skin,perfil,idPersonal,almacenesAsignados,notificacionesEmail): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/usuarios/actualizarUsuario')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); } 
     const body = { usuario : ConfiGlobal.Usuario, datos: {IdUsuario: idUsuario,
@@ -76,6 +77,7 @@ export class PlanificadorService {
                                                           Perfil: perfil,
                                                           IdPersonal: idPersonal,
                                                           AlmacenesAsignados: almacenesAsignados,
+                                                          NotificacionesEmail:notificacionesEmail
     } };    
     return this.http.post(ConfiGlobal.URL + '/api/usuarios/actualizarUsuario', body, Utilidades.getHeaders());
   }    
@@ -254,13 +256,17 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/entradas/importarEntrada_ERP', body, Utilidades.getHeaders());
   }   
 
-  async getEntradasAlmacen(almacen,filtroFamilia,filtroSubfamilia,filtroCanceladas): Promise<Observable<any>>{ 
+  async getEntradasAlmacen(almacen,filtroCanceladas,filtroIdArticulo,filtroFamilia,filtroSubfamilia,modoContiene,filtroOtros): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/entradas/getListaEntradasAlmacen')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
     const body = { usuario : ConfiGlobal.Usuario, datos: {IdAlmacen:almacen,
+                                                          FiltroCanceladas:filtroCanceladas,
+                                                          FiltroIdArticulo:filtroIdArticulo,
                                                           FiltroFamilia:filtroFamilia,
                                                           FiltroSubfamilia:filtroSubfamilia,
-                                                          FiltroCanceladas:filtroCanceladas } };            
+                                                          FiltroTipoContiene:modoContiene,
+                                                          FiltroOtros:filtroOtros
+                                                         } };            
     return this.http.post(ConfiGlobal.URL + '/api/entradas/getListaEntradasAlmacen', body, Utilidades.getHeaders());
   }  
 
@@ -343,13 +349,17 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/salidas/importarSalida_ERP', body, Utilidades.getHeaders());
   }   
 
-  async getSalidasAlmacen(almacen,filtroFamilia,filtroSubfamilia, filtroCanceladas): Promise<Observable<any>>{ 
+  async getSalidasAlmacen(almacen,filtroIdArticulo,filtroFamilia,filtroSubfamilia, filtroCanceladas, modoContiene, filtroOtros): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/salidas/getListaSalidasAlmacen')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
     const body = { usuario : ConfiGlobal.Usuario, datos: {IdAlmacen:almacen,
+                                                          FiltroIdArticulo:filtroIdArticulo,
                                                           FiltroFamilia:filtroFamilia,
                                                           FiltroSubfamilia:filtroSubfamilia,
-                                                          FiltroCanceladas:filtroCanceladas } };    
+                                                          FiltroCanceladas:filtroCanceladas,
+                                                          FiltroTipoContiene:modoContiene,
+                                                          FiltroOtros:filtroOtros  
+                                                        } };    
     return this.http.post(ConfiGlobal.URL + '/api/salidas/getListaSalidasAlmacen', body, Utilidades.getHeaders());
   }  
 
@@ -401,7 +411,7 @@ export class PlanificadorService {
     if(!await Utilidades.establecerConexion('/api/planificador/getPlanificacion')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: { IdSalida:idSalida } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacion', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacion', body, Utilidades.getHeaders());
   }
   
   async eliminarArticuloPlanificador(idSalida,idArticulo,observaciones): Promise<Observable<any>> {
@@ -409,7 +419,7 @@ export class PlanificadorService {
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
                    datos: { IdSalida:idSalida, IdArticulo:idArticulo, Observaciones:observaciones } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/eliminarLineaArticuloPlanificacion', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/eliminarLineaArticuloPlanificacion', body, Utilidades.getHeaders());
   }
 
   async insertarArticuloPlanificador(idSalida,idArticulo,unidades,observaciones): Promise<Observable<any>> {
@@ -417,7 +427,17 @@ export class PlanificadorService {
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
                    datos: { IdSalida:idSalida, IdArticulo:idArticulo, Unidades:unidades, Observaciones:observaciones } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/insertarLineaArticuloPlanificacion', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/insertarLineaArticuloPlanificacion', body, Utilidades.getHeaders());
+  }
+
+  async cambiarArticuloPlanificador(idSalida,idArticulo,motivoEliminar,idNewArticulo,unidades,observaciones): Promise<Observable<any>> {
+    if(!await Utilidades.establecerConexion('/api/planificador/cambiarLineaArticuloPlanificacion')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
+                   datos: { IdSalida:idSalida,
+                            IdArticulo:idArticulo, MotivoEliminar:motivoEliminar,
+                            IdArticuloCambio:idNewArticulo, Unidades:unidades, Observaciones:observaciones } };
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/cambiarLineaArticuloPlanificacion', body, Utilidades.getHeaders());
   }
 
   async planificarContratoSalida(idSalida): Promise<Observable<any>> {
@@ -425,7 +445,7 @@ export class PlanificadorService {
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
                    datos: { IdSalida:idSalida } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/planificarContratoSalida', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/planificarContratoSalida', body, Utilidades.getHeaders());
   }
   
   async desPlanificarContratoSalida(idSalida): Promise<Observable<any>> {
@@ -433,7 +453,7 @@ export class PlanificadorService {
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }      
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
                    datos: { IdSalida:idSalida } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/desPlanificarContratoSalida', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/desPlanificarContratoSalida', body, Utilidades.getHeaders());
   }
 
   async actualizarLineasPlanificadas(salida,articulo,unidades,listaSalidas): Promise<Observable<any>> {
@@ -444,7 +464,7 @@ export class PlanificadorService {
                             IdArticulo:articulo,
                             UndServidas:unidades,
                             lineasReplanificar:listaSalidas } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/actualizarLineasPlanificadas', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/actualizarLineasPlanificadas', body, Utilidades.getHeaders());
   }
 
   async getDatosPlanificadorArticulos(almacen,articulos): Promise<Observable<any>> {
@@ -453,7 +473,7 @@ export class PlanificadorService {
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
                    datos: { IdAlmacen:almacen, ListaArticulos:articulos } };
 
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacionAriculo', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacionAriculo', body, Utilidades.getHeaders());
   }
 
   //#endregion
@@ -465,10 +485,13 @@ export class PlanificadorService {
     if(!await Utilidades.establecerConexion('/api/planificador/getConfiguracionLayher')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }          
     const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: { } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getConfiguracionLayher', body, this.headers);
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getConfiguracionLayher', body, Utilidades.getHeaders());
   }
 
-  async setConfigPlanificador(numItemPlanificador, entradaConfirmarDefecto, entradaEstadoDefecto, entradaAlmacenDefecto, salidaPlanificarDefecto, salidaEstadoDefecto, salidaAlmacenDefecto): Promise<Observable<any>> {    
+  async setConfigPlanificador(numItemPlanificador, 
+                              entradaConfirmarDefecto, entradaEstadoDefecto, entradaAlmacenDefecto, 
+                              salidaPlanificarDefecto, salidaEstadoDefecto, salidaAlmacenDefecto,
+                              enviarMailAlertas, diasPermitidosSinConfirmar): Promise<Observable<any>> {    
     if(!await Utilidades.establecerConexion('/api/planificador/setConfiguracionLayher')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }          
     const body = { LogData: Utilidades.RecuperarLog(), 
@@ -478,8 +501,11 @@ export class PlanificadorService {
                                                           EntradaAlmacenDefecto: entradaAlmacenDefecto, 
                                                           SalidaPlanificarDefecto: salidaPlanificarDefecto, 
                                                           SalidaEstadoDefecto: salidaEstadoDefecto, 
-                                                          SalidaAlmacenDefecto: salidaAlmacenDefecto } };
-    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/setConfiguracionLayher', body, this.headers);
+                                                          SalidaAlmacenDefecto: salidaAlmacenDefecto,
+                                                          EnviarMailAlertas: enviarMailAlertas,
+                                                          DiasPermitidosSinConfirmar: diasPermitidosSinConfirmar
+                                                         } };
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/setConfiguracionLayher', body, Utilidades.getHeaders());
   }
 
   //#endregion
@@ -525,10 +551,56 @@ export class PlanificadorService {
   //#endregion
 
 
+  // -------------------------------------------
+  //#region -- SIMULACION PLANIFICADOR SALIDA CSV -> TABLA TEMPORAL  --
+  
+  // guardar simulacion Salida
+  async ImportarSimulacionSalidaCSV(idSalidaERP,contrato,referencia,idEstado,fechaAlta,fechaInicio,fechaFin,idCliente,idClienteERP,nombreCliente,obra,observaciones,idAlmacen,idTipoDocumento,planificar,lineasSalida ): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/salidas/importarSimulacionSalida_CSV')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSalidaERP:idSalidaERP
+                                                          ,Contrato:contrato
+                                                          ,Referencia:referencia
+                                                          ,IdEstado:idEstado
+                                                          ,FechaAlta:fechaAlta
+                                                          ,FechaInicio:fechaInicio
+                                                          ,FechaFin:fechaFin
+                                                          ,IdCliente:idCliente
+                                                          ,IdClienteERP:idClienteERP
+                                                          ,NombreCiente:nombreCliente
+                                                          ,Obra:obra
+                                                          ,Observaciones:observaciones
+                                                          ,IdAlmacen:idAlmacen
+                                                          ,IdTipoDocumento:idTipoDocumento
+                                                          ,Planificar:planificar
+                                                          ,LineasSalidaERP:lineasSalida
+    } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/importarSimulacionSalida_CSV', body, Utilidades.getHeaders());
+  }   
+
+  async BorrarSimulacionSalidaCSV(idSalida ): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/salidas/BorrarSimulacionSalida')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSalida:idSalida } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/BorrarSimulacionSalida', body, Utilidades.getHeaders());
+  } 
+
+  async getDatosSimulacionPlanificador(idSalida): Promise<Observable<any>> {
+    if(!await Utilidades.establecerConexion('/api/planificador/getSimulacionPlanificacion')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: { IdSalida:idSalida } };
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getSimulacionPlanificacion', body, Utilidades.getHeaders());
+  }
+
+  // obtenerSimulacionPlanificacion
+  
+  //#endregion
+
+
 
   // -------------------------------------------
   //#region -- DESCATALOGADOS, SIN USO, EJEMOLOS --
-  async cargarDatos_ficheroCSV(fileToUpload: File): Promise<Observable<any>> {
+  async cargarDatosCSV_LineasSalidas(fileToUpload: File): Promise<Observable<any>> {
     if(!await Utilidades.establecerConexion('/api/salidas/cargarDatosCSV_LineasOferta')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }   
 
@@ -536,10 +608,11 @@ export class PlanificadorService {
     const formData = new FormData();
     formData.append('fichero', fileToUpload, fileToUpload.name);
     formData.append('usuario', ConfiGlobal.Usuario.toString());
+    // formData.append('almacen', '1');
 
     // const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, datos: formData };
 
-    return this.http.post<any>(url, formData, this.headers);
+    return this.http.post<any>(url, formData, Utilidades.getHeaders());
   }   
   //#endregion
 

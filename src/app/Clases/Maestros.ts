@@ -82,5 +82,7 @@ export class ArticuloSubfamilia {
     SalidaEstadoDefecto: number;
     SalidaAlmacenDefecto: number;
     SalidaPlanificarDefecto: boolean;
+    EnviarMailAlertas: boolean;
+    DiasPermitidosSinConfirmar: number;
   }
 

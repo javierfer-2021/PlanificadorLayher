@@ -122,11 +122,18 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     },
     {
       dataField: 'Modificada',
-      caption: this.traducir('frm-venta-importar.colModificada','!!!'),
+      caption: this.traducir('frm-venta-importar.colModificada','Md.'),
       dataType: 'boolean',
       visible: true,
       width: 50,
-    },           
+    },
+    // marca linea con excepciones
+    {
+      dataField: 'Excepcion',
+      caption: this.traducir('frm-importar-csv.colAvisos','Ex.'),
+      visible: true, //this.mostrarAvisosLinea,
+      width: 50,
+    },               
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
@@ -383,10 +390,12 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       if (!Utilidades.isEmpty(e.FechaInicio)) {
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
       }
       if (!Utilidades.isEmpty(e.FechaFin)) {
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
       }
     }
     this.lineaSeleccionada = null;

@@ -206,8 +206,13 @@ export class FrmVentaBuscarComponent implements OnInit {
     locale('es');
     // inicializacion filtros 
     this.filtrosAdicionales= new filtrosBusqueda();
+    this.filtrosAdicionales.mostrarCanceladas=false;
+    this.filtrosAdicionales.buscarSinConfirmar=false;
+    this.filtrosAdicionales.diasSinConfirmar=ConfiGlobal.configLayher.DiasPermitidosSinConfirmar;
+    this.filtrosAdicionales.valorContiene=true;
+    this.filtrosAdicionales.IdArticulo='';
     this.filtrosAdicionales.IdFamilia=0;
-    this.filtrosAdicionales.IdSubfamilia=0;
+    this.filtrosAdicionales.IdSubfamilia=0;    
     this.filtrosAdicionales.otros='';
   }
 
@@ -271,7 +276,11 @@ export class FrmVentaBuscarComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getSalidasAlmacen(almacen,this.filtrosAdicionales.IdFamilia,this.filtrosAdicionales.IdSubfamilia,this.filtrosAdicionales.mostrarCanceladas)).subscribe(
+    (await this.planificadorService.getSalidasAlmacen(almacen,
+                                                      this.filtrosAdicionales.IdArticulo, this.filtrosAdicionales.IdFamilia,this.filtrosAdicionales.IdSubfamilia,
+                                                      this.filtrosAdicionales.mostrarCanceladas,
+                                                      this.filtrosAdicionales.valorContiene,
+                                                      this.filtrosAdicionales.otros)).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {
@@ -368,14 +377,34 @@ export class FrmVentaBuscarComponent implements OnInit {
   }
 
   cerrarFiltrosAdicionales(e){
-    if (e != null) {
+    if ((e != null) && (this.checkCambioFiltros(e)) ){
+      this.filtrosAdicionales.IdArticulo=e.IdArticulo;
       this.filtrosAdicionales.IdFamilia=e.IdFamilia;
       this.filtrosAdicionales.IdSubfamilia=e.IdSubfamilia;
+      this.filtrosAdicionales.valorContiene=e.valorContiene;
       this.filtrosAdicionales.mostrarCanceladas=e.mostrarCanceladas;
-      this.filtrosActivos = ((this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0) || (this.filtrosAdicionales.mostrarCanceladas))
-      // refrescamos
+      this.filtrosAdicionales.otros='';
+      if (this.filtrosAdicionales.buscarSinConfirmar){
+        this.filtrosAdicionales.otros=' SAL_ID_ESTADO=1 AND CAST(GETDATE() AS Date) >= DATEADD(day,'+ this.filtrosAdicionales.diasSinConfirmar.toString() +', CAST([SAL_FECHA_ALTA] AS Date)) ';
+      }
+      // marcar si hay filtros especiales activos
+      this.filtrosActivos = ((this.filtrosAdicionales.IdArticulo!='') || (this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0) || (this.filtrosAdicionales.mostrarCanceladas) || (this.filtrosAdicionales.buscarSinConfirmar))
+      // refrescamos consulta contratos Salida
       this.cargarSalidas(this.sbAlmacenes.SelectBox.value);
     }
     this.popUpVisibleFiltros = false;
   }
+
+  checkCambioFiltros(nuevoFiltro:filtrosBusqueda):boolean {
+    if (this.filtrosAdicionales.mostrarCanceladas != nuevoFiltro.mostrarCanceladas) return true;
+    if (this.filtrosAdicionales.buscarSinConfirmar != nuevoFiltro.buscarSinConfirmar) return true;
+    if (this.filtrosAdicionales.diasSinConfirmar != nuevoFiltro.diasSinConfirmar) return true;
+    if (this.filtrosAdicionales.valorContiene != nuevoFiltro.valorContiene) return true;
+    if (this.filtrosAdicionales.IdArticulo != nuevoFiltro.IdArticulo) return true;
+    if (this.filtrosAdicionales.IdFamilia != nuevoFiltro.IdFamilia) return true;
+    if (this.filtrosAdicionales.IdSubfamilia != nuevoFiltro.IdSubfamilia) return true;    
+    return false;
+  }
+
+
 }

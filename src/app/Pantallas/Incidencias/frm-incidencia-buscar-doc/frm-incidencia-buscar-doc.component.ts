@@ -368,7 +368,7 @@ export class FrmIncidenciaBuscarDocComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getSalidasAlmacen(almacen,0,0,false)).subscribe(
+    (await this.planificadorService.getSalidasAlmacen(almacen,'',0,0,false,true,'')).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {
@@ -393,7 +393,7 @@ export class FrmIncidenciaBuscarDocComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getEntradasAlmacen(almacen, 0, 0, false)).subscribe(
+    (await this.planificadorService.getEntradasAlmacen(almacen,false,'',0,0,true,'')).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {

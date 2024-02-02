@@ -1,3 +1,5 @@
+import { NumberSymbol } from "@angular/common";
+
 // Tipos y clases referentes a la gestión de entradas (COMPRAS) para el planificador
 export class Entrada {
     IdEntrada: number;
@@ -60,9 +62,11 @@ export class Entrada {
   }  
 
   export class filtrosBusqueda {
-    IdFamilia: number;
-    IdSubfamilia: number;
     mostrarCanceladas: boolean;
+    valorContiene: boolean;
+    IdArticulo: string;
+    IdFamilia: number;
+    IdSubfamilia: number;    
     otros: string;
   }
 

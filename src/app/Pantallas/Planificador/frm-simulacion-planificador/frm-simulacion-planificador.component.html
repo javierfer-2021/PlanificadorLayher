@@ -1,0 +1,213 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+        
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
+                    <b>{{traducir('frm-planificador.lblTitulo', 'SIMULACION PLANIFICACIÓN:')}}</b> &nbsp; 
+                    {{traducir('frm-planificador.lblTituloContrato', 'Contrato Salida')}}&nbsp;<b>{{_salida.Contrato}}</b> 
+                    &nbsp;|&nbsp;
+                    {{traducir('frm-planificador.lblTituloCliente', 'Cliente')}}&nbsp;<b>{{_salida.IdClienteERP}} - {{_salida.NombreCliente}}</b>
+                </div>
+            </div>
+        </div>          
+
+        <!-- datos pantalla-->
+        <div class="row pt-3">
+            <div class="col-4 px-0">
+                <div class="row" [ngStyle]="{'height': alturaDiv}">
+                    <div class="col-9">
+                        <div class="row">
+                            <div class="col-2 mt-0">
+                                <div class="row mt-0" style="font-size: 11px; height: 33px; align-items: center; text-align: right;"><b>CONTRATO</b></div>
+                            </div>                            
+                            <div class="col-10">
+                                <dx-text-box #txtOferta class="centerBold row" style="background-color: rgb(179, 235, 181); height: 33px; font-size: 20px;" [showClearButton]="false" [(ngModel)]="idOferta_mostrar" [disabled]="true">
+                                </dx-text-box>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>CLIENTE</b></div>
+                            </div>                            
+                            <div class="col-10">
+                                <dx-text-box #txtCliente class="centerBold row" style="background-color: white; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="cliente_mostrar" [disabled]="true">
+                                </dx-text-box>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>OBRA/REF.</b></div>
+                            </div>                            
+                            <div class="col-5">
+                                <dx-text-box #txtObra class="centerBold row" style="background-color: white; height: 30px; font-size: 11px;" [showClearButton]="false" [(ngModel)]="obra_mostrar" [disabled]="true">
+                                </dx-text-box>
+                            </div>
+                            <div class="col-5" style="padding-left: 20px;">
+                                <dx-text-box #txtRefereciia class="centerBold row" style="background-color: white; height: 30px; font-size: 11px;" [showClearButton]="false" [(ngModel)]="referencia_mostrar" [disabled]="true">
+                                </dx-text-box>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>DESDE</b></div>
+                                <div class="row mt-0" style="font-size: 11px; height: 30px; align-items: center; text-align: right;"><b>HASTA</b></div>
+                            </div>
+                            <div class="col-5">
+                                <dx-text-box #txtFechaInicio class="centerBold fechaInicio row" style="background-color: yellow; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="fechaInicio_mostrar" [disabled]="true">
+                                </dx-text-box>
+                                <dx-text-box #txtFechaFin class="centerBold fechaFin row mt-1" style="background-color: yellow; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="fechaFin_mostrar" [disabled]="true">
+                                </dx-text-box>
+                                <!-- <dx-text-box #txtEstado class="centerBold row mt-2" style="background-color: rgb(255, 183, 183); height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="estado_mostrar" [disabled]="true">
+                                </dx-text-box> -->
+
+                            </div>
+                            <div class="col-5" style="padding-left: 20px;">
+                                <!-- <div class="row mt-2" style="height: 33px; font-size: 12px; align-items: center; justify-content: center; font-weight: bold;">{{ fechaAlta_mostrar }}</div> -->
+                                <dx-text-box #txtAlmacen class="centerBold row" style="background-color: yellow; height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="almacen_mostrar" [disabled]="true">
+                                </dx-text-box>
+                                <dx-text-box #txtEstado class="centerBold row mt-1" style="background-color: rgb(255, 183, 183); height: 30px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="estado_mostrar" [disabled]="true">
+                                </dx-text-box>                                
+                                <!-- <dx-text-box #txtCliente class="centerBold row mt-2" style="background-color: white; height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="cliente_mostrar" [disabled]="true">
+                                </dx-text-box> -->
+                                <!-- <dx-text-box #txtEmpresa class="centerBold row mt-2" style="background-color: yellow; height: 33px; font-size: 12px;" [showClearButton]="false" [(ngModel)]="almacen_mostrar" [disabled]="true">
+                                </dx-text-box> -->
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-1">
+                            <div class="col-2 mt-0">&nbsp;</div>  
+
+                            <div *ngIf="salidaSel_BtnPlanificar; then btnPlanificarBlock else btnDESplanificarBlock"></div>
+                                <ng-template #btnPlanificarBlock>
+                                    <div class="col-5 px-0">
+                                        <button type="button" class="btn btn-outline-success btn-sm w-100" style="font-size:0.8em;" (click)="btnPlanificarContrato()">
+                                            <i class="bi bi-check-circle-fill"></i>&nbsp;&nbsp;
+                                            {{traducir('frm-venta-buscar.lblBtnPlanificar', 'Planificar')}}
+                                        </button> 
+                                    </div>
+                                </ng-template>
+                                <ng-template #btnDESplanificarBlock>
+                                    <div class="col-5 px-0">
+                                        <button type="button" class="btn btn-outline-danger btn-sm w-100" style="font-size:0.8em;" (click)="btnDESplanificarContrato()">
+                                            <i class="bi bi-dash-circle-fill"></i>&nbsp;&nbsp;
+                                            {{traducir('frm-venta-buscar.lblBtnDESPlanificar', 'DES-Planificar')}}
+                                        </button> 
+                                    </div>
+                                </ng-template>                            
+
+                                <div *ngIf="salidaSel_BtnObservaciones" class="col-5" style="padding:0px 0px 0px 8px;">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" style="font-size:0.8em;" (click)="btnMostrarObservaciones()">
+                                        <i class="bi bi-chat-fill"></i>&nbsp;&nbsp;
+                                        {{traducir('frm-venta-buscar.lblBtnObservaciones', 'Ver Observaciones')}}
+                                    </button>
+                                </div>   
+
+                        </div>
+                    </div>
+
+                    <div class="col-3" style="padding-right: 20px;">
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>CLIENTE</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>CONTRATO</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>OBRA</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>REFERENCIA</u></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>SALIDA</b></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>ENTRADA</b></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>ESTADO</u></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <app-cmp-data-grid id="dgArticulos" #dgArticulos [dgConfig]="dgConfigArticulos"
+                        (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" 
+                        (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)"
+                        (onRowPrepared_DataGrid)="onRowPrepared_DataGridArticulos($event)">
+                    </app-cmp-data-grid>
+                </div>
+
+            </div>
+            
+            <div class="col-8 px-0">
+                <app-cmp-data-grid id="dgUnidades" #dgUnidades [dgConfig]="dgConfigUnidades"
+                    (onContentReady_DataGrid)="onContentReady_DataGridUnidades()" 
+                    (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)"
+                    (onCellDoubleClick_DataGrid)="onCellDblClick_DataGridUnidades($event)" 
+                    (onContextMenuPreparing_DataGrid)="onContextMenuPreparing_DataGridUnidades($event)"
+                    (onCellPrepared_DataGrid)="onCellPrepared_DataGridUnidades($event)">
+                </app-cmp-data-grid>
+            </div>
+
+            <!-- DESABILITADOS menus popUp grid en simulacion -->
+            <!--
+            <dx-context-menu
+                [dataSource]="itemsMenuArticulos"
+                [width]="200"
+                target="#dgArticulos"
+                (onItemClick)="itemMenuArticulosClick($event)">                
+            </dx-context-menu>
+
+            <dx-context-menu
+                [dataSource]="itemsMenuContratos"
+                [width]="200"
+                target="#dgUnidades"
+                (onItemClick)="itemMenuContratosClick($event)">
+            </dx-context-menu>            
+            -->
+
+        </div>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+
+<!-- popUp para seleccion de articulo  -->
+<dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    contentTemplate="contentSeleccionarArticulo">
+    <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
+        <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" [solicitarUnidades]=true (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+    </div>    
+</dx-popup>
+
+<!-- popUp ver observciones  -->
+<dx-popup #popUpObservaciones [dragEnabled]="false" [width]="480" [height]="360"  
+    [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    [showTitle]="true" title="{{traducir('frm-articulos-buscar.str_txtPopupObservaciones', 'Observaciones')}}"
+    [(visible)]="popUpVisibleObservaciones"
+    contentTemplate="contentObservaciones">
+    <div *dxTemplate="let data of 'contentObservaciones'">
+        CONTRATO: {{str_contrato}}
+        <br>
+        {{str_observaciones}}
+    </div>      
+</dx-popup>
+
+<!-- popUp para edicion und.linea  -->
+<dx-popup *ngIf="popUpVisibleEditarUndLinea" #popUpEditarUndLineas (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="800px" height="440px"
+    [(visible)]="popUpVisibleEditarUndLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-planificador.str_txtPopupUndEditarUndLineas', 'Modificar Und. Asignadas')}}"
+    contentTemplate="contentUnidadesLineas">
+    <div *dxTemplate="let data of 'contentUnidadesLineas'">
+        <app-frm-planificador-und [lineaArticulo]="_modLineaArticulo" (cerrarPopUp)="cerrarEditarUnidadesArticulo($event)"></app-frm-planificador-und>
+    </div>    
+</dx-popup>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
+    [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" 
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+

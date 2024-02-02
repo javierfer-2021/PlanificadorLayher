@@ -21,6 +21,8 @@ export class Salida {
     Planificar: boolean;
     NumLineas: number;
     Aviso?: string;
+    //uso opcional y adicional para importación lineas csv 
+    IdSimulacion: string;
   }
 
   export class SalidaLinea {
@@ -39,11 +41,14 @@ export class Salida {
     Eliminada: boolean;
     Insertada: boolean;
     Observaciones: string;
-    FechaInicio: Date;
-    FechaFin: Date; 
     Modificada: boolean = false;
-    Excepcion: boolean = false;    
-    Aviso: string;  //imp ERP             
+    //uso gestion de excepciones
+    Excepcion: boolean = false;  
+    FechaInicio: Date;
+    FechaFin: Date;
+    //uso opcional y adicional para importación lineas csv 
+    IdSimulacion: string;
+    Aviso: string;     
   }
 
   /*
@@ -59,15 +64,33 @@ export class Salida {
   }
   */
 
+  export class LineasCSV {
+    IdArticulo: string;
+    NombreArticulo: string;
+    CantidadPedida: number;
+    Procesado: boolean; 
+    Error: boolean;
+    Aviso: string;  
+    //uso gestion de excepciones
+    Modificada: boolean = false;
+    Excepcion: boolean = false;  
+    FechaInicio: Date;
+    FechaFin: Date;     
+  }
+
   export class EstadoSalida {
     IdEstado: number;
     NombreEstado: string;
   }  
 
   export class filtrosBusqueda {
+    mostrarCanceladas: boolean;
+    valorContiene: boolean;
+    IdArticulo: string;
     IdFamilia: number;
     IdSubfamilia: number;
-    mostrarCanceladas: boolean;
+    buscarSinConfirmar: boolean;
+    diasSinConfirmar: number;
     otros: string;
   }
 

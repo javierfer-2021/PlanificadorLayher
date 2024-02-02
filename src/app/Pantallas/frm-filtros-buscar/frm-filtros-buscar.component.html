@@ -10,17 +10,84 @@
                 </div>
             </div> 
 
+            <!-- Filtros Buscar Salidas sin confirmar con dias excedidos -->
+            <div *ngIf="fsalida" class="row pt-0 pb-2">
+                <div class="col px-1 pb-1">
+                    <dx-check-box #checkSinConfirmar [value]="buscarSinConfirmar" [disabled]="false" text="{{traducir('frm-filtros-buscar.lblBuscarSinConfirmar', 'Buscar Sin Confirmar')}}"></dx-check-box>
+                </div>
+                <div class="col px-1 pb-1">
+                    <dx-number-box
+                        [(ngModel)]="this.diasSinConfirmar" 
+                        [height]="30" [min]="1" [max]="365" [value]="15" [step]="1"
+                        [showSpinButtons]="true"
+                        [showClearButton]="false"
+                        label="Dias desde alta"
+                        labelMode="static">
+                    </dx-number-box>
+                </div>
+            </div>
+
             <!-- Filtros Familia y Subfamilia Articulos -->
             <!-- Titulo seccion -->
-            <div class="row px-1 py-2 titulo">
+            <div class="row px-1 py-2 mt-1 titulo">
                 <div class="col pt-1 px-1">
-                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-filtros-buscar.lblTitulo', 'Contiene articulos de ...')}}</div>
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-filtros-buscar.lblTitulo', 'Articulos asociados al contrato.')}}</div>
                 </div>
             </div>  
-            <!-- filtro Familia -->  
+
+            <!-- RadioGroup Tipo busqueda (contiene / no contiene) -->
             <div class="row pt-2">
                 <div class="col px-1">
+                    <dx-radio-group #radioGroupContiene
+                        [dataSource]="arrayTipoFiltroContiene"
+                        valueExpr="valor"
+                        displayExpr="texto"
+                        [value]="this.filtros.valorContiene"
+                        layout="horizontal">
+                    </dx-radio-group> 
+                </div>
+            </div>              
+            <!-- filtro Articulo -->  
+            <div class="row pt-2">
+                <div class="col-3 px-1 pt-1 text-end">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblArticulo', 'Artículo')}}</div>
+                </div>
+                <div class="col px-1">
+                    <dx-text-box  #txtArticulo [height]="30"
+                        [(ngModel)]="str_txtArticulo"
+                        placeholder="{{traducir('frm-filtros-buscar.comboFamilia', 'Seleccionar Artículo')}}"
+                        showClearButton="true"
+                        [disabled]="false" [readOnly]="true"
+                        style="border-style: solid;">                     
+                        <dxi-button
+                            name="buscarArticulo"
+                            location="after"
+                            [options]="configBtnBuscarArticulo"
+                        ></dxi-button>
+                        <dxi-button
+                            name="limpiarArticulo"
+                            location="after"
+                            [options]="configBtnLimpiarArticulo"
+                        ></dxi-button>                                 
+                    </dx-text-box>
+                </div>
+                <!-- <div class="col-3 px-1">
+                    <dx-button
+                        stylingMode="contained"
+                        icon="find"
+                        text="Buscar"
+                        type="default"
+                        [height]="30"                    
+                        (onClick)="btnBuscarArticulo()">
+                  </dx-button>
+                </div> -->
+            </div>            
+            <!-- filtro Familia -->  
+            <div class="row pt-2">
+                <div class="col-3 px-1 pt-1 text-end">
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblFamilia', 'Familia')}}</div>
+                </div>
+                <div class="col px-1">
                     <dx-select-box  #comboFamilia [height]="30"
                         [(ngModel)]="str_txtFamilia"
                         [dataSource]="arrayFamilias"                     
@@ -34,8 +101,10 @@
             </div>            
             <!-- filtro Subfamilia -->  
             <div class="row pt-2">
-                <div class="col px-1">
+                <div class="col-3 px-1 pt-1 text-end">
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16">{{traducir('frm-filtros-buscar.lblSubfamilia', 'Subfamilia')}}</div>
+                </div>                
+                <div class="col px-1">
                     <dx-select-box  #comboSubfamilia [height]="30"
                         [(ngModel)]="str_txtSubfamilia"
                         [dataSource]="arraySubfamilias"                     
@@ -47,9 +116,27 @@
                     </dx-select-box>
                 </div>
             </div> 
+
+            <!-- Boton Limpiar Filtros -->
+            <div class="row mt-3 mb-1 px-1">
+                <button type="button" class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+                    <i class="bi bi-eraser-fill"></i>&nbsp;{{traducir('frm-venta-buscar.lblBtnFiltros', 'Limpiar todos los filtros')}}
+                </button>                
+            </div>
     </div>
 </div>
 
 <div #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
+
+<!-- popUp para seleccion de articulo  -->
+<dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    contentTemplate="contentSeleccionarArticulo">
+    <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
+        <app-frm-articulos-buscar [idAlmacen]="-1" [solicitarUnidades]=false (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+    </div>    
+</dx-popup>

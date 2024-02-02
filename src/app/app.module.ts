@@ -9,8 +9,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FrmLoginComponent } from './Pantallas/frm-login/frm-login.component';
 
 // DevExtreme + AngularMaterial + SmartWeb
-import { DevextremeModule } from './modulos/devextreme/devextreme.module';
-import { MaterialModule } from './modulos/AngularMaterial/material.module';
+import { DevextremeModule } from './Modulos/DevExtreme/devextreme.module';
+import { MaterialModule } from './Modulos/AngularMaterial/material.module';
 
 // carga parametros dominio:puerto desde fichero config.json
 import { APP_INITIALIZER } from '@angular/core';
@@ -60,6 +60,8 @@ import { FrmIncidenciaBuscarDocComponent } from './Pantallas/Incidencias/frm-inc
 import { FrmIncidenciaBuscarArtComponent } from './Pantallas/Incidencias/frm-incidencia-buscar-art/frm-incidencia-buscar-art.component';
 import { FrmCompraLineasComponent } from './Pantallas/Compras/frm-compra-lineas/frm-compra-lineas.component';
 import { FrmVentaLineasComponent } from './Pantallas/Ventas/frm-venta-lineas/frm-venta-lineas.component';
+import { FrmImportarCsvComponent } from './Pantallas/Ventas/frm-importar-csv/frm-importar-csv.component';
+import { FrmSimulacionPlanificadorComponent } from './Pantallas/Planificador/frm-simulacion-planificador/frm-simulacion-planificador.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -107,7 +109,9 @@ function initializeApp(appConfig: ConfigService) {
     FrmIncidenciaBuscarDocComponent,
     FrmIncidenciaBuscarArtComponent,
     FrmCompraLineasComponent,
-    FrmVentaLineasComponent
+    FrmVentaLineasComponent,
+    FrmImportarCsvComponent,
+    FrmSimulacionPlanificadorComponent
 
   ],
   imports: [

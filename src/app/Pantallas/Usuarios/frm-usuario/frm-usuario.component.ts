@@ -8,7 +8,7 @@ import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { Usuario } from '../../../Clases/Usuario';
+import { Usuario, Perfil } from '../../../Clases/Usuario';
 import { Almacen,Idioma } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxCheckBoxComponent, DxFormComponent, DxPopupComponent } from 'devextreme-angular';
@@ -55,6 +55,7 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
 
   arrayIdiomas: Array<Idioma> = ConfiGlobal.arrayIdiomas;  
   arrayAlmacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesActivos;  
+  arrayPerfiles: Array<Perfil> = ConfiGlobal.arrayPerfilesUsuario;
 
   arrayAlmacenesDisponibles: Array<Almacen> = new Array<Almacen>();  //ConfiGlobal.arrayAlmacenesActivos;  
   arrayAlmacenesAsignados: Array<Almacen> = new Array<Almacen>();    //[];
@@ -198,7 +199,8 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     this.WSDatos_Validando = true;
     (await this.planificadorService.insertarUsuario(this._usuario.Login,this._usuario.Password,this._usuario.NombreUsuario,this._usuario.Email,this._usuario.IdIdioma,
                                                     this._usuario.FechaAlta,this._usuario.FechaBaja,this._usuario.Baja,this._usuario.Administrador,this._usuario.VerAlmacenes,
-                                                    this._usuario.idAlmacenDefecto,this._usuario.Skin,this._usuario.Perfil,this._usuario.IdPersonal,this.arrayAlmacenesAsignados)).subscribe(
+                                                    this._usuario.idAlmacenDefecto,this._usuario.Skin,this._usuario.IdPerfil,this._usuario.IdPersonal,this.arrayAlmacenesAsignados,
+                                                    this._usuario.NotificacionesEmail)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-usuario.msgOk_WSInsertarUsuario','Usuario insertando')); 
@@ -221,7 +223,8 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     this.WSDatos_Validando = true;
     (await this.planificadorService.actualizarUsuario(this._usuario.IdUsuario,this._usuario.Login,this._usuario.Password,this._usuario.NombreUsuario,this._usuario.Email,this._usuario.IdIdioma,
                                                     this._usuario.FechaAlta,this._usuario.FechaBaja,this._usuario.Baja,this._usuario.Administrador,this._usuario.VerAlmacenes,
-                                                    this._usuario.idAlmacenDefecto,this._usuario.Skin,this._usuario.Perfil,this._usuario.IdPersonal,this.arrayAlmacenesAsignados)).subscribe(
+                                                    this._usuario.idAlmacenDefecto,this._usuario.Skin,this._usuario.IdPerfil,this._usuario.IdPersonal,this.arrayAlmacenesAsignados,
+                                                    this._usuario.NotificacionesEmail)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-usuario.msgOk_WSActualizarUsuario','Usuario actualizado')); 
@@ -259,9 +262,11 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     this._usuario = new(Usuario);    
     this._usuario.FechaAlta = new Date();
     this._usuario.Baja = false;
-    this._usuario.Administrador = false;
+    this._usuario.IdPerfil = this.getPerfilDefecto(this.arrayPerfiles);
+    this._usuario.Administrador = this.arrayPerfiles[this._usuario.IdPerfil].Administrador;
     this._usuario.VerAlmacenes = false;
     this._usuario.IdIdioma = 1;
+    this._usuario.NotificacionesEmail = false;
     // edicion
     this.setModoEdicion(true);
     // enviar foco a primer elemento vacio
@@ -289,6 +294,8 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       return;
     }
     else {
+      //ajuste campo administrador no visible en funcion del perfil indicado
+      this._usuario.Administrador = this.arrayPerfiles[this._usuario.IdPerfil].Administrador;
       // distingir entre edicion o insercion
       if (this.nuevoUsuario) {
         this.insertarUsuario();
@@ -365,6 +372,14 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       editor.option('mode') === 'text' ? 'password' : 'text',
     );        
   }
+
+  getPerfilDefecto(perfiles:Array<Perfil>):number {
+    for (let i=0; perfiles.length-1; i++){
+      if (perfiles[i].Defecto) return i;
+    }
+    return 0
+  }
+
 }
 
 

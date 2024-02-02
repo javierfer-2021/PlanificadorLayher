@@ -129,7 +129,14 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
       dataField: 'Aviso',
       caption: this.traducir('frm-venta-importar.colAvisos','Aviso'),
       visible: false,
-    },       
+    }, 
+    // marca linea con excepciones
+    {
+      dataField: 'Excepcion',
+      caption: this.traducir('frm-importar-csv.colAvisos','Ex.'),
+      visible: true, //this.mostrarAvisosLinea,
+      width: 50,
+    },      
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 400, '' );
 
@@ -434,10 +441,12 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
       if (!Utilidades.isEmpty(e.FechaInicio)) {
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
       }
       if (!Utilidades.isEmpty(e.FechaFin)) {
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
       }
     }
     this.lineaSeleccionada = null;

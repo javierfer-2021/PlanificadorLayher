@@ -44,8 +44,12 @@
                     </dxi-item>         
                     
                     <dxi-item itemType="group" caption="Permisos" [colCount]="1" [colSpan]="1">
-                        <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <!-- <dxi-item dataField="Administrador" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item> -->
+                        <dxi-item dataField="IdPerfil" [label]="{text:'Pefil Usuario'}" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayPerfiles, displayExpr:'NombrePerfil', valueExpr:'IdPerfil', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo PERFIL USUARIO"></dxi-validation-rule>
+                        </dxi-item>                        
                         <dxi-item dataField="VerAlmacenes" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="NotificacionesEmail" editorType="dxCheckBox" [label]="{text:'Notif. por eMail'}" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
                         <!-- <dxi-item itemType="empty" [colSpan]="2 "></dxi-item> -->
                     </dxi-item>
 

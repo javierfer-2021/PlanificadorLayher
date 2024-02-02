@@ -197,11 +197,15 @@ export class FrmCompraBuscarComponent implements OnInit {
   { 
     // Asignar localizacion ESPAÑA
     locale('es');
-    // inicializacion filtros 
+    // inicializacion filtros    
     this.filtrosAdicionales= new filtrosBusqueda();
+    this.filtrosAdicionales.mostrarCanceladas=false;
+    this.filtrosAdicionales.valorContiene=true;
+    this.filtrosAdicionales.IdArticulo='';
     this.filtrosAdicionales.IdFamilia=0;
-    this.filtrosAdicionales.IdSubfamilia=0;
+    this.filtrosAdicionales.IdSubfamilia=0;    
     this.filtrosAdicionales.otros='';    
+
   }
 
   ngOnInit(): void {
@@ -264,7 +268,11 @@ export class FrmCompraBuscarComponent implements OnInit {
     if (this.WSDatos_Validando) return;
     
     this.WSDatos_Validando = true;
-    (await this.planificadorService.getEntradasAlmacen(almacen, this.filtrosAdicionales.IdFamilia, this.filtrosAdicionales.IdSubfamilia, this.filtrosAdicionales.mostrarCanceladas)).subscribe(
+    (await this.planificadorService.getEntradasAlmacen(almacen, this.filtrosAdicionales.mostrarCanceladas,
+                                                       this.filtrosAdicionales.IdArticulo, 
+                                                       this.filtrosAdicionales.IdFamilia, this.filtrosAdicionales.IdSubfamilia, 
+                                                       this.filtrosAdicionales.valorContiene,
+                                                       this.filtrosAdicionales.otros)).subscribe(
       (datos) => {
 
         if (Utilidades.DatosWSCorrectos(datos)) {
@@ -342,14 +350,28 @@ export class FrmCompraBuscarComponent implements OnInit {
   }
 
   cerrarFiltrosAdicionales(e){
-    if (e != null) {
+    if ((e != null) && (this.checkCambioFiltros(e)) ){
+      this.filtrosAdicionales.IdArticulo=e.IdArticulo;
       this.filtrosAdicionales.IdFamilia=e.IdFamilia;
       this.filtrosAdicionales.IdSubfamilia=e.IdSubfamilia;
+      this.filtrosAdicionales.valorContiene=e.valorContiene;
       this.filtrosAdicionales.mostrarCanceladas=e.mostrarCanceladas;
-      this.filtrosActivos = ((this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0) || (this.filtrosAdicionales.mostrarCanceladas))
-      // refrescamos consulta
+      this.filtrosAdicionales.otros='';
+      // marcar si hay filtros especiales activos
+      this.filtrosActivos = ((this.filtrosAdicionales.IdArticulo!='') || (this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0) || (this.filtrosAdicionales.mostrarCanceladas))
+      // refrescamos consulta contratos ENTRADA
       this.cargarEntradas(this.sbAlmacenes.SelectBox.value);
     }
     this.popUpVisibleFiltros = false;
   }
+
+  checkCambioFiltros(nuevoFiltro:filtrosBusqueda):boolean {
+    if (this.filtrosAdicionales.mostrarCanceladas != nuevoFiltro.mostrarCanceladas) return true;
+    if (this.filtrosAdicionales.valorContiene != nuevoFiltro.valorContiene) return true;
+    if (this.filtrosAdicionales.IdArticulo != nuevoFiltro.IdArticulo) return true;
+    if (this.filtrosAdicionales.IdFamilia != nuevoFiltro.IdFamilia) return true;
+    if (this.filtrosAdicionales.IdSubfamilia != nuevoFiltro.IdSubfamilia) return true;    
+    return false;
+  }
+
 }

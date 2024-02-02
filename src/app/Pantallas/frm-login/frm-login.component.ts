@@ -263,7 +263,8 @@ export class FrmLoginComponent implements OnInit, AfterViewInit {
           ConfiGlobal.arrayAlmacenesActivos = ConfiGlobal.arrayAlmacenesFiltrosBusqueda.slice(1);
           ConfiGlobal.arrayAlmacenesUsuario = datos.datos.AlmacenesUsuario;
           ConfiGlobal.arrayIdiomas.push({'IdIdioma':1, 'NombreIdioma':'Español', 'iso':'es', 'Activo':1})
-
+          ConfiGlobal.arrayPerfilesUsuario = datos.datos.PerfilesUsuario;
+          
           this.WSLogin_Valido = true;
           this.dgConfigTxtUsuario.validationStatus = 'valid';
           this.dgConfigTxtPassword.validationStatus = 'valid';

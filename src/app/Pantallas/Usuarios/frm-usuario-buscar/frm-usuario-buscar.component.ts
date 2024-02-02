@@ -103,7 +103,23 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       dataField: 'NombreIdioma',
       caption: this.traducir('frm-usuario-buscar.colNombreIdioma','Idioma'),
       visible: true,
-    }, 
+    },
+    {
+      dataField: 'Administrador',
+      caption: this.traducir('frm-usuario-buscar.colAdministrador','Administrador'),
+      visible: false,
+      dataType: 'boolean',
+    },  
+    {
+      dataField: 'IdPerfil',
+      caption: this.traducir('frm-usuario-buscar.colIdPerfil','IdPerfil'),
+      visible: false,
+    },
+    {
+      dataField: 'NombrePerfil',
+      caption: this.traducir('frm-usuario-buscar.colNombrePerfil','Perfil'),
+      visible: true,
+    },      
     {
       dataField: 'idAlmacenDefecto',
       caption: this.traducir('frm-usuario-buscar.colIdAlmacenDefecto','Id.Almacen'),
@@ -131,24 +147,25 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       caption: this.traducir('frm-usuario-buscar.colActivo','Activo'),
       visible: true,
       dataType: 'boolean',
-    },                    
-    {
-      dataField: 'Administrador',
-      caption: this.traducir('frm-usuario-buscar.colAdministrador','Administrador'),
-      visible: true,
-      dataType: 'boolean',
-    },  
+      width: 100,
+    },                             
     {
       dataField: 'VerAlmacenes',
       caption: this.traducir('frm-usuario-buscar.colVerAlmacenes','Ver Almacenes'),
       visible: true,
       dataType: 'boolean',
+      width:150,
     },  
     {
       dataField: 'Email',
       caption: this.traducir('frm-usuario-buscar.colEmail','Email'),
       visible: false,
-    },        
+    },  
+    {
+      dataField: 'NotificacionesEmail',
+      caption: this.traducir('frm-usuario-buscar.colNotificacionesEmail','Notific.Email'),
+      visible: false,
+    },            
     {
       dataField: 'Conectado',
       caption: this.traducir('frm-usuario-buscar.colConectado','Conectado'),

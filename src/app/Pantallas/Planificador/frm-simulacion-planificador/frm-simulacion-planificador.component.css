@@ -1,0 +1,174 @@
+::ng-deep .dx-header-row {
+    font-size: 10px;
+    height: 30px;
+}
+
+::ng-deep .dx-header-row .cliente_sel,
+::ng-deep .dx-header-row .contrato_sel,
+::ng-deep .dx-header-row .fecha_sel,
+::ng-deep .dx-header-row .otros_sel,
+::ng-deep .dx-header-row .estado_sel {
+    color: black;
+}
+
+
+/* 
+::ng-deep .dx-header-row .grisClaro {
+    background-color: #f2f2f2;
+}
+
+::ng-deep .dx-header-row .verde {
+    background-color: rgb(84, 175, 87);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .verdeClaro {
+    background-color: rgb(179, 235, 181);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .gris {
+    background-color: rgb(227, 227, 227);
+}
+
+::ng-deep .dx-header-row .fecha {
+    background-color: yellow;
+}
+
+::ng-deep .dx-header-row .fechaRoja {
+    background-color: yellow;
+    color: red;
+} */
+
+
+
+
+/* ESTILOS columnas Salida SELECCIONADA */
+
+::ng-deep .dx-header-row .cliente_sel {
+    background-color: rgb(84, 175, 87);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .contrato_sel {
+    background-color: rgb(179, 235, 181);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .fecha_sel {
+    background-color: yellow;
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .otros_sel {
+    background-color: white;
+    font-weight: bold;
+}
+
+
+::ng-deep .dx-header-row .estado_sel {
+    background-color: rgb(179, 235, 181);
+    color: red;
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .planificado_sel {
+    background-color: rgb(179, 235, 181);
+    color: rgb(5, 60, 10);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .sinPlanificar_sel {
+    background-color: rgb(179, 235, 181);
+    color: red;
+    font-weight: bold;
+}
+
+
+::ng-deep .dx-header-row .unidades_sel,
+::ng-deep .dx-header-row .undPedidas_sel,
+::ng-deep .dx-header-row .undStock_sel,
+::ng-deep .dx-header-row .undAsignadas_sel {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: black;
+}
+
+
+
+
+/* ESTILOS columnas Salida NO SELECCIONADA (resto)*/
+
+::ng-deep .dx-header-row .cliente {
+    background-color: #ccc;
+    color: black;
+}
+
+::ng-deep .dx-header-row .contrato {
+    background-color: #f2f2f2;
+}
+
+::ng-deep .dx-header-row .fecha {
+    background-color: #f2f2f2;
+}
+
+::ng-deep .dx-header-row .otros {
+    background-color: #f2f2f2;
+}
+
+::ng-deep .dx-header-row .estado {
+    background-color: #f2f2f2;
+    color: red;
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .planificado {
+    background-color: #f2f2f2;
+    color: rgb(5, 60, 10);
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .sinPlanificar {
+    background-color: #f2f2f2;
+    color: red;
+    font-weight: bold;
+}
+
+::ng-deep .dx-header-row .unidades,
+::ng-deep .dx-header-row .undPedidas,
+::ng-deep .dx-header-row .undStock,
+::ng-deep .dx-header-row .undAsignadas {
+    background-color: #f2f2f2;
+}
+
+
+
+
+/* ESTILOS COLUMNAS VALORES UNIDADES ARTICULOS */
+
+::ng-deep .dx-data-row .valorUnidades {
+    font-weight: normal;
+}
+
+::ng-deep .dx-data-row .valorStockCero {
+    color: red;
+}
+
+::ng-deep .dx-data-row .valorUndPendientes {
+    background-color:lightpink; 
+}
+
+::ng-deep .dx-data-row .valorUnidades_sel {
+    font-weight: bold; 
+}
+
+::ng-deep .dx-data-row .valorStockCero_sel {
+    font-weight: bold; 
+    color: red;
+}
+
+::ng-deep .dx-data-row .valorUndPendientes_sel {
+    font-weight: bold; 
+    background-color:lightpink; 
+}
+

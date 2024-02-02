@@ -11,9 +11,10 @@
                 <div class="col-3 pt-0 px-1">
                     <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
                 </div>   
-                <div class="col-1 pt-0 px-1">
+                <div class="col-2 pt-0 px-1">
                     <button type="button" class="btn botonFiltros" [ngClass]="{'btn-success': filtrosActivos, 'btn-outline-secondary': !filtrosActivos}" (click)="seleccionarFiltrosAdicionales()">
-                        {{traducir('frm-venta-buscar.lblBtnFiltros', '+ Filtros')}}
+                        <i class="bi bi-funnel-fill"></i>
+                        {{traducir('frm-venta-buscar.lblBtnFiltros', 'Filtros Especiales')}}
                     </button>
                 </div>   
             </div>  
@@ -37,12 +38,12 @@
 
 <!-- popUp filtros adicionales -->
 <!-- *ngIf="popUpVisibleFiltros" -->
-<dx-popup  #popUpFiltros (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="350px" width="600px"
+<dx-popup  #popUpFiltros (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="470px" width="600px"
     [fullScreen]="false" 
     [(visible)]="popUpVisibleFiltros" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-venta-buscar.str_txtPopupFiltros', 'Filtros Adicionales')}}"
     contentTemplate="contentFiltrosAdicionales">
     <div *dxTemplate="let data of 'contentFiltrosAdicionales'">
-        <app-frm-filtros-buscar (cerrarPopUp)="cerrarFiltrosAdicionales($event)"></app-frm-filtros-buscar>
+        <app-frm-filtros-buscar [fsalida]="true" (cerrarPopUp)="cerrarFiltrosAdicionales($event)"></app-frm-filtros-buscar>
     </div>    
 </dx-popup>

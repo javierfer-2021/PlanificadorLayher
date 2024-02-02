@@ -40,6 +40,13 @@
                         </dxi-item>
                     </dxi-item>
 
+                    <dxi-item itemType="group" caption="Gestión de Avisos" [colCount]="1" [colSpan]="1">
+                        <dxi-item dataField="EnviarMailAlertas" [label]="{text:'Envio e-mail alertas'}" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
+                        <dxi-item dataField="DiasPermitidosSinConfirmar" [label]="{text:'Nº Días max. SIN Confirmar'}" [colSpan]="1" [editorOptions]="{disabled:false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor (0..N) para el campo DIAS SIN CONFIRMAR"></dxi-validation-rule>
+                        </dxi-item>
+                    </dxi-item>                    
+
                 </dx-form>
             </div>
         </div>

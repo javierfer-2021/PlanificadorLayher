@@ -121,7 +121,8 @@ export class FrmConfiguracionComponent implements OnInit {
 
     this.WSDatos_Validando = true;
     (await this.planificadorService.setConfigPlanificador(this._config.NumItemPlanificador,this._config.EntradaConfirmarDefecto,this._config.EntradaEstadoDefecto,this._config.EntradaAlmacenDefecto,
-                                                          this._config.SalidaPlanificarDefecto,this._config.SalidaEstadoDefecto,this._config.SalidaAlmacenDefecto)).subscribe(
+                                                          this._config.SalidaPlanificarDefecto,this._config.SalidaEstadoDefecto,this._config.SalidaAlmacenDefecto,
+                                                          this._config.EnviarMailAlertas, this._config.DiasPermitidosSinConfirmar)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-configuracion.msgOk_WSActualizarConfiguracion','Configuracion actualizado'));           

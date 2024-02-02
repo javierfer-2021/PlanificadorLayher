@@ -15,12 +15,20 @@ export class Usuario {
     idAlmacenDefecto: number;
     NombreAlmacenDefecto: String;
     Skin: string;
-    Perfil: number;
+    IdPerfil: number;
+    NombrePerfil: string;
     IdPersonal: number;
+    NotificacionesEmail: boolean;
   }
   
 
   export class Perfil {
     IdPerfil: number;
-    NombrePrefil: string;
+    NombrePerfil: string;
+    Abreviatura: string;
+    Descripcion: string;
+    Administrador: boolean;
+    Defecto: boolean;
+    Activo: boolean;
   }
+  

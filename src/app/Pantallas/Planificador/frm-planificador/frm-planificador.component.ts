@@ -15,6 +15,7 @@ import { DxPopupComponent } from 'devextreme-angular';
 import { Salida, SalidaLinea } from '../../../Clases/Salida';
 
 import { modLineaPlanificador } from '../../../Clases/Planificador';
+import { Articulo } from 'src/app/Clases/Maestros';
 
 @Component({
   selector: 'app-frm-planificador',
@@ -135,11 +136,16 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   itemsMenuArticulos: any;
   itemsMenuContratos: any;
 
+  //tipo opercion articulo
+  _tipoOperacionArticulo:number;  // 0:cambiarArticuloSalida | 1:eliminarArticuloSalida | 2:anadirArticuloSalida | 3:cambiarPrioridad
+  _lineaCambiar:SalidaLinea;
+
+
   //popUp Seleccion de Articulos
   @ViewChild('popUpArticulos', { static: false }) popUpArticulos: DxPopupComponent;
   popUpVisibleArticulos:boolean = false;
   popUpTitulo:string = "Selección Articulo";
-
+  
   //popUp ver observaciones de contrato
   popUpVisibleObservaciones:boolean = false;
   str_contrato:string = '';
@@ -402,6 +408,32 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
         } else {          
           this.WSDatos_Validando = false;
           Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSEliminarArticulos','Error WS eliminando artículo')); 
+        }
+      }, error => {        
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router, 'frm-planificador');        
+        //console.log(error);
+      }
+    );
+  }  
+
+  async cambiarArticulo(idArticulo:string,motivoEliminar:string,idNewArticulo:string,unidades:number,observaciones:string){
+    if(this.WSDatos_Validando) return;    
+    if (Utilidades.isEmpty(this.oOfertaSeleccionada)) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.cambiarArticuloPlanificador(this.oOfertaSeleccionada.IdSalida,
+                                                                idArticulo,motivoEliminar,
+                                                                idNewArticulo,unidades,observaciones)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          //console.log(datos);
+          Utilidades.MostrarExitoStr(this.traducir('frm-planificador.msgOk_WSCambiarArticulos','Artículo Cambiado correctamente'));           
+          this.WSDatos_Validando = false;
+          this.limpiarControles(true);
+        } else {          
+          this.WSDatos_Validando = false;
+          Utilidades.MostrarErrorStr(this.traducir('frm-planificador.msgError_WSCambiarArticulos','Error WS cambiando artículo')); 
         }
       }, error => {        
         this.WSDatos_Validando = false;
@@ -706,6 +738,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   async itemMenuArticulosClick(e) {
     //if (!e.itemData.items) { alert('The '+e.itemData.text+' item was clicked'); }
     let articulo:SalidaLinea = this.dgArticulos.objSeleccionado();
+    this._tipoOperacionArticulo = Utilidades.isEmpty(e.itemIndex) ? -1 : e.itemIndex;
     switch (e.itemIndex) {     
       //cambiar articulo
       case 0: this.cambiarArticuloSalida(articulo);
@@ -714,7 +747,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       case 1: this.eliminarArticuloSalida(articulo);
       break;
       //añadir articulo
-      case 2: this.anadirArticuloSalida();          
+      case 2: this.seleccionarNuevoArticuloSalida();          
       break;
       //marcar/desmarcar secundario
       case 3:         
@@ -790,21 +823,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
     if (!continuar) return;
     else {
-      //alert('eliminar articulo '+articulo.IdArticulo);      
       // Actualizar SALIDAS_LINEAS
       // Recalcular stock
       // actualizar en array articulos y unidades    
       this.eliminarArticulo(articulo.IdArticulo,"Eliminado desde planificador");
     }   
-  }
-
-  anadirArticuloSalida(){
-    // Seleccionar articulo a añadir
-    this.popUpVisibleArticulos=true;
-    // pantalla buscar seleccionar articulo
-      // Insertar en SALIDAS_LINEAS
-      // Recalcular stock
-      // Insertar en array articulos y unidades
   }
  
   async cambiarArticuloSalida(articulo:SalidaLinea){    
@@ -812,10 +835,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-planificador.MsgEliminarArticulo', 'El artículo '+articulo.IdArticulo+'-'+articulo.NombreArticulo+' sera eliminado de la planificación.'+'<br>¿Esta seguro que desea Continuar?'), this.traducir('frm-planificador.TituloConfirmar', 'Confirmar'));  
     if (!continuar) return;
     else {
-      // eliminar
-      this.eliminarArticulo(articulo.IdArticulo,"Eliminado desde planificador");
-      // añadir
-      this.anadirArticuloSalida();
+      this._lineaCambiar = articulo;
+      this.seleccionarNuevoArticuloSalida();
+      // eliminar + añadir
+      // this.eliminarArticulo(articulo.IdArticulo,"Eliminado desde planificador");
+      // this.seleccionarNuevoArticuloSalida();
     }      
   }
 
@@ -824,15 +848,33 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.actulizarArticuloValorSecundario(articulo.IdArticulo,valor);
   }
 
+
+  seleccionarNuevoArticuloSalida(){
+    // Seleccionar articulo a añadir
+    this.popUpVisibleArticulos=true;
+    // pantalla buscar seleccionar articulo
+      // Insertar en SALIDAS_LINEAS
+      // Recalcular stock
+      // Insertar en array articulos y unidades
+  }
+
   cerrarSeleccionarArticulo(e){
     if (e != null) {
       // comprobar articulo no existe previamente
       let index:number = this.arrayArts.findIndex(art=>art.IdArticulo == e.IdArticulo);
       if (index<0) {
-        // añadir articulo en la planificación
-        this.insertarArticulo(e.IdArticulo, e.Unidades,"Insertado desde el planificador");
+        // Insertar vs Cambiar
+        switch (this._tipoOperacionArticulo) {     
+          //cambiar articulo
+          case 0: this.cambiarArticulo(this._lineaCambiar.IdArticulo,"Eliminado desde planificador",e.IdArticulo, e.Unidades,"Insertado desde el planificador");
+                  break;
+          //añadir articulo
+          case 2: this.insertarArticulo(e.IdArticulo, e.Unidades,"Insertado desde el planificador");          
+                  break;
+          default: break;
+        }        
       } else {
-        Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','Artículo ya incluido (No insertado).<br>Modifique unidades manualmente'))
+        Utilidades.ShowDialogAviso(this.traducir('frm-planificador.msgError_ArticuloYaExistente','No insertado: Artículo indicado ya incluido.<br>Modifique unidades manualmente'))
       }
     }
     this.popUpVisibleArticulos = false;
