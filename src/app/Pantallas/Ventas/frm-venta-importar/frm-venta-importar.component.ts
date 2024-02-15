@@ -271,7 +271,8 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
         } else {          
           //this.WSEnvioCsv_Valido = false;
-          Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSobtenerDatosERP','Error: Documento no encontrado')); 
+          //Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_WSobtenerDatosERP','Error: Documento no encontrado')); 
+          Utilidades.MostrarError(datos.nError);
         }
         this.WSDatos_Validando = false;
       }, error => {

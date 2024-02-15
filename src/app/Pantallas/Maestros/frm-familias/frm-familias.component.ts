@@ -9,7 +9,7 @@ import { BotonMenu } from '../../../Clases/Componentes/BotonMenu';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { ArticuloFamilia } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxFormComponent } from 'devextreme-angular';
+import { DxFormComponent,DxDataGridComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-frm-familias',
@@ -28,7 +28,7 @@ export class FrmFamiliasComponent implements OnInit {
   @ViewChild('pantalla') pantalla: ElementRef;
 
   @ViewChild('formFamilia', { static: false }) formFamilia: DxFormComponent;  
-
+  
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-familias.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
   ];

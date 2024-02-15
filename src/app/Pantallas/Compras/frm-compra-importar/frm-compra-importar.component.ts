@@ -274,7 +274,8 @@ export class FrmCompraImportarComponent implements OnInit {
           this.asignarValoresDefecto();
 
         } else {          
-          Utilidades.MostrarErrorStr(this.traducir('frm-compra-importar.msgError_WSobtenerDatosERP','Error: Documento no encontrado')); 
+          //Utilidades.MostrarErrorStr(this.traducir('frm-compra-importar.msgError_WSobtenerDatosERP','Error: Documento no encontrado')); 
+          Utilidades.MostrarError(datos.nError);
         }
         this.WSDatos_Validando = false;
       }, error => {

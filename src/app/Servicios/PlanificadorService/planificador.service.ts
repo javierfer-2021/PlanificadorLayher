@@ -18,9 +18,15 @@ export class PlanificadorService {
 
   constructor(private http: HttpClient) { }
 
+  // async getAyudaPantalla(idPantalla): Promise<Observable<any>>{ 
+  //   // if(!await Utilidades.establecerConexion('/api/usuarios/getAlmacenesUsuario')) return;
+  //   // // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); } 
+  //   // const body = { usuario : ConfiGlobal.Usuario, datos: {IdPantalla: idPantalla} };    
+  //   // return this.http.post(ConfiGlobal.URL + '/api/usuarios/getAlmacenesUsuario', body, Utilidades.getHeaders());
+  // } 
 
   //#region - USUARIOS
-
+  
   async getListaUsuarios(): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/usuarios/getListaUsuarios')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  

@@ -28,7 +28,6 @@ import { DxPopupComponent } from 'devextreme-angular';
 })
 export class FrmVentaBuscarComponent implements OnInit {
 
-
   //#region - declaracion de cte y variables 
   altoBtnFooter = '45px';
   clickNoPeticion: boolean = false;
@@ -406,5 +405,7 @@ export class FrmVentaBuscarComponent implements OnInit {
     return false;
   }
 
-
+  mostrarAyuda(){
+    alert('Mostrar ayuda de la pantalla');
+  }
 }

@@ -62,6 +62,7 @@ import { FrmCompraLineasComponent } from './Pantallas/Compras/frm-compra-lineas/
 import { FrmVentaLineasComponent } from './Pantallas/Ventas/frm-venta-lineas/frm-venta-lineas.component';
 import { FrmImportarCsvComponent } from './Pantallas/Ventas/frm-importar-csv/frm-importar-csv.component';
 import { FrmSimulacionPlanificadorComponent } from './Pantallas/Planificador/frm-simulacion-planificador/frm-simulacion-planificador.component';
+import { FrmAyudaPantallaComponent } from './Pantallas/Ayuda/frm-ayuda-pantalla/frm-ayuda-pantalla.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -111,7 +112,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmCompraLineasComponent,
     FrmVentaLineasComponent,
     FrmImportarCsvComponent,
-    FrmSimulacionPlanificadorComponent
+    FrmSimulacionPlanificadorComponent,
+    FrmAyudaPantallaComponent
 
   ],
   imports: [

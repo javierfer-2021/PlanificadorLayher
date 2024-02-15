@@ -69,3 +69,11 @@ default:
     padding: 0px; 
     font-size: 14px;
 }
+
+.botonAyuda {
+    height: 30px;
+    width: 40px; 
+    margin-left: 5px;
+    padding: 0px; 
+    font-size: 14px;
+}
