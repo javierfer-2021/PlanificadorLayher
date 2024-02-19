@@ -190,6 +190,10 @@ export class FrmVentaBuscarComponent implements OnInit {
   filtrosAdicionales:filtrosBusqueda; 
   filtrosActivos:boolean = false;
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -406,6 +410,10 @@ export class FrmVentaBuscarComponent implements OnInit {
   }
 
   mostrarAyuda(){
-    alert('Mostrar ayuda de la pantalla');
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
   }
 }

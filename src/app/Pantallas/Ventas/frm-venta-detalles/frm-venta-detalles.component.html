@@ -43,20 +43,23 @@
                         </dxi-item>
                         <dxi-item itemType="empty" [colSpan]="1"></dxi-item>
 
-                        <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                        <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" 
+                            [editorOptions]="{disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                        <dxi-item name="fechaInicio" dataField="FechaInicio" editorType="dxDateBox" 
+                            [editorOptions]="{disabled:false, width:'100%',displayFormat:'dd/MM/yyyy', onValueChanged:onFechaInicioValueChanged.bind(this) }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                        <dxi-item name="fechaFin" dataField="FechaFin" editorType="dxDateBox" 
+                            [editorOptions]="{disabled:false, width:'100%',displayFormat:'dd/MM/yyyy', onValueChanged:onFechaFinValueChanged.bind(this)}">
                             <dxi-validation-rule *ngIf="requerirFechaFin" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
                         </dxi-item>
 
                         <dxi-item dataField="Planificar" editorType="dxCheckBox" [editorOptions]="{disabled:true, width:'100%'}"></dxi-item>
-                        <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
                         <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
-                    <!-- </dxi-item>                    -->
+
+                        <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
                 </dx-form>
             </div>
         </div>
@@ -78,7 +81,7 @@
 </div>
 
 <!-- popUp Editar Linea Salida -->
-<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="300px" width="960px"
+<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="335px" width="960px"
     [fullScreen]="false" 
     [(visible)]="popUpVisibleEditarLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-venta-detalles.str_txtPopupEditarLinea', 'Editar Línea Salida')}}"
@@ -88,4 +91,15 @@
     </div>    
 </dx-popup>
 
+
+<!-- popUp Editar Linea Salida -->
+<dx-popup *ngIf="popUpVisibleSalidasAfectadas" #popUpSalidasAfectadas (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="80%" width="80%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleSalidasAfectadas" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-detalles.str_txtPopupSalidasAfectadas', 'Lista salidas afectadas por cambio')}}"
+    contentTemplate="contentSalidasAfectadas">
+    <div *dxTemplate="let data of 'contentSalidasAfectadas'">
+        <app-frm-contratos-afectados [_salida]="_salida" (cerrarPopUp)="cerrarSalidasAfectadas($event)"></app-frm-contratos-afectados>
+    </div>    
+</dx-popup>
 

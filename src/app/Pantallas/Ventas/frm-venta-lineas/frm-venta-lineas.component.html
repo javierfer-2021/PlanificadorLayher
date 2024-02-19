@@ -4,13 +4,13 @@
     <div #pantalla>
 
         <!-- Titulo -->
-        <div class="row px-1 py-2 titulo">
+        <!-- <div class="row px-1 py-2 titulo">
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
                     {{traducir('frm-venta-lineas.lblTitulo', 'Excepciones linea salida material')}}
                 </div>
             </div>   
-        </div>         
+        </div>          -->
 
         <!-- Formulario Datos Linea Entrada (Compra) -->
         <div class="row pt-2">
@@ -24,8 +24,18 @@
                         <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE PROVEEDOR"></dxi-validation-rule>
                     </dxi-item>                            
 
+                    <dxi-item dataField="CantidadPedida" [colSpan]="1" editorType="dxNumberBox" 
+                        [editorOptions]="{disabled:false, showSpinButtons:true, mode:'number', min:1, step:1, invalidValueMessage:'Num Unidades debe terner un valor mayor que cero'}">
+                        <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CANTIDAD PEDIDA"></dxi-validation-rule>
+                    </dxi-item>                            
+                    <dxi-item itemType="empty" [colSpan]="2"></dxi-item>
+
+                    <dxi-item dataField="" [colSpan]="3" [template]="'excepciones'">
+                    </dxi-item>
+                    
                     <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
                         <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
+                        
                     </dxi-item>
                     <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
                         <!-- <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule> -->
@@ -36,6 +46,12 @@
                         
                     <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
 
+                    <div *dxTemplate="let data of 'excepciones'" style="background-color: gold; padding: 3px 0px;">
+                        <div id="template-content">
+                          <i id="helpedInfo" class="dx-icon dx-icon-info" style="margin-right: 10px;margin-left: 10px;font-size: 20px;"></i>
+                          Excepcion Fechas Inicio-Fin diferentes a lo indicado en el contrato salida.
+                        </div>
+                    </div>
                 </dx-form>
             </div>
         </div>                 

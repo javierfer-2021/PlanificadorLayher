@@ -18,12 +18,12 @@ export class PlanificadorService {
 
   constructor(private http: HttpClient) { }
 
-  // async getAyudaPantalla(idPantalla): Promise<Observable<any>>{ 
-  //   // if(!await Utilidades.establecerConexion('/api/usuarios/getAlmacenesUsuario')) return;
-  //   // // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); } 
-  //   // const body = { usuario : ConfiGlobal.Usuario, datos: {IdPantalla: idPantalla} };    
-  //   // return this.http.post(ConfiGlobal.URL + '/api/usuarios/getAlmacenesUsuario', body, Utilidades.getHeaders());
-  // } 
+  async getAyudaPantalla(pantalla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/ayuda/getAyudaPantalla')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); } 
+    const body = { usuario : ConfiGlobal.Usuario, datos: {NombrePantalla: pantalla} };    
+    return this.http.post(ConfiGlobal.URL + '/api/ayuda/getAyudaPantalla', body, Utilidades.getHeaders());
+  } 
 
   //#region - USUARIOS
   
@@ -231,7 +231,7 @@ export class PlanificadorService {
   //#endregion
 
 
-  //#region - ENTRADAS - Importar del ERP
+  //#region - ENTRADAS + Importar del ERP
 
   async cargarEntrada_from_ERP(contrato): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/entradas/cargarEntrada_from_ERP')) return;
@@ -323,7 +323,7 @@ export class PlanificadorService {
   //#endregion
 
   
-  //#region - SALIDAS - Importar del ERP
+  //#region - SALIDAS + Importar del ERP
 
   async cargarSalida_from_ERP(contrato): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/salidas/cargarSalida_from_ERP')) return;
@@ -407,6 +407,18 @@ export class PlanificadorService {
                             LineasSalida:lineas } };    
     return this.http.post(ConfiGlobal.URL + '/api/salidas/actualizarSalida', body, Utilidades.getHeaders());
   } 
+
+  async getSalidasAfectadas_CambioDatos(tipoCambio,idSalida,idNewAlmacen,newFechaInicio,newFechaFin): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/salidas/getListaSalidasAfectadas_CambioDatos')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: {TipoCambio:tipoCambio,
+                                                          IdSalida:idSalida,
+                                                          IdNewAlmacen:idNewAlmacen,
+                                                          NewFechaInicio:newFechaInicio,
+                                                          NewFechaFin:newFechaFin,
+                                                        } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/getListaSalidasAfectadas_CambioDatos', body, Utilidades.getHeaders());
+  }  
 
   //#endregion
 

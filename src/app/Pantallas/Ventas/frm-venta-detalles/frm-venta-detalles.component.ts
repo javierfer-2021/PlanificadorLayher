@@ -143,6 +143,10 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   lineaSeleccionada: SalidaLinea = new SalidaLinea();
   lineaSeleccionadaIndex: number = null;
 
+  //popUp mostrar Salidas afectadas x cambio
+  @ViewChild('popUpSalidasAfectadas', { static: false }) popUpSalidasAfectadas: DxPopupComponent;
+  popUpVisibleSalidasAfectadas:boolean = false;
+
   //#endregion
 
   
@@ -289,6 +293,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }
 
   btnCancelar(){
+    this.modoEdicion = false;
     // recuperar datos entrada previa a cambios
     this._salida = this._salidaCopia
     this.setModoEdicion(false);      
@@ -329,10 +334,10 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }
 
   btnEditarSalida(){
+    this.modoEdicion = true;
     // copiar entrada actual a var_temp (posibilidad cancelar)
-    this._salidaCopia = Object.assign({},this._salida);
-    // edicion
-    this.setModoEdicion(true);   
+    this._salidaCopia = Object.assign({},this._salida);  
+    this.setModoEdicion(true); 
   }
 
   async btnPlanificarSalida(){
@@ -477,12 +482,49 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     }
   }    
   
+  onFechaInicioValueChanged(e){
+   if ((this.modoEdicion) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaInicio != this._salidaCopia.FechaInicio)) {
+    this.confirmarCambios('FECHA INICIO',this._salidaCopia,this._salida);   }
+  }
+
+  onFechaFinValueChanged(e){    
+    if ((this.modoEdicion) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaFin != this._salidaCopia.FechaFin)) { 
+      this.confirmarCambios('FECHA FIN',this._salidaCopia,this._salida);
+    }
+   }
+   
+
+  async confirmarCambios(campoModificado:string, valorOrigen:any, valorFin:any ){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgConsultaContratosAfectados', 'Cambiar el valor del campo '+campoModificado+' puede afectar en la planificación de otros contratos<br>¿Desea CONFIRMAR cambio y ver contratos afectados?'), this.traducir('frm-ventas-detalles.TituloModificacionContrato', 'Modificación Contrato Salida'));  
+    if (!continuar) {  
+      if (campoModificado=='FECHA INICIO') { this._salida.FechaInicio = this._salidaCopia.FechaInicio; }
+      else if (campoModificado=='FECHA FIN') { this._salida.FechaFin = this._salidaCopia.FechaFin; }      
+      return true;
+    }
+    else {
+      //alert('pantalla consulta contratos afectados');
+      this.popUpVisibleSalidasAfectadas = true;
+      return true;
+      //this.ActualizarSalida();
+    }   
+  }
+
+  cerrarSalidasAfectadas(e){
+    this.popUpVisibleSalidasAfectadas = false;
+  }
+
+
   setFormFocus(campo:string){
     try {
       const editor = this.formSalida.instance.getEditor(campo);
       editor.focus();
     } 
     catch {} 
+  }
+
+
+  public getModoEdicion():boolean {
+    return this.modoEdicion;
   }
 
 }
