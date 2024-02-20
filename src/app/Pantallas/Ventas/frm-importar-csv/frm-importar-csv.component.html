@@ -7,19 +7,16 @@
         <div class="row px-1 py-2 titulo">
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-importar-csv.lblTitulo', 'SIMULACION PLANIFICADOR: Pre-Importación CSV salidas de material')}} </div>
-            </div>   
+            </div>
+			<div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>                
         </div>  
 
         <!-- Información de PRE-carga - simulación planificador -->
         <div>  
-            <!-- <hr class="my-1">
-            <div class="row pt-1 px-2" style="border-bottom: 1px dotted darkgray">
-                <div class="col px-1">Datos contrato {{str_txtTipoDocumento}} a importar</div>
-                <div *ngIf="aviso" class="col px-1" style="color: red;text-align:end;">                    
-                    <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.2rem; color:red;"></i>&nbsp;Contrato ya importado en el planificador.
-                </div>
-            </div> -->
-
             <!-- Formulario Datos Salida (Venta-Alquiler) -->
             <div class="row pt-2">
                 <div id="form-container" class="formulario">
@@ -135,6 +132,18 @@
         <app-frm-venta-lineas [linea]="lineaSeleccionada" (cerrarPopUp)="cerrarEditarLinea($event)"></app-frm-venta-lineas>
     </div>    
 </dx-popup>
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-importar-csv'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
+
 
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
     [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" 

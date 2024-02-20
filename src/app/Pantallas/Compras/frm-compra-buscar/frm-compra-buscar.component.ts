@@ -183,6 +183,10 @@ export class FrmCompraBuscarComponent implements OnInit {
   popUpVisibleFiltros:boolean = false;
   filtrosAdicionales:filtrosBusqueda; 
   filtrosActivos:boolean = false;
+
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
     
   //#endregion
 
@@ -372,6 +376,14 @@ export class FrmCompraBuscarComponent implements OnInit {
     if (this.filtrosAdicionales.IdFamilia != nuevoFiltro.IdFamilia) return true;
     if (this.filtrosAdicionales.IdSubfamilia != nuevoFiltro.IdSubfamilia) return true;    
     return false;
+  }
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
   }
 
 }

@@ -8,6 +8,11 @@
 # Only exists if Bazel was run
 /bazel-out
 
+# directorios auxiliares 
+/_backups
+/documentos
+/help
+
 # dependencies
 /node_modules
 

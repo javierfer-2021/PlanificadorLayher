@@ -147,6 +147,10 @@ export class FrmCompraImportarComponent implements OnInit {
   //lineaSeleccionada: {Index:number, Linea:EntradaLinea } = {Index:null, Linea:new EntradaLinea()} ;  //  = new EntradaLinea()};
   lineaSeleccionada: EntradaLinea = new EntradaLinea(); 
   lineaSeleccionadaIndex: number = null;
+
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
     
   //#endregion
 
@@ -478,6 +482,13 @@ export class FrmCompraImportarComponent implements OnInit {
 
   //#endregion
 
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
 
 }
 

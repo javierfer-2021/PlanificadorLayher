@@ -11,7 +11,7 @@
             </div>   -->
 
             <!-- text ayuda -->    
-            <div class="row h-75">
+            <div class="row">
                 <div class="col pt-1 px-1">    
                     <dx-text-area #txtInfo id="txtInfo" type="text" [autoResizeEnabled]="false"  [height]="450" 
                         class="form-control form-control-sm w-100 fs-12 fs-sm-14 fs-md-14 fs-lg-14 fs-xl-14"
@@ -25,15 +25,13 @@
             <!-- botones acceso documentacion/Video-->
             <div class="row pt-2">
                 <div *ngIf="this._infoAyuda.Documento!=''" class="col pt-1 px-1">
-                    <button type="button" class="btn btn-outline-secondary" (click)="mostrarDocumento()">
-                        <i class="bi bi-file-pdf"></i>
-                        {{traducir('frm-ayuda-pantalla.lblVerDocumento', 'Ver Documentación')}}
+                    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="mostrarDocumento()">
+                        <i class="bi bi-file-pdf px-2"></i>{{traducir('frm-ayuda-pantalla.lblVerDocumento', 'Ver Documentación')}}
                     </button>
                 </div>
                 <div *ngIf="this._infoAyuda.Video!=''" class="col pt-1 px-1" style="text-align: end;">
-                    <button type="button" class="btn btn-outline-secondary" (click)="mostrarVideo()">
-                        <i class="bi bi-play-btn"></i>
-                        {{traducir('frm-ayuda-pantalla.lblVerVideo', 'Ver Video')}}
+                    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="mostrarVideo()">
+                        <i class="bi bi-play-btn px-2"></i>{{traducir('frm-ayuda-pantalla.lblVerVideo', 'Ver Video')}}
                     </button>                    
                 </div>
             </div>

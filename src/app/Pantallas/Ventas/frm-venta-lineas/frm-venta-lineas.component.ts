@@ -42,19 +42,9 @@ export class FrmVentaLineasComponent implements OnInit {
 
   
   WSDatos_Validando: boolean = false;
-
   _lineaSalida: SalidaLinea = new(SalidaLinea);
-  
-  //arrayTiposEstadoEntrada: Array<EstadoEntrada> = [];  
-  //arrayAlmacenes: Array<Almacen> = [];
-  //requerirFechaConfirmacion:boolean = false;
-  
-  //modoEdicion: boolean = false;
-  //_entradaCopia: Entrada = new(Entrada);
 
-  // grid lineas Entrada
-  // [IdEntrada,  IdLinea, IdArticulo, NombreArticulo, CantidadPedida, CantidadConfirmada, CantidadCancelada, FechaActualizacion ]
-  // arrayLineasEntrada: Array<EntradaLinea>;
+  modoImportacion:boolean = false;
 
   //#endregion
 
@@ -71,14 +61,18 @@ export class FrmVentaLineasComponent implements OnInit {
 
   ngOnInit(): void {
     // copiar entrada actual a var_temp (posibilidad cancelar)
-    this._lineaSalida = Object.assign({},this.linea);    
-    //setTimeout(() => {this.cargarCombos();},200);
+    this._lineaSalida = Object.assign({},this.linea); 
+    this.modoImportacion = Utilidades.isEmpty(this._lineaSalida.IdSalida);    
   }
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // foco 
-    this.formSalidaLinea.instance.getEditor('FechaInicio').focus();
+    if (this.modoImportacion) {
+      setTimeout(() => { this.formSalidaLinea.instance.getEditor('CantidadPedida').focus(); }, 300);       
+    } else {
+      setTimeout(() => { this.formSalidaLinea.instance.getEditor('FechaInicio').focus(); }, 300);       
+    }
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();    
   }
@@ -110,27 +104,6 @@ export class FrmVentaLineasComponent implements OnInit {
 
   //#region -- WEB_SERVICES
 
-  async cargarCombos(){
-    // if(this.WSDatos_Validando) return;
-
-    // this.WSDatos_Validando = true;
-    // let filtroAlmacen:number= 0; // todos los almacenes activos
-    // (await this.planificadorService.getCombos_PantallaEntradas(filtroAlmacen)).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       this.arrayTiposEstadoEntrada = datos.datos.ListaEstados;
-    //       this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
-    //     } else {          
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-ventas-detalles.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, error => {
-    //     this.WSDatos_Validando = false;
-    //     Utilidades.compError(error, this.router,'frm-ventas-detalles');
-    //   }
-    // );
-  }  
-
   async ActualizarLineaEntrada(){
     this.cerrarPopUp.emit(this._lineaSalida);
 
@@ -153,7 +126,6 @@ export class FrmVentaLineasComponent implements OnInit {
     //   }
     // );
   } 
-
 
   //#endregion
   

@@ -140,6 +140,10 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   lineaSeleccionada: EntradaLinea = new EntradaLinea();
   lineaSeleccionadaIndex: number = null;
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
   
@@ -459,6 +463,14 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
       editor.focus();
     } 
     catch {} 
+  }
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
   }
 
 }

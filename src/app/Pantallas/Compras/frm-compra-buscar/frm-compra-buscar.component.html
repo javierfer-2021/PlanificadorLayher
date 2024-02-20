@@ -11,11 +11,15 @@
                 <div class="col-3 pt-0 px-1">
                     <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
                 </div>
-                <div class="col-2 pt-0 px-1">
+                <div class="col-2 pt-0 px-1" style="display: inline-flex;">
                     <button type="button" class="btn botonFiltros" [ngClass]="{'btn-success': filtrosActivos, 'btn-outline-secondary': !filtrosActivos}" (click)="seleccionarFiltrosAdicionales()">
                         <i class="bi bi-funnel-fill"></i>
                         {{traducir('frm-venta-buscar.lblBtnFiltros', 'Filtros Especiales')}}                        
                     </button>
+                    <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                        <!-- <i class="bi bi-question-circle-fill"></i> -->
+                        <i class="bi bi-question-circle"></i>
+                    </button>                     
                 </div>                      
             </div>              
 
@@ -48,3 +52,13 @@
     </div>    
 </dx-popup>
 
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-compra-buscar'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>

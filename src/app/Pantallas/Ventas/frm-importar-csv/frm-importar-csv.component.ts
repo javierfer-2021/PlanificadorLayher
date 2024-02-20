@@ -163,6 +163,10 @@ export class FrmImportarCsvComponent implements OnInit {
   lineaSeleccionada: SalidaLinea = new SalidaLinea();
   lineaSeleccionadaIndex: number = null;
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -556,6 +560,15 @@ export class FrmImportarCsvComponent implements OnInit {
   }   
 
   //#endregion  
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
+    
 }
 
 export class TipoDocumentoImportarCSV {

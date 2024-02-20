@@ -7,7 +7,12 @@
         <div class="row px-1 py-2 titulo">
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-compra-importar.lblTitulo', 'Importación contratos ENTRADA de material (Compras)')}} </div>
-            </div>   
+            </div>
+			<div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>                
         </div>  
 
         <!-- TextBox contrato compra a importar + botones Buscar | limpiar -->
@@ -111,6 +116,17 @@
     contentTemplate="contentEditarLinea">
     <div *dxTemplate="let data of 'contentEditarLinea'">
         <app-frm-compra-lineas [linea]="lineaSeleccionada" (cerrarPopUp)="cerrarEditarLinea($event)"></app-frm-compra-lineas>
+    </div>    
+</dx-popup>
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-compra-importar'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
     </div>    
 </dx-popup>
 

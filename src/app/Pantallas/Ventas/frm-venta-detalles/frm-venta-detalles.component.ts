@@ -147,6 +147,10 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   @ViewChild('popUpSalidasAfectadas', { static: false }) popUpSalidasAfectadas: DxPopupComponent;
   popUpVisibleSalidasAfectadas:boolean = false;
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
   
@@ -522,9 +526,16 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     catch {} 
   }
 
-
   public getModoEdicion():boolean {
     return this.modoEdicion;
   }
 
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
+    
 }

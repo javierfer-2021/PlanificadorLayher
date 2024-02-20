@@ -146,6 +146,10 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   lineaSeleccionada: SalidaLinea = new SalidaLinea();
   lineaSeleccionadaIndex: number = null;
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -165,7 +169,6 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     this.cargarCombos();
     this.contratoValido= true;
   }
-
 
   ngAfterViewInit(): void {    
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
@@ -221,6 +224,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   //#endregion
 
 
+  //----------------------------------------------------------------------------------------------------
   //#region -- WEB_SERVICES
 
   async cargarCombos(){
@@ -354,7 +358,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     this.txtContrato.instance.focus();
   }
 
-  //TODO - Asignar valores segun configuracion
+
   asignarValoresDefecto(){
     this._salida.FechaAlta = new Date();  //new Date().toLocaleDateString();
     this._salida.IdEstado = UtilidadesLayher.salidaEstadoPorDefecto();   
@@ -378,6 +382,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     }, 1000);
   }
 
+
   validarFormulario():boolean{
     const res = this.formSalida.instance.validate();
     // res.status === "pending" && res.complete.then((r) => {
@@ -394,6 +399,19 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     return true;
   }
 
+  formReady(){
+    //alert('form listo');
+  }
+
+  setFormFocus(campo:string){
+    try {
+      const editor = this.formSalida.instance.getEditor(campo);
+      editor.focus();
+    } 
+    catch {} 
+  }
+
+
   btnImportarOferta() {
     // validacion extandar del formulario con datos requeridos y formatos
     if (!this.validarFormulario()) {
@@ -407,38 +425,31 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
         this.importarOferta();
       }
     }
-  }
-    
+  } 
 
   btnSalir() {
     this.location.back();
   }
 
-  
-  formReady(){
-    //alert('form listo');
-  }
 
-  setFormFocus(campo:string){
-    try {
-      const editor = this.formSalida.instance.getEditor(campo);
-      editor.focus();
-    } 
-    catch {} 
-  }
 
+  //---------------------------------------------------------------------------------------------------
   //#region - Edicion lineas de importacion
   
   btnEditarLineaSalida(index:number){    
     this.lineaSeleccionadaIndex= index; 
     this.lineaSeleccionada = this.arrayLineasSalida[index];         
-    this.lineaSeleccionada.Modificada = false;     
+    //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;
   }  
 
   cerrarEditarLinea(e){
     if (e != null) {     
-      // Actualizar info del grid          
+      // Actualizar info del grid  
+      if (this.arrayLineasSalida[this.lineaSeleccionadaIndex].CantidadPedida != e.CantidadPedida) {
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].CantidadPedida = e.CantidadPedida;
+        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      }       
       if (!Utilidades.isEmpty(e.FechaInicio)) {
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
@@ -464,6 +475,8 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
 
   //#endregion  
 
+
+  //-------------------------------------------------------------------------------------------------------
   //#region -- gestion loadPanel
 
   async mostrarPanelProceso (mensaje?:string) {
@@ -498,6 +511,15 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   }  
 
   //#endregion
+
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
     
 }
 

@@ -98,7 +98,6 @@ export class FrmAyudaPantallaComponent implements OnInit,AfterViewInit {
         if (Utilidades.DatosWSCorrectos(datos)) {
           // asignar valores devuletos
           this._infoAyuda = datos.datos.Ayuda[0];
-          // this.arraySalidas = datos.datos;
         }
         else {
           Utilidades.MostrarErrorStr(this.traducir('frm-ayuda-pantalla.msgErrorWS_CargarAyuda','Error web-service obtener ayuda pantalla')); 
@@ -116,11 +115,13 @@ export class FrmAyudaPantallaComponent implements OnInit,AfterViewInit {
   }
 
   mostrarDocumento() {
-    alert('mostrar documento');
+    //alert('mostrar documento');
+    window.open(this._infoAyuda.Documento);
   }
 
   mostrarVideo() {
-    alert('mostrar video');
+    //alert('mostrar video');
+    window.open(this._infoAyuda.Video);
   }
 
 }
