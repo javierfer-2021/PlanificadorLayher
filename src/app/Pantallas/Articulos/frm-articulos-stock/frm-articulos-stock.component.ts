@@ -150,6 +150,10 @@ export class FrmArticulosStockComponent implements OnInit {
   popUpVisibleEditar:boolean = false;
   articuloSeleccionado: ArticuloStock = new ArticuloStock();
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -363,5 +367,13 @@ export class FrmArticulosStockComponent implements OnInit {
     this.cargarStock(this.sbAlmacenes.SelectBox.value);
   }
 
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
 
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
+
+  
 }

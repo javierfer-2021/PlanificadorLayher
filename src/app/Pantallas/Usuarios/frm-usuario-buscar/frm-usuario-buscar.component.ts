@@ -12,6 +12,7 @@ import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Usuario } from '../../../Clases/Usuario';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
+import { DxPopupComponent } from 'devextreme-angular';
 import { locale } from 'devextreme/localization';
 
 @Component({
@@ -182,6 +183,10 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
 
   selectedRowsData = [];
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -351,6 +356,13 @@ export class FrmUsuarioBuscarComponent implements OnInit,AfterViewInit {
       this.eliminarUsuarios(e.row.data.IdUsuario);
     }
   }
-  
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }  
 
 }

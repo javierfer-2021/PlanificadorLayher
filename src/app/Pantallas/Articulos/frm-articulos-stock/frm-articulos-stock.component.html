@@ -8,9 +8,14 @@
                 <div class="col pt-1 px-1">
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-articulos-stock.lblTitulo', 'Maestro Artículos-Stock')}} </div>
                 </div>
-                <div class="col-4 pt-0 px-1">
+                <div class="col-3 pt-0 px-1">
                     <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
-                </div>   
+                </div> 
+                <div class="col-md-auto pt-0 px-1" style="text-align: end;">
+                    <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                        <i class="bi bi-question-circle"></i>
+                    </button>                    
+                </div>                 
             </div>  
 
             <!-- grid lista articulos -->    
@@ -39,3 +44,13 @@
     </div>    
 </dx-popup>
 
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-stock.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-articulos-stock'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>

@@ -7,7 +7,12 @@
         <div class="row px-1 py-2 titulo">
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-usuario.lblTitulo', 'Detalles Usuario')}} </div>
-            </div>   
+            </div>
+			<div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>                 
         </div>  
 
         <!-- Formulario cliente -->
@@ -40,7 +45,9 @@
                         <dxi-item dataField="idAlmacenDefecto" [label]="{text:'Almacen Defecto'}" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled:false}" [colSpan]="2"></dxi-item>
+                        <dxi-item dataField="Email" [colSpan]="2" [editorOptions]="{disabled:false}" [colSpan]="2">
+                            <dxi-validation-rule type="email" message="Valor del campo EMAIL no valido"></dxi-validation-rule>
+                        </dxi-item>
                     </dxi-item>         
                     
                     <dxi-item itemType="group" caption="Permisos" [colCount]="1" [colSpan]="1">
@@ -120,5 +127,15 @@
 </div>
 
 
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-usuario.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-usuario'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
 
 

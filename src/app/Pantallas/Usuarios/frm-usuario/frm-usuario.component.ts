@@ -66,6 +66,10 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   modoEdicion: boolean = false;
   nuevoUsuario: boolean = false;
 
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+  
   //#endregion
 
   
@@ -263,7 +267,9 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
     this._usuario.FechaAlta = new Date();
     this._usuario.Baja = false;
     this._usuario.IdPerfil = this.getPerfilDefecto(this.arrayPerfiles);
-    this._usuario.Administrador = this.arrayPerfiles[this._usuario.IdPerfil].Administrador;
+    let indexPerfil = this.arrayPerfiles.findIndex (e=> e.IdPerfil==this._usuario.IdPerfil);
+    if (indexPerfil==-1) {this._usuario.Administrador = false}
+    else { this._usuario.Administrador = (this.arrayPerfiles[indexPerfil].Administrador); }    
     this._usuario.VerAlmacenes = false;
     this._usuario.IdIdioma = 1;
     this._usuario.NotificacionesEmail = false;
@@ -290,12 +296,14 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
   btnGuardar(){
     // validar formulario
     if (!this.validarDatosFormulario()) {
-      Utilidades.MostrarErrorStr(this.traducir('frm-usuario.msgError_FaltanDatos','Faltan campos obligatorios. Revise el formulario'));
+      Utilidades.MostrarErrorStr(this.traducir('frm-usuario.msgError_FaltanDatos','Faltan campos obligatorios o datos incorrectos. Revise el formulario'));
       return;
     }
     else {
       //ajuste campo administrador no visible en funcion del perfil indicado
-      this._usuario.Administrador = this.arrayPerfiles[this._usuario.IdPerfil].Administrador;
+      let indexPerfil = this.arrayPerfiles.findIndex (e=> e.IdPerfil==this._usuario.IdPerfil);
+      if (indexPerfil==-1) {this._usuario.Administrador = false}
+      else { this._usuario.Administrador = (this.arrayPerfiles[indexPerfil].Administrador); }
       // distingir entre edicion o insercion
       if (this.nuevoUsuario) {
         this.insertarUsuario();
@@ -378,6 +386,14 @@ export class FrmUsuarioComponent implements OnInit,AfterViewInit,AfterContentChe
       if (perfiles[i].Defecto) return i;
     }
     return 0
+  }
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
   }
 
 }

@@ -7,10 +7,15 @@
             <div class="row px-1 py-2 titulo">
                 <div class="col pt-1 px-1">                    
                     <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-usuario-buscar.lblTitulo', 'Lista de Usuarios de la aplicación')}} </div>
-                </div>   
+                </div> 
+                <div class="col-2 pt-0 px-1" style="text-align: end;">
+                    <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                        <i class="bi bi-question-circle"></i>
+                    </button>                    
+                </div>                   
             </div>  
 
-            <!-- grid lista ofertas -->    
+            <!-- grid lista usuarios -->    
             <div class="row pt-1">
                 <div class="col pt-1 px-1">    
                     <app-cmp-data-grid #dg [dgConfig]="dgConfig" 
@@ -26,10 +31,15 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
-<!-- <dx-popup *ngIf="popUpVisibleDireccion" 
-    #popUpDireccion (window:resize)="onResize($event)" [fullScreen]="true"
-    [(visible)]="popUpVisibleDireccion" [dragEnabled]="false" [showTitle]="false" [showCloseButton]="true" [closeOnOutsideClick]="false"
-    title="{{traducir('frm-envio-lista.popUpTituloDatosEntrega', 'Direccion Entrega')}}">
-    <app-frm-envio-direccion [idEnvio]="ver_info_envio" (cerrarPopUp)="cerrarPopUpDireccion()"></app-frm-envio-direccion>
-</dx-popup> -->
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-usuario-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-usuario-buscar'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
 

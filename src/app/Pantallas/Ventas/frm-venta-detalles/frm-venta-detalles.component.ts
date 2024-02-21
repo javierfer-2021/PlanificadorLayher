@@ -124,13 +124,13 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       dataField: 'Modificada',
       caption: this.traducir('frm-venta-importar.colModificada','Md.'),
       dataType: 'boolean',
-      visible: true,
+      visible: false,
       width: 50,
     },
     // marca linea con excepciones
     {
       dataField: 'Excepcion',
-      caption: this.traducir('frm-importar-csv.colAvisos','Ex.'),
+      caption: this.traducir('frm-venta-importar.colExcepcion','Exc.'),
       visible: true, //this.mostrarAvisosLinea,
       width: 50,
     },               
@@ -249,6 +249,9 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayLineasSalida = datos.datos;
+          for (let i=0; i<this.arrayLineasSalida.length-1 ; i++){
+            this.arrayLineasSalida[i].Modificada=false;
+          }
           // Se configura el grid
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard');
@@ -387,7 +390,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   btnEditarLineaSalida(index:number){  
     this.lineaSeleccionadaIndex= index; 
     this.lineaSeleccionada = this.arrayLineasSalida[index];         
-    this.lineaSeleccionada.Modificada = false;     
+    //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;            
   }
 
@@ -396,16 +399,20 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     this.popUpVisibleEditarLinea = false;
     if (e != null) {     
       // Actualizar info del grid          
-      if (!Utilidades.isEmpty(e.FechaInicio)) {
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
-      }
-      if (!Utilidades.isEmpty(e.FechaFin)) {
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
-      }
+      // if (!Utilidades.isEmpty(e.FechaInicio)) {
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
+      // }
+      // if (!Utilidades.isEmpty(e.FechaFin)) {
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
+      // }
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion = ( (!Utilidades.isEmpty(e.FechaInicio)) || (!Utilidades.isEmpty(e.FechaFin)) );
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada = true;
     }
     this.lineaSeleccionada = null;
     this.popUpVisibleEditarLinea = false;          
