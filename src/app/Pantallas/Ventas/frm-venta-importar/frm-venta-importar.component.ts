@@ -133,7 +133,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     // marca linea con excepciones
     {
       dataField: 'Excepcion',
-      caption: this.traducir('frm-importar-csv.colAvisos','Ex.'),
+      caption: this.traducir('frm-venta-importar.colExcepcion','Exc.'),
       visible: true, //this.mostrarAvisosLinea,
       width: 50,
     },      
@@ -446,20 +446,23 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   cerrarEditarLinea(e){
     if (e != null) {     
       // Actualizar info del grid  
+      // if (!Utilidades.isEmpty(e.FechaInicio)) {
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
+      // }
+      // if (!Utilidades.isEmpty(e.FechaFin)) {
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
+      //   this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
+      // }    
       if (this.arrayLineasSalida[this.lineaSeleccionadaIndex].CantidadPedida != e.CantidadPedida) {
         this.arrayLineasSalida[this.lineaSeleccionadaIndex].CantidadPedida = e.CantidadPedida;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
-      }       
-      if (!Utilidades.isEmpty(e.FechaInicio)) {
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
-      }
-      if (!Utilidades.isEmpty(e.FechaFin)) {
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada=true;
-        this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion=true;
-      }
+      }  
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].Excepcion = ( (!Utilidades.isEmpty(e.FechaInicio)) || (!Utilidades.isEmpty(e.FechaFin)) );
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaInicio = e.FechaInicio;
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].FechaFin = e.FechaFin;
+      this.arrayLineasSalida[this.lineaSeleccionadaIndex].Modificada = true;
     }
     this.lineaSeleccionada = null;
     this.popUpVisibleEditarLinea = false;      

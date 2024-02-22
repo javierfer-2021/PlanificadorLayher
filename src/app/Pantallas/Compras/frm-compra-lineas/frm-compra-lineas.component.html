@@ -29,11 +29,11 @@
                     </dxi-item>
                     <dxi-item dataField="CantidadConfirmada" [label]="{text:'Cant. Confirmada'}" editorType="dxNumberBox" [editorOptions]="{disabled: false, width: '100%'}">
                     </dxi-item>
-                    <dxi-item dataField="CantidadCancelada" [label]="{text:'Cant. Cancelada'}"editorType="dxNumberBox" [editorOptions]="{disabled: true, width: '100%'}">
+                    <dxi-item dataField="CantidadCancelada" [label]="{text:'Cant. Cancelada'}"editorType="dxNumberBox" [editorOptions]="{disabled: false, width: '100%'}">
                     </dxi-item>
 
                     <dxi-item dataField="FechaPrevista" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
-                        <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA PREVISTA"></dxi-validation-rule>
+                        <!-- <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA PREVISTA"></dxi-validation-rule> -->
                     </dxi-item>
                     <dxi-item dataField="FechaConfirmacion" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
                         <!-- <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA CONFIRMACION"></dxi-validation-rule> -->

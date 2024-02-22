@@ -195,6 +195,11 @@ export class FrmCompraLineasComponent implements OnInit {
     //   Utilidades.MostrarErrorStr(this.traducir('frm-compra-lineas.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
     //   return false;
     // }
+    // cantidad cancelada <= cantidad pedida
+    if (this._lineaEntrada.CantidadCancelada > this._lineaEntrada.CantidadPedida) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-compra-lineas.msgError_UndCanceladaMayorPedidas','Las unidades CANCELADAS deben ser menor o igual a las unidades PEDIDAS'));
+      return false;
+    }
     return true;
   }
   

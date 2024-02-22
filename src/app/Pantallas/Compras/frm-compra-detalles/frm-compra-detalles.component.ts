@@ -122,11 +122,19 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     }, 
     {
       dataField: 'Modificada',
-      caption: this.traducir('frm-compra-importar.colModificada','!!!'),
+      caption: this.traducir('frm-compra-detalles.colModificada','Mod.'),
       dataType: 'boolean',
-      visible: true,
+      visible: false,
       width: 50,
-    },          
+    },
+    // marca linea con excepciones
+    {
+      dataField: 'Excepcion',
+      caption: this.traducir('frm-compra-detalles.colExcepcion','Exc.'),
+      visible: true, 
+      dataType: 'boolean',
+      width: 50,
+    },                
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
@@ -397,21 +405,31 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   btnEditarLineaEntrada(index:number){    
     this.lineaSeleccionadaIndex= index; 
     this.lineaSeleccionada = this.arrayLineasEntrada[index];         
-    this.lineaSeleccionada.Modificada = false;     
+    // this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;    
   }
 
   cerrarEditarLinea(e){
     if (e != null) {     
       // Actualizar info del grid          
-      if (!Utilidades.isEmpty(e.FechaPrevista)) {
-        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
-        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
-      }
-      if (!Utilidades.isEmpty(e.FechaConfirmada)) {
-        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
-        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
-      }
+      // if (!Utilidades.isEmpty(e.FechaPrevista)) {
+      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
+      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
+      // }
+      // if (!Utilidades.isEmpty(e.FechaConfirmada)) {
+      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
+      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
+      // }
+      if (this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadPedida != e.CantidadPedida) {
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadPedida = e.CantidadPedida;
+      } 
+      if (this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadCancelada != e.CantidadCancelada) {
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadCancelada = e.CantidadCancelada;
+      }       
+      this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Excepcion = ( (!Utilidades.isEmpty(e.FechaPrevista)) || (!Utilidades.isEmpty(e.FechaConfirmada)) );
+      this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
+      this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
+      this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada = true;         
     }
     this.lineaSeleccionada = null;
     this.popUpVisibleEditarLinea = false;        
