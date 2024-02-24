@@ -12,7 +12,7 @@ import { Utilidades } from '../../Utilidades/Utilidades';
 import { Configuracion, Almacen } from '../../Clases/Maestros';
 import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
 
-import { DxFormComponent } from 'devextreme-angular';
+import { DxFormComponent, DxPopupComponent } from 'devextreme-angular';
 
 
 
@@ -47,6 +47,10 @@ export class FrmConfiguracionComponent implements OnInit {
   arrayEstadosEntrada: Array<{id:number, nombre:string}> = [];
   arrayEstadosSalida: Array<{id:number, nombre:string}> = [];
   arrayAlmacenDefecto: Array<{id:number, nombre:string}> = [];
+
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;  
 
 //#endregion - declaracion de cte y variables 
 
@@ -162,6 +166,15 @@ export class FrmConfiguracionComponent implements OnInit {
 
   salir() {
     this.location.back();
+  }  
+
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
   }  
 
 }

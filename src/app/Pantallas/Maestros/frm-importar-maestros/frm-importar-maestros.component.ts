@@ -16,6 +16,8 @@ import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Almacen } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 
+import { DxPopupComponent } from 'devextreme-angular';
+
 @Component({
   selector: 'app-frm-importar-maestros',
   templateUrl: './frm-importar-maestros.component.html',
@@ -65,6 +67,10 @@ export class FrmImportarMaestrosComponent implements OnInit {
   almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
   sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
   
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;  
+
   //#endregion - declaracion de cte y variables 
 
 
@@ -238,5 +244,13 @@ export class FrmImportarMaestrosComponent implements OnInit {
   }  
 
   //#endregion
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }    
 
 }

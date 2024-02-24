@@ -8,6 +8,11 @@
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-importacion-maestros.lblTitulo', 'Importación Maestros e Inicialización Stock')}} </div>
             </div>
+            <div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>             
         </div>  
 
         <!-- Datos pantalla -->  
@@ -109,7 +114,20 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-importar-maestros.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-importar-maestros'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
+
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
     [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" 
     [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
 </dx-load-panel>
+
