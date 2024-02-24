@@ -101,6 +101,14 @@ export class FrmIncidenciaComponent implements OnInit {
   @ViewChild('popUpArticulos', { static: false }) popUpArticulos: DxPopupComponent;
   popUpVisibleArticulos:boolean = false;
 
+  //popUp mostrar Salidas afectadas x cambio
+  @ViewChild('popUpSalidasAfectadas', { static: false }) popUpSalidasAfectadas: DxPopupComponent;
+  popUpVisibleSalidasAfectadas:boolean = false;
+
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+
   //#endregion
 
 
@@ -209,8 +217,9 @@ export class FrmIncidenciaComponent implements OnInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           Utilidades.MostrarExitoStr(this.traducir('frm-incidencias.msgOk_WSInsertandoIncidencia','Incidencia Insertada Correctamente'));           
-          //this._incidencia = datos.datos[0];
-          this.location.back();          
+          this._incidencia = datos.datos[0];
+          // this.location.back(); --> se pasa a cerrarSalidasAfectadas()
+          if (!Utilidades.isEmpty(this._incidencia)) { this.mostrarSalidasAfectadas(); }
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-incidencias.msgError_WSInsertandoIncidencia','Error Insertando Incidencia')); 
         }
@@ -360,6 +369,23 @@ export class FrmIncidenciaComponent implements OnInit {
       } 
     }
   } 
+
+  mostrarSalidasAfectadas(){
+    this.popUpVisibleSalidasAfectadas = true;
+  }
+
+  cerrarSalidasAfectadas(e){
+    this.popUpVisibleSalidasAfectadas = false;
+    this.location.back();
+  }
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
 
 }
 

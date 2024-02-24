@@ -8,6 +8,11 @@
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-incidencia.lblTitulo', 'Gestión de Incidencias')}} </div>
             </div>
+			<div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>               
         </div>  
 
         <!-- Formulario datos Incidencia -->
@@ -101,5 +106,27 @@
     contentTemplate="contentSeleccionarArticulo">
     <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
         <app-frm-incidencia-buscar-art [incidencia]="_incidencia" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-incidencia-buscar-art>
+    </div>    
+</dx-popup>
+
+<!-- popUp Salidas afectadas -->
+<dx-popup *ngIf="popUpVisibleSalidasAfectadas" #popUpSalidasAfectadas (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="80%" width="80%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleSalidasAfectadas" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia.str_txtPopupSalidasAfectadas', 'Lista salidas afectadas por incidencia')}}"
+    contentTemplate="contentSalidasAfectadas">
+    <div *dxTemplate="let data of 'contentSalidasAfectadas'">
+        <app-frm-incidencia-contratos-afectados [_incidencia]="_incidencia" (cerrarPopUp)="cerrarSalidasAfectadas($event)"></app-frm-incidencia-contratos-afectados>
+    </div>    
+</dx-popup>
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-incidencia'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
     </div>    
 </dx-popup>

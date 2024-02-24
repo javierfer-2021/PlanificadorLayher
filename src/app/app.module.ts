@@ -64,6 +64,7 @@ import { FrmImportarCsvComponent } from './Pantallas/Ventas/frm-importar-csv/frm
 import { FrmSimulacionPlanificadorComponent } from './Pantallas/Planificador/frm-simulacion-planificador/frm-simulacion-planificador.component';
 import { FrmAyudaPantallaComponent } from './Pantallas/Ayuda/frm-ayuda-pantalla/frm-ayuda-pantalla.component';
 import { FrmContratosAfectadosComponent } from './Pantallas/Ventas/frm-contratos-afectados/frm-contratos-afectados.component';
+import { FrmIncidenciaContratosAfectadosComponent } from './Pantallas/Incidencias/frm-incidencia-contratos-afectados/frm-incidencia-contratos-afectados.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -115,7 +116,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmImportarCsvComponent,
     FrmSimulacionPlanificadorComponent,
     FrmAyudaPantallaComponent,
-    FrmContratosAfectadosComponent
+    FrmContratosAfectadosComponent,
+    FrmIncidenciaContratosAfectadosComponent
 
   ],
   imports: [

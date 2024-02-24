@@ -1,4 +1,4 @@
-/* PANTALLA VISOR DE CONTRATOS AFECTADOS POR MODIFICACIONES EN VENTAS YA REGISTRADAS EN EL SISTEMA */
+/* PANTALLA VISOR DE CONTRATOS AFECTADOS POR REGISTRO DE INCIDENCIA EN EL SISTEMA */
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2, Input, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef} from '@angular/core';
@@ -12,16 +12,17 @@ import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Salida } from '../../../Clases/Salida';
+import { Incidencia } from '../../../Clases/Incidencia';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 
 @Component({
-  selector: 'app-frm-contratos-afectados',
-  templateUrl: './frm-contratos-afectados.component.html',
-  styleUrls: ['./frm-contratos-afectados.component.css']
+  selector: 'app-frm-incidencia-contratos-afectados',
+  templateUrl: './frm-incidencia-contratos-afectados.component.html',
+  styleUrls: ['./frm-incidencia-contratos-afectados.component.css']
 })
-export class FrmContratosAfectadosComponent implements OnInit {
+export class FrmIncidenciaContratosAfectadosComponent implements OnInit {
 
-  @Input() _salida: Salida;                                               // salida modificada (salida referencia busqueda)
+  @Input() _incidencia: Incidencia;                                               // salida modificada (salida referencia busqueda)
   @Output() cerrarPopUp : EventEmitter<any> = new EventEmitter<any>();    // retorno de la pantalla
 
   //#region - declaracion de cte y variables 
@@ -38,115 +39,115 @@ export class FrmContratosAfectadosComponent implements OnInit {
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
 
   btnAciones: BotonPantalla[] = [
-    { icono: '', texto: this.traducir('frm-contratos-afectados.btnSalir', 'Salir'), visible:true, posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
+    { icono: '', texto: this.traducir('frm-incidencia-contratos-afectados.btnSalir', 'Salir'), visible:true, posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
   ];
  
   WSDatos_Validando: boolean = false;
 
-  // grid lineas Salida
+  // grid lineas Salida afectadas
   arraySalidas: Array<Salida>;
   cols: Array<ColumnDataGrid> = [ 
     {
       dataField: 'IdSalida',
-      caption: this.traducir('frm-contratos-afectados.colIdSalida','Id.Salida'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colIdSalida','Id.Salida'),
       visible: true,
     },      
     // {
     //   dataField: 'IdSalidaERP',
-    //   caption: this.traducir('frm-contratos-afectados.colIdSalidaERP','Id.Salida ERP'),
+    //   caption: this.traducir('frm-incidencia-contratos-afectados.colIdSalidaERP','Id.Salida ERP'),
     //   visible: false,
     // },      
     {
       dataField: 'Contrato',
-      caption: this.traducir('frm-contratos-afectados.colContrato','Contrato'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colContrato','Contrato'),
       visible: true,      
     },
     // {
     //   dataField: 'IdTipoDocumento',
-    //   caption: this.traducir('frm-contratos-afectados.colIdTipoDocumento','IdTipoDocumento'),
+    //   caption: this.traducir('frm-incidencia-contratos-afectados.colIdTipoDocumento','IdTipoDocumento'),
     //   visible: false,
     // },
     // {
     //   dataField: 'NombreTipoDocumento',
-    //   caption: this.traducir('frm-contratos-afectados.colNombreTipoDocumento','Tipo Contrato'),
+    //   caption: this.traducir('frm-incidencia-contratos-afectados.colNombreTipoDocumento','Tipo Contrato'),
     //   visible: true,
     // },   
     {
       dataField: 'Planificar',
-      caption: this.traducir('frm-contratos-afectados.colPlanificar','Planificar'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colPlanificar','Planificar'),
       visible: true,
     },      
     {
       dataField: 'IdAlmacen',
-      caption: this.traducir('frm-contratos-afectados.colIdAlmacen','IdAlmacen'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colIdAlmacen','IdAlmacen'),
       visible: false,
     },
     {
       dataField: 'NombreAlmacen',
-      caption: this.traducir('frm-contratos-afectados.colAlmacen','Almacen'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colAlmacen','Almacen'),
       visible: true,
     },   
     {
       dataField: 'Referencia',
-      caption: this.traducir('frm-contratos-afectados.colReferencia','Referencia'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colReferencia','Referencia'),
       visible: true,
     },
     {
       dataField: 'IdCliente',
-      caption: this.traducir('frm-contratos-afectados.colIdCliente','Id.Cliente'),      
+      caption: this.traducir('frm-incidencia-contratos-afectados.colIdCliente','Id.Cliente'),      
       visible: false,
     },
     {
       dataField: 'IdClienteERP',
-      caption: this.traducir('frm-contratos-afectados.colIdClienteERP','Id.Cliente ERP'),      
+      caption: this.traducir('frm-incidencia-contratos-afectados.colIdClienteERP','Id.Cliente ERP'),      
       visible: true,
     },
     {
       dataField: 'NombreCliente',
-      caption: this.traducir('frm-contratos-afectados.colNombreCliente','Nombre Cliente'),      
+      caption: this.traducir('frm-incidencia-contratos-afectados.colNombreCliente','Nombre Cliente'),      
       visible: true,
     },    
     {
       dataField: 'IdEstado',
-      caption: this.traducir('frm-contratos-afectados.colIdEstado','IdEstado'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colIdEstado','IdEstado'),
       visible: false,
     },
     {
       dataField: 'NombreEstado',
-      caption: this.traducir('frm-contratos-afectados.colEstado','Estado'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colEstado','Estado'),
       visible: true,
     },
     {
       dataField: 'FechaAlta',
-      caption: this.traducir('frm-contratos-afectados.colFechaAlta','Fecha Alta'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colFechaAlta','Fecha Alta'),
       visible: false,
       dataType: 'date',
     },
     {
       dataField: 'FechaInicio',
-      caption: this.traducir('frm-contratos-afectados.colFechaInicio','Fecha Inicio'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colFechaInicio','Fecha Inicio'),
       visible: true,
       dataType: 'date',
     },
     {
       dataField: 'FechaFin',
-      caption: this.traducir('frm-contratos-afectados.colFechaFin','Fecha Fin'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colFechaFin','Fecha Fin'),
       visible: true,
       dataType: 'date',
     },
     {
       dataField: 'Obra',
-      caption: this.traducir('frm-contratos-afectados.colObra','Obra'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colObra','Obra'),
       visible: true,
     },
     {
       dataField: 'Observaciones',
-      caption: this.traducir('frm-contratos-afectados.colObservaciones','Observaciones'),
+      caption: this.traducir('frm-incidencia-contratos-afectados.colObservaciones','Observaciones'),
       visible: false,
     },
     // {
     //   dataField: 'NumLineas',
-    //   caption: this.traducir('frm-contratos-afectados.colNumLineas','Num.Lineas'),
+    //   caption: this.traducir('frm-incidencia-contratos-afectados.colNumLineas','Num.Lineas'),
     //   visible: true,
     // },             
   ];
@@ -173,7 +174,7 @@ export class FrmContratosAfectadosComponent implements OnInit {
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // Totales, exportar + redimensionar grid, popUp
-    this.dg.mostrarFilaSumaryTotal('IdSalida','Contrato',this.traducir('frm-contratos-afectados.TotalRegistros','Total Lineas: '),'count');
+    this.dg.mostrarFilaSumaryTotal('IdSalida','Contrato',this.traducir('frm-incidencia-contratos-afectados.TotalRegistros','Total Lineas: '),'count');
     this.dg.habilitarExportar('contratos_afectados.xlsx');
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
@@ -217,7 +218,7 @@ export class FrmContratosAfectadosComponent implements OnInit {
 
     this.WSDatos_Validando = true;
     let tipoCambio:number = 1;                                                              
-    (await this.planificadorService.getSalidasAfectadas_CambioDatos(1,this._salida.IdSalida,this._salida.IdAlmacen,this._salida.FechaInicio,this._salida.FechaFin)).subscribe(
+    (await this.planificadorService.getSalidasAfectadas_Incidencia(this._incidencia.IdIncidencia)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arraySalidas = datos.datos;
@@ -226,16 +227,15 @@ export class FrmContratosAfectadosComponent implements OnInit {
             this.dgConfigLineas = new DataGridConfig(this.arraySalidas, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
             this.dgConfigLineas.actualizarConfig(true,false,'standard');
           } else {
-            Utilidades.MostrarExitoStr(this.traducir('frm-contratos-afectados.msgOK_NosalidasAfectadas','No se han detectado salidas planificadas afectadas por el cambio')); 
             this.btnSalir(); 
-          }          
+          }
         } else {          
-          Utilidades.MostrarErrorStr(this.traducir('frm-contratos-afectados.msgError_WSCargarDatos','Error cargando datos salidas afectadas')); 
+          Utilidades.MostrarErrorStr(this.traducir('frm-incidencia-contratos-afectados.msgError_WSCargarDatos','Error cargando datos salidas afectadas')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
         this.WSDatos_Validando = false;
-        Utilidades.compError(error, this.router,'frm-contratos-afectados');
+        Utilidades.compError(error, this.router,'frm-incidencia-contratos-afectados');
       }
     );
   } 
@@ -246,6 +246,5 @@ export class FrmContratosAfectadosComponent implements OnInit {
     //this.location.back();
     this.cerrarPopUp.emit(null);
   }
- 
 
 }

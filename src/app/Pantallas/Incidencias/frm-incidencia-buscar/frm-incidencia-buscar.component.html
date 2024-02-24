@@ -11,6 +11,11 @@
                 <div class="col-3 pt-0 px-1">
                     <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
                 </div>   
+                <div class="col-md-auto pt-0 px-1" style="text-align: end;">
+                    <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                        <i class="bi bi-question-circle"></i>
+                    </button>                    
+                </div>                  
             </div>  
 
             <!-- grid lista incidencias -->             
@@ -29,5 +34,14 @@
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>
 
-
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-incidencia-buscar'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
 

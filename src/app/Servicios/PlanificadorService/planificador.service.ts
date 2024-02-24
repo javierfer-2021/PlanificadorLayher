@@ -566,6 +566,13 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/incidencias/getCombos_PantallaIncidencias', body, Utilidades.getHeaders());
   }   
 
+  async getSalidasAfectadas_Incidencia(idIncidencia): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/incidencias/getListaSalidasAfectadas_Incidencia')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdIncidencia:idIncidencia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/incidencias/getListaSalidasAfectadas_Incidencia', body, Utilidades.getHeaders());
+  }    
+  
   //#endregion
 
 

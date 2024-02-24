@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TipoBoton } from '../../../Enumeraciones/TipoBoton';
 import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { Utilidades } from '../../../Utilidades/Utilidades';
+import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
 
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxTextAreaComponent } from 'devextreme-angular';
@@ -121,6 +122,7 @@ export class FrmAyudaPantallaComponent implements OnInit,AfterViewInit {
 
   mostrarVideo() {
     //alert('mostrar video');
+    //console.log(document.location.host);
     window.open(this._infoAyuda.Video);
   }
 

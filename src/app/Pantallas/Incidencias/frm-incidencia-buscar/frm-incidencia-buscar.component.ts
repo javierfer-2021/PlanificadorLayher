@@ -182,6 +182,10 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
   almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
   sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
   
+  //popUp Ayuda Pantalla
+  @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
+  popUpVisibleAyuda:boolean = false;
+    
   //#endregion
 
   //#region - constructores y eventos inicialización
@@ -331,5 +335,12 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
     this.cargarIncidencias(this.sbAlmacenes.SelectBox.value);
   }  
 
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
 
 }
