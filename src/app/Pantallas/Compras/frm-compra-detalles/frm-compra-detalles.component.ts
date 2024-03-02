@@ -304,8 +304,8 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     );
   } 
 
-
   //#endregion
+
   
   btnSalir() {
     this.location.back();
@@ -436,6 +436,18 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   }
   
   
+  onFechaPrevistaValueChanged(e){
+    if ((this.modoEdicion) && (this._entrada.FechaPrevista.getFullYear()<1900)) {
+      this._entrada.FechaPrevista = Utilidades.year2to4digits(this._entrada.FechaPrevista);
+    }
+  }
+ 
+  onFechaConfirmacionValueChanged(e){
+    if ((this.modoEdicion) && (this._entrada.FechaConfirmada.getFullYear()<1900)) {
+      this._entrada.FechaConfirmada = Utilidades.year2to4digits(this._entrada.FechaConfirmada);
+    }
+  }  
+
   // validacion estandar del formulario
   validarFormulario():boolean{
     const res = this.formEntrada.instance.validate();

@@ -419,6 +419,18 @@ export class FrmCompraImportarComponent implements OnInit {
     catch {} 
   }  
 
+  onFechaPrevistaValueChanged(e){
+    if ((this.contratoValido) && (this._entrada.FechaPrevista.getFullYear()<1900)) {
+      this._entrada.FechaPrevista = Utilidades.year2to4digits(this._entrada.FechaPrevista);
+    }
+  }
+ 
+  onFechaConfirmacionValueChanged(e){
+    if ((this.contratoValido) && (this._entrada.FechaConfirmada.getFullYear()<1900)) {
+      this._entrada.FechaConfirmada = Utilidades.year2to4digits(this._entrada.FechaConfirmada);
+    }
+  }  
+
   //#region - Edicion lineas de importacion
   
   btnEditarLineaEntrada(index:number){    

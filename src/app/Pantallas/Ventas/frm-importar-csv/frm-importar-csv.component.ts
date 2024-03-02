@@ -282,6 +282,32 @@ export class FrmImportarCsvComponent implements OnInit {
     );
   }
 
+  async validarCodigosArticulos(){
+    if (this.WSDatos_Validando) return; 
+    if ( (this.arrayLineasSalida==null) || (this.arrayLineasSalida==undefined) || (this.arrayLineasSalida.length==0)) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.validarCodigosArticulosCSV(this._salida.IdSalidaERP,this._salida.Contrato,this._salida.Referencia,this._salida.IdEstado
+                                                  ,this._salida.FechaAlta,this._salida.FechaInicio,this._salida.FechaFin
+                                                  ,this._salida.IdCliente,this._salida.IdClienteERP,this._salida.NombreCliente
+                                                  ,this._salida.Obra,this._salida.Observaciones,this._salida.IdAlmacen,this._salida.IdTipoDocumento,this._salida.Planificar
+                                                  ,this.arrayLineasSalida)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.arrayLineasSalida = datos.datos;
+          this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigLineas.actualizarConfig(true,false,'standard');
+        } else { 
+            Utilidades.MostrarErrorStr(this.traducir('frm-importar-csv.msgError_WSComprobarCodigosArticulosCSV','Error WS comprobacion codigos articulos')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-importar-csv');
+      }
+    );
+  }
+  
   //#endregion
 
   limpiarDocumento(){
@@ -334,6 +360,18 @@ export class FrmImportarCsvComponent implements OnInit {
     return newIdContrato;
   }
 
+
+  onFechaInicioValueChanged(e){
+    if ((this._salida.FechaInicio.getFullYear()<1900)) {
+      this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
+    }
+  }
+ 
+  onFechaFinValueChanged(e){
+    if ((this._salida.FechaFin.getFullYear()<1900)) {
+      this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
+    }
+  }
 
   validarFormulario():boolean{
     const res = this.formSalida.instance.validate();
@@ -498,6 +536,9 @@ export class FrmImportarCsvComponent implements OnInit {
         this.arrayLineasSalida = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, 0, headersRow.length);  
         this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
         this.dgConfigLineas.actualizarConfig(true,false,'standard');
+        
+        // proceso adicional de validación articulos leidos del fichero
+        this.validarCodigosArticulos();
       };  
   
       reader.onerror = function () {  
@@ -519,8 +560,8 @@ export class FrmImportarCsvComponent implements OnInit {
         if (curruntRecord.length == numColumnas) {  
           let csvRecord: LineasCSV = new LineasCSV();  
           csvRecord.IdArticulo = curruntRecord[0].trim();  
-          csvRecord.NombreArticulo = curruntRecord[1].trim();  
-          csvRecord.CantidadPedida = parseInt(curruntRecord[2].trim());  
+          //csvRecord.NombreArticulo = curruntRecord[1].trim();  
+          csvRecord.CantidadPedida = parseInt(curruntRecord[1].trim());  
           csvRecord.Procesado = false;
           csvRecord.Error = false;
           csvRecord.Aviso = ''; 

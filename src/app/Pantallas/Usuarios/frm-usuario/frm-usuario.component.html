@@ -23,8 +23,12 @@
                     <dxi-item itemType="group" caption="Datos Usuario" [colCount]="4" [colSpan]="4">
                         
                         <dxi-item dataField="IdUsuario" [editorOptions]="{disabled: true}"></dxi-item>
-                        <dxi-item dataField="FechaAlta" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
-                        <dxi-item dataField="FechaBaja" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
+                        <dxi-item dataField="FechaAlta" 
+                            editorType="dxDateBox" 
+                            [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
+                        <dxi-item dataField="FechaBaja" 
+                            editorType="dxDateBox" 
+                            [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}"></dxi-item>
                         <dxi-item dataField="Baja" editorType="dxCheckBox" #cbBaja [editorOptions]="checkBoxBajaOptions"></dxi-item>
                         <!-- <dxi-item dataField="Baja" editorType="dxCheckBox" #cbBaja [editorOptions]='{disabled: !modoEdicion (onValueChanged)="cbBaja_onValueChanged($event)"}'></dxi-item> -->
 

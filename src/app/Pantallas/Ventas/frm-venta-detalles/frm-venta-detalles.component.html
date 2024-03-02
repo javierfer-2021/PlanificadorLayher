@@ -26,7 +26,9 @@
                         <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="IdEstado" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoSalida, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
+                        <dxi-item dataField="IdEstado" 
+                            editorType="dxSelectBox" 
+                            [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoSalida, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO"></dxi-validation-rule>
                         </dxi-item>
                         <dxi-item dataField="FechaAlta" [editorOptions]="{disabled: true}">
@@ -48,15 +50,18 @@
                         </dxi-item>
                         <dxi-item itemType="empty" [colSpan]="1"></dxi-item>
 
-                        <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" 
+                        <dxi-item dataField="IdAlmacen" 
+                            editorType="dxSelectBox" 
                             [editorOptions]="{disabled:true, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item name="fechaInicio" dataField="FechaInicio" editorType="dxDateBox" 
+                        <dxi-item name="fechaInicio" dataField="FechaInicio" 
+                            editorType="dxDateBox" 
                             [editorOptions]="{disabled:false, width:'100%',displayFormat:'dd/MM/yyyy', onValueChanged:onFechaInicioValueChanged.bind(this) }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item name="fechaFin" dataField="FechaFin" editorType="dxDateBox" 
+                        <dxi-item name="fechaFin" dataField="FechaFin" 
+                            editorType="dxDateBox" 
                             [editorOptions]="{disabled:false, width:'100%',displayFormat:'dd/MM/yyyy', onValueChanged:onFechaFinValueChanged.bind(this)}">
                             <dxi-validation-rule *ngIf="requerirFechaFin" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
                         </dxi-item>

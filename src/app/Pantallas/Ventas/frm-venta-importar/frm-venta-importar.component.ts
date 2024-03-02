@@ -58,7 +58,8 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   contratoValido:boolean = false;
   vCambiado_str_txtContrato:boolean = false;
   
-  aviso :boolean = false;
+  aviso: boolean = false;
+  strAviso: string = ''; 
   str_txtTipoDocumento:string ='<Tipo Documento>';
   
   _salida: Salida = new(Salida);
@@ -263,6 +264,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
           this.color_txtContrato = ConfiGlobal.colorValido;          
           this.str_txtTipoDocumento = this._salida.NombreTipoDocumento;
           this.aviso = (this._salida.Aviso != '');
+          this.strAviso = this._salida.Aviso;
           this.requerirFechaFin = (this._salida.IdTipoDocumento == 20);
           
           //Datos Linea
@@ -382,6 +384,17 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     }, 1000);
   }
 
+  onFechaInicioValueChanged(e){
+    if ((this.contratoValido) && (this._salida.FechaInicio.getFullYear()<1900)) {
+      this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
+    }
+  }
+ 
+  onFechaFinValueChanged(e){
+    if ((this.contratoValido) && (this._salida.FechaFin.getFullYear()<1900)) {
+      this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
+    }
+  }
 
   validarFormulario():boolean{
     const res = this.formSalida.instance.validate();
@@ -412,7 +425,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   }
 
 
-  btnImportarOferta() {
+  async btnImportarOferta() {
     // validacion extandar del formulario con datos requeridos y formatos
     if (!this.validarFormulario()) {
       Utilidades.MostrarErrorStr(this.traducir('frm-venta-importar.msgError_FaltanDatos','Faltan datos y/o hay datos incorrectos. Revise el formulario'));
@@ -421,8 +434,19 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     else {
       // validacion especifica adicional de datos
       if (this.validarDatosFormulario()) {
-        // llamar a web_service de importacion
-        this.importarOferta();
+        // Confirmar Importacion salida (contrato+almacen) ya existente
+        let almacen = this.arrayAlmacenes[this._salida.IdAlmacen].NombreAlmacen;
+        if (this.aviso && (Utilidades.contieneCadena(this._salida.Aviso,almacen))) {
+          let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-importar.MsgImportarExistente', 'El registro con mismo contrato y almacen sera reemplazado.<br>¿Esta seguro que desea realizar la importación?'), this.traducir('frm-ventas-importar.TituloImportarExistente', 'Confirmar importación'));  
+          if (!continuar) return;
+          else {  
+            // llamar a web_service de importacion
+            this.importarOferta();
+          }  
+        } else {
+          // llamar a web_service de importacion
+          this.importarOferta();
+        }
       }
     }
   } 

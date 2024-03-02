@@ -5,12 +5,13 @@
     [dataSource]="dgConfigSB.dataSource"
     [displayExpr]="dgConfigSB.displayExpr"
     [valueExpr]="dgConfigSB.valueExpr"
-    (click)="$event.target.select()" 
     (onValueChanged)="onValueChanged()"
     (onEnterKey)="onEnterKey()" 
     (onFocusOut)="onFocusOut()" 
     (onFocusIn)="onFocusIn()">
+    <!-- REVISAR -- ELIMINADO evento (click)="$event.target.select()" > Error en consola TypeError: $event.target.select -->
 </dx-select-box>
+
 
 <!-- 
 [(ngModel)]="dgConfigSB.stringTxt"    

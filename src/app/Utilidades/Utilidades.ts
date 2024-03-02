@@ -1102,6 +1102,9 @@ export class Utilidades {
              + '</tr></table>';                 
         return html;
     }
+
+
+
     static miDatePipe: DatePipe;
     public static EscribirLog(info: string) {
         try {
@@ -1573,15 +1576,6 @@ export class Utilidades {
         return fechaComprobada;    
     }
 
-    
-    // oscurecer la pantalla en la peticion,
-    public static VerLPGenerico(valor : boolean)
-    {
-        Utilidades.VarStatic.LPGenerico.instance.option("visible", valor);
-    }
-
-
-
     public static validacionFechaDDMMYY(strFecha): Date {
         let fechaComprobada: Date = null;
         if(Utilidades.isEmpty(strFecha)) return null;
@@ -1595,15 +1589,15 @@ export class Utilidades {
         return this.validacionFechaDDMMYYYY(strFecha);
     }    
 
-    public static navegarLogin() {
-        Utilidades.router.navigate(['']);
-        // Quitar fondo de carga gris
-        Utilidades.VerLPGenerico(false);
+    //utilidad para pasa de 2 a 4 digitos en el año en DateBox -- (ejmplo: 0024 --> 2024)
+    public static year2to4digits(fecha:Date): Date {
+        let newYear = 2000 + fecha.getFullYear();
+        let newDate = new Date(newYear, fecha.getMonth(), fecha.getDate());
+        return newDate;
     }
 
 
     // A esta funcion se le pasa el parametro en formato fecha dd/mm/yyyy o dd-mm-yyyy ambos son aceptados
-
     public static semanadelano($fecha){
         // Constantes para el calculo del primer dia de la primera semana del año
         let cons: Array<number>  =  [2,1,7,6,5,4,3]; 
@@ -1648,6 +1642,35 @@ export class Utilidades {
         // Con esta sentencia arrojamos el resultado. Esta ultima linea puede ser cambiada a gusto y conveniencia del lector          
         alert(semanas);
     };
+    
+
+    public static contieneCadena(cadena:string,buscar:string,caseSensitive:boolean=false):boolean {
+        let strCadena:string = cadena;
+        let strBuscar:string = buscar;
+        if (!caseSensitive) {
+            strCadena = strCadena.toUpperCase();
+            strBuscar = strBuscar.toUpperCase();
+        }
+        // buscar strBuscar en strCadena
+        return (strCadena.indexOf(strBuscar) != -1);
+    }
+
+    // oscurecer la pantalla en la peticion,
+    public static VerLPGenerico(valor : boolean)
+    {
+        Utilidades.VarStatic.LPGenerico.instance.option("visible", valor);
+    }
+
+
+
+
+    public static navegarLogin() {
+        Utilidades.router.navigate(['']);
+        // Quitar fondo de carga gris
+        Utilidades.VerLPGenerico(false);
+    }
+
+
 
     // TRUE - ARTICULO MULTIPLE
     // FALSE - ARTICULO UNICO

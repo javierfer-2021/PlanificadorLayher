@@ -494,11 +494,21 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }    
   
   onFechaInicioValueChanged(e){
-   if ((this.modoEdicion) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaInicio != this._salidaCopia.FechaInicio)) {
-    this.confirmarCambios('FECHA INICIO',this._salidaCopia,this._salida);   }
+    // Correcion año 2 a 4 digitos
+    if ((this.modoEdicion) && (this._salida.FechaInicio.getFullYear()<1900)) {
+      this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
+    }
+    // aviso cambio fecha -> confirmar y ver contratos afectados    
+    if ((this.modoEdicion) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaInicio != this._salidaCopia.FechaInicio)) {
+      this.confirmarCambios('FECHA INICIO',this._salidaCopia,this._salida);   }
   }
 
-  onFechaFinValueChanged(e){    
+  onFechaFinValueChanged(e){
+    // Correcion año 2 a 4 digitos
+    if ((this.modoEdicion) && (this._salida.FechaFin.getFullYear()<1900)) {
+      this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
+    }
+    // aviso cambio fecha -> confirmar y ver contratos afectados
     if ((this.modoEdicion) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaFin != this._salidaCopia.FechaFin)) { 
       this.confirmarCambios('FECHA FIN',this._salidaCopia,this._salida);
     }

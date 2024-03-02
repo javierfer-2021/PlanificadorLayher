@@ -22,47 +22,61 @@
         <div class="row pt-2">
             <div id="form-container" class="formulario">
                 <dx-form id="formEntrada" #formEntrada [colCount]="3" [formData]="_entrada" labelMode='static' labelLocation="left" [readOnly]="!modoEdicion">
-
                     <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
-
-                        <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}">
+                        <dxi-item dataField="Contrato" 
+                            [editorOptions]="{disabled: true}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="IdEstado" editorType="dxSelectBox" [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoEntrada, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
+                        <dxi-item dataField="IdEstado" 
+                            editorType="dxSelectBox" 
+                            [editorOptions]="{ disabled:false, dataSource:arrayTiposEstadoEntrada, displayExpr:'NombreEstado', valueExpr:'IdEstado', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ESTADO"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaAlta" [editorOptions]="{disabled: true}">
+                        <dxi-item dataField="FechaAlta" 
+                            [editorOptions]="{disabled: true}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ALTA"></dxi-validation-rule>
                         </dxi-item>
 
-                        <dxi-item dataField="IdProveedorERP" [label]="{text:'Id Prov.ERP'}" [colSpan]="1" [editorOptions]="{disabled: true}">
+                        <dxi-item dataField="IdProveedorERP" 
+                            [label]="{text:'Id Prov.ERP'}" [colSpan]="1" 
+                            [editorOptions]="{disabled: true}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID PROVEEDOR"></dxi-validation-rule>
                         </dxi-item>                            
-                        <dxi-item dataField="NombreProveedor" [colSpan]="2" [editorOptions]="{disabled: false}">
+                        <dxi-item dataField="NombreProveedor" 
+                            [colSpan]="2" 
+                            [editorOptions]="{disabled: false}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE PROVEEDOR"></dxi-validation-rule>
                         </dxi-item>                            
 
-                        <dxi-item dataField="Referencia" [editorOptions]="{disabled: false}">
+                        <dxi-item dataField="Referencia" 
+                            [editorOptions]="{disabled: false}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo REFERENCIA"></dxi-validation-rule>
                         </dxi-item>
                         <dxi-item itemType="empty" [colSpan]="2"></dxi-item>
 
-                        <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                        <dxi-item dataField="IdAlmacen" 
+                            editorType="dxSelectBox" 
+                            [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaPrevista" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
-                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
+                        <dxi-item dataField="FechaPrevista" 
+                            editorType="dxDateBox" 
+                            [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaPrevistaValueChanged.bind(this)}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA PREVISTA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaConfirmacion" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
-                            <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
+                        <dxi-item dataField="FechaConfirmacion" 
+                            editorType="dxDateBox" 
+                            [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaConfirmacionValueChanged.bind(this)}">
+                            <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA CONFIRMACION"></dxi-validation-rule>
                         </dxi-item>
 
                         <dxi-item dataField="Confirmada" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
-                        <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
+                        
                         <dxi-item dataField="Observaciones" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
 
                         <dxi-item itemType="button" horizontalAlignment="left"  [buttonOptions]="confirmarButtonOptions"></dxi-item>
-                    <!-- </dxi-item>                    -->
+                        <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
+                    <!-- </dxi-item> -->
                 </dx-form>
             </div>
         </div>

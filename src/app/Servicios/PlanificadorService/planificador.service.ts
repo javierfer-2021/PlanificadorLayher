@@ -579,6 +579,30 @@ export class PlanificadorService {
   // -------------------------------------------
   //#region -- SIMULACION PLANIFICADOR SALIDA CSV -> TABLA TEMPORAL  --
   
+  // Verificar codigos articulos leidos del CSV - Los datos del tipo Salida son inrelevantes e ignorados en el ws (solo se utilizan sus lineas)
+  async validarCodigosArticulosCSV(idSalidaERP,contrato,referencia,idEstado,fechaAlta,fechaInicio,fechaFin,idCliente,idClienteERP,nombreCliente,obra,observaciones,idAlmacen,idTipoDocumento,planificar,lineasSalida ): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/salidas/validarCodigosArticulos_CSV')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdSalidaERP:idSalidaERP
+                                                          ,Contrato:contrato
+                                                          ,Referencia:referencia
+                                                          ,IdEstado:idEstado
+                                                          ,FechaAlta:fechaAlta
+                                                          ,FechaInicio:fechaInicio
+                                                          ,FechaFin:fechaFin
+                                                          ,IdCliente:idCliente
+                                                          ,IdClienteERP:idClienteERP
+                                                          ,NombreCiente:nombreCliente
+                                                          ,Obra:obra
+                                                          ,Observaciones:observaciones
+                                                          ,IdAlmacen:idAlmacen
+                                                          ,IdTipoDocumento:idTipoDocumento
+                                                          ,Planificar:planificar
+                                                          ,LineasSalidaERP:lineasSalida
+    } };    
+    return this.http.post(ConfiGlobal.URL + '/api/salidas/validarCodigosArticulos_CSV', body, Utilidades.getHeaders());
+  }
+
   // guardar simulacion Salida
   async ImportarSimulacionSalidaCSV(idSalidaERP,contrato,referencia,idEstado,fechaAlta,fechaInicio,fechaFin,idCliente,idClienteERP,nombreCliente,obra,observaciones,idAlmacen,idTipoDocumento,planificar,lineasSalida ): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/salidas/importarSimulacionSalida_CSV')) return;

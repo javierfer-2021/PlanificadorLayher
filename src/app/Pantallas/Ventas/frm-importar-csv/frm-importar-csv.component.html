@@ -27,7 +27,9 @@
                             <dxi-item dataField="Contrato" [editorOptions]="{disabled: true}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>
                             </dxi-item>
-                            <dxi-item dataField="IdTipoDocumento" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayTiposDocumentos, displayExpr:'NombreDocumento', valueExpr:'IdTipoDocumento', searchEnabled: true }">
+                            <dxi-item dataField="IdTipoDocumento" 
+                                editorType="dxSelectBox" 
+                                [editorOptions]="{disabled:false, dataSource:arrayTiposDocumentos, displayExpr:'NombreDocumento', valueExpr:'IdTipoDocumento', searchEnabled: true }">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo TIPO CONTRATO"></dxi-validation-rule>
                             </dxi-item>
                             <dxi-item dataField="Planificar" editorType="dxCheckBox" [editorOptions]="{disabled:false, width:'100%'}"></dxi-item>
@@ -43,10 +45,14 @@
                             <dxi-item dataField="IdAlmacen" editorType="dxSelectBox" [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                             </dxi-item>
-                            <dxi-item dataField="FechaInicio" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                            <dxi-item dataField="FechaInicio" 
+                                editorType="dxDateBox" 
+                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaInicioValueChanged.bind(this)}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
                             </dxi-item>
-                            <dxi-item dataField="FechaFin" editorType="dxDateBox" [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy'}">
+                            <dxi-item dataField="FechaFin" 
+                                editorType="dxDateBox" 
+                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaFinValueChanged.bind(this)}">
                                 <dxi-validation-rule *ngIf="requerirFechaFin" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
                             </dxi-item>
 
@@ -96,13 +102,19 @@
                 <div class="col-2 px-1 pt-1">
                     <button class="btn btn-primary" style="float: right;" (click)="cargarDatos()" type="submit">Cargar Fichero</button>
                 </div> -->
-                <div class="col-10 px-1 pt-1">
+                <div class="col px-1 pt-1">
                     <div class="row px-2">
                         <input type="file" #FicheroCSV id="txtFicheroCSV" accept=".csv" (change)="leerFicheroCSV_2_Array($event)">
                     </div>               
                 </div>
-                <div class="col-2 px-1 pt-1">
-                    <button class="btn btn-primary btn-sm" style="float: right; height: 30px;" (click)="fileReset()" type="submit"><i class="bi bi-x-circle-fill px-1"></i>Limpiar fichero</button>
+                <div class="col-auto px-1 pt-1">
+                    <!-- <button class="btn btn-primary btn-sm" style="float: right; height: 30px;" (click)="fileReset()" type="submit"><i class="bi bi-x-circle-fill px-1"></i>Limpiar fichero</button> -->
+                    <div class="brn-group"  style="float: right;" role="group">
+                        <button class="btn btn-primary btn-sm mx-2" (click)="fileReset()" type="submit"><i class="bi bi-x-circle-fill px-1"></i>Limpiar fichero</button>
+                        <a href="assets/plantillas/plantilla_importacion_lineas.csv" target="_blank">
+                            <button class="btn btn-secondary btn-sm me-1"><i class="bi bi-file-earmark-arrow-down px-1"></i>Descargar Plantilla</button>
+                        </a>
+                    </div>
                 </div>                
             </div>            
          
@@ -123,7 +135,7 @@
 </div>
 
 <!-- popUp Editar Linea Salida -->
-<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="300px" width="960px"
+<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="335px" width="960px"
     [fullScreen]="false" 
     [(visible)]="popUpVisibleEditarLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-venta-detalles.str_txtPopupEditarLinea', 'Editar Línea Salida')}}"

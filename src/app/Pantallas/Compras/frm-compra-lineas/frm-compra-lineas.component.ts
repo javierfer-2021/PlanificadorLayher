@@ -43,20 +43,8 @@ export class FrmCompraLineasComponent implements OnInit {
 
   
   WSDatos_Validando: boolean = false;
-
   _lineaEntrada: EntradaLinea = new(EntradaLinea);
-  
-  //arrayTiposEstadoEntrada: Array<EstadoEntrada> = [];  
-  //arrayAlmacenes: Array<Almacen> = [];
-  //requerirFechaConfirmacion:boolean = false;
-  
-  //modoEdicion: boolean = false;
-  //_entradaCopia: Entrada = new(Entrada);
-
-  // grid lineas Entrada
-  // [IdEntrada,  IdLinea, IdArticulo, NombreArticulo, CantidadPedida, CantidadConfirmada, CantidadCancelada, FechaActualizacion ]
-  // arrayLineasEntrada: Array<EntradaLinea>;
-
+ 
   //#endregion
 
   
@@ -73,7 +61,6 @@ export class FrmCompraLineasComponent implements OnInit {
   ngOnInit(): void {
     // copiar entrada actual a var_temp (posibilidad cancelar)
     this._lineaEntrada = Object.assign({},this.linea);    
-    //setTimeout(() => {this.cargarCombos();},200);
   }
 
   ngAfterViewInit(): void {
@@ -110,27 +97,6 @@ export class FrmCompraLineasComponent implements OnInit {
   //#endregion
 
   //#region -- WEB_SERVICES
-
-  async cargarCombos(){
-    // if(this.WSDatos_Validando) return;
-
-    // this.WSDatos_Validando = true;
-    // let filtroAlmacen:number= 0; // todos los almacenes activos
-    // (await this.planificadorService.getCombos_PantallaEntradas(filtroAlmacen)).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       this.arrayTiposEstadoEntrada = datos.datos.ListaEstados;
-    //       this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
-    //     } else {          
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-compras-detalles.msgError_WSCargarCombos','Error cargando valores Estados/Almacenes')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, error => {
-    //     this.WSDatos_Validando = false;
-    //     Utilidades.compError(error, this.router,'frm-compras-detalles');
-    //   }
-    // );
-  }  
 
   async ActualizarLineaEntrada(){
     this.cerrarPopUp.emit(this._lineaEntrada);
@@ -178,6 +144,18 @@ export class FrmCompraLineasComponent implements OnInit {
   }
 
   //#region  - gestion formulario
+
+  onFechaPrevistaValueChanged(e){
+    if ((this._lineaEntrada.FechaPrevista.getFullYear()<1900)) {
+      this._lineaEntrada.FechaPrevista = Utilidades.year2to4digits(this._lineaEntrada.FechaPrevista);
+    }
+  }
+ 
+  onFechaConfirmacionValueChanged(e){
+    if ((this._lineaEntrada.FechaConfirmada.getFullYear()<1900)) {
+      this._lineaEntrada.FechaConfirmada = Utilidades.year2to4digits(this._lineaEntrada.FechaConfirmada);
+    }
+  }  
 
   // validacion estandar del formulario
   validarFormulario():boolean{
