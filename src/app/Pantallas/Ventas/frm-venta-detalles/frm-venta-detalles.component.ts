@@ -56,6 +56,9 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   modoEdicion: boolean = false;
   _salidaCopia: Salida = new(Salida);
 
+  ajusteFechaYYYY:boolean = false;
+  cambioFechaCancelado: boolean = false;
+
   // grid lineas Salida
   // [IdSalida,  IdLinea, IdArticulo, NombreArticulo, CantidadPedida, CantidadReservada, CantidadDisponible, FechaActualizacion ]
   arrayLineasSalida: Array<SalidaLinea>;
@@ -498,21 +501,34 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   
   onFechaInicioValueChanged(e){
     // Correcion año 2 a 4 digitos
-    if ((this.modoEdicion) && (!Utilidades.isEmpty(this._salida.FechaInicio)) && (this._salida.FechaInicio.getFullYear()<1900)) {
-      this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
-    }
+    if ( (this.modoEdicion) && (!Utilidades.isEmpty(this._salida.FechaInicio)) ) {
+      if ((this._salida.FechaInicio.getFullYear()<1900)) {
+        this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
+        this.ajusteFechaYYYY = true;  
+      } else {
+        this.ajusteFechaYYYY = false;  
+      }
+    } 
     // aviso cambio fecha -> confirmar y ver contratos afectados    
-    if ((this.modoEdicion) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaInicio != this._salidaCopia.FechaInicio)) {
-      this.confirmarCambios('FECHA INICIO',this._salidaCopia,this._salida);   }
+    if ((this.modoEdicion) && (!this.ajusteFechaYYYY) && (!this.cambioFechaCancelado) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this.hayCambioFechaInicio())) {
+      //this.mostrarAvisoCambioFecha = false;
+      this.confirmarCambios('FECHA INICIO',this._salidaCopia,this._salida);   
+    }
   }
 
   onFechaFinValueChanged(e){
     // Correcion año 2 a 4 digitos
-    if ((this.modoEdicion) && (!Utilidades.isEmpty(this._salida.FechaFin)) && (this._salida.FechaFin.getFullYear()<1900)) {
-      this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
+    if ( (this.modoEdicion) && (!Utilidades.isEmpty(this._salida.FechaFin)) ) {
+      if ((this._salida.FechaFin.getFullYear()<1900)) {
+        this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
+        this.ajusteFechaYYYY = true;  
+      } else {
+        this.ajusteFechaYYYY = false;  
+      }      
     }
     // aviso cambio fecha -> confirmar y ver contratos afectados
-    if ((this.modoEdicion) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaFin != this._salidaCopia.FechaFin)) { 
+    if ((this.modoEdicion) && (!this.ajusteFechaYYYY) && (!this.cambioFechaCancelado) && (this._salida.Planificar) && (this._salida.IdEstado!=99) && (this._salida.FechaFin != this._salidaCopia.FechaFin)) { 
+      //this.mostrarAvisoCambioFecha = false;
       this.confirmarCambios('FECHA FIN',this._salidaCopia,this._salida);
     }
    }
@@ -522,12 +538,14 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-detalles.MsgConsultaContratosAfectados', 'Cambiar el valor del campo '+campoModificado+' puede afectar en la planificación de otros contratos<br>¿Desea CONFIRMAR cambio y ver contratos afectados?'), this.traducir('frm-ventas-detalles.TituloModificacionContrato', 'Modificación Contrato Salida'));  
     if (!continuar) {  
       if (campoModificado=='FECHA INICIO') { this._salida.FechaInicio = this._salidaCopia.FechaInicio; }
-      else if (campoModificado=='FECHA FIN') { this._salida.FechaFin = this._salidaCopia.FechaFin; }      
+      else if (campoModificado=='FECHA FIN') { this._salida.FechaFin = this._salidaCopia.FechaFin; }   
+      this.cambioFechaCancelado = true;   
       return true;
     }
     else {
       //alert('pantalla consulta contratos afectados');
       this.popUpVisibleSalidasAfectadas = true;
+      this.cambioFechaCancelado = false; 
       return true;
       //this.ActualizarSalida();
     }   
@@ -557,5 +575,19 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   cerrarAyuda(e){
     this.popUpVisibleAyuda = false;
   }
-    
+
+  // funciones auxiliares para eliminar informacion de tiempo incluida por dxDateBox en la comparacion de fechas
+  hayCambioFechaInicio():boolean{
+    let fechaOld:Date = new Date(this._salidaCopia.FechaInicio.getFullYear(),this._salidaCopia.FechaInicio.getMonth(),this._salidaCopia.FechaInicio.getDate(),0,0,0,0);
+    let fechaNew:Date = new Date(this._salida.FechaInicio.getFullYear(),this._salida.FechaInicio.getMonth(),this._salida.FechaInicio.getDate(),0,0,0,0);    
+    return !(fechaOld === fechaNew);
+  }
+
+  // funciones auxiliares para eliminar informacion de tiempo incluida por dxDateBox en la comparacion de fechas
+  hayCambioFechaFin():boolean{
+    let fechaOld:Date = new Date(this._salidaCopia.FechaFin.getFullYear(),this._salidaCopia.FechaFin.getMonth(),this._salidaCopia.FechaFin.getDate(),0,0,0,0);
+    let fechaNew:Date = new Date(this._salida.FechaFin.getFullYear(),this._salida.FechaFin.getMonth(),this._salida.FechaFin.getDate(),0,0,0,0);    
+    return !(fechaOld === fechaNew);
+  }
+
 }
