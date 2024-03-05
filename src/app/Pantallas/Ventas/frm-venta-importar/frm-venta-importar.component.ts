@@ -385,15 +385,17 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   }
 
   onFechaInicioValueChanged(e){
-    if ((this.contratoValido) && (this._salida.FechaInicio.getFullYear()<1900)) {
+    if ((this.contratoValido) && (!Utilidades.isEmpty(this._salida.FechaInicio)) && (this._salida.FechaInicio.getFullYear()<1900)) {
       this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
     }
+    //this._salida.FechaInicio = Utilidades.setDefaultTime(this._salida.FechaInicio);
   }
  
   onFechaFinValueChanged(e){
-    if ((this.contratoValido) && (this._salida.FechaFin.getFullYear()<1900)) {
+    if ((this.contratoValido) && (!Utilidades.isEmpty(this._salida.FechaFin)) && (this._salida.FechaFin.getFullYear()<1900)) {
       this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
     }
+    //this._salida.FechaFin = Utilidades.setDefaultTime(this._salida.FechaFin);
   }
 
   validarFormulario():boolean{
@@ -435,7 +437,8 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
       // validacion especifica adicional de datos
       if (this.validarDatosFormulario()) {
         // Confirmar Importacion salida (contrato+almacen) ya existente
-        let almacen = this.arrayAlmacenes[this._salida.IdAlmacen].NombreAlmacen;
+        let index: number = this.arrayAlmacenes.findIndex(e => this._salida.IdAlmacen == e.IdAlmacen );
+        let almacen = this.arrayAlmacenes[index].NombreAlmacen;
         if (this.aviso && (Utilidades.contieneCadena(this._salida.Aviso,almacen))) {
           let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-ventas-importar.MsgImportarExistente', 'El registro con mismo contrato y almacen sera reemplazado.<br>¿Esta seguro que desea realizar la importación?'), this.traducir('frm-ventas-importar.TituloImportarExistente', 'Confirmar importación'));  
           if (!continuar) return;

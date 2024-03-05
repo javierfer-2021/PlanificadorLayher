@@ -188,7 +188,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   ngOnInit(): void {
     this.personalizarBotonesAccion()
     this.cargarCombos();
-    setTimeout(() => {this.cargarLineasEntrada();},1000);
+    setTimeout(() => {this.cargarLineasEntrada();},2000);
   }
 
   ngAfterViewInit(): void {
@@ -437,13 +437,13 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   
   
   onFechaPrevistaValueChanged(e){
-    if ((this.modoEdicion) && (this._entrada.FechaPrevista.getFullYear()<1900)) {
+    if ((this.modoEdicion) && (!Utilidades.isEmpty(this._entrada.FechaPrevista)) && (this._entrada.FechaPrevista.getFullYear()<1900)) {
       this._entrada.FechaPrevista = Utilidades.year2to4digits(this._entrada.FechaPrevista);
     }
   }
  
   onFechaConfirmacionValueChanged(e){
-    if ((this.modoEdicion) && (this._entrada.FechaConfirmada.getFullYear()<1900)) {
+    if ((this.modoEdicion) && (!Utilidades.isEmpty(this._entrada.FechaConfirmada)) && (this._entrada.FechaConfirmada.getFullYear()<1900)) {
       this._entrada.FechaConfirmada = Utilidades.year2to4digits(this._entrada.FechaConfirmada);
     }
   }  

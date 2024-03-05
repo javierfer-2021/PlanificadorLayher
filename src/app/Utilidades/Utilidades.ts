@@ -25,6 +25,7 @@ import { Log } from '../Clases/Log';
 
 import * as fs from 'fs-web';
 import { ConfiGlobal } from './ConfiGlobal';
+import { parseDate } from 'devextreme/localization';
 
 
 /*
@@ -1591,12 +1592,19 @@ export class Utilidades {
 
     //utilidad para pasa de 2 a 4 digitos en el año en DateBox -- (ejmplo: 0024 --> 2024)
     public static year2to4digits(fecha:Date): Date {
-        let newYear = 2000 + fecha.getFullYear();
-        let newDate = new Date(newYear, fecha.getMonth(), fecha.getDate());
+        //let newYear: number = 2000 + fecha.getFullYear();
+        let newDate = new Date( (2000+fecha.getFullYear()), fecha.getMonth(), fecha.getDate(), 0,0,0,0);
         return newDate;
     }
 
-
+    public static setDefaultTime(fecha:Date): Date {
+        if (Utilidades.isEmpty(fecha)) { return null; }
+        else { 
+            fecha.setHours(12,0,0,0); 
+            return fecha;
+        }
+    }
+    
     // A esta funcion se le pasa el parametro en formato fecha dd/mm/yyyy o dd-mm-yyyy ambos son aceptados
     public static semanadelano($fecha){
         // Constantes para el calculo del primer dia de la primera semana del año

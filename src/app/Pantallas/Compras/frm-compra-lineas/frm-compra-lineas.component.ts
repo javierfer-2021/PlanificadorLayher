@@ -146,13 +146,13 @@ export class FrmCompraLineasComponent implements OnInit {
   //#region  - gestion formulario
 
   onFechaPrevistaValueChanged(e){
-    if ((this._lineaEntrada.FechaPrevista.getFullYear()<1900)) {
+    if ((!Utilidades.isEmpty(this._lineaEntrada.FechaPrevista)) && (this._lineaEntrada.FechaPrevista.getFullYear()<1900)) {
       this._lineaEntrada.FechaPrevista = Utilidades.year2to4digits(this._lineaEntrada.FechaPrevista);
     }
   }
  
   onFechaConfirmacionValueChanged(e){
-    if ((this._lineaEntrada.FechaConfirmada.getFullYear()<1900)) {
+    if ((!Utilidades.isEmpty(this._lineaEntrada.FechaConfirmada)) && (this._lineaEntrada.FechaConfirmada.getFullYear()<1900)) {
       this._lineaEntrada.FechaConfirmada = Utilidades.year2to4digits(this._lineaEntrada.FechaConfirmada);
     }
   }  

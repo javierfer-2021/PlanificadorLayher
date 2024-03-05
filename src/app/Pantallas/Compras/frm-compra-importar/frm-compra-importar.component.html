@@ -78,12 +78,12 @@
                             </dxi-item>
                             <dxi-item dataField="FechaPrevista" 
                                 editorType="dxDateBox" 
-                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaPrevistaValueChanged.bind(this)}">
+                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaPrevistaValueChanged.bind(this)}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA PREVISTA"></dxi-validation-rule>
                             </dxi-item>
                             <dxi-item dataField="FechaConfirmacion" 
                                 editorType="dxDateBox" 
-                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaConfirmacionValueChanged.bind(this)}">
+                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaConfirmacionValueChanged.bind(this)}">
                                 <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA CONFIRMACION"></dxi-validation-rule>
                             </dxi-item>
 

@@ -83,12 +83,12 @@
                             </dxi-item>
                             <dxi-item dataField="FechaInicio" 
                                 editorType="dxDateBox" 
-                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaInicioValueChanged.bind(this)}">
+                                [editorOptions]="{disabled:false, width:'100%', displayFormat:'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaInicioValueChanged.bind(this)}">
                                 <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INICIO"></dxi-validation-rule>
                             </dxi-item>
                             <dxi-item dataField="FechaFin" 
                                 editorType="dxDateBox" 
-                                [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', showClearButton:true, onValueChanged:onFechaFinValueChanged.bind(this)}">
+                                [editorOptions]="{disabled:false, width:'100%', displayFormat:'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaFinValueChanged.bind(this)}">
                                 <dxi-validation-rule *ngIf="requerirFechaFin" type="required" message="Debe indicar un valor para el campo FECHA FIN"></dxi-validation-rule>
                             </dxi-item>
 

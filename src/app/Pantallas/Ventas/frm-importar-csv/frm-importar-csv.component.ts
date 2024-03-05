@@ -362,13 +362,13 @@ export class FrmImportarCsvComponent implements OnInit {
 
 
   onFechaInicioValueChanged(e){
-    if ((this._salida.FechaInicio.getFullYear()<1900)) {
+    if ((!Utilidades.isEmpty(this._salida.FechaInicio)) && (this._salida.FechaInicio.getFullYear()<1900)) {
       this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
     }
   }
  
   onFechaFinValueChanged(e){
-    if ((this._salida.FechaFin.getFullYear()<1900)) {
+    if ((!Utilidades.isEmpty(this._salida.FechaFin)) && (this._salida.FechaFin.getFullYear()<1900)) {
       this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
     }
   }

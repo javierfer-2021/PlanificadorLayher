@@ -15,6 +15,7 @@ import { Almacen } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent } from 'devextreme-angular';
 import { DxPopupComponent } from 'devextreme-angular';
+import { parseDate } from 'devextreme/localization';
 
 
 @Component({
@@ -167,6 +168,8 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
       const nav = this.router.getCurrentNavigation().extras.state;      
       if (( nav.Salida !== null) && ( nav.Salida !== undefined)) {
         this._salida= nav.Salida;
+        this._salida.FechaInicio = new Date(this._salida.FechaInicio);
+        this._salida.FechaFin = new Date(this._salida.FechaFin);
       }
     }
 
@@ -176,7 +179,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
     this.personalizarBotonesAccion();
     // cargar informacion
     this.cargarCombos();
-    setTimeout(() => {this.cargarLineasSalida();},1000);
+    setTimeout(() => {this.cargarLineasSalida();},2000);
   }
 
   ngAfterViewInit(): void {
@@ -495,7 +498,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   
   onFechaInicioValueChanged(e){
     // Correcion año 2 a 4 digitos
-    if ((this.modoEdicion) && (this._salida.FechaInicio.getFullYear()<1900)) {
+    if ((this.modoEdicion) && (!Utilidades.isEmpty(this._salida.FechaInicio)) && (this._salida.FechaInicio.getFullYear()<1900)) {
       this._salida.FechaInicio = Utilidades.year2to4digits(this._salida.FechaInicio);
     }
     // aviso cambio fecha -> confirmar y ver contratos afectados    
@@ -505,7 +508,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
 
   onFechaFinValueChanged(e){
     // Correcion año 2 a 4 digitos
-    if ((this.modoEdicion) && (this._salida.FechaFin.getFullYear()<1900)) {
+    if ((this.modoEdicion) && (!Utilidades.isEmpty(this._salida.FechaFin)) && (this._salida.FechaFin.getFullYear()<1900)) {
       this._salida.FechaFin = Utilidades.year2to4digits(this._salida.FechaFin);
     }
     // aviso cambio fecha -> confirmar y ver contratos afectados

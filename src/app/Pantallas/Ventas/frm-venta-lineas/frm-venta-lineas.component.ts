@@ -151,13 +151,13 @@ export class FrmVentaLineasComponent implements OnInit {
   //#region  - gestion formulario
 
   onFechaInicioValueChanged(e){
-    if ((this._lineaSalida.FechaInicio.getFullYear()<1900)) {
+    if ((!Utilidades.isEmpty(this._lineaSalida.FechaInicio)) && (this._lineaSalida.FechaInicio.getFullYear()<1900)) {
       this._lineaSalida.FechaInicio = Utilidades.year2to4digits(this._lineaSalida.FechaInicio);
     }
   }
  
   onFechaFinValueChanged(e){
-    if ((this._lineaSalida.FechaFin.getFullYear()<1900)) {
+    if (((!Utilidades.isEmpty(this._lineaSalida.FechaFin)) && (this._lineaSalida.FechaFin.getFullYear()<1900))) {
       this._lineaSalida.FechaFin = Utilidades.year2to4digits(this._lineaSalida.FechaFin);
     }
   }
