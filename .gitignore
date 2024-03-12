@@ -9,6 +9,7 @@
 /bazel-out
 
 # directorios auxiliares 
+/backups
 /_backups
 /documentos
 /help

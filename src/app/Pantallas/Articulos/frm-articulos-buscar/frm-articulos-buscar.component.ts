@@ -218,6 +218,7 @@ export class FrmArticulosBuscarComponent implements OnInit {
       return;
     } else {   
       let retorno:any = this.dg.objSeleccionado(); // {idArticulo:this.dg.objSeleccionado().IdArticulo , unidades:1}   
+      if (this.solicitarUnidades) { retorno.Unidades = parseInt(this.str_txtUnidades); }
       this.cerrarPopUp.emit(retorno);   
     }
   }
