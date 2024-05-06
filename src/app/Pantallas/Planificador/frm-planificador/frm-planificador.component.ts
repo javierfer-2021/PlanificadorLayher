@@ -98,9 +98,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       caption: 'Cantidad Disponible',
       visible: false
     },
-    { dataField: 'CantidadDisponible',
-      caption: 'Cantidad Disponible',
-      visible: false
+    { dataField: 'StockInicial',
+      caption: 'S.I.',
+      visible: true
     },   
     { dataField: 'Prioridad',
       caption: 'Secundario',
@@ -289,8 +289,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
               caption: (this.obtenerCaptionColumna(c.NombreCliente,true)+'.'),
               cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'cliente_sel' : 'cliente',
               columns: [{
-                dataField: c.Contrato,
-                caption: c.Contrato,
+                dataField: c.ContratoMostrar,
+                caption: c.ContratoMostrar,
                 cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'contrato_sel' : 'contrato',
                 columns: [{
                   dataField: c.Obra,
@@ -1024,7 +1024,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }
 
   obtenerFecha(fecha:string):string {    
-    if (fecha.substring(0,4) == '1900') {
+    if ( (Utilidades.isEmpty(fecha)) || (fecha.substring(0,4) == '1900') || (fecha.substring(0,4) == '1001')) {
       return '-'
     } else {
       let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4);
