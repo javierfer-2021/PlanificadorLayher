@@ -72,7 +72,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
         { icon: "edit",
           hint: "Editar Linea",
           onClick: (e) => { 
-            this.btnEditarLineaEntrada(e.row.rowIndex); 
+            this.btnEditarLineaEntrada(e.row); 
           }
         },
       ]
@@ -402,24 +402,16 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     }       
   }
 
-  btnEditarLineaEntrada(index:number){    
-    this.lineaSeleccionadaIndex= index; 
-    this.lineaSeleccionada = this.arrayLineasEntrada[index];         
-    // this.lineaSeleccionada.Modificada = false;     
+  btnEditarLineaEntrada(data:any){    
+    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    this.lineaSeleccionada = this.dg.objSeleccionado();
+    this.lineaSeleccionadaIndex = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);
+    //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;    
   }
 
   cerrarEditarLinea(e){
     if (e != null) {     
-      // Actualizar info del grid          
-      // if (!Utilidades.isEmpty(e.FechaPrevista)) {
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
-      // }
-      // if (!Utilidades.isEmpty(e.FechaConfirmada)) {
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
-      // }
       if (this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadPedida != e.CantidadPedida) {
         this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadPedida = e.CantidadPedida;
       } 

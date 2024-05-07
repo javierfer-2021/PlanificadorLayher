@@ -84,13 +84,13 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
         { icon: "edit",
           hint: "Editar Linea",
           onClick: (e) => { 
-            this.btnEditarLineaSalida(e.row.rowIndex); 
+            this.btnEditarLineaSalida(e.row); 
           }
         },
         { icon: "trash",
           hint: "Eliminar Línea",
           onClick: (e) => { 
-            this.btnEliminarLineaSalida(e.row.rowIndex); 
+            this.btnEliminarLineaSalida(e.row); 
           }
         },        
       ]
@@ -136,6 +136,7 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
       dataField: 'Excepcion',
       caption: this.traducir('frm-venta-importar.colExcepcion','Exc.'),
       visible: true, //this.mostrarAvisosLinea,
+      dataType: 'boolean',
       width: 50,
     },      
   ];
@@ -463,11 +464,12 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   //---------------------------------------------------------------------------------------------------
   //#region - Edicion lineas de importacion
   
-  btnEditarLineaSalida(index:number){    
-    this.lineaSeleccionadaIndex= index; 
-    this.lineaSeleccionada = this.arrayLineasSalida[index];         
+  btnEditarLineaSalida(data:any){    
+    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    this.lineaSeleccionada = this.dg.objSeleccionado();
+    this.lineaSeleccionadaIndex = this.arrayLineasSalida.findIndex(e => e==this.lineaSeleccionada);
     //this.lineaSeleccionada.Modificada = false;     
-    this.popUpVisibleEditarLinea = true;
+    this.popUpVisibleEditarLinea = true;    
   }  
 
   cerrarEditarLinea(e){
@@ -495,11 +497,14 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     this.popUpVisibleEditarLinea = false;      
   }
 
-  async btnEliminarLineaSalida(index:number){
+  async btnEliminarLineaSalida(data:any){
     let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-venta-importar.dlgEliminarLineaMensaje','La línea seleccionada será eliminada y NO IMPORTADA al planificador.<br>¿Seguro que desea continuar?'), 
                                                                this.traducir('frm-venta-importar.dlgEliminarLineaTitulo', 'Eliminar Línea'));
     if (confirmar) {
+      this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+      let index:number = this.arrayLineasSalida.findIndex(e => e==this.dg.objSeleccionado());     
       this.arrayLineasSalida.splice(index,1);
+      //this.arrayLineasSalida.splice(index,1);
     }
   }  
 

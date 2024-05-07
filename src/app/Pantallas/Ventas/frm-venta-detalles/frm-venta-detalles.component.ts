@@ -76,7 +76,7 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
         { icon: "edit",
           hint: "Editar Linea",
           onClick: (e) => { 
-            this.btnEditarLineaSalida(e.row.rowIndex); 
+            this.btnEditarLineaSalida(e.row); 
           }
         },
       ]
@@ -393,11 +393,12 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
   }
 
 
-  btnEditarLineaSalida(index:number){  
-    this.lineaSeleccionadaIndex= index; 
-    this.lineaSeleccionada = this.arrayLineasSalida[index];         
+  btnEditarLineaSalida(data:any){  
+    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    this.lineaSeleccionada = this.dg.objSeleccionado();
+    this.lineaSeleccionadaIndex = this.arrayLineasSalida.findIndex(e => e==this.lineaSeleccionada);
     //this.lineaSeleccionada.Modificada = false;     
-    this.popUpVisibleEditarLinea = true;            
+    this.popUpVisibleEditarLinea = true;           
   }
 
 

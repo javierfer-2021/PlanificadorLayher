@@ -83,13 +83,13 @@ export class FrmCompraImportarComponent implements OnInit {
         { icon: "edit",
           hint: "Editar Línea",
           onClick: (e) => { 
-            this.btnEditarLineaEntrada(e.row.rowIndex); 
+            this.btnEditarLineaEntrada(e.row); 
           }
         },
         { icon: "trash",
           hint: "Eliminar Línea",
           onClick: (e) => { 
-            this.btnEliminarLineaEntrada(e.row.rowIndex); 
+            this.btnEliminarLineaEntrada(e.row); 
           }
         },         
       ]
@@ -433,27 +433,23 @@ export class FrmCompraImportarComponent implements OnInit {
 
   //#region - Edicion lineas de importacion
   
-  btnEditarLineaEntrada(index:number){    
-    this.lineaSeleccionadaIndex= index; 
-    this.lineaSeleccionada = this.arrayLineasEntrada[index];         
+  btnEditarLineaEntrada(data:any){    
+    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    this.lineaSeleccionada = this.dg.objSeleccionado();
+    this.lineaSeleccionadaIndex = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);
+    
     //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;
   }  
 
   cerrarEditarLinea(e){
     if (e != null) {     
-      // Actualizar info del grid          
-      // if (!Utilidades.isEmpty(e.FechaPrevista)) {
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
-      // }
-      // if (!Utilidades.isEmpty(e.FechaConfirmada)) {
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
-      //   this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Modificada=true;
-      // }
       if (this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadPedida != e.CantidadPedida) {
         this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadPedida = e.CantidadPedida;
       }  
+      if (this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadConfirmada != e.CantidadConfirmada) {
+        this.arrayLineasEntrada[this.lineaSeleccionadaIndex].CantidadConfirmada = e.CantidadConfirmada;
+      }        
       this.arrayLineasEntrada[this.lineaSeleccionadaIndex].Excepcion = ( (!Utilidades.isEmpty(e.FechaPrevista)) || (!Utilidades.isEmpty(e.FechaConfirmada)) );
       this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
       this.arrayLineasEntrada[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
@@ -463,11 +459,14 @@ export class FrmCompraImportarComponent implements OnInit {
     this.popUpVisibleEditarLinea = false;    
   }
 
-  async btnEliminarLineaEntrada(index:number){
+  async btnEliminarLineaEntrada(data:any){
     let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-importar.dlgEliminarLineaMensaje','La línea seleccionada será eliminada y NO IMPORTADA al planificador.<br>¿Seguro que desea continuar?'), 
                                                                this.traducir('frm-compra-importar.dlgEliminarLineaTitulo', 'Eliminar Línea'));
     if (confirmar) {
+      this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+      let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());     
       this.arrayLineasEntrada.splice(index,1);
+      //this.arrayLineasEntrada.splice(data.dataIndex,1);
     }
   }
 
