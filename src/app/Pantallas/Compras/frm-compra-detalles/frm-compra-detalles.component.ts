@@ -452,7 +452,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   // validacion complementaria datos del formulario
   validarDatosFormulario():boolean{
     // confirmda -> requiere fecha confirmación
-    if ((!Utilidades.isEmpty(this._entrada.Confirmada)) && (this._entrada.FechaConfirmada <= new Date(0))) {
+    if (!Utilidades.isEmpty(this._entrada.Confirmada) && (this._entrada.Confirmada)) {
       Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
       return false;
     }

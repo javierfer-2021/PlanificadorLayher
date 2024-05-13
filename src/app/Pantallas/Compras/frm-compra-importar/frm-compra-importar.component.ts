@@ -92,6 +92,12 @@ export class FrmCompraImportarComponent implements OnInit {
             this.btnEliminarLineaEntrada(e.row); 
           }
         },         
+        { icon: "add",
+          hint: "Duplicar Línea Artículo",
+          onClick: (e) => { 
+            this.btnDuplicarLineaEntrada(e.row); 
+          }
+        },        
       ]
     },    
     {
@@ -468,6 +474,15 @@ export class FrmCompraImportarComponent implements OnInit {
       this.arrayLineasEntrada.splice(index,1);
       //this.arrayLineasEntrada.splice(data.dataIndex,1);
     }
+  }
+
+  btnDuplicarLineaEntrada(data:any){    
+    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());
+    let newLinea:EntradaLinea = new EntradaLinea();
+    newLinea = Object.assign({},this.dg.objSeleccionado()); 
+    newLinea.CantidadPedida = 0;
+    this.arrayLineasEntrada.splice(index+1,0,newLinea);   
   }
 
   //#endregion
