@@ -65,6 +65,7 @@ import { FrmSimulacionPlanificadorComponent } from './Pantallas/Planificador/frm
 import { FrmAyudaPantallaComponent } from './Pantallas/Ayuda/frm-ayuda-pantalla/frm-ayuda-pantalla.component';
 import { FrmContratosAfectadosComponent } from './Pantallas/Ventas/frm-contratos-afectados/frm-contratos-afectados.component';
 import { FrmIncidenciaContratosAfectadosComponent } from './Pantallas/Incidencias/frm-incidencia-contratos-afectados/frm-incidencia-contratos-afectados.component';
+import { FrmMostrarCalculoStockComponent } from './Pantallas/Planificador/frm-mostrar-calculo-stock/frm-mostrar-calculo-stock.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -117,7 +118,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmSimulacionPlanificadorComponent,
     FrmAyudaPantallaComponent,
     FrmContratosAfectadosComponent,
-    FrmIncidenciaContratosAfectadosComponent
+    FrmIncidenciaContratosAfectadosComponent,
+    FrmMostrarCalculoStockComponent
 
   ],
   imports: [

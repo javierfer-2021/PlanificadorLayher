@@ -156,6 +156,12 @@ str_observaciones:string = '';
 popUpVisibleEditarUndLinea:boolean = false;
 _modLineaArticulo: modLineaPlanificador = new(modLineaPlanificador);
 
+//popUp Ver calculo stock disponible
+@ViewChild('popUpCalculoStock', { static: false }) popUpCalculoStock: DxPopupComponent;
+popUpVisibleCalculoStock:boolean = false;
+_stockSalida:number;
+_stockArticulo:string;
+_stockTitulo:string;
 
 //#endregion - cte y var de la pantalla
 
@@ -197,9 +203,9 @@ async ngAfterViewInit(): Promise<void> {
   Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
   // Actualizar altura de los grids
-  this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 210);
+  this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
   this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
-  this.alturaDiv = '210px';
+  this.alturaDiv = '240px';
 
   // eliminar error debug ... expression has changed after it was checked.
   this.cdref.detectChanges();      
@@ -215,10 +221,10 @@ onResize(event) {
   // this.mostrarEspacio = false;
   Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
   // Actualizar altura del grid
-  this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima));
+  this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
   this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
   
-  this.alturaDiv = '210px';
+  this.alturaDiv = '240px';
 }
 
 LPGen(value : boolean) {
@@ -310,33 +316,40 @@ async getPlanificacion(){
                       dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                       caption: this.obtenerFecha(c.FechaFin.toString()), //c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                       cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'fecha_sel' : 'fecha',
+
                       columns: [{
-                        dataField: c.NombreEstado,
-                        // mofificamos mostrar estado por campo Planificar
-                        //caption: c.NombreEstado,
-                        caption: (c.Planificar) ? 'Planificado' : 'SIN Planificar',
-                        //cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'estado_sel' : 'estado',
-                        cssClass: this.obtenerClasePlanificado((c.Contrato === this.oOfertaSeleccionada.Contrato),c.Planificar),                          
+                        dataField: 'FechaPlanificacion',
+                        caption: (Utilidades.isEmpty(c.FechaPlanificacion)) ? '-' : this.obtenerFechaHora(c.FechaPlanificacion.toString()),
+                        cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'otros_sel' : 'otros', 
                         columns: [{
-                          dataField: 'C' + nroCol.toString() + '_PEDIDAS',
-                          caption: 'Ped.',
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
-                          allowSorting: false
-                        },
-                        {
-                          dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
-                          caption: 'Asig.',
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
-                          allowSorting: false
-                        },
-                        {
-                          dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
-                          caption: 'Dis.',
-                          cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
-                          allowSorting: false
-                        },
-                      ]
+                          dataField: c.NombreEstado,
+                          // mofificamos mostrar estado por campo Planificar
+                          //caption: c.NombreEstado,
+                          caption: (c.Planificar) ? 'Planificado' : 'SIN Planificar',
+                          //cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'estado_sel' : 'estado',
+                          cssClass: this.obtenerClasePlanificado((c.Contrato === this.oOfertaSeleccionada.Contrato),c.Planificar),                          
+                          columns: [{
+                            dataField: 'C' + nroCol.toString() + '_PEDIDAS',
+                            caption: 'Ped.',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
+                            allowSorting: false
+                          },
+                          {
+                            dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
+                            caption: 'Asig.',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
+                            allowSorting: false
+                          },
+                          {
+                            dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
+                            caption: 'Dis.',
+                            cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'unidades_sel' : 'unidades',
+                            allowSorting: false
+                          },
+                        ]
+                        }]
                       }]
+
                     }]
                   }]
                 }]
@@ -829,7 +842,11 @@ onContextMenuPreparing_DataGridUnidades(e) {
     e.items.push({ text: 'Cancelar', onItemClick: () => { this.cancelarContrato(e.columnIndex); } });
   }
   else {
-    e.items = []; 
+    //e.items = [];
+    // menu contextual grid -> ver calcul stock (contrato planificado, col_Stock, /* col_stock>0 */)
+    if ((e.row.rowType=='data') && (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 2) /*&& (e.row.values[e.columnIndex]>0)*/ ) {  
+      e.items = [{ text: 'Ver calculo Stock', onItemClick:()=>{this.itemMenuContratosClick(e);} }]; 
+    }
   }
 }
 
@@ -837,6 +854,20 @@ itemMenuContratosClick(e) {
   // if (!e.itemData.items) { 
   //   alert('Opcion '+e.itemData.text+' del contrato'+ this.dgUnidades.objSeleccionado().Contrato); 
   // }
+  if ((e.row.rowType=='data') /*&& (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 1) && (e.row.values[e.columnIndex-1]>0)*/ ) {
+    this._stockSalida = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida;
+    this._stockArticulo = this.arrayArts[e.rowIndex].IdArticulo;
+    this._stockTitulo = 'CONTRATO: '+ this.arrayCabeceras[Math.floor(e.columnIndex/3)].Contrato + ' | '
+                      + 'ARTICULO:' + this.arrayArts[e.rowIndex].IdArticulo + ' '
+                                    + this.arrayArts[e.rowIndex].NombreArticulo;
+    //alert('ver stock -> idSalida:'+this._modLineaArticulo.IdSalida+' -- idArticulo:'+this._modLineaArticulo.IdArticulo)
+    this.popUpVisibleCalculoStock = true;
+   }
+
+}
+
+cerrarCalculoStockDisponible(e) {
+  this.popUpVisibleCalculoStock = false;
 }
 
 //#endgion - Gestion de menus y click asociados a los Grid
@@ -1051,10 +1082,20 @@ obtenerCaptionColumna(texto:string, rellenar:boolean=false): string {
 }
 
 obtenerFecha(fecha:string):string {    
-  if (fecha.substring(0,4) == '1900') {
-    return '-'
+    if ( (Utilidades.isEmpty(fecha)) || (fecha.substring(0,4) == '1900') || (fecha.substring(0,4) == '1001') || (fecha.substring(0,4) == '1')) {
+      return '-'
   } else {
     let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4);
+    return strFecha;
+  }    
+}
+
+obtenerFechaHora(fecha:string):string {    
+  if ( (Utilidades.isEmpty(fecha)) || (fecha.substring(0,4) == '1900') || (fecha.substring(0,4) == '1001') || (fecha.substring(0,4) == '1')) {
+    return '-'
+  } else {
+    let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4)
+                 + '  '+ fecha.substring(11,16);
     return strFecha;
   }    
 }

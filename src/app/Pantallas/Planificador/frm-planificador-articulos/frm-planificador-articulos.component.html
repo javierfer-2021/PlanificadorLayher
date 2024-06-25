@@ -74,6 +74,7 @@
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>REFERENCIA</u></div>
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>SALIDA</b></div>
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>ENTRADA</b></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>F.PLANIFIC.</u></div>
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>ESTADO</u></div>
                     </div>
                 </div>
@@ -135,6 +136,20 @@
         <br>
         {{str_observaciones}}
     </div>      
+</dx-popup>
+
+<!-- popUp ver calculo stock  -->
+<dx-popup *ngIf="popUpVisibleCalculoStock" #popUpCalculoStock (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="820px" height="640px"
+    [(visible)]="popUpVisibleCalculoStock" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-planificador.str_txtPopupUndCalculoStock', 'Calculo Stock Disponible')}}"
+    contentTemplate="contentCalculoStock">
+    <div *dxTemplate="let data of 'contentCalculoStock'">
+        <app-frm-mostrar-calculo-stock 
+            [_salida]="_stockSalida" [_articulo]="_stockArticulo" [_simulacion]="false" [_titulo]="_stockTitulo"
+            (cerrarPopUp)="cerrarCalculoStockDisponible($event)">
+        </app-frm-mostrar-calculo-stock>
+    </div>    
 </dx-popup>
 
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 

@@ -494,6 +494,15 @@ export class PlanificadorService {
     return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getPlanificacionAriculo', body, Utilidades.getHeaders());
   }
 
+  async getTablaCalculoStockDisponible(salida,articulo,simulacion): Promise<Observable<any>> {
+    if(!await Utilidades.establecerConexion('/api/planificador/getTablaCalculoStockDisponible')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }      
+    const body = { LogData: Utilidades.RecuperarLog(), usuario : ConfiGlobal.Usuario, 
+                   datos: { IdSalida:salida, IdArticulo:articulo, Simulacion:simulacion } };
+
+    return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getTablaCalculoStockDisponible', body, Utilidades.getHeaders());
+  }
+
   //#endregion
 
   

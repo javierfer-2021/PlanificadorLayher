@@ -24,6 +24,8 @@ export class Salida {
     Aviso?: string;
     //uso opcional y adicional para importación lineas csv 
     IdSimulacion: string;
+    // añadido control 
+    FechaPlanificacion: Date; 
   }
 
   export class SalidaLinea {
@@ -49,7 +51,7 @@ export class Salida {
     FechaFin: Date;
     //uso opcional y adicional para importación lineas csv 
     IdSimulacion: string;
-    Aviso: string;     
+    Aviso: string;    
   }
 
   /*

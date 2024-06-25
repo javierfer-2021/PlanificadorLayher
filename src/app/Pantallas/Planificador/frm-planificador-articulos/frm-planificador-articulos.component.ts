@@ -102,6 +102,13 @@ popUpVisibleObservaciones:boolean = false;
 str_contrato:string = '';
 str_observaciones:string = '';
 
+//popUp Ver calculo stock disponible
+@ViewChild('popUpCalculoStock', { static: false }) popUpCalculoStock: DxPopupComponent;
+popUpVisibleCalculoStock:boolean = false;
+_stockSalida:number;
+_stockArticulo:string;
+_stockTitulo:string;
+
 //#endregion - cte y var de la pantalla
 
 //#region - creación, inicializacion y gestion eventos pantalla
@@ -144,9 +151,9 @@ ConstructorPantalla() {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // Actualizar altura de los grids
-    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 210);
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
-    this.alturaDiv = '210px';
+    this.alturaDiv = '240px';
 
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();      
@@ -162,10 +169,10 @@ ConstructorPantalla() {
     // this.mostrarEspacio = false;
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // Actualizar altura del grid
-    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima));
+    this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
     
-    this.alturaDiv = '210px';
+    this.alturaDiv = '240px';
   }
 
   LPGen(value : boolean) {
@@ -241,30 +248,38 @@ ConstructorPantalla() {
                         dataField: c.FechaFin.toString().substring(0, c.FechaFin.toString().indexOf('T')),
                         caption: this.obtenerFecha(c.FechaFin.toString()), 
                         cssClass: 'fecha',
+
                         columns: [{
-                          dataField: c.NombreEstado,
-                          caption: c.NombreEstado,
-                          cssClass: 'estado',
+                          dataField: 'FechaPlanificacion',
+                          caption: (Utilidades.isEmpty(c.FechaPlanificacion)) ? '-' : this.obtenerFechaHora(c.FechaPlanificacion.toString()),
+                          cssClass: 'otros', 
+
                           columns: [{
-                            dataField: 'C' + nroCol.toString() + '_PEDIDAS',
-                            caption: 'Ped.',
-                            cssClass: 'unidades',
-                            allowSorting: false
-                          },
-                          {
-                            dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
-                            caption: 'Asig.',
-                            cssClass: 'unidades',
-                            allowSorting: false
-                          },
-                          {
-                            dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
-                            caption: 'Dis.',
-                            cssClass: 'unidades',
-                            allowSorting: false
-                          },
-                        ]
+                            dataField: c.NombreEstado,
+                            caption: c.NombreEstado,
+                            cssClass: 'estado',
+                            columns: [{
+                              dataField: 'C' + nroCol.toString() + '_PEDIDAS',
+                              caption: 'Ped.',
+                              cssClass: 'unidades',
+                              allowSorting: false
+                            },
+                            {
+                              dataField: 'C' + nroCol.toString() + '_ASIGNADAS',
+                              caption: 'Asig.',
+                              cssClass: 'unidades',
+                              allowSorting: false
+                            },
+                            {
+                              dataField: 'C' + nroCol.toString() + '_DISPONIBLES',
+                              caption: 'Dis.',
+                              cssClass: 'unidades',
+                              allowSorting: false
+                            },
+                          ]
+                          }]
                         }]
+
                       }]
                     }]
                   }]
@@ -624,7 +639,11 @@ onContextMenuPreparing_DataGridUnidades(e) {
     }    
   }
   else {
-    e.items = []; 
+    //e.items = [];
+    // menu contextual grid -> ver calcul stock (contrato planificado, col_Stock, /* col_stock>0 */)
+    if ((e.row.rowType=='data') && (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 2) /*&& (e.row.values[e.columnIndex]>0)*/ ) {  
+      e.items = [{ text: 'Ver calculo Stock', onItemClick:()=>{this.itemMenuContratosClick(e);} }]; 
+    }
   }
 }
 
@@ -632,7 +651,21 @@ itemMenuContratosClick(e) {
   // if (!e.itemData.items) { 
   //   alert('Opcion '+e.itemData.text+' del contrato'+ this.dgUnidades.objSeleccionado().Contrato); 
   // }
+  if ((e.row.rowType=='data') /*&& (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 1) && (e.row.values[e.columnIndex-1]>0)*/ ) {
+    this._stockSalida = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida;
+    this._stockArticulo = this.arrayArts[e.rowIndex].IdArticulo;
+    this._stockTitulo = 'CONTRATO: '+ this.arrayCabeceras[Math.floor(e.columnIndex/3)].Contrato + ' | '
+                      + 'ARTICULO:' + this.arrayArts[e.rowIndex].IdArticulo + ' '
+                                    + this.arrayArts[e.rowIndex].NombreArticulo;
+    //alert('ver stock -> idSalida:'+this._modLineaArticulo.IdSalida+' -- idArticulo:'+this._modLineaArticulo.IdArticulo)
+    this.popUpVisibleCalculoStock = true;
+   }
 }
+
+cerrarCalculoStockDisponible(e) {
+  this.popUpVisibleCalculoStock = false;
+}
+
 
 //#endgion - Gestion de menus y click asociados a los Grid
 
@@ -737,6 +770,16 @@ obtenerFecha(fecha:string):string {
     return '-'
   } else {
     let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4);
+    return strFecha;
+  }    
+}
+
+obtenerFechaHora(fecha:string):string {    
+  if ( (Utilidades.isEmpty(fecha)) || (fecha.substring(0,4) == '1900') || (fecha.substring(0,4) == '1001') || (fecha.substring(0,4) == '1')) {
+    return '-'
+  } else {
+    let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4)
+                + '  '+ fecha.substring(11,16);
     return strFecha;
   }    
 }

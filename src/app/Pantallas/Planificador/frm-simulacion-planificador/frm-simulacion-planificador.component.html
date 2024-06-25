@@ -119,6 +119,7 @@
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>REFERENCIA</u></div>
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>SALIDA</b></div>
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><b>ENTRADA</b></div>
+                        <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>F.PLANIFIC.</u></div>
                         <div class="row" style="height: 30px; font-size: 11px; align-items: center; text-align: right;"><u>ESTADO</u></div>
                     </div>
                 </div>
@@ -202,6 +203,20 @@
     contentTemplate="contentUnidadesLineas">
     <div *dxTemplate="let data of 'contentUnidadesLineas'">
         <app-frm-planificador-und [lineaArticulo]="_modLineaArticulo" (cerrarPopUp)="cerrarEditarUnidadesArticulo($event)"></app-frm-planificador-und>
+    </div>    
+</dx-popup>
+
+<!-- popUp ver calculo stock  -->
+<dx-popup *ngIf="popUpVisibleCalculoStock" #popUpCalculoStock (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="820px" height="640px"
+    [(visible)]="popUpVisibleCalculoStock" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-planificador.str_txtPopupUndCalculoStock', 'Calculo Stock Disponible')}}"
+    contentTemplate="contentCalculoStock">
+    <div *dxTemplate="let data of 'contentCalculoStock'">
+        <app-frm-mostrar-calculo-stock 
+            [_salida]="_stockSalida" [_articulo]="_stockArticulo" [_simulacion]="true" [_titulo]="_stockTitulo"
+            (cerrarPopUp)="cerrarCalculoStockDisponible($event)">
+        </app-frm-mostrar-calculo-stock>
     </div>    
 </dx-popup>
 
