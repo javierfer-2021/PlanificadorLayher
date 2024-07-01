@@ -66,7 +66,6 @@ colsArts: Array<ColumnDataGrid> = [
   { dataField: 'Unidades',
     caption: 'Stock I.',
     cssClass: 'blanco',
-    width:90,
   },
   { dataField: 'IdAlmacen', caption: '', visible: false },
   { dataField: 'NombreAlmacen', caption: '', visible: false },

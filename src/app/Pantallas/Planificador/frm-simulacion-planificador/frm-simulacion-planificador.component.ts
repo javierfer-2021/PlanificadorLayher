@@ -63,63 +63,28 @@ referencia_mostrar: string;
 
 // grid articulos contrato seleccionado
 colsArts: Array<ColumnDataGrid> = [
-  { dataField: 'IdLinea',
-    caption: 'Id Línea',
-    visible: false
-  },
-  { dataField: 'IdSalida',
-    caption: 'Id Salida',
-    visible: false
-  },
+  { dataField: 'IdLinea', caption: 'Id Línea', visible: false },
+  { dataField: 'IdSalida', caption: 'Id Salida', visible: false },
   { dataField: 'IdArticulo',
     caption: 'Cod.Artículo',
   },
   { dataField: 'NombreArticulo',
     caption: 'Descripción',
   },
-  { dataField: 'CantidadDisponible',
-    caption: 'Cantidad Disponible',
-    cssClass: 'blanco',
-    visible: false
-  },
-  { dataField: 'CantidadPedida',
-    caption: 'Cantidad Pedida',
-    visible: false     
-  },
-  { dataField: 'CantidadReservada',
-    caption: 'Cantidad Reservada',
-    visible: false
-  },
-  { dataField: 'FechaActualizacion',
-    caption: 'Fecha Actualización',
-    visible: false
-  },
-  { dataField: 'CantidadDisponible',
-    caption: 'Cantidad Disponible',
-    visible: false
-  },
-  { dataField: 'CantidadDisponible',
-    caption: 'Cantidad Disponible',
-    visible: false
+  { dataField: 'StockInicial',
+  caption: 'Stock I.',
+  visible: true,
   },   
-  { dataField: 'Prioridad',
-    caption: 'Secundario',
-    visible: false
-  },    
-  { dataField: 'Eliminada',
-    caption: 'Eliminada',
-    visible: false
-  },    
-  { dataField: 'Insertada',
-    caption: 'Insertada',
-    visible: false
-  },    
-  { dataField: 'Observaciones',
-    caption: 'Observaciones',
-    visible: false
-  },    
-
-]
+  { dataField: 'CantidadDisponible', caption: 'Cantidad Disponible', cssClass: 'blanco', visible: false },
+  { dataField: 'CantidadPedida', caption: 'Cantidad Pedida', visible: false },
+  { dataField: 'CantidadReservada', caption: 'Cantidad Reservada', visible: false },
+  { dataField: 'FechaActualizacion', caption: 'Fecha Actualización', visible: false },
+  { dataField: 'CantidadDisponible', caption: 'Cantidad Disponible', visible: false }, 
+  { dataField: 'Prioridad', caption: 'Secundario', visible: false },    
+  { dataField: 'Eliminada', caption: 'Eliminada', visible: false },    
+  { dataField: 'Insertada', caption: 'Insertada', visible: false },    
+  { dataField: 'Observaciones', caption: 'Observaciones', visible: false },   
+];
 dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
 
 // grid articulos Contratos Planificados & Unidades
@@ -266,7 +231,7 @@ async getPlanificacion(){
         this.WSDatos_Valido = true;
 
         this.oOfertaSeleccionada = datos.datos.Oferta[0];
-        this.idOferta_mostrar = this.oOfertaSeleccionada.Contrato;
+        this.idOferta_mostrar = this.oOfertaSeleccionada.Contrato + ' - (id:'+this.oOfertaSeleccionada.IdSalida.toString()+')';
         this.fechaAlta_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaAlta.toString());
         this.fechaInicio_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaInicio.toString());
         this.fechaFin_mostrar = this.obtenerFecha(this.oOfertaSeleccionada.FechaFin.toString());
@@ -863,9 +828,12 @@ itemMenuContratosClick(e) {
   if ((e.row.rowType=='data') /*&& (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 1) && (e.row.values[e.columnIndex-1]>0)*/ ) {
     this._stockSalida = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida;
     this._stockArticulo = this.arrayArts[e.rowIndex].IdArticulo;
-    this._stockTitulo = 'CONTRATO: '+ this.arrayCabeceras[Math.floor(e.columnIndex/3)].Contrato + ' | '
-                      + 'ARTICULO:' + this.arrayArts[e.rowIndex].IdArticulo + ' '
-                                    + this.arrayArts[e.rowIndex].NombreArticulo;
+    this._stockTitulo = 'CONTRATO: '+ this.arrayCabeceras[Math.floor(e.columnIndex/3)].Contrato 
+                      + ' (id.: ' + this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida.toString()+') '
+                      + ' | F.Inicio: ' + this.arrayCabeceras[Math.floor(e.columnIndex/3)].FechaInicio.toString()
+                      + '\n'
+                      + 'ARTICULO: ' + this.arrayArts[e.rowIndex].IdArticulo + ' - '
+                                      + this.arrayArts[e.rowIndex].NombreArticulo;                                    
     //alert('ver stock -> idSalida:'+this._modLineaArticulo.IdSalida+' -- idArticulo:'+this._modLineaArticulo.IdArticulo)
     this.popUpVisibleCalculoStock = true;
    }
