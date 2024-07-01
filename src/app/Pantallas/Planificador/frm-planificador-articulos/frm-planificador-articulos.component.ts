@@ -64,8 +64,9 @@ colsArts: Array<ColumnDataGrid> = [
     caption: 'Descripción',
   },
   { dataField: 'Unidades',
-    caption: 'Stock',
+    caption: 'Stock I.',
     cssClass: 'blanco',
+    width:90,
   },
   { dataField: 'IdAlmacen', caption: '', visible: false },
   { dataField: 'NombreAlmacen', caption: '', visible: false },
@@ -641,7 +642,13 @@ onContextMenuPreparing_DataGridUnidades(e) {
   else {
     //e.items = [];
     // menu contextual grid -> ver calcul stock (contrato planificado, col_Stock, /* col_stock>0 */)
-    if ((e.row.rowType=='data') && (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 2) /*&& (e.row.values[e.columnIndex]>0)*/ ) {  
+    if ((e.row.rowType=='data') 
+         //&& (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) // contratos planificados
+         && ((e.columnIndex % 3) == 2)  // columna stock disponible
+         && (e.row.values[(e.columnIndex-2)]>0)  // pedidas > 0
+         //&& (e.row.values[e.columnIndex]>0)   
+       ) 
+    {  
       e.items = [{ text: 'Ver calculo Stock', onItemClick:()=>{this.itemMenuContratosClick(e);} }]; 
     }
   }
