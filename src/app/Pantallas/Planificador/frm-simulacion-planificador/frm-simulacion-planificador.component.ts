@@ -830,7 +830,7 @@ itemMenuContratosClick(e) {
     this._stockArticulo = this.arrayArts[e.rowIndex].IdArticulo;
     this._stockTitulo = 'CONTRATO: '+ this.arrayCabeceras[Math.floor(e.columnIndex/3)].Contrato 
                       + ' (id.: ' + this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida.toString()+') '
-                      + ' | F.Inicio: ' + this.arrayCabeceras[Math.floor(e.columnIndex/3)].FechaInicio.toString()
+                      + ' | F.Inicio: ' +  this.obtenerFecha(this.arrayCabeceras[Math.floor(e.columnIndex/3)].FechaInicio.toString())                      
                       + '\n'
                       + 'ARTICULO: ' + this.arrayArts[e.rowIndex].IdArticulo + ' - '
                                       + this.arrayArts[e.rowIndex].NombreArticulo;                                    
