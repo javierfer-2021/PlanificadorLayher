@@ -59,6 +59,8 @@ arrayUnidadesOfertas = [];
 colsArts: Array<ColumnDataGrid> = [
   { dataField: 'IdArticulo',
     caption: 'Cod.Artículo',
+    visible: true,
+    width: 100,  
   },
   { dataField: 'NombreArticulo',
     caption: 'Descripción',
@@ -66,6 +68,8 @@ colsArts: Array<ColumnDataGrid> = [
   { dataField: 'Unidades',
     caption: 'Stock I.',
     cssClass: 'blanco',
+    visible: true,
+    width: 80,    
   },
   { dataField: 'IdAlmacen', caption: '', visible: false },
   { dataField: 'NombreAlmacen', caption: '', visible: false },
@@ -151,6 +155,7 @@ ConstructorPantalla() {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // Actualizar altura de los grids
+    this.dgArticulos.setModoOrdenarColumna('none');  // eliminar opcion de ordenación en columna titulo -- bug reordenar und. en salidas afectadas
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
     this.alturaDiv = '240px';

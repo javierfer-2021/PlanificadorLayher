@@ -64,12 +64,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   // grid articulos contrato seleccionado
   colsArts: Array<ColumnDataGrid> = [
     { dataField: 'IdLinea', caption: 'Id Línea', visible: false },
-    { dataField: 'IdSalida',
-      caption: 'Id Salida',
-      visible: false
-    },
+    { dataField: 'IdSalida', caption: 'Id Salida', visible: false },
     { dataField: 'IdArticulo',
       caption: 'Cod.Artículo',
+      visible: true,
+      width: 100,
     },
     { dataField: 'NombreArticulo',
       caption: 'Descripción',
@@ -77,6 +76,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     { dataField: 'StockInicial',
       caption: 'Stock I.',
       visible: true,
+      width: 80,
     },      
     { dataField: 'CantidadDisponible', caption: 'Cantidad Disponible', cssClass: 'blanco', visible: false },
     { dataField: 'CantidadPedida', caption: 'Cantidad Pedida', visible: false },
@@ -170,8 +170,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   // para actualizar la altura de btnFooter
   async ngAfterViewInit(): Promise<void> {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-
+    
     // Actualizar altura de los grids
+    this.dgArticulos.setModoOrdenarColumna('none');  // eliminar opcion de ordenación en columna titulo -- bug reordenar und. en salidas afectadas
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
     this.alturaDiv = '240px'; //210
@@ -254,7 +255,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
           // Se configura el grid de artículos
           this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          this.dgConfigArticulos.actualizarConfig(true,false,'standard');
+          this.dgConfigArticulos.actualizarConfig(true,false,'standard');         
           
           // Se configura el grid de las unidades
           let nroCol: number = 0;
@@ -545,22 +546,22 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       case 'IdArticulo':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            a.IdArticulo.localeCompare(b.IdArticulo, 'en', { numeric: true })
+            a.IdArticulo.localeCompare(b.IdArticulo, 'es', { numeric: true })
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            b.IdArticulo.localeCompare(a.IdArticulo, 'en', { numeric: true })
+            b.IdArticulo.localeCompare(a.IdArticulo, 'es', { numeric: true })
           );
         }
         break;
       case 'NombreArticulo':
         if(columnOptionSorted.sortOrder === 'asc') {
           this.arrayArts.sort((a, b) => 
-            a.NombreArticulo.localeCompare(b.NombreArticulo, 'en', { numeric: true })
+            a.NombreArticulo.localeCompare(b.NombreArticulo, 'es', { numeric: true })
           );
         } else {
           this.arrayArts.sort((a, b) => 
-            b.NombreArticulo.localeCompare(a.NombreArticulo, 'en', { numeric: true })
+            b.NombreArticulo.localeCompare(a.NombreArticulo, 'es', { numeric: true })
           );
         }
         break;

@@ -67,13 +67,16 @@ colsArts: Array<ColumnDataGrid> = [
   { dataField: 'IdSalida', caption: 'Id Salida', visible: false },
   { dataField: 'IdArticulo',
     caption: 'Cod.Artículo',
+    visible: true,
+    width: 100,    
   },
   { dataField: 'NombreArticulo',
     caption: 'Descripción',
   },
   { dataField: 'StockInicial',
-  caption: 'Stock I.',
-  visible: true,
+    caption: 'Stock I.',
+    visible: true,
+    width: 80,
   },   
   { dataField: 'CantidadDisponible', caption: 'Cantidad Disponible', cssClass: 'blanco', visible: false },
   { dataField: 'CantidadPedida', caption: 'Cantidad Pedida', visible: false },
@@ -168,6 +171,7 @@ async ngAfterViewInit(): Promise<void> {
   Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
   // Actualizar altura de los grids
+  this.dgArticulos.setModoOrdenarColumna('none');  // eliminar opcion de ordenación en columna titulo -- bug reordenar und. en salidas afectadas
   this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
   this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
   this.alturaDiv = '240px';

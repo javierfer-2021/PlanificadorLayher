@@ -3,7 +3,8 @@
         [focusedRowEnabled]="dgConfig.focusedRowEnabled" 
         [dataSource]="dgConfig.dataSource" [columns]="dgConfig.columnas" [height]="dgConfig.alturaMaxima" 
         [noDataText]="dgConfig.txtDatosVacios" [errorRowEnabled]="false" [columnAutoWidth]="dgConfig.ColumnaAjustable"
-        [allowColumnResizing]="false" [showBorders]="true"         
+        [allowColumnResizing]="false"         
+        [showBorders]="true"         
         [sorting]="{showSortIndexes:false}" 
         [filterRow]="{visible: dgConfig.filterRowVisible}"         
         (onRowClick)="onClick_DataGrid.emit($event)"
@@ -26,6 +27,10 @@
         [pager]="{allowedPageSizes:'auto', displayMode: 'full', infoText: 'Num. registros {2}', showInfo: true, showNavigationButtons:false, visible: false}"
         [paging]="{enabled: false}" 
         (onExporting)="onExporting($event)">
+
+        <dxo-sorting
+            [mode]="modoOrdenarColumna"> <!-- "single" or "multiple" | "none" -->
+        </dxo-sorting>        
 
         <dxo-filter-row [visible]="dgConfig.filterRowVisible">
             <dxo-operation-descriptions 

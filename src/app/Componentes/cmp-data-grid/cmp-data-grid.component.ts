@@ -30,6 +30,7 @@ export class CmpDataGridComponent implements OnInit {
   filtro: any;
   mostrarPanelBusqueda:boolean = false;
   mostrarBotonExportar:boolean = false;
+  modoOrdenarColumna:string = 'single';
   _nombreFichero:string = "";
 
   constructor() { }
@@ -127,4 +128,9 @@ export class CmpDataGridComponent implements OnInit {
   onExporting(e) {
     if (!Utilidades.isEmpty(this._nombreFichero)) {e.fileName=this._nombreFichero}
   }
+
+  public setModoOrdenarColumna(modo:string){
+    this.modoOrdenarColumna = modo;
+  }
+
 }
