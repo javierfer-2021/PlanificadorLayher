@@ -1,0 +1,64 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+            <!-- Titulo -->
+            <div class="row px-1 py-2 titulo">
+                <div class="col pt-1 px-1">
+                    <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-plantilla-stock-buscar.lblTitulo', 'Plantillas Consulta Stock')}} </div>
+                </div>
+                <div class="col-3 pt-0 px-1">
+                    <app-cmd-select-box #sbAlmacenes [dgConfigSB]="sbConfig" (onValueChanged_SelectBox)="onValueChanged_ComboAlmacen()"></app-cmd-select-box>
+                </div>
+                <div class="col-auto pt-0 px-1" style="display: inline-flex;">
+                    <!-- <button type="button" class="btn botonFiltros" [ngClass]="{'btn-success': filtrosActivos, 'btn-outline-secondary': !filtrosActivos}" (click)="seleccionarFiltrosAdicionales()">
+                        <i class="bi bi-funnel-fill"></i>
+                        {{traducir('frm-plantilla-stock.lblBtnFiltros', 'Filtros Especiales')}}                        
+                    </button> -->
+                    <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                        <!-- <i class="bi bi-question-circle-fill"></i> -->
+                        <i class="bi bi-question-circle"></i>
+                    </button>                     
+                </div>                      
+            </div>              
+
+            <!-- grid lista ofertas -->    
+            <div class="row">
+                <div class="col pt-1 px-1">    
+                    <app-cmp-data-grid #dg [dgConfig]="dgConfig" 
+                        (onDoubleClick_DataGrid)="onDoubleClick_DataGrid($event)">
+                    </app-cmp-data-grid>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+
+<!-- popUp filtros adicionales -->
+<!-- *ngIf="popUpVisibleFiltros" -->
+<!-- <dx-popup  #popUpFiltros (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="430px" width="600px"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleFiltros" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-plantilla-stock-buscar.str_txtPopupFiltros', 'Filtros Adicionales')}}"
+    contentTemplate="contentFiltrosAdicionales">
+    <div *dxTemplate="let data of 'contentFiltrosAdicionales'">
+        <app-frm-filtros-buscar [fsalida]="false" (cerrarPopUp)="cerrarFiltrosAdicionales($event)"></app-frm-filtros-buscar>
+    </div>    
+</dx-popup> -->
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-plantilla-stock-buscar'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>

@@ -22,6 +22,8 @@ import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-con
 import { FrmImportarMaestrosComponent } from './Pantallas/Maestros/frm-importar-maestros/frm-importar-maestros.component';
 import { FrmFamiliasComponent } from './Pantallas/Maestros/frm-familias/frm-familias.component';
 import { FrmSubfamiliasComponent } from './Pantallas/Maestros/frm-subfamilias/frm-subfamilias.component';
+import { FrmPlantillaStockBuscarComponent } from './Pantallas/Plantillas/frm-plantilla-stock-buscar/frm-plantilla-stock-buscar.component';
+import { FrmPlantillaStockComponent } from './Pantallas/Plantillas/frm-plantilla-stock/frm-plantilla-stock.component';
 
 import { FrmImportarCsvComponent } from './Pantallas/Ventas/frm-importar-csv/frm-importar-csv.component';
 import { FrmSimulacionPlanificadorComponent } from './Pantallas/Planificador/frm-simulacion-planificador/frm-simulacion-planificador.component'
@@ -44,6 +46,9 @@ const routes: Routes = [
   { path: 'incidencia', component: FrmIncidenciaComponent, canActivate: [AuthGuard] },
 
   { path: 'articulos_stock', component: FrmArticulosStockComponent, canActivate: [AuthGuard] },
+  { path: 'plantillas_stock_buscar', component: FrmPlantillaStockBuscarComponent, canActivate: [AuthGuard] },
+  { path: 'plantillas_stock', component: FrmPlantillaStockComponent, canActivate: [AuthGuard] },
+  
 
   { path: 'planificador', component: FrmPlanificadorComponent, canActivate: [AuthGuard] },
   { path: 'planificador_articulos', component: FrmPlanificadorArticulosComponent, canActivate: [AuthGuard] },

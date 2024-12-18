@@ -657,6 +657,71 @@ export class PlanificadorService {
 
 
   // -------------------------------------------
+  //#region -- PLANTILLAS STOCK ARTICULOS  --
+
+  async getPlantillasStockAlmacen(almacen): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getPlantillasStockAlmacen')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: {IdAlmacen:almacen } };            
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getPlantillasStockAlmacen', body, Utilidades.getHeaders());
+  }  
+
+  async insertarPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+  } 
+
+  async actualizarPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+  } 
+
+  async eliminarPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+  } 
+
+  // ---
+  
+  async getLineasPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+  } 
+
+  async insertarLineasPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+  }  
+
+  async actualizarLineasPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+  }  
+
+  async eliminarLineasPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+  }  
+
+  //#endregion -- PLANTILLAS STOCK ARTICULOS  --
+
+
+
+  // -------------------------------------------
   //#region -- DESCATALOGADOS, SIN USO, EJEMOLOS --
   async cargarDatosCSV_LineasSalidas(fileToUpload: File): Promise<Observable<any>> {
     if(!await Utilidades.establecerConexion('/api/salidas/cargarDatosCSV_LineasOferta')) return;

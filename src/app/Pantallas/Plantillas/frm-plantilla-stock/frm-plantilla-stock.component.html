@@ -1,0 +1,122 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> 
+                    {{traducir('frm-plantilla-stock.lblTitulo', 'Detalles Plantilla Consulta Stock')}}
+                </div>
+            </div>
+			<div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>                 
+        </div>         
+
+        <!-- Formulario Datos Plantilla -->
+        <div class="row pt-2">
+            <div id="form-container" class="formulario">
+                <dx-form id="formPlantilla" #formPlantilla [colCount]="3" [formData]="_plantillaStock" labelMode='static' labelLocation="left" [readOnly]="!modoEdicion">
+                    <!-- <dxi-item itemType="group" caption="" [colCount]="3" [colSpan]="3"> -->
+                        <dxi-item dataField="IdPlantilla" 
+                            [editorOptions]="{disabled: true}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID.PLANTILLA"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="Fecha" [label]="{text:'Fecha Alta'}"
+                            editorType="dxDateBox" 
+                            [editorOptions]="{disabled: true, width: '100%', displayFormat: 'dd/MM/yyyy', type:'date', showClearButton:false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ALTA"></dxi-validation-rule>
+                        </dxi-item> 
+                        <dxi-item itemType="empty" [colSpan]="1"></dxi-item>      
+                        
+                        <dxi-item dataField="NombrePlantilla" 
+                            [colSpan]="2" 
+                            [editorOptions]="{disabled: false}">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo NOMBRE PLANTILLA"></dxi-validation-rule>
+                        </dxi-item>                            
+                        <dxi-item dataField="IdAlmacen" 
+                            editorType="dxSelectBox" 
+                            [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="Descripcion" editorType="dxTextArea" [editorOptions]="{ height: 90 }" [colSpan]="2"></dxi-item>
+
+                        <!-- <dxi-item itemType="button" horizontalAlignment="left"  [buttonOptions]="confirmarButtonOptions"></dxi-item> -->
+                        <!-- <dxi-item itemType="empty" [colSpan]="2"></dxi-item> -->
+                    <!-- </dxi-item> -->
+                </dx-form>
+            </div>
+        </div>
+                  
+        <!-- grid lineas cargadas del CSVs -->    
+        <!-- <div class="row pt-1 px-1 pb-2">
+            <div class="col pt-1 px-1">    
+                <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+            </div>
+        </div>             -->
+
+        <!-- grid con detalles de lineas articulos asociadas a la plantilla -->
+        <div id="noPrint">
+            <hr class="mx-0 mt-2 mb-0">
+            <div class="row m-0 py-0 pb-1 px-1">
+                <div class="col pt-0 pb-0 px-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" style="margin-top: 6px;float:right" (click)="btnInsertarLinea()">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm mx-2" style="margin-top: 6px;float:right" (click)="btnImportarCsv()">
+                        <i class="bi bi-filetype-csv">Importar CSV</i>
+                    </button>                    
+                </div>
+            </div>
+            <div class="row m-0 py-0 px-1">
+                <div class="col pt-0 pb-0 px-2">
+                    <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+<!-- popUp Editar Linea Entrada -->
+<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="350px" width="960px"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleEditarLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-plantilla-stock.str_txtPopupEditarLinea', 'Editar Línea Entrada')}}"
+    contentTemplate="contentEditarLinea">
+    <div *dxTemplate="let data of 'contentEditarLinea'">
+        <app-frm-compra-lineas [linea]="lineaSeleccionada" (cerrarPopUp)="cerrarEditarLinea($event)"></app-frm-compra-lineas>
+    </div>    
+</dx-popup>
+
+<!-- popUp para seleccion de articulo  -->
+<dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    contentTemplate="contentSeleccionarArticulo">
+    <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
+        <app-frm-articulos-buscar [idAlmacen]="-1" [solicitarUnidades]=false (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+    </div>    
+</dx-popup>
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-plantilla-stock'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>

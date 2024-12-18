@@ -36,6 +36,7 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   botonIncidencias: BotonMenu = { icono: './assets/icons/atencion.svg', texto: 'Gestión Incidencias', ruta: '', nombre: 'botonIncidencias', notificacion: 0, desactivado: false, accion: () => { } };
   
   botonStock: BotonMenu = { icono: './assets/icons/stock.svg', texto: 'Ver Articulos-Stock', ruta: '', nombre: 'botonStock', notificacion: 0, desactivado: false, accion: () => { } };
+  botonPlantillaStock: BotonMenu = { icono: './assets/icons/Inventario A_B.svg', texto: 'Plantillas Consulta Stock', ruta: '', nombre: 'botonPlantillaStock', notificacion: 0, desactivado: false, accion: () => { } };
   
   botonUsuarios: BotonMenu = { icono: './assets/icons/usuario.svg', texto: 'Gestión Usuarios', ruta: '', nombre: 'botonUsuarios', notificacion: 0, desactivado: false, accion: () => { } };
   botonConfiguracion: BotonMenu = { icono: './assets/icons/configuracion.svg', texto: 'Configuración', ruta: '', nombre: 'botonConfiguracion', notificacion: 0, desactivado: false, accion: () => { } };
@@ -63,6 +64,7 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonComprasImportar.accion = () => { this.router.navigate(['compra_importar']); };
     this.botonIncidencias.accion = () => { this.router.navigate(['incidencia-buscar']); };
     this.botonStock.accion = () => { this.router.navigate(['articulos_stock']); };
+    this.botonPlantillaStock.accion = () => { this.router.navigate(['plantillas_stock_buscar']); };
     this.botonUsuarios.accion = () => { this.router.navigate(['usuario_buscar']); };
     this.botonConfiguracion.accion = () => { this.router.navigate(['configuracion']); };
     this.botonIniciarPeriodo.accion = () => { this.router.navigate(['importar_maestros']); };
