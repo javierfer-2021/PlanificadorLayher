@@ -7,6 +7,8 @@ export class PlantillaStock {
     Fecha:Date;
     Descripcion:string;
     Lineas : Array<PlantillaStockLinea> = [];
+    // campo aux. Fecha calculo (solo uso en pantalla calculo stock plantilla)
+    FechaCalculo:Date;
   }
 
 
@@ -14,6 +16,15 @@ export class PlantillaStock {
     IdPlantilla:number;
     IdArticulo:string;
     NombreArticulo:string;
-    stockInicial:number;
+    StockInicial:number;
     UndDisponibles:number;
+  }
+
+  // clase utilizada para importar fichero CSV
+  export class LineasCSV {
+    IdArticulo: string;
+    NombreArticulo: string;
+    Procesado: boolean; 
+    Error: boolean;
+    Aviso: string;  
   }

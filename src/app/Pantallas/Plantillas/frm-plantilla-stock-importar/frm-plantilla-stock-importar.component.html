@@ -1,0 +1,88 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-plantilla-stock-importar.lblTitulo', 'Importador Artículos Plantilla Calculo Stock')}} </div>
+            </div>
+			<!-- 
+            <div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div> 
+            -->
+        </div>  
+
+        <!-- Información basica Plantilla (cabecera) -->
+        <div>  
+            <div class="row pt-2">
+                <div id="form-container" class="formulario">
+                    <dx-form id="formPlantillaStock" #formPlantillaStock [colCount]="6" [formData]="_plantillaStock" labelMode='static' labelLocation="left" [readOnly]="true" (onContentReady)="formReady()">
+                        <dxi-item dataField="IdPlantilla" [label]="{text:'Id.Plantilla'}" [colSpan]="1" [editorOptions]="{disabled: true}"></dxi-item>
+                        <dxi-item dataField="NombrePlantilla" [label]="{text:'Nombre'}" [colSpan]="3" [editorOptions]="{disabled: true}"></dxi-item>
+                        <dxi-item dataField="NombreAlmacen" [label]="{text:'Almacen'}" [colSpan]="2" [editorOptions]="{disabled: true}"></dxi-item>
+                        <!-- <dxi-item itemType="empty" [colSpan]="1"></dxi-item> -->
+                    </dx-form>
+                </div>
+            </div>
+
+            <hr style="margin: 0.5rem 0;">            
+            <div class="row px-1">
+                <!-- <div class="col-10 px-1 pt-1">
+                    <div class="row px-2"><input type="file" accept=".csv" (change)="guardarCsv($event.target.files)"></div>               
+                </div>
+                <div class="col-2 px-1 pt-1">
+                    <button class="btn btn-primary" style="float: right;" (click)="cargarDatos()" type="submit">Cargar Fichero</button>
+                </div> -->
+                <div class="col px-1 pt-1">
+                    <div class="row px-2">
+                        <input type="file" #FicheroCSV id="txtFicheroCSV" accept=".csv" (change)="leerFicheroCSV_2_Array($event)">
+                    </div>               
+                </div>
+                <div class="col-auto px-1 pt-1">
+                    <!-- <button class="btn btn-primary btn-sm" style="float: right; height: 30px;" (click)="fileReset()" type="submit"><i class="bi bi-x-circle-fill px-1"></i>Limpiar fichero</button> -->
+                    <div class="brn-group"  style="float: right;" role="group">
+                        <button class="btn btn-primary btn-sm mx-2" (click)="fileReset()" type="submit"><i class="bi bi-x-circle-fill px-1"></i>Limpiar fichero</button>
+                        <a href="assets/plantillas/plantilla_importacion_lineas.csv" target="_blank">
+                            <button class="btn btn-secondary btn-sm me-1"><i class="bi bi-file-earmark-arrow-down px-1"></i>Descargar Plantilla</button>
+                        </a>
+                    </div>
+                </div>                
+            </div>            
+         
+                  
+            <!-- grid lineas venta cargadas del CSVs -->    
+            <div class="row px-2 pt-1">
+                <div class="col pt-1 px-1">    
+                    <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+                </div>
+            </div>                       
+        </div>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-venta-buscar.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-plantilla-stock-importar'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
+    [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" 
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+

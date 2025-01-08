@@ -1,3 +1,4 @@
+//** PANTALLA QUE BUSCA Y MUESTRA ARTICULOS Y STOCK POR ALMACEN */
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, Input, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
@@ -186,8 +187,8 @@ export class FrmArticulosBuscarComponent implements OnInit {
           // asignar valores devuletos
           this.arrayStockArticulos = datos.datos;
           this.dgConfig = new DataGridConfig(this.arrayStockArticulos, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          if (this.arrayStockArticulos.length>0) { this.dgConfig.actualizarConfig(true,false, 'virtual',true, true);}
-          else { this.dgConfig.actualizarConfig(true,false, 'standard'); }
+          if (this.arrayStockArticulos.length>50) { this.dgConfig.actualizarConfig(true,false, 'virtual',true,true);}
+          else { this.dgConfig.actualizarConfig(true,false, 'standard',true,true); }
           this.loadIndicatorVisible = false;
         }
         else {

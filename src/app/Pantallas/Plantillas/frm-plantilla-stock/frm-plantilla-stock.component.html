@@ -103,10 +103,21 @@
 <dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
     [fullScreen]="false" 
     [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
-    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Artículo')}}"
     contentTemplate="contentSeleccionarArticulo">
     <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
-        <app-frm-articulos-buscar [idAlmacen]="-1" [solicitarUnidades]=false (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+        <app-frm-articulos-buscar [idAlmacen]="_plantillaStock.IdAlmacen" [solicitarUnidades]=false (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+    </div>    
+</dx-popup>
+
+<!-- popUp para importacion fichero csv  -->
+<dx-popup *ngIf="popUpVisibleImportarCSV" #popUpImportarCSV (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleImportarCSV" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-plantilla-stock.str_txtPopupImportarCSV', 'Importar Artículos Plantilla Stock')}}"
+    contentTemplate="contentImportarCSV">
+    <div *dxTemplate="let data of 'contentImportarCSV'">
+        <app-frm-plantilla-stock-importar [_plantilla]="_plantillaStock" (cerrarPopUp)="cerrarImportarCSV($event)"></app-frm-plantilla-stock-importar>
     </div>    
 </dx-popup>
 

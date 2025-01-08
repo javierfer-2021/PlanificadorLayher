@@ -40,9 +40,9 @@ export class FrmPlantillaStockComponent implements OnInit {
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-plantilla-stock.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-plantilla-stock.btnEditar', 'Editar Plantilla'), posicion: 2, accion: () => {this.btnEditarEntrada()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-plantilla-stock.btnInsertar', 'Nueva Plantilla'), posicion: 3, accion: () => {this.btnCancelarEntrada()}, tipo: TipoBoton.secondary },    
-    { icono: '', texto: this.traducir('frm-plantilla-stock.btnConfirmar', 'Eliminar Plantilla'), posicion: 4, accion: () => {this.btnConfirmarEntrada()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-plantilla-stock.btnEditar', 'Editar Plantilla'), posicion: 2, accion: () => {this.btnEditarPlantilla()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-plantilla-stock.btnInsertar', 'Nueva Plantilla'), posicion: 3, accion: () => {this.btnInsertarPlantilla()}, tipo: TipoBoton.secondary },    
+    { icono: '', texto: this.traducir('frm-plantilla-stock.btnConfirmar', 'Eliminar Plantilla'), posicion: 4, accion: () => {this.btnEliminarPlantilla()}, tipo: TipoBoton.secondary },
   ];
   
   WSDatos_Validando: boolean = false;
@@ -130,8 +130,8 @@ export class FrmPlantillaStockComponent implements OnInit {
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
   // botones acciones formulario
-  confirmarButtonOptions: any;
-  cancelarButtonOptions: any;
+  // confirmarButtonOptions: any;
+  // cancelarButtonOptions: any;
 
   //popUp Editar Lineas
   @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
@@ -143,6 +143,10 @@ export class FrmPlantillaStockComponent implements OnInit {
   @ViewChild('popUpArticulos', { static: false }) popUpArticulos: DxPopupComponent;
   popUpVisibleArticulos:boolean = false;
   popUpTitulo:string = "Selección Articulo";
+
+  //popUp Importar CSV 
+  @ViewChild('popUpImportarCSV', { static: false }) popUpImportarCSV: DxPopupComponent;
+  popUpVisibleImportarCSV:boolean = false;
 
   //popUp Ayuda Pantalla
   @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
@@ -167,35 +171,38 @@ export class FrmPlantillaStockComponent implements OnInit {
     }
 
     // botones acciones formulario
-    this.confirmarButtonOptions = {
-      icon: 'add',
-      text: 'Confirmar',
-      type: 'success',
-      visible: this.modoEdicion,      
-      onClick: () => {
-        alert('Confirmar');
-        // this.employee.Phones.push('');
-        // this.phoneOptions = this.getPhonesOptions(this.employee.Phones);
-      },
-    };     
+    // this.confirmarButtonOptions = {
+    //   icon: 'add',
+    //   text: 'Confirmar',
+    //   type: 'success',
+    //   visible: this.modoEdicion,      
+    //   onClick: () => {
+    //     alert('Confirmar');
+    //     // this.employee.Phones.push('');
+    //     // this.phoneOptions = this.getPhonesOptions(this.employee.Phones);
+    //   },
+    // };     
 
   }
 
+  cargarDatosPantalla(){
+    this.cargarCombos();
+    if (!this.modoInsercion) {
+      setTimeout(() => {this.cargarLineasPlantilla();},1500);
+    }    
+  }
 
   ngOnInit(): void {
-    this.personalizarBotonesAccion()
-    this.cargarCombos();
-    setTimeout(() => {this.cargarLineasPlantilla();},2000);
   }
 
   ngAfterViewInit(): void {
+    this.cargarDatosPantalla();
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-    // redimensionar grid, popUp
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
     }, 200);  
     // control estado botones (llamada en modo insercion)
-    this.setModoEdicion(this.modoInsercion);
+    this.setModoEdicion(this.modoInsercion);    
     // foco 
     this.formPlantilla.instance.getEditor('NombrePlantilla').focus();
     // eliminar error debug ... expression has changed after it was checked.
@@ -273,6 +280,33 @@ export class FrmPlantillaStockComponent implements OnInit {
     );
   } 
 
+  async insertarPlantilla(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.insertarPlantillaStock(this._plantillaStock)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSInsertarPlantilla','Plantilla Consulta Stock Insertada'),'success',1000);                     
+          // datos plantilla insertada
+          this._plantillaStock = datos.datos.Cabecera[0];          
+          // lineas Plantilla
+          this.arrayLineasPlantilla = datos.datos.Lineas;
+          this.dgConfigLineas = new DataGridConfig(this.arrayLineasPlantilla, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);
+          // ajuste interfaz
+          this.setModoEdicion(false);
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSInsertarPlantilla','Error WS Insertando Plantilla')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-plantilla-stock');
+      }
+    );
+  } 
+
   async actualizarPlantilla(){
     if(this.WSDatos_Validando) return;
 
@@ -300,48 +334,47 @@ export class FrmPlantillaStockComponent implements OnInit {
     // );
   } 
 
+  async eliminarPlantilla(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.eliminarPlantillaStock(this._plantillaStock.IdPlantilla)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSEliminarPlantilla','Plantilla Consulta Stock Eliminada'),'success',1000);                     
+          // datos plantilla eliminada
+          this._plantillaStock = null;
+          this.arrayLineasPlantilla = [];
+          // salir
+          this.btnSalir();
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSEliminarPlantilla','Error WS Eliminar Plantilla')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-plantilla-stock');
+      }
+    );
+  } 
+
   //#endregion
 
+
+  //#region -- botones acciones principales 
   
   btnSalir() {
     this.location.back();
   }
-
-  btnEditarEntrada(){
-    // copiar entrada actual a var_temp (posibilidad cancelar)
-    this._plantillaStockCopia = Object.assign({},this._plantillaStock);
-    // edicion
-    this.setModoEdicion(true);    
-  }
-
-  setModoEdicion(editar:boolean){
-    this.modoEdicion = editar;
-    this.cols[0].visible = editar;        
-    this.dg.DataGrid.instance.option('columns',this.cols);
-
-    // ajuste dinamico de botones acciones segun modo edicion    
-    if (editar) {
-      this.btnAciones[0].texto = this.traducir('frm-plantilla-stock.btnCancelar', 'Cancelar');      
-      this.btnAciones[0].accion = () => {this.btnCancelar()};
-      this.btnAciones[1].texto = this.traducir('frm-plantilla-stock.btnGuardar', 'Guardar');
-      this.btnAciones[1].accion = () => {this.btnGuardar()};
-      this.btnAciones[1].tipo= TipoBoton.success;
-    } else {
-      this.btnAciones[0].texto = this.traducir('frm-plantilla-stock.btnSalir', 'Salir');
-      this.btnAciones[0].accion = () => {this.btnSalir()};
-      this.btnAciones[1].texto = this.traducir('frm-plantilla-stock.btnEditar', 'Editar Plantilla');
-      this.btnAciones[1].accion = () => {this.btnEditarEntrada()};
-      this.btnAciones[1].tipo= TipoBoton.secondary;
-      this.personalizarBotonesAccion();
-    }
-    this.btnAciones[2].visible = !editar;
-    this.btnAciones[3].visible = !editar;
-  }
-
+  
   btnCancelar(){
-    // recuperar datos entrada previa a cambios
-    this._plantillaStock = this._plantillaStockCopia
-    this.setModoEdicion(false);      
+    if (this.modoInsercion) {
+      this.btnSalir();
+    } else {
+      // recuperar datos entrada previa a cambios
+      this._plantillaStock = this._plantillaStockCopia
+      this.setModoEdicion(false);      
+    }
   }
 
   btnGuardar(){
@@ -353,50 +386,47 @@ export class FrmPlantillaStockComponent implements OnInit {
     else {
       // validacion especifica adicional de datos
       if (this.validarDatosFormulario()) {
-        this.actualizarPlantilla();
-        this.setModoEdicion(false);
+        if (this.modoInsercion) { this.insertarPlantilla(); } 
+        else { this.actualizarPlantilla();}
+        //this.setModoEdicion(false);
       }
     }      
   }
 
-  async btnCancelarEntrada(){
-    // let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-plantilla-stock.MsgCancelar', '¿Esta seguro que desea CANCELAR el contrato de Entrada seleccionado?<br>Aviso: Se realizara re-planificación de las salidas'), this.traducir('frm-plantilla-stock.TituloCancelar', 'Cancelar Entrada'));  
-    // if (!continuar) return;
-    // else {
-    //   this._plantillaStock.IdEstado=99;
-    //   this._plantillaStock.Confirmada=false;
-    //   this.ActualizarPlantilla();
-    // }     
+  btnEditarPlantilla(){
+    // copiar entrada actual a var_temp (posibilidad cancelar)
+    this._plantillaStockCopia = Object.assign({},this._plantillaStock);
+    // interfaz modo edicion
+    this.setModoEdicion(true);    
   }
 
-  async btnDesCancelarEntrada(){
-    // let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-plantilla-stock.MsgDesCancelar', '¿Esta seguro que desea ACTIVAR el contrato de Entrada seleccionado?<br>Aviso: Se realizara re-planificación de las salidas'), this.traducir('frm-plantilla-stock.TituloDESCancelar', 'DES-Cancelar Entrada'));  
-    // if (!continuar) return;
-    // else {
-    //   this._plantillaStock.IdEstado=1;
-    //   this.ActualizarPlantilla();
-    // }      
+  btnInsertarPlantilla(){
+    // copiar entrada actual a var_temp (posibilidad cancelar)
+    this._plantillaStockCopia = Object.assign({},this._plantillaStock);
+    // nuevo registro    
+    this.modoInsercion = true;
+    this._plantillaStock.IdPlantilla = -1;
+    this._plantillaStock.IdAlmacen = -1;
+    this._plantillaStock.Fecha = new Date();
+    // interfaz modo edicion
+    this.setModoEdicion(true);
   }
 
-  async btnConfirmarEntrada(){
-    // let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-plantilla-stock.MsgConfirmar', '¿Esta seguro que desea CONFIRMAR con fecha de hoy el contrato de Entrada seleccionado?'), this.traducir('frm-plantilla-stock.TituloConfirmar', 'Confirmar Entrada'));  
-    // if (!continuar) return;
-    // else {
-    //   this._plantillaStock.Confirmada=true;
-    //   this._plantillaStock.FechaConfirmada= new Date();
-    //   this.ActualizarPlantilla();
-    // }     
+  async btnEliminarPlantilla(){
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-plantilla-stock.MsgEliminarConfirmar', '¿Esta seguro que desea Eliminar la Plantilla Seleccionada?'), this.traducir('frm-plantilla-stock.TituloEliminar', 'Eliminar Plantilla'));  
+    if (!continuar) return;
+    else {
+      this.eliminarPlantilla();
+    }       
   }
+  
+  //#endregion -- botones acciones principales 
 
-  async btnDesConfirmarEntrada(){
-    // let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-plantilla-stock.MsgDesConfirmar', '¿Esta seguro que desea DES-Confirmar el contrato de Entrada seleccionado?'), this.traducir('frm-plantilla-stock.TituloDESConfirmar', 'DES-Confirmar Entrada'));  
-    // if (!continuar) return;
-    // else {
-    //   this._plantillaStock.Confirmada=false;
-    //   this._plantillaStock.FechaConfirmada=null;
-    //   this.ActualizarPlantilla();
-    // }       
-  }
+
+
+
+
+
 
   btnEditarLineaEntrada(data:any){    
     // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
@@ -438,26 +468,6 @@ export class FrmPlantillaStockComponent implements OnInit {
     return true;
   }
 
-  personalizarBotonesAccion(){
-    // // personalizacion boton Cancelar/DEScancelar segun valor estado salida mostrada
-    // if (this._plantillaStock.IdEstado==99) {
-    //   this.btnAciones[2].texto='DES-Cancelar';
-    //   this.btnAciones[2].accion= () => {this.btnDesCancelarEntrada()}      
-    // } else {
-    //   this.btnAciones[2].texto='Marcar Cancelado';
-    //   this.btnAciones[2].accion = () => {this.btnCancelarEntrada()}
-    // }
-
-    // // personalizacion boton Planificar/DESplanificar segun valor planificar salida mostrada
-    // if (this._plantillaStock.Confirmada) {
-    //   this.btnAciones[3].texto='DES-Confirmar';
-    //   this.btnAciones[3].accion= () => {this.btnDesConfirmarEntrada()}      
-    // } else {
-    //   this.btnAciones[3].texto='Confirmar';
-    //   this.btnAciones[3].accion = () => {this.btnConfirmarEntrada()}
-    // }    
-  }
-
   setFormFocus(campo:string){
     try {
       const editor = this.formPlantilla.instance.getEditor(campo);
@@ -466,14 +476,33 @@ export class FrmPlantillaStockComponent implements OnInit {
     catch {} 
   }
 
-  mostrarAyuda(){
-    this.popUpVisibleAyuda = true;
+  setModoEdicion(editar:boolean){
+    this.modoEdicion = editar;
+    this.cols[0].visible = editar;        
+    this.dg.DataGrid.instance.option('columns',this.cols);
+
+    // ajuste dinamico de botones acciones segun modo edicion    
+    if (editar) {
+      this.btnAciones[0].texto = this.traducir('frm-plantilla-stock.btnCancelar', 'Cancelar');      
+      this.btnAciones[0].accion = () => {this.btnCancelar()};
+      this.btnAciones[1].texto = this.traducir('frm-plantilla-stock.btnGuardar', 'Guardar');
+      this.btnAciones[1].accion = () => {this.btnGuardar()};
+      this.btnAciones[1].tipo= TipoBoton.success;
+    } else {
+      this.btnAciones[0].texto = this.traducir('frm-plantilla-stock.btnSalir', 'Salir');
+      this.btnAciones[0].accion = () => {this.btnSalir()};
+      this.btnAciones[1].texto = this.traducir('frm-plantilla-stock.btnEditar', 'Editar Plantilla');
+      this.btnAciones[1].accion = () => {this.btnEditarPlantilla()};
+      this.btnAciones[1].tipo= TipoBoton.secondary;
+    }
+    this.btnAciones[2].visible = !editar;
+    this.btnAciones[3].visible = !editar;
   }
 
-  cerrarAyuda(e){
-    this.popUpVisibleAyuda = false;
-  }
 
+  btnInsertarLinea(){
+    this.btnBuscarArticulo();
+  }
 
   btnBuscarArticulo(){
     this.popUpVisibleArticulos = true;
@@ -481,16 +510,40 @@ export class FrmPlantillaStockComponent implements OnInit {
 
   cerrarSeleccionarArticulo(e){    
     if (e != null) {
-      alert(e.IdArticulo+' - '+e.NombreArticulo);
-      // this.IdArticulo = e.IdArticulo;
-      // this.str_txtArticulo = e.NombreArticulo;
+      let linea = new PlantillaStockLinea();
+      linea.IdPlantilla = this._plantillaStock.IdPlantilla;
+      linea.IdArticulo = e.IdArticulo;
+      linea.NombreArticulo = e.NombreArticulo;
+      linea.StockInicial = e.Unidades;
+      // insertar linea
+      // ws VS array.add
+      this.arrayLineasPlantilla.push(linea);
     }
     this.popUpVisibleArticulos = false;
   }
 
-  btnImportarCsv(){}
+  btnImportarCsv(){
+    this.popUpVisibleImportarCSV = true;
+  }
 
-  btnInsertarLinea(){}
+  cerrarImportarCSV(e){    
+    if (e != null) {
+      alert(e.IdArticulo+' - '+e.NombreArticulo);
+      // this.IdArticulo = e.IdArticulo;
+      // this.str_txtArticulo = e.NombreArticulo;
+    }
+    this.popUpVisibleImportarCSV = false;
+  }
+
+
+  mostrarAyuda(){
+    this.popUpVisibleAyuda = true;
+  }
+
+  cerrarAyuda(e){
+    this.popUpVisibleAyuda = false;
+  }
+  
 
 }
 

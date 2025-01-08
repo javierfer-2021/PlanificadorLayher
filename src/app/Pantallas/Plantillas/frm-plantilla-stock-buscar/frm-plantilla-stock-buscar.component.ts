@@ -44,7 +44,7 @@ export class FrmPlantillaStockBuscarComponent implements OnInit {
     { icono: '', texto: this.traducir('frm-plantilla-stock-buscar.btnSalir', 'Salir'), posicion: 1, accion: () => {this.salir()}, tipo: TipoBoton.danger },
     { icono: '', texto: this.traducir('frm-plantilla-stock-buscar.btnInsertar', 'Nueva Plantilla'), posicion: 2, accion: () => {this.btnInsertarPlantilla()}, tipo: TipoBoton.secondary },
     { icono: '', texto: this.traducir('frm-plantilla-stock-buscar.btnDetalles', 'Ver Detalles'), posicion: 3, accion: () => {this.btnVerDetallesPlantilla()}, tipo: TipoBoton.secondary },
-    { icono: '', texto: this.traducir('frm-plantilla-stock-buscar.btnConsultarStock', 'Consultar Stock'), posicion: 4, accion: () => {this.verPantallaConsultaStock()}, tipo: TipoBoton.secondary },
+    { icono: '', texto: this.traducir('frm-plantilla-stock-buscar.btnConsultarStock', 'Consultar Stock Disponible'), posicion: 4, accion: () => {this.verPantallaConsultaStock()}, tipo: TipoBoton.success },
   ];
 
   WSDatos_Validando: boolean = false;
@@ -78,9 +78,10 @@ export class FrmPlantillaStockBuscarComponent implements OnInit {
       visible: false,
     },      
     {
-      dataField: 'IdNombrePlantilla',
+      dataField: 'NombrePlantilla',
       caption: this.traducir('frm-plantilla-stock-buscar.colNombrePlantilla','Nombre Plantilla'),
       visible: true,
+      width: 300,
     },      
     {
       dataField: 'IdAlmacen',
@@ -91,17 +92,20 @@ export class FrmPlantillaStockBuscarComponent implements OnInit {
       dataField: 'NombreAlmacen',
       caption: this.traducir('frm-plantilla-stock-buscar.colNombreAlmacen','Almacen'),
       visible: true,
+      width: 150,
+    },  
+    {
+      dataField: 'Descripcion',
+      caption: this.traducir('frm-plantilla-stock-buscar.colDescripcion','Descripcion'),
+      visible: true,
     },
     {
       dataField: 'Fecha',
       caption: this.traducir('frm-plantilla-stock-buscar.colFecha','Fecha'),
       visible: true,
-    },   
-    {
-      dataField: 'Descripcion',
-      caption: this.traducir('frm-plantilla-stock-buscar.colDescripcion','Descripcion'),
-      visible: true,
-    },      
+      dataType: 'date',
+      width: 120,
+    },           
   ];
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
 
@@ -260,7 +264,17 @@ export class FrmPlantillaStockBuscarComponent implements OnInit {
 
 
   verPantallaConsultaStock() {
-    this.router.navigate(['compra_importar']);
+    if(Utilidades.ObjectNull(this.dg.objSeleccionado())) {
+      Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock-buscar.msgErrorSelectLinea','Debe seleccionar una Plantilla'));
+      return;
+    } 
+    else {
+      let vPlantilla : PlantillaStock =  this.dg.objSeleccionado(); 
+      const navigationExtras: NavigationExtras = {
+        state: { PantallaAnterior: 'frm-plantilla-stock-buscar', Plantilla: vPlantilla }
+      };      
+      this.router.navigate(['plantillas_stock_calcular'], navigationExtras);  
+    }   
   }
 
   //#endregion
