@@ -18,13 +18,18 @@ export class PlantillaStock {
     NombreArticulo:string;
     StockInicial:number;
     UndDisponibles:number;
+    // campos aux. Uso para control importacion CSV
+    Procesado: boolean; 
+    Error: boolean;
+    Mensaje: string;      
   }
 
   // clase utilizada para importar fichero CSV
-  export class LineasCSV {
+  export class LineaCSV {
     IdArticulo: string;
     NombreArticulo: string;
+    StockInicial:number;
     Procesado: boolean; 
     Error: boolean;
-    Aviso: string;  
+    Mensaje: string;  
   }

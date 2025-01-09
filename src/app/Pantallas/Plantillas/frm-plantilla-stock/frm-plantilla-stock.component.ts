@@ -46,7 +46,7 @@ export class FrmPlantillaStockComponent implements OnInit {
   ];
   
   WSDatos_Validando: boolean = false;
-  WSEnvioCsv_Valido: boolean = false;
+  //WSEnvioCsv_Valido: boolean = false;
 
   _plantillaStock: PlantillaStock = new(PlantillaStock);
   arrayAlmacenes: Array<Almacen> = [];
@@ -62,32 +62,25 @@ export class FrmPlantillaStockComponent implements OnInit {
     {
       dataField: '',
       caption: '',
-      visible: false,
+      visible: true,
       type: "buttons",
       width: 65,
-      //alignment: "center",
+      alignment: "center",
       fixed: true,
       fixedPosition: "right",
       buttons: [ 
-        { icon: "edit",
-          hint: "Editar Linea",
-          visible: false,
-          onClick: (e) => { 
-            this.btnEditarLineaEntrada(e.row); 
-          }
-        },
         { icon: "add",
           hint: "Añadir Linea",
           visible: true,
           onClick: (e) => { 
-            this.btnEditarLineaEntrada(e.row); 
+            this.btnInsertarLineaPlantilla(e.row); 
           }
         },           
         { icon: "trash",
           hint: "Eliminar Linea",
           visible: true,
           onClick: (e) => { 
-            this.btnEditarLineaEntrada(e.row); 
+            this.btnEliminarLineaPlantilla(e.row); 
           }
         },        
       ]
@@ -96,12 +89,7 @@ export class FrmPlantillaStockComponent implements OnInit {
       dataField: 'IdPlantilla',
       caption: this.traducir('frm-plantilla-stock.colIdPlantilla','Id.Plantilla'),      
       visible: false,
-    }, 
-    // {
-    //   dataField: 'IdLinea',
-    //   caption: this.traducir('frm-plantilla-stock.colIdLinea','Linea'),
-    //   visible: false,
-    // },     
+    },     
     {
       dataField: 'IdArticulo',
       caption: this.traducir('frm-plantilla-stock.colIdArticulo','Articulo'),
@@ -129,14 +117,8 @@ export class FrmPlantillaStockComponent implements OnInit {
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 100, '', );
 
-  // botones acciones formulario
-  // confirmarButtonOptions: any;
-  // cancelarButtonOptions: any;
-
-  //popUp Editar Lineas
-  @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
-  popUpVisibleEditarLinea:boolean = false;
-  lineaSeleccionada: EntradaLinea = new EntradaLinea();
+  //gestion lineas del grid LineasPlantillaStock
+  lineaSeleccionada: PlantillaStockLinea = new PlantillaStockLinea();
   lineaSeleccionadaIndex: number = null;
 
   //popUp Seleccion de Articulos
@@ -169,40 +151,27 @@ export class FrmPlantillaStockComponent implements OnInit {
       this._plantillaStock = nav.Plantilla;
       this.modoInsercion = (this._plantillaStock.IdPlantilla==-1);
     }
-
-    // botones acciones formulario
-    // this.confirmarButtonOptions = {
-    //   icon: 'add',
-    //   text: 'Confirmar',
-    //   type: 'success',
-    //   visible: this.modoEdicion,      
-    //   onClick: () => {
-    //     alert('Confirmar');
-    //     // this.employee.Phones.push('');
-    //     // this.phoneOptions = this.getPhonesOptions(this.employee.Phones);
-    //   },
-    // };     
-
   }
 
   cargarDatosPantalla(){
     this.cargarCombos();
-    if (!this.modoInsercion) {
-      setTimeout(() => {this.cargarLineasPlantilla();},1500);
-    }    
+    // if (!this.modoInsercion) {
+    //   setTimeout(() => {this.cargarLineasPlantilla();},1500);
+    // }    
   }
 
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void {
-    this.cargarDatosPantalla();
+  ngAfterViewInit(): void {    
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
     }, 200);  
     // control estado botones (llamada en modo insercion)
     this.setModoEdicion(this.modoInsercion);    
+    // carga datos
+    this.cargarDatosPantalla();
     // foco 
     this.formPlantilla.instance.getEditor('NombrePlantilla').focus();
     // eliminar error debug ... expression has changed after it was checked.
@@ -246,6 +215,9 @@ export class FrmPlantillaStockComponent implements OnInit {
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
           this.arrayAlmacenes = datos.datos.ListaAlmacenes;          
+          // carga secuencial de lineas asociadas a Plantilla en caso no Inserción
+          this.WSDatos_Validando = false;
+          if (!this.modoInsercion) { this.cargarLineasPlantilla(); }           
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSCargarCombos','Error cargando valores Almacenes')); 
         }
@@ -269,7 +241,7 @@ export class FrmPlantillaStockComponent implements OnInit {
           this.dgConfigLineas = new DataGridConfig(this.arrayLineasPlantilla, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
           this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);
         } else {          
-          this.WSEnvioCsv_Valido = false;
+          //this.WSEnvioCsv_Valido = false;
           Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSCargarLineas','Error cargando lineas de la Plantilla')); 
         }
         this.WSDatos_Validando = false;
@@ -282,6 +254,9 @@ export class FrmPlantillaStockComponent implements OnInit {
 
   async insertarPlantilla(){
     if(this.WSDatos_Validando) return;
+    
+    // asociamos a la plantilla las lineas insertadas
+    this._plantillaStock.Lineas = this.arrayLineasPlantilla;
 
     this.WSDatos_Validando = true;
     (await this.planificadorService.insertarPlantillaStock(this._plantillaStock)).subscribe(
@@ -310,28 +285,31 @@ export class FrmPlantillaStockComponent implements OnInit {
   async actualizarPlantilla(){
     if(this.WSDatos_Validando) return;
 
-    // this.WSDatos_Validando = true;
-    // (await this.planificadorService.actualizarPlantilla(this._plantillaStock.IdEntrada,this._plantillaStock.Referencia,this._plantillaStock.FechaPrevista,this._plantillaStock.FechaConfirmada,
-    //                                                  this._plantillaStock.IdEstado,this._plantillaStock.NombreProveedor,this._plantillaStock.Observaciones,
-    //                                                  this._plantillaStock.IdAlmacen,this._plantillaStock.Confirmada, this.arrayLineasPlantilla)).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSEntradaActualizada','Contrato Entrada Actualizado'),'success',1000);                     
-    //       //this._salida = datos.datos[0];
-    //       this.personalizarBotonesAccion();
-    //       // this.arrayLineasSalida = datos.datos.lineas;
-    //       // // Se configura el grid
-    //       // this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-    //       // this.dgConfigLineas.actualizarConfig(true,false,'standard');
-    //     } else {          
-    //       Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSActualizarPlantilla','Error WS Actualizando entrada')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, error => {
-    //     this.WSDatos_Validando = false;
-    //     Utilidades.compError(error, this.router,'frm-plantilla-stock');
-    //   }
-    // );
+    // asociamos a la plantilla las lineas insertadas
+    // this._plantillaStock.Lineas = this.arrayLineasPlantilla;    
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.actualizarPlantillaStock(this._plantillaStock)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSActualizarPlantilla','Plantilla Consulta Stock Actualizada'),'success',1000);                     
+          // datos plantilla actualizada
+          this._plantillaStock = datos.datos.Cabecera[0];          
+          // lineas Plantilla
+          this.arrayLineasPlantilla = datos.datos.Lineas;
+          this.dgConfigLineas = new DataGridConfig(this.arrayLineasPlantilla, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);
+          // ajuste interfaz
+          this.setModoEdicion(false);
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSActualizarPlantilla','Error WS Actualizando Plantilla')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-plantilla-stock');
+      }
+    );
   } 
 
   async eliminarPlantilla(){
@@ -349,6 +327,49 @@ export class FrmPlantillaStockComponent implements OnInit {
           this.btnSalir();
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSEliminarPlantilla','Error WS Eliminar Plantilla')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-plantilla-stock');
+      }
+    );
+  } 
+
+  async insertarLineaPlantilla(lineaPlantilla){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.insertarLineaPlantillaStock(lineaPlantilla)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          // Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSInsertarLineaPlantilla','Linea Plantilla Consulta Stock Insertada'),'success',1000);                     
+          // insertada en BD=OK -> añadimos al array interfaz
+          if (datos.datos[0].Result==0) { this.arrayLineasPlantilla.push(lineaPlantilla); }
+          else { Utilidades.MostrarErrorStr(datos.datos[0].Mensaje); }          
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSInsertarLineaPlantilla','Error WS Insertar Linea Plantilla')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-plantilla-stock');
+      }
+    );
+  } 
+
+  async eliminarLineaPlantilla(lineaPlantilla){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.eliminarLineaPlantillaStock(lineaPlantilla)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          // Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSEliminarLineaPlantilla','Linea Plantilla Consulta Stock Eliminada'),'success',1000);                     
+          // eliminada en BD=OK -> eliminamos del array interfaz
+          this.arrayLineasPlantilla.splice(this.lineaSeleccionadaIndex,1);
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSEliminarLineaPlantilla','Error WS Eliminar Linea Plantilla')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
@@ -424,35 +445,29 @@ export class FrmPlantillaStockComponent implements OnInit {
 
 
 
+  //#region -- gestion lineas grid
 
-
-
-
-  btnEditarLineaEntrada(data:any){    
-    // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-    // this.lineaSeleccionada = this.dg.objSeleccionado();
-    // this.lineaSeleccionadaIndex = this.arrayLineasPlantilla.findIndex(e => e==this.lineaSeleccionada);
-    // //this.lineaSeleccionada.Modificada = false;     
-    // this.popUpVisibleEditarLinea = true;    
+  btnInsertarLineaPlantilla(data:any){    
+    this.btnInsertarLinea();
   }
 
-  cerrarEditarLinea(e){
-    // if (e != null) {     
-    //   if (this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].CantidadPedida != e.CantidadPedida) {
-    //     this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].CantidadPedida = e.CantidadPedida;
-    //   } 
-    //   if (this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].CantidadCancelada != e.CantidadCancelada) {
-    //     this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].CantidadCancelada = e.CantidadCancelada;
-    //   }       
-    //   this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].Excepcion = ( (!Utilidades.isEmpty(e.FechaPrevista)) || (!Utilidades.isEmpty(e.FechaConfirmada)) );
-    //   this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].FechaPrevista = e.FechaPrevista;
-    //   this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].FechaConfirmada = e.FechaConfirmada;
-    //   this.arrayLineasPlantilla[this.lineaSeleccionadaIndex].Modificada = true;         
-    // }
-    // this.lineaSeleccionada = null;
-    // this.popUpVisibleEditarLinea = false;        
+  async btnEliminarLineaPlantilla(data:any){  
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-plantilla-stock.MsgEliminarLineaConfirmar', '¿Esta seguro que desea Eliminar la Linea Seleccionada?'), this.traducir('frm-plantilla-stock.TituloEliminarLinea', 'Eliminar Linea Plantilla'));  
+    if (!continuar) return;
+    else {
+      this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+      this.lineaSeleccionada = this.dg.objSeleccionado();
+      this.lineaSeleccionadaIndex = this.arrayLineasPlantilla.findIndex(e => e==this.lineaSeleccionada);
+      if (this.modoInsercion) {
+        this.arrayLineasPlantilla.splice(this.lineaSeleccionadaIndex,1);
+      } else {
+        this.eliminarLineaPlantilla(this.lineaSeleccionada);
+      }
+    }
   }
-  
+
+  //#endregion -- gestion lineas grid  
+
 
   // validacion estandar del formulario
   validarFormulario():boolean{
@@ -478,8 +493,8 @@ export class FrmPlantillaStockComponent implements OnInit {
 
   setModoEdicion(editar:boolean){
     this.modoEdicion = editar;
-    this.cols[0].visible = editar;        
-    this.dg.DataGrid.instance.option('columns',this.cols);
+    // this.cols[0].visible = editar;        
+    // this.dg.DataGrid.instance.option('columns',this.cols);
 
     // ajuste dinamico de botones acciones segun modo edicion    
     if (editar) {
@@ -509,32 +524,59 @@ export class FrmPlantillaStockComponent implements OnInit {
   }
 
   cerrarSeleccionarArticulo(e){    
+    this.popUpVisibleArticulos = false;
     if (e != null) {
       let linea = new PlantillaStockLinea();
       linea.IdPlantilla = this._plantillaStock.IdPlantilla;
       linea.IdArticulo = e.IdArticulo;
       linea.NombreArticulo = e.NombreArticulo;
       linea.StockInicial = e.Unidades;
-      // insertar linea
-      // ws VS array.add
-      this.arrayLineasPlantilla.push(linea);
+      // check articulo ya incluido en las lineas
+      if (this.existeArticuloEnLineas(linea.IdArticulo)) {
+        Utilidades.MostrarErrorStr('Articulo ya incluido en las Lineas de la Plantilla');
+      } else {
+        // insertar linea (insert=array.add vs Edit)
+        if (this.modoInsercion) {
+          this.arrayLineasPlantilla.push(linea);
+        } else {
+          this.insertarLineaPlantilla(linea);
+        }
+      }
     }
-    this.popUpVisibleArticulos = false;
   }
 
   btnImportarCsv(){
     this.popUpVisibleImportarCSV = true;
   }
 
-  cerrarImportarCSV(e){    
-    if (e != null) {
-      alert(e.IdArticulo+' - '+e.NombreArticulo);
-      // this.IdArticulo = e.IdArticulo;
-      // this.str_txtArticulo = e.NombreArticulo;
-    }
+  cerrarImportarCSV(lineasCSV){    
     this.popUpVisibleImportarCSV = false;
+    // e= lista de articulos importados del CSV
+    if (lineasCSV != null) {
+      // procesar lista
+      for (let i=0; i<lineasCSV.length; i++) {
+        if ((!lineasCSV[i].Error) && (!this.existeArticuloEnLineas(lineasCSV[i].IdArticulo))) {
+          // nueva linesPlantilla
+          let linea = new PlantillaStockLinea();
+          linea.IdPlantilla = this._plantillaStock.IdPlantilla;
+          linea.IdArticulo = lineasCSV[i].IdArticulo;
+          linea.NombreArticulo = lineasCSV[i].NombreArticulo;
+          linea.StockInicial = lineasCSV[i].StockInicial;          
+          // insertar linea (insert=array.add vs Edit)
+          if (this.modoInsercion) {
+            this.arrayLineasPlantilla.push(linea);
+          } else {
+            this.insertarLineaPlantilla(linea);
+          }          
+        }
+      }
+    }    
   }
 
+  existeArticuloEnLineas(idArticulo:string):boolean {
+    let index:number = this.arrayLineasPlantilla.findIndex(e => e.IdArticulo==idArticulo);
+    return (index>=0);
+  }
 
   mostrarAyuda(){
     this.popUpVisibleAyuda = true;

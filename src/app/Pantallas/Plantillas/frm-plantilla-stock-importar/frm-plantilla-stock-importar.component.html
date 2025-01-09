@@ -4,24 +4,23 @@
     <div #pantalla>
 
         <!-- Titulo -->
-        <div class="row px-1 py-2 titulo">
+        <!-- <div class="row px-1 py-2 titulo">
             <div class="col pt-1 px-1">
                 <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-plantilla-stock-importar.lblTitulo', 'Importador Artículos Plantilla Calculo Stock')}} </div>
             </div>
-			<!-- 
+			
             <div class="col-2 pt-0 px-1" style="text-align: end;">
                 <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
                     <i class="bi bi-question-circle"></i>
                 </button>                    
-            </div> 
-            -->
-        </div>  
+            </div>            
+        </div>   -->
 
         <!-- Información basica Plantilla (cabecera) -->
         <div>  
             <div class="row pt-2">
                 <div id="form-container" class="formulario">
-                    <dx-form id="formPlantillaStock" #formPlantillaStock [colCount]="6" [formData]="_plantillaStock" labelMode='static' labelLocation="left" [readOnly]="true" (onContentReady)="formReady()">
+                    <dx-form id="formPlantillaStock" #formPlantillaStock [colCount]="6" [formData]="_plantillaStock" labelMode='static' labelLocation="left" [readOnly]="false">
                         <dxi-item dataField="IdPlantilla" [label]="{text:'Id.Plantilla'}" [colSpan]="1" [editorOptions]="{disabled: true}"></dxi-item>
                         <dxi-item dataField="NombrePlantilla" [label]="{text:'Nombre'}" [colSpan]="3" [editorOptions]="{disabled: true}"></dxi-item>
                         <dxi-item dataField="NombreAlmacen" [label]="{text:'Almacen'}" [colSpan]="2" [editorOptions]="{disabled: true}"></dxi-item>

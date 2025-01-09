@@ -10,7 +10,7 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-import { PlantillaStock, PlantillaStockLinea, LineasCSV } from '../../../Clases/PlantillaStock';
+import { PlantillaStock, PlantillaStockLinea } from '../../../Clases/PlantillaStock';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent, DxTextBoxComponent, DxPopupComponent } from 'devextreme-angular';
 import { locale } from 'devextreme/localization';

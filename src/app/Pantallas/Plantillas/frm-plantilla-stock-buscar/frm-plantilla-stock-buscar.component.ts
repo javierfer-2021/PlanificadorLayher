@@ -49,9 +49,6 @@ export class FrmPlantillaStockBuscarComponent implements OnInit {
 
   WSDatos_Validando: boolean = false;
 
-  // grid lista Entradas
-  // [IdEntrada, IdEntradaERP, Contrato, Referencia, FechaAlta, FechaPrevista, FechaConfirmada, IdEstado, NombreEstado, IdProveedor, IdProveedorERP, NombreProveedor,
-  //  Observaciones, IdAlmacen, NombreAlmacen, IdTipoDocumento, NombreTipoDocumento, Confirmada, NumLineas]
   arrayPlantillasStock: Array<PlantillaStock>;
   cols: Array<ColumnDataGrid> = [
     {
@@ -138,38 +135,21 @@ export class FrmPlantillaStockBuscarComponent implements OnInit {
   { 
     // Asignar localizacion ESPAÑA
     locale('es');
-    // // inicializacion filtros    
-    // this.filtrosAdicionales= new filtrosBusqueda();
-    // this.filtrosAdicionales.mostrarCanceladas=false;
-    // this.filtrosAdicionales.valorContiene=true;
-    // this.filtrosAdicionales.IdArticulo='';
-    // this.filtrosAdicionales.IdFamilia=0;
-    // this.filtrosAdicionales.IdSubfamilia=0;    
-    // this.filtrosAdicionales.otros='';    
-
   }
 
-  ngOnInit(): void {
-    //this.cargarOfertas();
-  }
-
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-
     // configuracion extra del grid -> mostrar fila total registros
     this.dg.mostrarFilaSumaryTotal('IdPlantilla','NombrePlantilla',this.traducir('frm-plantilla-stock-buscar.TotalRegistros','Nº Plantillas: '),'count');
-    //this.dg.habilitarExportar('Compras_Planificador.xlsx');
-
     // redimensionar grid, popUp
     setTimeout(() => {
       this.dg.panelBusqueda(true);
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfig.alturaMaxima));
-    }, 200);
-    
+    }, 200);  
     // seleccion almacen por defecto -> evento cambio carga datos.
-    this.seleccionarAlmacenDefecto();
-    
+    this.seleccionarAlmacenDefecto();    
     // foco
     this.dg.DataGrid.instance.focus();    
     // eliminar error debug ... expression has changed after it was checked.
@@ -303,34 +283,6 @@ export class FrmPlantillaStockBuscarComponent implements OnInit {
     this.cargarPlantillasStock(this.sbAlmacenes.SelectBox.value);
   } 
 
-  // seleccionarFiltrosAdicionales(){
-  //   this.popUpVisibleFiltros = true;
-  // }
-
-  // cerrarFiltrosAdicionales(e){
-  //   if ((e != null) && (this.checkCambioFiltros(e)) ){
-  //     this.filtrosAdicionales.IdArticulo=e.IdArticulo;
-  //     this.filtrosAdicionales.IdFamilia=e.IdFamilia;
-  //     this.filtrosAdicionales.IdSubfamilia=e.IdSubfamilia;
-  //     this.filtrosAdicionales.valorContiene=e.valorContiene;
-  //     this.filtrosAdicionales.mostrarCanceladas=e.mostrarCanceladas;
-  //     this.filtrosAdicionales.otros='';
-  //     // marcar si hay filtros especiales activos
-  //     this.filtrosActivos = ((this.filtrosAdicionales.IdArticulo!='') || (this.filtrosAdicionales.IdFamilia>0) || (this.filtrosAdicionales.IdSubfamilia>0) || (this.filtrosAdicionales.mostrarCanceladas))
-  //     // refrescamos consulta contratos ENTRADA
-  //     this.cargarEntradas(this.sbAlmacenes.SelectBox.value);
-  //   }
-  //   this.popUpVisibleFiltros = false;
-  // }
-
-  // checkCambioFiltros(nuevoFiltro:filtrosBusqueda):boolean {
-  //   if (this.filtrosAdicionales.mostrarCanceladas != nuevoFiltro.mostrarCanceladas) return true;
-  //   if (this.filtrosAdicionales.valorContiene != nuevoFiltro.valorContiene) return true;
-  //   if (this.filtrosAdicionales.IdArticulo != nuevoFiltro.IdArticulo) return true;
-  //   if (this.filtrosAdicionales.IdFamilia != nuevoFiltro.IdFamilia) return true;
-  //   if (this.filtrosAdicionales.IdSubfamilia != nuevoFiltro.IdSubfamilia) return true;    
-  //   return false;
-  // }
 
   mostrarAyuda(){
     this.popUpVisibleAyuda = true;

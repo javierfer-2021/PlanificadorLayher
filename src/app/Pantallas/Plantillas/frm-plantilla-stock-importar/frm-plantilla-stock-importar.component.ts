@@ -10,8 +10,7 @@ import { BotonPantalla } from '../../../Clases/Componentes/BotonPantalla';
 import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
-//import { Salida, SalidaLinea, LineasCSV} from '../../../Clases/Salida';
-import { PlantillaStock, PlantillaStockLinea, LineasCSV } from '../../../Clases/PlantillaStock';
+import { PlantillaStock, /*PlantillaStockLinea,*/ LineaCSV } from '../../../Clases/PlantillaStock';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent, DxTextBoxComponent, DxPopupComponent } from 'devextreme-angular';
 import { locale } from 'devextreme/localization';
@@ -42,25 +41,23 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
   @ViewChild('pantalla') pantalla: ElementRef;
   
   @ViewChild('txtContrato', { static: false }) txtContrato: DxTextBoxComponent;
-  @ViewChild('formSalida', { static: false }) formSalida: DxFormComponent;  
+  @ViewChild('formPlantillaStock', { static: false }) formPlantillaStock: DxFormComponent;  
   @ViewChild('dg', { static: false }) dg: CmpDataGridComponent; 
   @ViewChild('FicheroCSV') FicheroCSV: any;  
 
   btnAciones: BotonPantalla[] = [
     { icono: '', texto: this.traducir('frm-importar-csv.btnSalir', 'Salir'), posicion: 1, accion: () => {this.btnSalir()}, tipo: TipoBoton.danger },
-    { icono: '', texto: this.traducir('frm-importar-csv.btnLimpiar', 'Limpiar Todo'), posicion: 2, accion: () => {this.limpiarDocumento()}, tipo: TipoBoton.primary },
-    { icono: '', texto: this.traducir('frm-importar-csv.btnImportar', 'Importar Artículos'), posicion: 3, accion: () => {this.btnImportarOferta()}, tipo: TipoBoton.success, activo: false },
+    //{ icono: '', texto: this.traducir('frm-importar-csv.btnLimpiar', 'Limpiar Todo'), posicion: 2, accion: () => {this.limpiarDocumento()}, tipo: TipoBoton.primary },
+    { icono: '', texto: this.traducir('frm-importar-csv.btnImportar', 'Importar Artículos'), posicion: 2, accion: () => {this.btnImportarOferta()}, tipo: TipoBoton.success, activo: false },
   ];
-  
-  
+    
   WSDatos_Validando: boolean = false; 
-  aviso :boolean = false;
   
   _plantillaStock: PlantillaStock = new(PlantillaStock);
   
   // grid lista articulos importados CSV
   mostrarAvisosLinea: boolean = false;
-  arrayLineasSalida: Array<PlantillaStockLinea> = [];
+  arrayLineasImportar: Array<LineaCSV> = [];
   cols: Array<ColumnDataGrid> = [
     {
       dataField: '',
@@ -75,7 +72,7 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
         { icon: "trash",
           hint: "Eliminar Línea",
           onClick: (e) => { 
-            this.btnEliminarLineaSalida(e.row.rowIndex); 
+            this.btnEliminarLineaSalida(e.row); 
           }
         },        
       ]
@@ -92,19 +89,19 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
       visible: true,
     },    
     {
-      dataField: 'Excepcion',
-      caption: this.traducir('frm-importar-csv.colAvisos','Ex.'),
+      dataField: 'Error',
+      caption: this.traducir('frm-importar-csv.colAvisos','Error'),
       visible: true, 
-      width: 50,
+      width: 70,
     },                  
     {
-      dataField: 'Aviso',
+      dataField: 'Mensaje',
       caption: this.traducir('frm-importar-csv.colAvisos','Aviso'),
       visible: true, 
-      width: 250,
+      width: 350,
     },
   ];
-  dgConfigLineas: DataGridConfig = new DataGridConfig(this.arrayLineasSalida, this.cols, 400, '' );
+  dgConfigLineas: DataGridConfig = new DataGridConfig(this.arrayLineasImportar, this.cols, 400, '' );
 
   //popUp Ayuda Pantalla
   @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
@@ -129,7 +126,6 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
   ngOnInit(): void {
     this._plantillaStock = Object.assign(this._plantilla);
   }
-
 
   ngAfterViewInit(): void {    
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
@@ -183,7 +179,7 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
   //                                                 ,this._salida.FechaAlta,this._salida.FechaInicio,this._salida.FechaFin
   //                                                 ,this._salida.IdCliente,this._salida.IdClienteERP,this._salida.NombreCliente
   //                                                 ,this._salida.Obra,this._salida.Observaciones,this._salida.IdAlmacen,this._salida.IdTipoDocumento,this._salida.Planificar
-  //                                                 ,this.arrayLineasSalida)).subscribe(
+  //                                                 ,this.arrayLineasImportar)).subscribe(
   //     datos => {
   //       if(Utilidades.DatosWSCorrectos(datos)) {
   //         //this._salida = datos.datos[0];
@@ -209,8 +205,8 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
   //         else {
   //           Utilidades.MostrarErrorStr(this.traducir('frm-importar-csv.msgError_WSImportarOfertaCSVarticulos','Simulacion Cancelada: Artículos no encontrados (revise CSV)')); 
   //           this.mostrarAvisosLinea = true;
-  //           this.arrayLineasSalida = datos.datos.lineasError;
-  //           this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+  //           this.arrayLineasImportar = datos.datos.lineasError;
+  //           this.dgConfigLineas = new DataGridConfig(this.arrayLineasImportar, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
   //           this.dgConfigLineas.actualizarConfig(true,false,'standard');  
   //         }        
   //       }
@@ -225,28 +221,24 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
 
   async validarCodigosArticulos(){
     if (this.WSDatos_Validando) return; 
-    // if ( (this.arrayLineasSalida==null) || (this.arrayLineasSalida==undefined) || (this.arrayLineasSalida.length==0)) return;
+    if ( (this.arrayLineasImportar==null) || (this.arrayLineasImportar==undefined) || (this.arrayLineasImportar.length==0)) return;
 
-    // this.WSDatos_Validando = true;
-    // (await this.planificadorService.validarCodigosArticulosCSV(this._salida.IdSalidaERP,this._salida.Contrato,this._salida.Referencia,this._salida.IdEstado
-    //                                               ,this._salida.FechaAlta,this._salida.FechaInicio,this._salida.FechaFin
-    //                                               ,this._salida.IdCliente,this._salida.IdClienteERP,this._salida.NombreCliente
-    //                                               ,this._salida.Obra,this._salida.Observaciones,this._salida.IdAlmacen,this._salida.IdTipoDocumento,this._salida.Planificar
-    //                                               ,this.arrayLineasSalida)).subscribe(
-    //   datos => {
-    //     if(Utilidades.DatosWSCorrectos(datos)) {
-    //       this.arrayLineasSalida = datos.datos;
-    //       this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-    //       this.dgConfigLineas.actualizarConfig(true,false,'standard');
-    //     } else { 
-    //         Utilidades.MostrarErrorStr(this.traducir('frm-importar-csv.msgError_WSComprobarCodigosArticulosCSV','Error WS comprobacion codigos articulos')); 
-    //     }
-    //     this.WSDatos_Validando = false;
-    //   }, error => {
-    //     this.WSDatos_Validando = false;
-    //     Utilidades.compError(error, this.router,'frm-importar-csv');
-    //   }
-    // );
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.PLT_STK_validarArticulosCSV(this.arrayLineasImportar)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.arrayLineasImportar = datos.datos;
+          this.dgConfigLineas = new DataGridConfig(this.arrayLineasImportar, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigLineas.actualizarConfig(true,false,'standard');
+        } else { 
+            Utilidades.MostrarErrorStr(this.traducir('frm-importar-csv.msgError_WSComprobarCodigosArticulosCSV','Error WS comprobacion codigos articulos')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-importar-csv');
+      }
+    );
   }
   
   //#endregion
@@ -260,7 +252,7 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
 
 
   validarFormulario():boolean{
-    const res = this.formSalida.instance.validate();
+    const res = this.formPlantillaStock.instance.validate();
     // res.status === "pending" && res.complete.then((r) => {
     //   console.log(r.status);
     // });
@@ -277,7 +269,7 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
 
   btnImportarOferta() {
     // validacion extandar del formulario con datos requeridos y formatos
-    if ((this.arrayLineasSalida == null) || (this.arrayLineasSalida.length == 0)) {
+    if ((this.arrayLineasImportar == null) || (this.arrayLineasImportar.length == 0)) {
       Utilidades.MostrarErrorStr(this.traducir('frm-importar-csv.msgError_FaltanLineasDatos','Lineas de artículos a importar del CSV no cargadas'));
       return;
     }
@@ -288,24 +280,21 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
     else {
       // validacion especifica adicional de datos
       if (this.validarDatosFormulario()) {
-        // llamar a web_service de importacion
-        // this.importarOferta();
-        alert('servicion de importación');
+        // retornamos lista de articulos a importar
+        this.cerrarPopUp.emit(this.arrayLineasImportar); 
       }
     }
   }
    
   btnSalir() {
-    this.location.back();
+    //this.location.back();
+    this.cerrarPopUp.emit(null); 
   }
   
-  formReady(){
-    //alert('form listo');
-  }
 
   setFormFocus(campo:string){
     try {
-      const editor = this.formSalida.instance.getEditor(campo);
+      const editor = this.formPlantillaStock.instance.getEditor(campo);
       editor.focus();
     } 
     catch {} 
@@ -315,11 +304,13 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
   //----------------------------------------
   //#region - Edicion lineas de importacion
 
-  async btnEliminarLineaSalida(index:number){
+  async btnEliminarLineaSalida(data:any){
     let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-importar-csv.dlgEliminarLineaMensaje','La línea seleccionada será eliminada y NO IMPORTADA.<br>¿Seguro que desea continuar?'), 
                                                                this.traducir('frm-importar-csv.dlgEliminarLineaTitulo', 'Eliminar Línea'));
     if (confirmar) {
-      this.arrayLineasSalida.splice(index,1);
+      this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+      let index:number = this.arrayLineasImportar.findIndex(e => e==this.dg.objSeleccionado());
+      this.arrayLineasImportar.splice(index,1);
     }
   }  
 
@@ -398,8 +389,8 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
         let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);  
   
         let headersRow = this.getHeaderArray(csvRecordsArray);          
-        this.arrayLineasSalida = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, 0, headersRow.length);  
-        this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+        this.arrayLineasImportar = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, 0, headersRow.length);  
+        this.dgConfigLineas = new DataGridConfig(this.arrayLineasImportar, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
         this.dgConfigLineas.actualizarConfig(true,false,'standard');
         
         // proceso adicional de validación articulos leidos del fichero
@@ -423,13 +414,13 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
       for (let i = filaInicio; i < csvRecordsArray.length; i++) {  
         let curruntRecord = (<string>csvRecordsArray[i]).split(';');  
         if (curruntRecord.length == numColumnas) {  
-          let csvRecord: LineasCSV = new LineasCSV();  
+          let csvRecord: LineaCSV = new LineaCSV();  
           csvRecord.IdArticulo = curruntRecord[0].trim();  
           //csvRecord.NombreArticulo = curruntRecord[1].trim();  
           //csvRecord.CantidadPedida = parseInt(curruntRecord[1].trim());  
           csvRecord.Procesado = false;
           csvRecord.Error = false;
-          csvRecord.Aviso = ''; 
+          csvRecord.Mensaje = ''; 
           //csvRecord.Modificada = false;
           //csvRecord.Excepcion = false;
           // if (csvRecord.CantidadPedida>0) {
@@ -458,8 +449,8 @@ export class FrmPlantillaStockImportarComponent implements OnInit, AfterViewInit
   fileReset() {  
     this.FicheroCSV.nativeElement.value = ""; 
     this.mostrarAvisosLinea = false; 
-    this.arrayLineasSalida = [];  
-    this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    this.arrayLineasImportar = [];  
+    this.dgConfigLineas = new DataGridConfig(this.arrayLineasImportar, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
   }
 
   isValidCSVFile(file: any) {  

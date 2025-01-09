@@ -696,25 +696,18 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
   } 
 
-  async insertarLineasPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
-    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+  async insertarLineaPlantillaStock(linea): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/insertarLineaPlantillaStock')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
-    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
-    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+    const body = { usuario : ConfiGlobal.Usuario, datos: { PlantillaStockLinea:linea } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/insertarLineaPlantillaStock', body, Utilidades.getHeaders());
   }  
 
-  async actualizarLineasPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
-    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
+  async eliminarLineaPlantillaStock(linea): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/eliminarLineaPlantillaStock')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
-    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
-    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
-  }  
-
-  async eliminarLineasPlantillaStock(idPlantilla): Promise<Observable<any>>{ 
-    if(!await Utilidades.establecerConexion('/api/plantillasStock/getLineasPlantillaStock')) return;
-    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
-    const body = { usuario : ConfiGlobal.Usuario, datos: { IdPlantilla:idPlantilla } };    
-    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/getLineasPlantillaStock', body, Utilidades.getHeaders());
+    const body = { usuario : ConfiGlobal.Usuario, datos: { PlantillaStockLinea:linea } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/eliminarLineaPlantillaStock', body, Utilidades.getHeaders());
   }  
 
   //--
@@ -725,6 +718,16 @@ export class PlanificadorService {
     const body = { usuario : ConfiGlobal.Usuario, datos: { PlantillaStock:plantilla } };    
     return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/calcularValoresPlantillaStock', body, Utilidades.getHeaders());
   } 
+
+  //--
+
+  // Verificar codigos articulos leidos del CSV
+  async PLT_STK_validarArticulosCSV(lineasCSV ): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/validarCodigosArticulos_CSV')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { LineasCSV:lineasCSV } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/validarCodigosArticulos_CSV', body, Utilidades.getHeaders());
+  }
 
   //#endregion -- PLANTILLAS STOCK ARTICULOS  --
 
