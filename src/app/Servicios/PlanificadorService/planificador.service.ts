@@ -729,6 +729,14 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/validarCodigosArticulos_CSV', body, Utilidades.getHeaders());
   }
 
+  // Verificar codigos articulos leidos del CSV
+  async PLT_STK_importarArticulosCSV(lineasCSV, idPlantilla ): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/plantillasStock/importarListaArticulos_CSV')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { LineasCSV:lineasCSV, IdPlantilla:idPlantilla } };    
+    return this.http.post(ConfiGlobal.URL + '/api/plantillasStock/importarListaArticulos_CSV', body, Utilidades.getHeaders());
+  }
+
   //#endregion -- PLANTILLAS STOCK ARTICULOS  --
 
 

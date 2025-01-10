@@ -11,11 +11,12 @@ import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { Entrada, EntradaLinea, EstadoEntrada } from '../../../Clases/Entrada';
-import { PlantillaStock, PlantillaStockLinea } from '../../../Clases/PlantillaStock';
+import { LineaCSV, PlantillaStock, PlantillaStockLinea } from '../../../Clases/PlantillaStock';
 import { Almacen } from '../../../Clases/Maestros';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { DxFormComponent } from 'devextreme-angular';
 import { DxPopupComponent } from 'devextreme-angular';
+import { utils } from 'protractor';
 
 @Component({
   selector: 'app-frm-plantilla-stock',
@@ -57,7 +58,7 @@ export class FrmPlantillaStockComponent implements OnInit {
 
   // grid lineas articulos asociados a la plantilla
   // [IdPlantilla, IdLinea, IdArticulo, NombreArticulo, StockInicial, UnidadesDisponibles]
-  arrayLineasPlantilla: Array<PlantillaStockLinea>;
+  arrayLineasPlantilla: Array<PlantillaStockLinea> = [];
   cols: Array<ColumnDataGrid> = [
     {
       dataField: '',
@@ -343,6 +344,7 @@ export class FrmPlantillaStockComponent implements OnInit {
     (await this.planificadorService.insertarLineaPlantillaStock(lineaPlantilla)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
+          this.WSDatos_Validando = false;
           // Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSInsertarLineaPlantilla','Linea Plantilla Consulta Stock Insertada'),'success',1000);                     
           // insertada en BD=OK -> añadimos al array interfaz
           if (datos.datos[0].Result==0) { this.arrayLineasPlantilla.push(lineaPlantilla); }
@@ -370,6 +372,29 @@ export class FrmPlantillaStockComponent implements OnInit {
           this.arrayLineasPlantilla.splice(this.lineaSeleccionadaIndex,1);
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSEliminarLineaPlantilla','Error WS Eliminar Linea Plantilla')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        Utilidades.compError(error, this.router,'frm-plantilla-stock');
+      }
+    );
+  } 
+
+
+  async importarLineasCSV(lineas){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    (await this.planificadorService.PLT_STK_importarArticulosCSV(lineas,this._plantillaStock.IdPlantilla)).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          Utilidades.MostrarExitoStr(this.traducir('frm-plantilla-stock.msgOk_WSImportarLineasCSV','Lineas ficher CSV Importadas Correctamente'),'success',1000);                     
+          this.arrayLineasPlantilla = datos.datos;
+          this.dgConfigLineas = new DataGridConfig(this.arrayLineasPlantilla, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);          
+        } else {          
+          Utilidades.MostrarErrorStr(this.traducir('frm-plantilla-stock.msgError_WSImportarLineasCSV','Error WS Importar CSV')); 
         }
         this.WSDatos_Validando = false;
       }, error => {
@@ -429,8 +454,16 @@ export class FrmPlantillaStockComponent implements OnInit {
     this._plantillaStock.IdPlantilla = -1;
     this._plantillaStock.IdAlmacen = -1;
     this._plantillaStock.Fecha = new Date();
+    this._plantillaStock.NombrePlantilla = '';
+    this._plantillaStock.Descripcion = '';
+    // nueva lista lineas
+    this.arrayLineasPlantilla=[];
+    this.dgConfigLineas = new DataGridConfig(this.arrayLineasPlantilla, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+    this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);     
     // interfaz modo edicion
     this.setModoEdicion(true);
+    // foco
+    this.setFormFocus('NombrePlantilla');
   }
 
   async btnEliminarPlantilla(){
@@ -549,14 +582,21 @@ export class FrmPlantillaStockComponent implements OnInit {
     this.popUpVisibleImportarCSV = true;
   }
 
-  cerrarImportarCSV(lineasCSV){    
+  cerrarImportarCSV(e){    
     this.popUpVisibleImportarCSV = false;
     // e= lista de articulos importados del CSV
-    if (lineasCSV != null) {
+    if (e != null) {
+      //this.importarListaCSV_1(e);
+      this.importarListaCSV_2(e);
+    }    
+  }
+
+  // importa linea a linea mediante el WS standar de insertarLineaPlantilla
+  importarListaCSV_1(lineasCSV){
       // procesar lista
       for (let i=0; i<lineasCSV.length; i++) {
         if ((!lineasCSV[i].Error) && (!this.existeArticuloEnLineas(lineasCSV[i].IdArticulo))) {
-          // nueva linesPlantilla
+          // nueva linea Plantilla
           let linea = new PlantillaStockLinea();
           linea.IdPlantilla = this._plantillaStock.IdPlantilla;
           linea.IdArticulo = lineasCSV[i].IdArticulo;
@@ -566,16 +606,48 @@ export class FrmPlantillaStockComponent implements OnInit {
           if (this.modoInsercion) {
             this.arrayLineasPlantilla.push(linea);
           } else {
-            this.insertarLineaPlantilla(linea);
+            setTimeout(() => { this.insertarLineaPlantilla(linea); }, 300); 
           }          
         }
       }
-    }    
+  }
+
+
+  // importa toda la lista a traves de WS
+  importarListaCSV_2(lineasCSV){
+    let listaImportar:Array<LineaCSV> = [];
+    // procesar lista
+    for (let i=0; i<lineasCSV.length; i++) {
+      if ((!lineasCSV[i].Error) && (!this.existeArticuloEnLineas(lineasCSV[i].IdArticulo))) {
+        // nueva linea Plantilla
+        let linea = new PlantillaStockLinea();
+        linea.IdPlantilla = this._plantillaStock.IdPlantilla;
+        linea.IdArticulo = lineasCSV[i].IdArticulo;
+        linea.NombreArticulo = lineasCSV[i].NombreArticulo;
+        linea.StockInicial = lineasCSV[i].StockInicial;          
+        // insertar linea (insert=array.add vs Edit)
+        if (this.modoInsercion) {
+          this.arrayLineasPlantilla.push(linea);
+        } else {
+          listaImportar.push(lineasCSV[i]);
+        }          
+      }
+    }
+    // importar Lista
+    if (!this.modoInsercion) { 
+      this.importarLineasCSV(listaImportar);
+    } else {
+      this.dgConfigLineas = new DataGridConfig(this.arrayLineasPlantilla, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+      this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);      
+    }
   }
 
   existeArticuloEnLineas(idArticulo:string):boolean {
-    let index:number = this.arrayLineasPlantilla.findIndex(e => e.IdArticulo==idArticulo);
-    return (index>=0);
+    if (Utilidades.isEmpty(this.arrayLineasPlantilla)) return false;
+    else {
+      let index:number = this.arrayLineasPlantilla.findIndex(e => e.IdArticulo==idArticulo);
+      return (index>=0);  
+    }
   }
 
   mostrarAyuda(){
