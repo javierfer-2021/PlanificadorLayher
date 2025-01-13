@@ -74,7 +74,7 @@ export class FrmPlantillaStockCalcularComponent implements OnInit {
     {
       dataField: 'StockInicial',
       caption: this.traducir('frm-plantilla-stock-calcular.colAvisos','Stock Inicial'),
-      visible: true, 
+      visible: false, 
       width: 150,
     },                  
     {

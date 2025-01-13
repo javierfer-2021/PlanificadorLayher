@@ -105,7 +105,7 @@ export class FrmPlantillaStockComponent implements OnInit {
     {
       dataField: 'StockInicial',
       caption: this.traducir('frm-plantilla-stock.colStockInicial','Stock Inicial'),      
-      visible: true,
+      visible: false,
       width: 150,
     },
     {
