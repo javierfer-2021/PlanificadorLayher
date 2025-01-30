@@ -17,7 +17,8 @@ import { FrmUsuarioBuscarComponent } from './Pantallas/Usuarios/frm-usuario-busc
 import { FrmUsuarioComponent } from './Pantallas/Usuarios/frm-usuario/frm-usuario.component';
 import { FrmArticulosStockComponent } from './Pantallas/Articulos/frm-articulos-stock/frm-articulos-stock.component';
 import { FrmIncidenciaBuscarComponent } from './Pantallas/Incidencias/frm-incidencia-buscar/frm-incidencia-buscar.component';
-import { FrmIncidenciaComponent } from './Pantallas/Incidencias/frm-incidencia/frm-incidencia.component';
+//import { FrmIncidenciaComponent } from './Pantallas/Incidencias/frm-incidencia/frm-incidencia.component';
+import { FrmIncidencia2Component } from './Pantallas/Incidencias/frm-incidencia2/frm-incidencia2.component';
 import { FrmConfiguracionComponent } from './Pantallas/frm-configuracion/frm-configuracion.component';
 import { FrmImportarMaestrosComponent } from './Pantallas/Maestros/frm-importar-maestros/frm-importar-maestros.component';
 import { FrmFamiliasComponent } from './Pantallas/Maestros/frm-familias/frm-familias.component';
@@ -44,7 +45,8 @@ const routes: Routes = [
   { path: 'compra_detalle', component: FrmCompraDetallesComponent, canActivate: [AuthGuard] }, 
   
   { path: 'incidencia-buscar', component: FrmIncidenciaBuscarComponent, canActivate: [AuthGuard] },
-  { path: 'incidencia', component: FrmIncidenciaComponent, canActivate: [AuthGuard] },
+  //{ path: 'incidencia', component: FrmIncidenciaComponent, canActivate: [AuthGuard] },
+  { path: 'incidencia', component: FrmIncidencia2Component, canActivate: [AuthGuard] },
 
   { path: 'articulos_stock', component: FrmArticulosStockComponent, canActivate: [AuthGuard] },
   { path: 'plantillas_stock_buscar', component: FrmPlantillaStockBuscarComponent, canActivate: [AuthGuard] },

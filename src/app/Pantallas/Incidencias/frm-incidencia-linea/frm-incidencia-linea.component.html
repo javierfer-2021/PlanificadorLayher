@@ -1,0 +1,73 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-incidencia-linea.lblTitulo', 'Gestión de Incidencias')}} </div>
+            </div>
+			<div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>               
+        </div>  
+
+        <!-- Formulario datos Incidencia -->
+        <div>
+            <!-- Formulario Datos Salida (Venta-Alquiler) -->
+            <div class="row pt-2 pb-2">
+                <div id="form-container" class="formulario">
+                    <dx-form id="formIncidenciaLinea" #formIncidenciaLinea [colCount]="4" [formData]="_lineaIncidencia" [readOnly]="!editandoIncidencia" labelMode='static' labelLocation="left">
+                        <!-- <dxi-item itemType="group" caption="Línea Artículo Incluido en Incidencia" [colCount]="4" [colSpan]="4"> -->
+                            <dxi-item dataField="IdArticulo" [editorOptions]="articuloOptions">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID ARTICULO"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{ disabled:true, readOnly:true }">
+                            </dxi-item>
+                            <dxi-item dataField="Unidades" editorType="dxNumberBox" [editorOptions]="{ disabled:false }">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo UNIDADES"></dxi-validation-rule>
+                            </dxi-item> 
+                            
+                            <dxi-item dataField="Observaciones" [colSpan]="4" [editorOptions]="{ disabled:false }"></dxi-item>                            
+                        <!-- </dxi-item> -->
+                    </dx-form>
+                </div>
+            </div>
+
+          
+        </div>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+
+<!-- popUp para seleccion de articulo  -->
+<dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    contentTemplate="contentSeleccionarArticulo">
+    <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
+        <app-frm-incidencia-buscar-art [incidencia]="_incidencia" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-incidencia-buscar-art>
+    </div>    
+</dx-popup>
+
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-incidencia'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
+

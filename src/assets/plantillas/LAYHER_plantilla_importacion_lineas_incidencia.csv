@@ -1,0 +1,12 @@
+* FICHERO IMPORTACION LINEAS ARTICULOS A INCLUIR EN INCIDENCIA
+* FORMATO FICHERO  : ;columna_1= COD_ARTICULO | columna_2 = UNIDADES | columna_2 = OBSERVACIONES
+* INSTRUCCIONES USO: ;"1-Rellenar documento. 2-Eliminar cabecera (Importante dejar solo datos). 3-Guardar archivo como CSV (DOS) =  campos separados por ;"
+* EJEMPLO FICHERO  : ;
+COD_ARTICULO;UNIDADES;OBSERVACIONES
+5402080;0;No se incluira por tener unidades a cero
+5402081;2;defectuoso
+5402086;3;
+5402180;4;observaciones
+5402185;3;observaciones_5402185
+5402208;30;
+5510207;12;

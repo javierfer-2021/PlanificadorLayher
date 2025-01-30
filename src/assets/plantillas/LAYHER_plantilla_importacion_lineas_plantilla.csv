@@ -1,0 +1,12 @@
+* FICHERO IMPORTACION LINEAS PLANTILLAS CONSULTA STOCK
+* FORMATO FICHERO  : ;columna_1= COD_ARTICULO 
+* INSTRUCCIONES USO: ;"1-Rellenar documento. 2-Eliminar cabecera (Importante dejar solo datos). 3-Guardar archivo como CSV (DOS) =  campos separados por ;"
+* EJEMPLO FICHERO  : ;
+COD_ARTICULO
+5402080
+5402081
+5402086
+5402180
+5402185
+5402208
+5510207

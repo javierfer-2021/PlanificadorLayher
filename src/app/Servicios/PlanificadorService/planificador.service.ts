@@ -582,6 +582,32 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/incidencias/getListaSalidasAfectadas_Incidencia', body, Utilidades.getHeaders());
   }    
   
+  // -- gestion de incidencias & lineas asociadas
+
+  async insertarIncidenciaPlusLineas(incidencia): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/incidencias/insertarIncidencia2PlusLineas')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }          
+    const body = { usuario : ConfiGlobal.Usuario, 
+                   datos: { Incidencia: incidencia  } };    
+    return this.http.post(ConfiGlobal.URL + '/api/incidencias/insertarIncidencia2PlusLineas', body, Utilidades.getHeaders());
+  } 
+
+  async obtenerLineasIncidencia(idIncidencia): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/incidencias/getListaLineasIncidencias')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }          
+    const body = { usuario : ConfiGlobal.Usuario, 
+                   datos: { IdIncidencia: idIncidencia } };    
+    return this.http.post(ConfiGlobal.URL + '/api/incidencias/getListaLineasIncidencias', body, Utilidades.getHeaders());
+  }   
+
+  // Verificar codigos articulos leidos del CSV
+  async INC_LIN_validarArticulosCSV(lineasCSV ): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/incidencias/validarCodigosArticulos_CSV')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { LineasCSV:lineasCSV } };    
+    return this.http.post(ConfiGlobal.URL + '/api/incidencias/validarCodigosArticulos_CSV', body, Utilidades.getHeaders());
+  }  
+
   //#endregion
 
 

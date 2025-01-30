@@ -72,6 +72,8 @@ import { FrmPlantillaStockBuscarComponent } from './Pantallas/Plantillas/frm-pla
 import { FrmArticulosBuscarBasicoComponent } from './Pantallas/Articulos/frm-articulos-buscar-basico/frm-articulos-buscar-basico.component';
 import { FrmPlantillaStockImportarComponent } from './Pantallas/Plantillas/frm-plantilla-stock-importar/frm-plantilla-stock-importar.component';
 import { FrmPlantillaStockCalcularComponent } from './Pantallas/Plantillas/frm-plantilla-stock-calcular/frm-plantilla-stock-calcular.component';
+import { FrmIncidenciaImportarLineasComponent } from './Pantallas/Incidencias/frm-incidencia-importar-lineas/frm-incidencia-importar-lineas.component';
+import { FrmIncidenciaLineaComponent } from './Pantallas/Incidencias/frm-incidencia-linea/frm-incidencia-linea.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -131,7 +133,9 @@ function initializeApp(appConfig: ConfigService) {
     FrmPlantillaStockBuscarComponent,
     FrmArticulosBuscarBasicoComponent,
     FrmPlantillaStockImportarComponent,
-    FrmPlantillaStockCalcularComponent
+    FrmPlantillaStockCalcularComponent,
+    FrmIncidenciaImportarLineasComponent,
+    FrmIncidenciaLineaComponent
 
   ],
   imports: [

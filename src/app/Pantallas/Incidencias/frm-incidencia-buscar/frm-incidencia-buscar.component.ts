@@ -141,21 +141,22 @@ export class FrmIncidenciaBuscarComponent implements OnInit {
       caption: this.traducir('frm-incidencia-buscar.colNombreCliProv','Nombre Cli/Prov'),
       visible: true,
     },
-    {
-      dataField: 'IdArticulo',
-      caption: this.traducir('frm-incidencia-buscar.colIdArticulo','IdArticulo'),
-      visible: true,
-    },
-    {
-      dataField: 'NombreArticulo',
-      caption: this.traducir('frm-incidencia-buscar.colNombreArticulo','NombreArticulo'),      
-      visible: false,
-    },
-    {
-      dataField: 'Unidades',
-      caption: this.traducir('frm-incidencia-buscar.colUnidades','Unidades'),      
-      visible: true,
-    },
+    // ACT. 2025 - Gestión de N articulos por incidencia en tabla INCIDENCIAS_LINEAS (ya no se retorna articulo unico asociado ala incidencia)
+    // {
+    //   dataField: 'IdArticulo',
+    //   caption: this.traducir('frm-incidencia-buscar.colIdArticulo','IdArticulo'),
+    //   visible: true,
+    // },
+    // {
+    //   dataField: 'NombreArticulo',
+    //   caption: this.traducir('frm-incidencia-buscar.colNombreArticulo','NombreArticulo'),      
+    //   visible: false,
+    // },
+    // {
+    //   dataField: 'Unidades',
+    //   caption: this.traducir('frm-incidencia-buscar.colUnidades','Unidades'),      
+    //   visible: true,
+    // },
     {
       dataField: 'NombreCliente',
       caption: this.traducir('frm-incidencia-buscar.colNombreCliente','Nombre Cliente'),      

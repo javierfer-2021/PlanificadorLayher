@@ -22,6 +22,8 @@ export class Incidencia {
     IdUsuario: number;
     SeleccionarArticuloDocumento: boolean;
     CoincideAlmacen: boolean;    
+    // info adicional para incluir lineas asociadas.
+    Lineas: Array<LineaIncidencia> = [];
   }
 
   export class TipoIncidencia {
@@ -36,6 +38,27 @@ export class Incidencia {
     Activo:boolean;
   }  
 
+  // act. 2025 - Asociar lineas incidencia
+  export class LineaIncidencia {
+    IdIncidencia: number;    
+    IdArticulo: string;
+    NombreArticulo: string;
+    Unidades: number; 
+    Observaciones: string;   
+  }
+
+  // act. 2025 - Asociar lineas incidencia
+  // clase utilizada para importar fichero CSV
+  
+  export class LineaCSV {
+    IdArticulo: string;
+    NombreArticulo: string;
+    Unidades:number;
+    Observaciones: string;
+    Procesado: boolean; 
+    Error: boolean;
+    Mensaje: string;  
+  }
 
   /*
   export class DocumentoIncidencia {

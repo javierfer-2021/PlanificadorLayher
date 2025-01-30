@@ -1,1 +1,167 @@
-<p>frm-incidencia2 works!</p>
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-incidencia.lblTitulo', 'Gestión de Incidencias')}} </div>
+            </div>
+			<div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>               
+        </div>  
+
+        <!-- Formulario datos Incidencia -->
+        <div>
+            <!-- Formulario Datos Salida (Venta-Alquiler) -->
+            <div class="row pt-2">
+                <div id="form-container" class="formulario">
+                    <dx-form id="formIncidencia" #formIncidencia [colCount]="4" [formData]="_incidencia" [readOnly]="!editandoIncidencia" labelMode='static' labelLocation="left">
+                        <dxi-item itemType="group" caption="Identificación Incidencia" [colCount]="4" [colSpan]="4">
+                            <dxi-item dataField="IdIncidencia" [editorOptions]="{disabled: true}">
+                            </dxi-item>
+                            <dxi-item dataField="FechaAlta" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: true, width: '100%'}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ALTA"></dxi-validation-rule>
+                            </dxi-item> 
+                            <dxi-item dataField="IdTipoIncidencia" [label]="{text:'Tipo Incidencia'}" [colSpan]="2" editorType="dxSelectBox" 
+                                [editorOptions]="tipoIncidenciaOptions">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo TIPO INCIDENCIA"></dxi-validation-rule>
+                            </dxi-item>
+                            
+                            <dxi-item dataField="FechaIncidencia" editorType="dxDateBox" [editorOptions]="{displayFormat: 'dd/MM/yyyy', disabled: false, width: '100%'}">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA INCIDENCIA"></dxi-validation-rule>
+                            </dxi-item> 
+                            <dxi-item dataField="IdAlmacen" [label]="{text:'Almacen'}" [colSpan]="1" editorType="dxSelectBox" 
+                                [editorOptions]="{ disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="Descripcion" [colSpan]="2" [editorOptions]="{disabled: false}">                                
+                            </dxi-item>
+                            <dxi-item dataField="Observaciones" [colSpan]="4" editorType="dxTextArea" [editorOptions]="{ height:60 }"></dxi-item>
+                        </dxi-item>
+
+                        <dxi-item itemType="group" #grDocumento id="grDocumento" caption="Identificación Contrato" [colCount]="4" [colSpan]="4" [disabled]="!requerirContrato">
+                            <dxi-item dataField="Contrato" editorType="dxTextBox" [editorOptions]="contratoOptions">
+                                <dxi-validation-rule *ngIf="requerirContrato" type="required" message="Debe indicar un valor para el campo CONTRATO"></dxi-validation-rule>                                
+                            </dxi-item>
+                            <dxi-item dataField="IdDocumento" [editorOptions]="{disabled:true, readOnly:true}">
+                            </dxi-item>
+                            <dxi-item itemType="empty" [colSpan]="2"></dxi-item>
+
+                            <dxi-item dataField="NombreTipoDocumento" [label]="{text:'Tipo Doc.'}" [editorOptions]="{disabled: true, readOnly:true}">
+                            </dxi-item>
+                            <dxi-item dataField="IdCliProv" [label]="{text:'Id.Cli/Prov.'}" [editorOptions]="{disabled: true, readOnly:true}">
+                            </dxi-item>
+                            <dxi-item dataField="NombreCliProv" [label]="{text:'Nombre'}" [colSpan]="2" [editorOptions]="{disabled: true, readOnly:true}">
+                            </dxi-item>
+                        </dxi-item>
+
+                        <!-- <dxi-item itemType="group" caption="Artículos Incluidos en la Incidencia" [colCount]="4" [colSpan]="4"> -->
+                            <!-- <dxi-item dataField="IdArticulo" [editorOptions]="articuloOptions">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ID ARTICULO"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="NombreArticulo" [colSpan]="2" [editorOptions]="{ disabled:true, readOnly:true }">
+                            </dxi-item>
+                            <dxi-item dataField="Unidades" editorType="dxNumberBox" [editorOptions]="{ disabled:false }">
+                                <dxi-validation-rule type="required" message="Debe indicar un valor para el campo UNIDADES"></dxi-validation-rule>
+                            </dxi-item>  -->
+                        <!-- </dxi-item> -->
+
+                        <!-- <dxi-item itemType="group" caption="Observaciones" [colCount]="4" [colSpan]="4">
+                            <dxi-item dataField="Observaciones" [colSpan]="4" editorType="dxTextArea" [editorOptions]="{ height:90 }"></dxi-item>
+                        </dxi-item>                         -->
+                    </dx-form>
+                </div>
+            </div>
+
+            <!-- grid de articulos asociados a la incidencia -->
+            <hr style="margin: 0.5rem 0;"> 
+            <div class="row m-0 py-0 pb-1 px-1">
+                <div class="col pt-0 pb-0 px-0">
+                      <span class="dx-form-group-caption" style="font-family: 'Helvetica Neue','Segoe UI',Helvetica,Verdana,sans-serif;">Artículos Incluidos en la Incidencia</span> 
+                </div>
+                <div *ngIf="editandoIncidencia" class="col pt-0 pb-0 px-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" style="margin-top: 6px;float:right" (click)="btnInsertarLinea()">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm mx-2" style="margin-top: 6px;float:right" (click)="btnImportarCsv()">
+                        <i class="bi bi-filetype-csv">Importar CSV</i>
+                    </button>                    
+                </div>
+            </div>            
+            <div class="row m-0 pt-1 pb-2 px-1">
+                <div class="col pt-0 pb-0 px-2">
+                    <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+                </div>
+            </div>            
+        </div>
+
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+<!-- popUp para busqueda y seleccion documento (compra/venta) asociado a la incidencia  -->
+<dx-popup *ngIf="popUpVisibleDocumentos" #popUpDocumentos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleDocumentos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencias-buscar.str_txtPopupDocumentos', 'Selección Contrato')}}"
+    contentTemplate="contentSeleccionarContrato">
+    <div *dxTemplate="let data of 'contentSeleccionarContrato'">
+        <app-frm-incidencia-buscar-doc [incidencia]="_incidencia" (cerrarPopUp)="cerrarSeleccionarDocumento($event)"></app-frm-incidencia-buscar-doc>
+    </div>    
+</dx-popup>
+
+<!-- popUp para seleccion de articulo  -->
+<dx-popup *ngIf="popUpVisibleArticulos" #popUpArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" height="auto" width="80%"
+    [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia-linea.str_txtPopupTitulo', 'Artículo Associado a Incidencia')}}"
+    contentTemplate="contentLineaIncidencia">
+    <div *dxTemplate="let data of 'contentLineaIncidencia'">
+        <!-- <app-frm-incidencia-buscar-art [incidencia]="_incidencia" (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-incidencia-buscar-art> -->
+        <app-frm-incidencia-linea [_incidencia]="_incidencia" [_lineaIncidencia]="lineaSeleccionada" (cerrarPopUp)="cerrarLineaIncidencia($event)"></app-frm-incidencia-linea>
+    </div>    
+</dx-popup>
+
+
+<!-- popUp para importacion fichero csv  -->
+<dx-popup *ngIf="popUpVisibleImportarCSV" #popUpImportarCSV (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleImportarCSV" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia2.str_txtPopupImportarCSV', 'Importar Artículos Incidencia')}}"
+    contentTemplate="contentImportarCSV">
+    <div *dxTemplate="let data of 'contentImportarCSV'">
+        <app-frm-incidencia-importar-lineas [_incidencia]="_incidencia" (cerrarPopUp)="cerrarImportarCSV($event)"></app-frm-incidencia-importar-lineas>
+    </div>    
+</dx-popup>
+
+<!-- popUp Salidas afectadas -->
+<dx-popup *ngIf="popUpVisibleSalidasAfectadas" #popUpSalidasAfectadas (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="80%" width="80%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleSalidasAfectadas" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia.str_txtPopupSalidasAfectadas', 'Lista salidas afectadas por incidencia')}}"
+    contentTemplate="contentSalidasAfectadas">
+    <div *dxTemplate="let data of 'contentSalidasAfectadas'">
+        <app-frm-incidencia-contratos-afectados [_incidencia]="_incidencia" (cerrarPopUp)="cerrarSalidasAfectadas($event)"></app-frm-incidencia-contratos-afectados>
+    </div>    
+</dx-popup>
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-incidencia.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-incidencia'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
+
+

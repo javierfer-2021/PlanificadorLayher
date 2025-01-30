@@ -16,13 +16,13 @@
             </div>            
         </div>   -->
 
-        <!-- Información basica Plantilla (cabecera) -->
+        <!-- Información basica Incidencia (cabecera) -->
         <div>  
             <div class="row pt-2">
                 <div id="form-container" class="formulario">
-                    <dx-form id="formPlantillaStock" #formPlantillaStock [colCount]="6" [formData]="_plantillaStock" labelMode='static' labelLocation="left" [readOnly]="false">
-                        <dxi-item dataField="IdPlantilla" [label]="{text:'Id.Plantilla'}" [colSpan]="1" [editorOptions]="{disabled: true}"></dxi-item>
-                        <dxi-item dataField="NombrePlantilla" [label]="{text:'Nombre'}" [colSpan]="3" [editorOptions]="{disabled: true}"></dxi-item>
+                    <dx-form id="formIncidencia" #formIncidencia [colCount]="6" [formData]="_incidenciaStock" labelMode='static' labelLocation="left" [readOnly]="false">
+                        <dxi-item dataField="IdIncidencia" [label]="{text:'Id.Incidencia'}" [colSpan]="1" [editorOptions]="{disabled: true}"></dxi-item>
+                        <dxi-item dataField="NombreTipoIncidencia" [label]="{text:'Tipo Incidencia'}" [colSpan]="3" [editorOptions]="{disabled: true}"></dxi-item>
                         <dxi-item dataField="NombreAlmacen" [label]="{text:'Almacen'}" [colSpan]="2" [editorOptions]="{disabled: true}"></dxi-item>
                         <!-- <dxi-item itemType="empty" [colSpan]="1"></dxi-item> -->
                     </dx-form>
@@ -46,7 +46,7 @@
                     <!-- <button class="btn btn-primary btn-sm" style="float: right; height: 30px;" (click)="fileReset()" type="submit"><i class="bi bi-x-circle-fill px-1"></i>Limpiar fichero</button> -->
                     <div class="brn-group"  style="float: right;" role="group">
                         <button class="btn btn-primary btn-sm mx-2" (click)="fileReset()" type="submit"><i class="bi bi-x-circle-fill px-1"></i>Limpiar fichero</button>
-                        <a href="assets/plantillas/LAYHER_plantilla_importacion_lineas_plantilla.csv" target="_blank">
+                        <a href="assets/plantillas/LAYHER_plantilla_importacion_lineas_incidencia.csv" target="_blank">
                             <button class="btn btn-secondary btn-sm me-1"><i class="bi bi-file-earmark-arrow-down px-1"></i>Descargar Plantilla</button>
                         </a>
                     </div>
@@ -84,4 +84,5 @@
     [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" 
     [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
 </dx-load-panel>
+
 
