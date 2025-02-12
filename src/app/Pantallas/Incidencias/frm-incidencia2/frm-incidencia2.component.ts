@@ -493,7 +493,8 @@ export class FrmIncidencia2Component implements OnInit, AfterViewInit {
   } 
 
   mostrarSalidasAfectadas(){
-    this.popUpVisibleSalidasAfectadas = true;
+    // Pendiente revision proceso de calculo y cambio para N lineas articulo por incidencia
+    //this.popUpVisibleSalidasAfectadas = true;
   }
 
   cerrarSalidasAfectadas(e){
