@@ -11,6 +11,8 @@ import { Utilidades } from '../../Utilidades/Utilidades';
 import { TiposGruposWS } from '../../Enumeraciones/TiposGruposWS';
 import { Usuario } from '../../Clases/Usuario';
 
+import { PlanificadorService } from '../../Servicios/PlanificadorService/planificador.service';
+
 @Component({
   selector: 'app-frm-principal',
   templateUrl: './frm-principal.component.html',
@@ -23,6 +25,11 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   nombreUsuario: string = ConfiGlobal.NombreUsuario;
   _usuario: Usuario = new Usuario();
   
+  loadingVisible = false;
+  indicatorUrl = "";
+  loadingMessage = 'Procesando...'    
+  
+  WSDatos_Validando: boolean = false;
 
   WSGetInci_Validando: boolean = false;
   WSGetInci_Valido: boolean = false;
@@ -30,6 +37,7 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   botonComprasBuscar: BotonMenu = { icono: './assets/icons/entradas.svg', texto: 'Buscar y Ver Entradas', ruta: '', nombre: 'botonComprasBuscar', notificacion: 0, desactivado: false, accion: () => { } };
   botonComprasImportar: BotonMenu = { icono: './assets/icons/importar.svg', texto: 'Importar Entrada', ruta: '', nombre: 'botonComprasImportar', notificacion: 0, desactivado: false, accion: () => { } };
 
+  botonImportarVentaCSV: BotonMenu = { icono: './assets/icons/archivo-csv.svg', texto: 'Pre-Importar CSV', ruta: '', nombre: 'botonImportarVentaCSV', notificacion: 0, desactivado: false, accion: () => { } };
   botonVentaBuscar: BotonMenu = { icono: './assets/icons/salidas.svg', texto: 'Buscar y Ver Salidas', ruta: '', nombre: 'botonVentaBuscar', notificacion: 0, desactivado: false, accion: () => { } };
   botonVentaImportar: BotonMenu = { icono: './assets/icons/importar.svg', texto: 'Importar Salida', ruta: '', nombre: 'botonVentaImportar', notificacion: 0, desactivado: false, accion: () => { } };
   
@@ -40,9 +48,8 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   
   botonUsuarios: BotonMenu = { icono: './assets/icons/usuario.svg', texto: 'Gestión Usuarios', ruta: '', nombre: 'botonUsuarios', notificacion: 0, desactivado: false, accion: () => { } };
   botonConfiguracion: BotonMenu = { icono: './assets/icons/configuracion.svg', texto: 'Configuración', ruta: '', nombre: 'botonConfiguracion', notificacion: 0, desactivado: false, accion: () => { } };
-  botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Ejercicio y Gestión Maestros', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, accion: () => { } };
-
-  botonImportarVentaCSV: BotonMenu = { icono: './assets/icons/archivo-csv.svg', texto: 'Pre-Importar CSV', ruta: '', nombre: 'botonImportarVentaCSV', notificacion: 0, desactivado: false, accion: () => { } };
+  botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Ejercicio y Gestión Maestros', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, accion: () => { } };  
+  botonrRecalculoPlanificacion: BotonMenu = { icono: './assets/icons/elipsis.svg', texto: 'Recalculo Planificaión', ruta: '', nombre: 'botonRecalculoPlanificacion', notificacion: 0, desactivado: false, accion: () => { } };
 
   btnAciones: BotonPantalla[] =  [
     { icono :'', texto: this.traducir('frm-principal.btnSalir', 'Salir'), posicion: 1, accion: () => {this.cerrarSesion();}, tipo: TipoBoton.danger, activo: true, visible: true } 
@@ -52,12 +59,14 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
               public peticionesService: PeticionesGeneralesService,
               public translate: TranslateService,
               public resolver: ComponentFactoryResolver,
+              public planificadorService: PlanificadorService
   ) {
 
     Utilidades.CompActual = this;
 
     this.Reconectar();
 
+    this.botonImportarVentaCSV.accion = () => { this.router.navigate(['venta_importar_csv']); };
     this.botonVentaBuscar.accion = () => { this.router.navigate(['venta_buscar']); };
     this.botonVentaImportar.accion = () => { this.router.navigate(['venta_importar']); };
     this.botonComprasBuscar.accion = () => { this.router.navigate(['compra_buscar']); };
@@ -68,9 +77,8 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonUsuarios.accion = () => { this.router.navigate(['usuario_buscar']); };
     this.botonConfiguracion.accion = () => { this.router.navigate(['configuracion']); };
     this.botonIniciarPeriodo.accion = () => { this.router.navigate(['importar_maestros']); };
-
-    this.botonImportarVentaCSV.accion = () => { this.router.navigate(['venta_importar_csv']); };
-
+    this.botonrRecalculoPlanificacion.accion = () => { this.recalculoPlanificacion(); };
+    
     this.loadingPrincipalVisible = Utilidades.VarStatic.LoadPrincipal;
     this._usuario = ConfiGlobal.DatosUsuario;
   }
@@ -156,4 +164,75 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
       return def;
     }
   }
+
+
+  /* ----------------------------------- */
+  async recalculoPlanificacion(){
+    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-principal.dlgRecalculoPlanificacionMensaje','¡IMPORTANTE!<br>Esta opertación recalcula el stock asignado/disponible para todos los contratos de salida del ejercicio actual<br>Es posible que se cambien los valores asignados/disponibles<br>Esta operación puede tardar varios minutos.<br><br>¿Seguro que desea Iniciar el RECALCULO de la Planificación?'), 
+                                                               this.traducir('frm-principal.dlgRecalculoPlanificacionTitulo', 'Recalculo Planificación Ejercicio'));
+    if (confirmar) {
+      alert('Reclacular Planificación');
+      // this.iniciarEjercicio();  
+    } 
+  }
+
+  async iniciarEjercicio(){
+    if(this.WSDatos_Validando) return;
+
+    this.WSDatos_Validando = true;
+    this.mostrarPanelProceso();
+    (await this.planificadorService.recalculoPlanificacion()).subscribe(
+      datos => {
+        if(Utilidades.DatosWSCorrectos(datos)) {
+          this.ocultarPanelProceso_Exito(this.traducir('frm-principal.msgOk_WSRecalculoPlanificacion','RECALCULO Planificación realizado correctamente'));
+        } else {          
+          this.ocultarPanelProceso_Fallo(this.traducir('frm-principal.msgError_WSRecalculoPlanificacion','Error en Proceso de Recalculo Planificación')); 
+        }
+        this.WSDatos_Validando = false;
+      }, error => {
+        this.WSDatos_Validando = false;
+        this.ocultarPanelProceso();
+        Utilidades.compError(error, this.router,'frm-importar-maestros');
+      }
+    );
+  } 
+
+  /* ----------------------------------- */
+
+  //#region -- gestion loadPanel
+
+  async mostrarPanelProceso (mensaje?:string) {
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      this.loadingMessage = mensaje;
+    }
+    this.loadingVisible = true;
+  }
+
+  async ocultarPanelProceso () {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+  }
+
+  async ocultarPanelProceso_Exito (mensaje?:string) {
+    this.indicatorUrl = "../../assets/gifs/checkBackground.gif";
+    await Utilidades.delay(1000);
+    this.loadingVisible = false;
+    this.indicatorUrl = "";
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarExitoStr(mensaje,'success',3000);
+    }
+  }
+
+  async ocultarPanelProceso_Fallo (mensaje?:string) {
+    this.indicatorUrl = "";
+    this.loadingVisible = false;
+    if (!Utilidades.isEmpty(mensaje)) {
+      Utilidades.MostrarErrorStr(mensaje);
+    }    
+  }  
+
+  //#endregion
+  
+
 }

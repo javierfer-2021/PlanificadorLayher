@@ -552,13 +552,19 @@ export class FrmIncidencia2Component implements OnInit, AfterViewInit {
   cerrarLineaIncidencia(datos:any){
     this.popUpVisibleArticulos = false;
     if (datos != null) {
-      let linea = new LineaIncidencia();
-      linea.IdIncidencia = datos.IdIncidencia;
-      linea.IdArticulo = datos.IdArticulo;
-      linea.NombreArticulo = datos.NombreArticulo;
-      linea.Unidades = datos.Unidades;
-      linea.Observaciones = datos.Observaciones;
-      this.arrayLineasIncidencia.push(linea);
+      if ((this.existeArticuloEnLineas(datos.IdArticulo))) {
+        Utilidades.MostrarErrorStr('Articulo incluido previamente en lineas incidencia. Revise Unidades');
+      } else {
+        let linea = new LineaIncidencia();
+        linea.IdIncidencia = datos.IdIncidencia;
+        linea.IdArticulo = datos.IdArticulo;
+        linea.NombreArticulo = datos.NombreArticulo;
+        linea.Unidades = datos.Unidades;
+        linea.Observaciones = datos.Observaciones;
+        this.arrayLineasIncidencia.push(linea);
+        this.dgConfigLineas = new DataGridConfig(this.arrayLineasIncidencia, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+        this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);   
+      }
     }    
   }  
 

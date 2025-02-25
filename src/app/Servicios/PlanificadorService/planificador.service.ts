@@ -121,7 +121,6 @@ export class PlanificadorService {
     return this.http.post(ConfiGlobal.URL + '/api/articulostock/iniciarEjercicio', body, Utilidades.getHeaders());
   }  
 
-
   async getStockArticulos(almacen): Promise<Observable<any>>{ 
     if(!await Utilidades.establecerConexion('/api/articulostock/getListaArticulosStock')) return;
     // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }   
@@ -502,6 +501,15 @@ export class PlanificadorService {
 
     return this.http.post<any>(ConfiGlobal.URL + '/api/planificador/getTablaCalculoStockDisponible', body, Utilidades.getHeaders());
   }
+
+  // --- nueva funcion 23/02/2025
+
+  async recalculoPlanificacion(): Promise<Observable<any>>{ 
+    if(!await Utilidades.establecerConexion('/api/planificador/recalculoPlanificacion')) return;
+    // while (ConfiGlobal.principalValidando) { await Utilidades.delay(500); }  
+    const body = { usuario : ConfiGlobal.Usuario, datos: { } };    
+    return this.http.post(ConfiGlobal.URL + '/api/planificador/recalculoPlanificacion', body, Utilidades.getHeaders());
+  } 
 
   //#endregion
 
