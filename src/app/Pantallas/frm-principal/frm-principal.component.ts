@@ -171,12 +171,12 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-principal.dlgRecalculoPlanificacionMensaje','¡IMPORTANTE!<br>Esta opertación recalcula el stock asignado/disponible para todos los contratos de salida del ejercicio actual<br>Es posible que se cambien los valores asignados/disponibles<br>Esta operación puede tardar varios minutos.<br><br>¿Seguro que desea Iniciar el RECALCULO de la Planificación?'), 
                                                                this.traducir('frm-principal.dlgRecalculoPlanificacionTitulo', 'Recalculo Planificación Ejercicio'));
     if (confirmar) {
-      alert('Reclacular Planificación');
-      // this.iniciarEjercicio();  
+      // alert('Reclacular Planificación');
+      this.recalcularPlanificacion();  
     } 
   }
 
-  async iniciarEjercicio(){
+  async recalcularPlanificacion(){
     if(this.WSDatos_Validando) return;
 
     this.WSDatos_Validando = true;

@@ -320,7 +320,7 @@ export class FrmIncidencia2Component implements OnInit, AfterViewInit {
           //this._incidencia = datos.datos[0];
           this._incidencia = datos.datos.Incidencia[0];
           this.arrayLineasIncidencia = datos.datos.Lineas;
-          // this.location.back(); --> se pasa a cerrarSalidasAfectadas()
+          // this.location.back(); //--> se pasa a cerrarSalidasAfectadas()
           if (!Utilidades.isEmpty(this._incidencia)) { this.mostrarSalidasAfectadas(); }
         } else {          
           Utilidades.MostrarErrorStr(this.traducir('frm-incidencias.msgError_WSInsertandoIncidencia','Error Insertando Incidencia')); 
@@ -495,6 +495,7 @@ export class FrmIncidencia2Component implements OnInit, AfterViewInit {
   mostrarSalidasAfectadas(){
     // Pendiente revision proceso de calculo y cambio para N lineas articulo por incidencia
     //this.popUpVisibleSalidasAfectadas = true;
+    this.location.back();
   }
 
   cerrarSalidasAfectadas(e){
@@ -561,6 +562,7 @@ export class FrmIncidencia2Component implements OnInit, AfterViewInit {
         linea.NombreArticulo = datos.NombreArticulo;
         linea.Unidades = datos.Unidades;
         linea.Observaciones = datos.Observaciones;
+        if (Utilidades.isEmpty(linea.Observaciones)) {linea.Observaciones = '';}
         this.arrayLineasIncidencia.push(linea);
         this.dgConfigLineas = new DataGridConfig(this.arrayLineasIncidencia, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
         this.dgConfigLineas.actualizarConfig(true,false,'standard',true,true);   
@@ -640,7 +642,8 @@ export class FrmIncidencia2Component implements OnInit, AfterViewInit {
         linea.IdArticulo = lineasCSV[i].IdArticulo;
         linea.NombreArticulo = lineasCSV[i].NombreArticulo;
         linea.Unidades = lineasCSV[i].Unidades; 
-        linea.Observaciones = lineasCSV[i].Observaciones;         
+        linea.Observaciones = lineasCSV[i].Observaciones;  
+        if (Utilidades.isEmpty(linea.Observaciones)) {linea.Observaciones = '';}       
         // insertar linea (insert=array.add vs Edit)
         if (this.modoInsercion) {
           this.arrayLineasIncidencia.push(linea);
