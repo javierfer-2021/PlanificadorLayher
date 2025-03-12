@@ -59,12 +59,12 @@
                             [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaPrevista" 
+                        <dxi-item dataField="FechaPrevista" [label]="{text:'Fec.Prev.Entrada'}"
                             editorType="dxDateBox" 
                             [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaPrevistaValueChanged.bind(this)}">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA PREVISTA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaConfirmacion" 
+                        <dxi-item dataField="FechaConfirmada" [label]="{text:'Fec.Confirmada'}" 
                             editorType="dxDateBox" 
                             [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaConfirmacionValueChanged.bind(this)}">
                             <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA CONFIRMACION"></dxi-validation-rule>
@@ -84,7 +84,7 @@
         <!-- grid lineas cargadas del CSVs -->    
         <div class="row pt-1 px-1">
             <div class="col pt-1 px-1">    
-                <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+                <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas" (onRowPrepared_DataGrid)="onRowPrepared_DataGrid($event)"></app-cmp-data-grid>
             </div>
         </div>            
 

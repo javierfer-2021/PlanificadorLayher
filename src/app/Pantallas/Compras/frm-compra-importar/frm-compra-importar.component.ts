@@ -317,7 +317,7 @@ export class FrmCompraImportarComponent implements OnInit {
                                                   ,this.arrayLineasEntrada)).subscribe(
       datos => {
         if(Utilidades.DatosWSCorrectos(datos)) {
-          console.log(datos);
+          //console.log(datos);
           Utilidades.MostrarExitoStr(this.traducir('frm-compra-importar.msgOk_WSImportarCompra','Documento Importado correctamente'));           
           this.limpiarDocumento();
         } else {          
@@ -399,12 +399,18 @@ export class FrmCompraImportarComponent implements OnInit {
     return (res.isValid);
   }
 
-  btnImportarEntrada() {
+  async btnImportarEntrada() {
     // guardamos info del usuario modificada - insertada
     if (!this.validarDatosFormulario()) return;
     else {
-      // llamar a web_service de importacion
-      this.importarOferta();
+      // 12/03/25 -> Mensaje confirmacion re-emplazo entrada ya existente
+      let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-importar.dlgReemplazarEntradaExistente','La entrada existente sera Cancelada y Reemplazada por el nuevo documento<br>¿Seguro que desea continuar con la importación?'), this.traducir('frm-venta-importar.dlgAvisoImporarExistente', 'Confirmar Re-emplazo Entrada'));
+      if (confirmar) {
+        // 12/03/25 -> cambio estado automatico si marcada como confirmada
+        if (this._entrada.Confirmada) { this._entrada.IdEstado=2; }
+        // llamar a web_service de importacion
+        this.importarOferta();
+      }
     }
   }
     

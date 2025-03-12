@@ -54,7 +54,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   
   modoEdicion: boolean = false;
   _entradaCopia: Entrada = new(Entrada);
-
+  
   // grid lineas Entrada
   // [IdEntrada,  IdLinea, IdArticulo, NombreArticulo, CantidadPedida, CantidadConfirmada, CantidadCancelada, FechaActualizacion ]
   arrayLineasEntrada: Array<EntradaLinea>;
@@ -106,7 +106,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     {
       dataField: 'CantidadConfirmada',
       caption: this.traducir('frm-compra-detalles.colUndConfirmadas','Und.Confirmadas'),      
-      visible: true,
+      visible: false,
       width: 150,
     },    
     {
@@ -124,7 +124,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
       dataField: 'Modificada',
       caption: this.traducir('frm-compra-detalles.colModificada','Mod.'),
       dataType: 'boolean',
-      visible: false,
+      visible: true,
       width: 50,
     },
     // marca linea con excepciones
@@ -345,7 +345,9 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   btnCancelar(){
     // recuperar datos entrada previa a cambios
     this._entrada = this._entradaCopia
-    this.setModoEdicion(false);      
+    this.setModoEdicion(false);
+    // refrescamos lineas or si hay cambios pendientes de guardar 
+    this.cargarLineasEntrada();     
   }
 
   btnGuardar(){
@@ -383,12 +385,28 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   }
 
   async btnConfirmarEntrada(){
-    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgConfirmar', '¿Esta seguro que desea CONFIRMAR con fecha de hoy el contrato de Entrada seleccionado?'), this.traducir('frm-compra-detalles.TituloConfirmar', 'Confirmar Entrada'));  
+    let fecha:Date;
+    if (Utilidades.isEmpty(this._entrada.FechaConfirmada)) { 
+      fecha=new Date();
+    } else { 
+      fecha= new Date(this._entrada.FechaConfirmada); 
+    }
+    //let date2string:string = fecha.getDate() +'/'+ (fecha.getMonth()+1) +'/'+ fecha.getFullYear();
+    let date2string:string = fecha.toLocaleDateString('es-ES');
+    let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgConfirmar', '¿Esta seguro que desea CONFIRMAR el contrato de Entrada seleccionado?'+'<br>Fecha Confirmación: '+date2string), this.traducir('frm-compra-detalles.TituloConfirmar', 'Confirmar Entrada'));  
     if (!continuar) return;
     else {
       this._entrada.Confirmada=true;
-      this._entrada.FechaConfirmada= new Date();
-      this.ActualizarEntrada();
+      this._entrada.FechaConfirmada=fecha; //new Date();
+      this._entrada.IdEstado=2; //confirmada
+      for (let i = 0 ; i < this.arrayLineasEntrada.length ; i++)
+      {
+        if (Utilidades.isEmpty(this.arrayLineasEntrada[i].FechaConfirmada)) { 
+          this.arrayLineasEntrada[i].FechaConfirmada = this._entrada.FechaConfirmada; 
+          this.arrayLineasEntrada[i].Modificada = true; 
+        }
+      }
+      setTimeout(() => { this.ActualizarEntrada(); }, 200);      
     }     
   }
 
@@ -396,9 +414,18 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     let continuar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-detalles.MsgDesConfirmar', '¿Esta seguro que desea DES-Confirmar el contrato de Entrada seleccionado?'), this.traducir('frm-compra-detalles.TituloDESConfirmar', 'DES-Confirmar Entrada'));  
     if (!continuar) return;
     else {
+      let fechaConfimada_OLD: Date = this._entrada.FechaConfirmada;
       this._entrada.Confirmada=false;
       this._entrada.FechaConfirmada=null;
-      this.ActualizarEntrada();
+      this._entrada.IdEstado=1; //pendiente
+      for (let i = 0 ; i < this.arrayLineasEntrada.length ; i++)
+      {
+        if ((this.arrayLineasEntrada[i].FechaConfirmada==fechaConfimada_OLD)) { 
+          this.arrayLineasEntrada[i].FechaConfirmada = null;
+          this.arrayLineasEntrada[i].Modificada = true; 
+        }
+      }
+      setTimeout(() => { this.ActualizarEntrada(); }, 200);   
     }       
   }
 
@@ -493,6 +520,17 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
 
   cerrarAyuda(e){
     this.popUpVisibleAyuda = false;
+  }
+
+
+  // marcar colores grid - 
+  onRowPrepared_DataGrid(e){
+    if (!this.modoEdicion) return;
+    if (e.rowType==="data") {
+      if (e.data.Modificada) { 
+        e.rowElement.style.backgroundColor = '#FED2D2';  //Pendiente de revision - rosa
+      }
+    }
   }
 
 }
