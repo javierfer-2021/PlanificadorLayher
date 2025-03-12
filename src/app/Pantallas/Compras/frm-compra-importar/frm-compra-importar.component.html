@@ -40,7 +40,7 @@
             <div class="row pt-1 px-2" style="border-bottom: 1px dotted darkgray">
                 <div class="col px-1">Datos contrato {{str_txtTipoDocumento}} a importar</div>
                 <div *ngIf="aviso" class="col px-1" style="color: red;text-align:end;">                    
-                    <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.2rem; color:red;"></i>&nbsp;Contrato ya importado en el planificador.
+                    <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.2rem; color:red;"></i>&nbsp;{{_entrada.Aviso}}
                 </div>
             </div>
 
@@ -113,7 +113,7 @@
 </div>
 
 <!-- popUp Editar Linea Entrada -->
-<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="350px" width="960px"
+<dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="310px" width="980px"
     [fullScreen]="false" 
     [(visible)]="popUpVisibleEditarLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-compra-detalles.str_txtPopupEditarLinea', 'Editar Línea Entrada')}}"

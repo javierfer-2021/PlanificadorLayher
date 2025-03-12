@@ -41,6 +41,7 @@ export class Entrada {
     Modificada: boolean = false;
     Excepcion: boolean = false;
     Aviso: string;
+    Insertada: boolean = false;
   }
 
   /*

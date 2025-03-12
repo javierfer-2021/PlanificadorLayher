@@ -132,6 +132,14 @@ export class FrmCompraImportarComponent implements OnInit {
       width: 150,
     },
     {
+      dataField: 'FechaPrevista',
+      caption: this.traducir('frm-compra-importar.colUndPedidas','Fecha Prevista'),      
+      visible: true,
+      dataType: 'date', 
+      alignment: 'center',
+      width: 130,
+    },    
+    {
       dataField: 'Aviso',
       caption: this.traducir('frm-compra-importar.colAvisos','Aviso'),
       visible: false,
@@ -404,8 +412,16 @@ export class FrmCompraImportarComponent implements OnInit {
     if (!this.validarDatosFormulario()) return;
     else {
       // 12/03/25 -> Mensaje confirmacion re-emplazo entrada ya existente
-      let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-importar.dlgReemplazarEntradaExistente','La entrada existente sera Cancelada y Reemplazada por el nuevo documento<br>¿Seguro que desea continuar con la importación?'), this.traducir('frm-venta-importar.dlgAvisoImporarExistente', 'Confirmar Re-emplazo Entrada'));
-      if (confirmar) {
+      if (this.aviso) {
+        let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-importar.dlgReemplazarEntradaExistente','La entrada existente sera Cancelada y Reemplazada por el nuevo documento<br>¿Seguro que desea continuar con la importación?'), this.traducir('frm-venta-importar.dlgAvisoImporarExistente', 'Confirmar Re-emplazo Entrada'));
+        if (confirmar) {
+          // 12/03/25 -> cambio estado automatico si marcada como confirmada
+          if (this._entrada.Confirmada) { this._entrada.IdEstado=2; }
+          // llamar a web_service de importacion
+          this.importarOferta();
+        } 
+      }
+      else {
         // 12/03/25 -> cambio estado automatico si marcada como confirmada
         if (this._entrada.Confirmada) { this._entrada.IdEstado=2; }
         // llamar a web_service de importacion

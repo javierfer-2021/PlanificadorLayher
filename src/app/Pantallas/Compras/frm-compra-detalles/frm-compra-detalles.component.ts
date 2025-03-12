@@ -64,7 +64,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
       caption: '',
       visible: false,
       type: "buttons",
-      width: 40,
+      width: 65,
       //alignment: "center",
       fixed: true,
       fixedPosition: "right",
@@ -75,6 +75,12 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
             this.btnEditarLineaEntrada(e.row); 
           }
         },
+        { icon: "add",
+          hint: "Duplicar Línea Artículo",
+          onClick: (e) => { 
+            this.btnDuplicarLineaEntrada(e.row); 
+          }
+        },         
       ]
     },    
     {
@@ -114,7 +120,15 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
       caption: this.traducir('frm-compra-detalles.colUndCanceladas','Und.Canceladas'),      
       visible: true,
       width: 150,
-    },   
+    },
+    {
+      dataField: 'FechaPrevista',
+      caption: this.traducir('frm-compra-importar.colUndPedidas','Fecha Prevista'),      
+      visible: true,
+      dataType: 'date', 
+      alignment: 'center',
+      width: 130,
+    },           
     {
       dataField: 'FechaActualizacion',
       caption: this.traducir('frm-compra-detalles.colAvisos','Fec.Actualización'),
@@ -453,7 +467,17 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     this.lineaSeleccionada = null;
     this.popUpVisibleEditarLinea = false;        
   }
-  
+
+  btnDuplicarLineaEntrada(data:any){    
+    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());
+    let newLinea:EntradaLinea = new EntradaLinea();
+    newLinea = Object.assign({},this.dg.objSeleccionado()); 
+    newLinea.CantidadPedida = 0;    
+    newLinea.Insertada = true;
+    newLinea.Modificada = true;
+    this.arrayLineasEntrada.splice(index+1,0,newLinea);   
+  }  
   
   onFechaPrevistaValueChanged(e){
     if ((this.modoEdicion) && (!Utilidades.isEmpty(this._entrada.FechaPrevista)) && (this._entrada.FechaPrevista.getFullYear()<1900)) {
@@ -478,8 +502,8 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
 
   // validacion complementaria datos del formulario
   validarDatosFormulario():boolean{
-    // confirmda -> requiere fecha confirmación
-    if (!Utilidades.isEmpty(this._entrada.Confirmada) && (this._entrada.Confirmada)) {
+    // confirmada -> requiere fecha confirmación
+    if ((this._entrada.Confirmada) && (Utilidades.isEmpty(this._entrada.FechaConfirmada))) {
       Utilidades.MostrarErrorStr(this.traducir('frm-compra-detalles.msgError_FechaConfirmacionVacia','Debe indicar un valor en el campo Fecha CONFIRMACION'));
       return false;
     }
