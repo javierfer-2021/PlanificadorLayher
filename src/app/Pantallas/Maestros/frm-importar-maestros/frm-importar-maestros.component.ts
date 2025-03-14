@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterContentInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
@@ -191,7 +191,18 @@ export class FrmImportarMaestrosComponent implements OnInit {
   }
 
   async btnIniciarPeriodo() {
-    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-importar-maestros.dlgIniciarPeriodoMensaje','¡IMPORTANTE!<br>El maestro de STOCK va a ser actualizado a fecha de hoy<br>y la Planificación será recalculada.<br>¿Seguro que desea Iniciar un Nuevo Ejercicio?'), 
+    let textoDialogo : string = '¡IMPORTANTE! Acciones que se realizaran con la apertura del nuevo ejercicio'
+                              + '<br><br>'
+                              + '<ol>'
+                              + '<li>Creación y activacion de nuevo ejercicio a fecha actual</li>'
+                              + '<li>El maestro de STOCK-ARTICULOS sera actualizado a fecha de hoy</li>'
+                              + '<li>Traspaso Contratos todavía vigentes al nuevo ejercicio</li>'                              
+                              + '<li>Los contratos antiguos seran desvinculados de la planificación</li>'
+                              + '<li>Generación automatica incidencias devoluciones ejercicio anterior</li>'
+                              + '<li>Re-Calculo planificación para contratos trspasados en función nuevo stock</li>'
+                              + '</ol>'
+                              + '¿Seguro que desea Iniciar un Nuevo Ejercicio?';
+    let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-importar-maestros.dlgIniciarPeriodoMensaje',textoDialogo), 
                                                                this.traducir('frm-importar-maestros.dlgIniciarPeriodoTitulo', 'Iniciar Nuevo Ejercicio'));
     if (confirmar) {
       this.iniciarEjercicio();  

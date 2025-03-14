@@ -1,0 +1,80 @@
+<mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla> 
+
+        <!-- Titulo -->
+        <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-utils-admin-bd.lblTitulo', 'Utilidades Administracion BBDD.')}} </div>
+            </div>
+            <div class="col-2 pt-0 px-1" style="text-align: end;">
+                <button type="button" class="btn btn-outline-secondary botonAyuda" (click)="mostrarAyuda()">
+                    <i class="bi bi-question-circle"></i>
+                </button>                    
+            </div>             
+        </div>  
+
+        <!-- Datos pantalla -->  
+
+        <div class="row">
+            <div class="col">
+                FUNCIONES NO DISPONIBLES.
+            </div>
+        </div>
+         
+
+
+        <!-- Edicion de maestros de familias y subfamilias -->
+        <!--
+        <div class="row mt-3 mb-2">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <!- Tabs navs ->
+                <ul class="nav nav-tabs" id="ex1" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="tab-familia" aria-controls="familias" role="tab" href="#familias">Maestro Familias</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="tab-subfamilia" aria-controls="subfamilias" role="tab" href="#subfamilias">Maestro Sub-Familias</a>
+                    </li>
+                </ul>             
+                <!- Tabs content ->
+                <div class="tab-content" id="ex1-content">
+                    <div class="tab-pane fade show active" id="familias" role="tabpanel" aria-labelledby="tab-familia">
+                        Tab 1 content
+                    </div>
+                    <div class="tab-pane fade" id="subfamilias" role="tabpanel" aria-labelledby="tab-subfamilia">
+                        Tab 2 content
+                    </div>   
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+        -->
+        
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+
+
+<!-- popUp ayuda pantalla -->
+<dx-popup  #popUpAyuda (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true" height="70%" width="70%"
+    [fullScreen]="false" 
+    [(visible)]="popUpVisibleAyuda" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-importar-maestros.str_txtPopupAyuda', 'Ayuda...')}}"
+    contentTemplate="contentAyuda">
+    <div *dxTemplate="let data of 'contentAyuda'">
+        <app-frm-ayuda-pantalla [nombrePantalla]="'frm-importar-maestros'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" 
+    [message]="loadingMessage" [(visible)]="loadingVisible" [indicatorSrc]="indicatorUrl" 
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+

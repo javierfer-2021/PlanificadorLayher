@@ -26,9 +26,9 @@ import { FrmSubfamiliasComponent } from './Pantallas/Maestros/frm-subfamilias/fr
 import { FrmPlantillaStockBuscarComponent } from './Pantallas/Plantillas/frm-plantilla-stock-buscar/frm-plantilla-stock-buscar.component';
 import { FrmPlantillaStockComponent } from './Pantallas/Plantillas/frm-plantilla-stock/frm-plantilla-stock.component';
 import { FrmPlantillaStockCalcularComponent } from './Pantallas/Plantillas/frm-plantilla-stock-calcular/frm-plantilla-stock-calcular.component';
-
 import { FrmImportarCsvComponent } from './Pantallas/Ventas/frm-importar-csv/frm-importar-csv.component';
 import { FrmSimulacionPlanificadorComponent } from './Pantallas/Planificador/frm-simulacion-planificador/frm-simulacion-planificador.component'
+import { FrmUtilsAdminBdComponent } from './Pantallas/frm-utils-admin-bd/frm-utils-admin-bd.component';
 
 const routes: Routes = [
   { path: '', component: FrmLoginComponent },
@@ -63,7 +63,9 @@ const routes: Routes = [
   { path: 'importar_maestros', component: FrmImportarMaestrosComponent, canActivate: [AuthGuard] },
   { path: 'maestro-familias', component: FrmFamiliasComponent, canActivate: [AuthGuard] },
   { path: 'maestro-subfamilias', component: FrmSubfamiliasComponent, canActivate: [AuthGuard] },
-    
+   
+  { path: 'utils_admin_bd', component: FrmUtilsAdminBdComponent, canActivate: [AuthGuard] },
+
 ];
 
 @NgModule({

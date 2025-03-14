@@ -50,7 +50,9 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
   botonConfiguracion: BotonMenu = { icono: './assets/icons/configuracion.svg', texto: 'Configuración', ruta: '', nombre: 'botonConfiguracion', notificacion: 0, desactivado: false, accion: () => { } };
   botonIniciarPeriodo: BotonMenu = { icono: './assets/icons/servidor-web.svg', texto: 'Iniciar Ejercicio y Gestión Maestros', ruta: '', nombre: 'botonIniciarPeriodo', notificacion: 0, desactivado: false, accion: () => { } };  
   botonrRecalculoPlanificacion: BotonMenu = { icono: './assets/icons/elipsis.svg', texto: 'Recalculo Planificaión', ruta: '', nombre: 'botonRecalculoPlanificacion', notificacion: 0, desactivado: false, accion: () => { } };
+  botonrUtilidadesAdminBD: BotonMenu = { icono: './assets/icons/utils_bd.svg', texto: 'Utils. Admin. BBDD', ruta: '', nombre: 'botonUtilidadesAdminBD', notificacion: 0, desactivado: false, accion: () => { } };
 
+  
   btnAciones: BotonPantalla[] =  [
     { icono :'', texto: this.traducir('frm-principal.btnSalir', 'Salir'), posicion: 1, accion: () => {this.cerrarSesion();}, tipo: TipoBoton.danger, activo: true, visible: true } 
   ];
@@ -79,6 +81,9 @@ export class FrmPrincipalComponent implements OnInit, AfterViewInit {
     this.botonIniciarPeriodo.accion = () => { this.router.navigate(['importar_maestros']); };
     this.botonrRecalculoPlanificacion.accion = () => { this.recalculoPlanificacion(); };
     
+    //this.botonrUtilidadesAdminBD.accion = () => { this.router.navigate(['utils_admin_bd']); };
+    this.botonrUtilidadesAdminBD.accion = () => { Utilidades.ShowDialogInfo('Utilidades NO disponibles actualmente') };
+
     this.loadingPrincipalVisible = Utilidades.VarStatic.LoadPrincipal;
     this._usuario = ConfiGlobal.DatosUsuario;
   }

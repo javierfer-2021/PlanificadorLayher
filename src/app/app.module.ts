@@ -74,6 +74,7 @@ import { FrmPlantillaStockImportarComponent } from './Pantallas/Plantillas/frm-p
 import { FrmPlantillaStockCalcularComponent } from './Pantallas/Plantillas/frm-plantilla-stock-calcular/frm-plantilla-stock-calcular.component';
 import { FrmIncidenciaImportarLineasComponent } from './Pantallas/Incidencias/frm-incidencia-importar-lineas/frm-incidencia-importar-lineas.component';
 import { FrmIncidenciaLineaComponent } from './Pantallas/Incidencias/frm-incidencia-linea/frm-incidencia-linea.component';
+import { FrmUtilsAdminBdComponent } from './Pantallas/frm-utils-admin-bd/frm-utils-admin-bd.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -135,7 +136,8 @@ function initializeApp(appConfig: ConfigService) {
     FrmPlantillaStockImportarComponent,
     FrmPlantillaStockCalcularComponent,
     FrmIncidenciaImportarLineasComponent,
-    FrmIncidenciaLineaComponent
+    FrmIncidenciaLineaComponent,
+    FrmUtilsAdminBdComponent
 
   ],
   imports: [
