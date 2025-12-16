@@ -296,7 +296,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
                             dataField: c.NombreEstado,
                             // mofificamos mostrar estado por campo Planificar
                             //caption: c.NombreEstado,
-                            caption: (c.Planificar) ? 'Planificado' : 'SIN Planificar',
+                            caption: c.NombreEstado + ' - '+ ((c.Planificar) ? 'Planificado' : 'SIN Planificar'),
                             //cssClass: (c.Contrato === this.oOfertaSeleccionada.Contrato) ? 'estado_sel' : 'estado',
                             cssClass: this.obtenerClasePlanificado((c.Contrato === this.oOfertaSeleccionada.Contrato),c.Planificar),                          
                             columns: [{
