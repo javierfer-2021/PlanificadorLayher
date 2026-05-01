@@ -59,12 +59,12 @@
                             [editorOptions]="{disabled:false, dataSource:arrayAlmacenes, displayExpr:'NombreAlmacen', valueExpr:'IdAlmacen', searchEnabled: true }">
                             <dxi-validation-rule type="required" message="Debe indicar un valor para el campo ALMACEN"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaPrevista" [label]="{text:'Fec.Prev.Entrada'}"
+                        <dxi-item dataField="FechaPrevista" [label]="{text:'Fec.Entrada'}"
                             editorType="dxDateBox" 
                             [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaPrevistaValueChanged.bind(this)}">
-                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA PREVISTA"></dxi-validation-rule>
+                            <dxi-validation-rule type="required" message="Debe indicar un valor para el campo FECHA ENTRADA"></dxi-validation-rule>
                         </dxi-item>
-                        <dxi-item dataField="FechaConfirmada" [label]="{text:'Fec.Confirmada'}" 
+                        <dxi-item dataField="FechaConfirmada" [label]="{text:'Fec.Confirmado'}" 
                             editorType="dxDateBox" 
                             [editorOptions]="{disabled: false, width: '100%', displayFormat: 'dd/MM/yyyy', type:'date', showClearButton:true, onValueChanged:onFechaConfirmacionValueChanged.bind(this)}">
                             <dxi-validation-rule *ngIf="requerirFechaConfirmacion" type="required" message="Debe indicar un valor para el campo FECHA CONFIRMACION"></dxi-validation-rule>

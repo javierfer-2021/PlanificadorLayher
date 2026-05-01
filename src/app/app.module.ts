@@ -75,6 +75,9 @@ import { FrmPlantillaStockCalcularComponent } from './Pantallas/Plantillas/frm-p
 import { FrmIncidenciaImportarLineasComponent } from './Pantallas/Incidencias/frm-incidencia-importar-lineas/frm-incidencia-importar-lineas.component';
 import { FrmIncidenciaLineaComponent } from './Pantallas/Incidencias/frm-incidencia-linea/frm-incidencia-linea.component';
 import { FrmUtilsAdminBdComponent } from './Pantallas/frm-utils-admin-bd/frm-utils-admin-bd.component';
+import { FrmBuscarLineaArticuloComponent } from './Pantallas/Planificador/frm-buscar-linea-articulo/frm-buscar-linea-articulo.component';
+import { FrmCompraImportarEliminarLineasComponent } from './Pantallas/Compras/frm-compra-importar-eliminar-lineas/frm-compra-importar-eliminar-lineas.component';
+import { FrmVentasImportarEliminarLineasComponent } from './Pantallas/Ventas/frm-ventas-importar-eliminar-lineas/frm-ventas-importar-eliminar-lineas.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) { }
 
@@ -137,8 +140,10 @@ function initializeApp(appConfig: ConfigService) {
     FrmPlantillaStockCalcularComponent,
     FrmIncidenciaImportarLineasComponent,
     FrmIncidenciaLineaComponent,
-    FrmUtilsAdminBdComponent
-
+    FrmUtilsAdminBdComponent,
+    FrmBuscarLineaArticuloComponent,
+    FrmCompraImportarEliminarLineasComponent,
+    FrmVentasImportarEliminarLineasComponent
   ],
   imports: [
     BrowserModule,

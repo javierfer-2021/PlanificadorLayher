@@ -1,0 +1,9 @@
+.dx-datagrid-rowsview .dx-row > td {
+    white-space: nowrap;
+  }
+
+.dx-datagrid-text-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }

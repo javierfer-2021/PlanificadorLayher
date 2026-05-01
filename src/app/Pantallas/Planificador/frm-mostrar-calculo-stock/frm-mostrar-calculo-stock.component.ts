@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Renderer2, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, Input, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CmpDataGridComponent } from 'src/app/Componentes/cmp-data-grid/cmp-data-grid.component';
 import { ConfiGlobal } from '../../../Utilidades/ConfiGlobal';
@@ -11,7 +11,6 @@ import { ColumnDataGrid } from '../../../Clases/Componentes/ColumnDataGrid';
 import { DataGridConfig } from '../../../Clases/Componentes/DataGridConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
-import { DxPopupComponent } from 'devextreme-angular';
 import { locale } from 'devextreme/localization';
 
 @Component({
@@ -51,7 +50,7 @@ export class FrmMostrarCalculoStockComponent implements OnInit {
     {
       dataField: 'ID',
       caption: this.traducir('frm-mostrar-calculo-stock.colIdUsuario','#'),
-      visible: true,      
+      visible: false,      
     },      
     {
       dataField: 'TIPO_MOVIMIENTO',

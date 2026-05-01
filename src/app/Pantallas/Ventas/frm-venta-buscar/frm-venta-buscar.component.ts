@@ -173,6 +173,7 @@ export class FrmVentaBuscarComponent implements OnInit {
     {
       dataField: 'NumLineas',
       caption: this.traducir('frm-venta-buscar.colNumLineas','Num.Lineas'),
+      width: 80,
       visible: true,
     },             
   ];

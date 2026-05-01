@@ -1277,6 +1277,7 @@ export class Utilidades {
 
     /*** Metodo para actualizar la altura de los grid ***/
     // nGrids numero de grids (2 grids)¡Poner altura inicial a 0 para ajustar bien!!
+    
     public static ActualizarAlturaGrid(
         divContainer: ElementRef, divPantalla: ElementRef,divFooter: ElementRef, alturaActual: number, nGrids: number = 1): number {
 
@@ -1296,6 +1297,29 @@ export class Utilidades {
             return (alturaActual + diff)/nGrids;
         }
     }
+    
+    // version depurada por IA
+    public static ActualizarAlturaGrid_IA(
+        divContainer: ElementRef,
+        divPantalla: ElementRef,
+        divFooter: ElementRef,
+        alturaActual: number,
+        nGrids: number = 1
+      ): number {
+      
+        const altoVisible = divContainer.nativeElement.clientHeight;
+        const altoContenido = divPantalla.nativeElement.scrollHeight;
+        const altoFooter = divFooter.nativeElement.offsetHeight;
+      
+        const espacioDisponible = altoVisible - altoFooter;
+        const diff = espacioDisponible - altoContenido;
+      
+        if (diff > 0) {
+          return (alturaActual + diff) / nGrids;
+        } else {
+          return alturaActual / nGrids;
+        }
+      }
 
     /*** Metodo para actualizar la altura de los TextArea ***/
     public static ActualizarAlturaTextArea(

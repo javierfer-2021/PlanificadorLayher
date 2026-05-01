@@ -131,6 +131,10 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   _stockArticulo:string;
   _stockTitulo:string;
   
+  //popUp Buscar Articulo en lineas salida
+  @ViewChild('popUpBuscarArticulos', { static: false }) popUpBuscarArticulos: DxPopupComponent;
+  popUpVisibleBuscarArticulo:boolean = false;
+  
 
 //#endregion - cte y var de la pantalla
 
@@ -157,7 +161,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.itemsMenuArticulos= [{ text: 'Reemplazar artículo' },
                               { text: 'Eliminar artículo' },
                               { text: 'Añadir artículo' }, 
-                              { text: 'Marcar/Desmarcar Secundario' },                              
+                              { text: 'Marcar/Desmarcar Secundario' },
+                              { text: 'Buscar Refernecia ...' },                              
     ];
     //configuración menu contratos -> configurado dinamicamente en evento  "onContextMenuPreparing_DataGridUnidades(e)"
     this.itemsMenuContratos= [];  
@@ -174,8 +179,8 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     // Actualizar altura de los grids
     this.dgArticulos.setModoOrdenarColumna('none');  // eliminar opcion de ordenación en columna titulo -- bug reordenar und. en salidas afectadas
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
-    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));   
-    this.alturaDiv = '240px'; //210
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima) );   
+    this.alturaDiv = '240px'; //210   
 
     // eliminar error debug ... expression has changed after it was checked.
     this.cdref.detectChanges();      
@@ -190,10 +195,9 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.alturaDiv = '0px';    
     // this.mostrarEspacio = false;
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
-    // Actualizar altura del grid
+    // Actualizar altura del grid    
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
-    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));
-    
+    this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima));     
     this.alturaDiv = '240px';
   }
 
@@ -736,7 +740,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       //marcar/desmarcar secundario
       case 3:         
         this.actualizarValorSecunadrio(articulo);          
-      break;      
+      break; 
+      //buscar referencia
+      case 4:         
+        this.abrirBuscarLineaArticulo();
+      break;            
       default: break;
     }
   }
@@ -922,7 +930,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   cerrarEditarUnidadesArticulo(datos){
     if (datos!=null) {
-      console.log(datos);
+      //console.log(datos);
       
       // actualizar valor modificado
       datos.values[datos.Columna]=datos.UndServidas;
@@ -1094,6 +1102,59 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
   }  
   
   //#endregion
+
+
+  //#region -- Buscar articulo en lineas salida
+  abrirBuscarLineaArticulo(){
+    this.popUpVisibleBuscarArticulo = true;
+  }
+
+  cerrarBuscarLineaArticulo(CodArticulo){
+    if (CodArticulo!=null) {
+      this.buscarYSeleccionar(CodArticulo)
+    }
+    this.popUpVisibleBuscarArticulo = false;
+  }
+
+  buscarYSeleccionar(valor: any) {
+    const grid = this.dgArticulos.DataGrid.instance;
+  
+    /* busqueda por campo clave */
+    // const dataSource = grid.getDataSource();
+    // const items = dataSource.items();
+  
+    // const fila = items.find(x => x.IdArticulo === valor);
+  
+    // if (fila) {
+    //   grid.selectRows([fila.IdArticulo], false); // id = keyExpr
+    //   grid.navigateToRow(fila.IdArticulo);
+    // } else {
+    //   Utilidades.ShowDialogError('Codigo Artículo No Encontrado');
+    // }
+
+    /* busqueda por indice | - fiable pero no esta definido keyExpr="id" en el dx-data-grid */
+    const items = grid.getDataSource().items();  
+    const index = items.findIndex(x => x.IdArticulo === valor);
+  
+    if (index !== -1) {
+      grid.selectRowsByIndexes([index]);
+      grid.option("focusedRowIndex", index);
+    } else {
+      Utilidades.ShowDialogError('Codigo Artículo No Encontrado');
+    }
+
+  }
+
+  //#endregion
+
+
+  onScrollArticulos(e) {
+    this.dgUnidades.DataGrid.instance.getScrollable().scrollTo({ top: e.scrollOffset.top });
+  }
+  
+  onScrollUnidades(e) {
+    this.dgArticulos.DataGrid.instance.getScrollable().scrollTo({ top: e.scrollOffset.top });
+  }
 
 }
 

@@ -1,6 +1,7 @@
 <mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar>
 
-<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+<!-- <div class="container" #container (window:resize)="onResize($event)" style="overflow-y:auto; height:100vh;"> -->
+<div class="container" #container (window:resize)="onResize($event)" style="height:100vh; overflow: hidden; ">    
     <div #pantalla>
         
         <!-- Titulo -->
@@ -125,11 +126,14 @@
                 </div>
 
                 <div class="row">
-                    <app-cmp-data-grid id="dgArticulos" #dgArticulos [dgConfig]="dgConfigArticulos"
-                        (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" 
-                        (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)"
-                        (onRowPrepared_DataGrid)="onRowPrepared_DataGridArticulos($event)">
-                    </app-cmp-data-grid>
+                    <div class="col">
+                        <app-cmp-data-grid id="dgArticulos" #dgArticulos [dgConfig]="dgConfigArticulos"
+                            (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" 
+                            (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)"
+                            (onRowPrepared_DataGrid)="onRowPrepared_DataGridArticulos($event)"
+                            (onScroll)="onScrollArticulos($event)">
+                        </app-cmp-data-grid>
+                    </div>
                 </div>
 
             </div>
@@ -140,7 +144,8 @@
                     (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridUnidades($event)"
                     (onCellDoubleClick_DataGrid)="onCellDblClick_DataGridUnidades($event)"
                     (onContextMenuPreparing_DataGrid)="onContextMenuPreparing_DataGridUnidades($event)"
-                    (onCellPrepared_DataGrid)="onCellPrepared_DataGridUnidades($event)">
+                    (onCellPrepared_DataGrid)="onCellPrepared_DataGridUnidades($event)"
+                    (onScroll)="onScrollUnidades($event)">
                 </app-cmp-data-grid>
             </div>
 
@@ -160,7 +165,13 @@
 
         </div>
 
+        <!-- 
+        <div #btnFooter class="px-1">
+            <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+        </div> -->
+
     </div>
+
 </div>
 
 <div #btnFooter>
@@ -204,6 +215,7 @@
 </dx-popup>
 
 <!-- popUp ver calculo stock  -->
+<!-- *ngIf="popUpVisibleCalculoStock" -->
 <dx-popup *ngIf="popUpVisibleCalculoStock" #popUpCalculoStock (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
     [fullScreen]="false" width="820px" height="640px"
     [(visible)]="popUpVisibleCalculoStock" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
@@ -214,6 +226,17 @@
             [_salida]="_stockSalida" [_articulo]="_stockArticulo" [_simulacion]="false" [_titulo]="_stockTitulo"
             (cerrarPopUp)="cerrarCalculoStockDisponible($event)">
         </app-frm-mostrar-calculo-stock>
+    </div>    
+</dx-popup>
+
+<!-- popUp para buscar referencia articulo  -->
+<dx-popup *ngIf="popUpVisibleBuscarArticulo" #popUpBuscarArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="480px" height="180px"
+    [(visible)]="popUpVisibleBuscarArticulo" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-planificador.str_txtPopupUndBuscarArticulo', 'Buscar Artículo')}}"
+    contentTemplate="contentBuscarArticulo">
+    <div *dxTemplate="let data of 'contentBuscarArticulo'">
+        <app-frm-buscar-linea-articulo (cerrarPopUp)="cerrarBuscarLineaArticulo($event)"></app-frm-buscar-linea-articulo>
     </div>    
 </dx-popup>
 

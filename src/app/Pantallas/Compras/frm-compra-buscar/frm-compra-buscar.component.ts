@@ -149,7 +149,7 @@ export class FrmCompraBuscarComponent implements OnInit {
     },
     {
       dataField: 'FechaPrevista',
-      caption: this.traducir('frm-venta-buscar.colFechaPrevista','Fecha Prevista'),
+      caption: this.traducir('frm-venta-buscar.colFechaPrevista','Fecha Entrada'),
       visible: true,
       dataType: 'date',
     },

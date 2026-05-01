@@ -1,0 +1,33 @@
+<!-- <mat-progress-bar mode="indeterminate" *ngIf="LPGen(WSDatos_Validando)"></mat-progress-bar> -->
+
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <!-- <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-planificador-und.lblTitulo', 'Editar Unidades Asignadas')}} </div>
+            </div>   
+        </div>   -->
+
+        <!-- TextBox Referencia Articulo a Buscar -->
+        <div class="row px-1 pt-1">
+            <div class="col-4 px-2 pt-1 text-right">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-buscar-linea-articulo.lblCodArticulo', 'Codigo Artículo')}} </div>    
+            </div>
+            <div class="col-8 px-1">
+                <dx-text-box #txtCodArticulo class="w-100 fs-12 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16" [height]="30" [showClearButton]="false" 
+                [(ngModel)]="str_txtCodArticulo"
+                [ngStyle]="{'background-color': color_txtCodArticulo}" 
+                (onEnterKey)="onEnterKey_campo()" 
+                format="text">
+            </dx-text-box>
+            </div>                        
+        </div>
+        
+    </div>
+</div>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>

@@ -24,6 +24,8 @@ export class CmpDataGridComponent implements OnInit {
   @Output() onCellDoubleClick_DataGrid = new EventEmitter<any>();
   @Output() onContextMenuPreparing_DataGrid = new EventEmitter<any>();
   @Output() onCellPrepared_DataGrid = new EventEmitter<any>();
+  //gestion scroll
+  //@Output() onScroll_DataGrid = new EventEmitter<any>();
 
   @ViewChild('DataGrid', { static: false }) DataGrid: DxDataGridComponent;
 
@@ -133,4 +135,7 @@ export class CmpDataGridComponent implements OnInit {
     this.modoOrdenarColumna = modo;
   }
 
+  // onScroll(e) {
+  //   this.DataGrid.instance.getScrollable().scrollTo({top: e.scrollOffset.top});
+  // }  
 }
