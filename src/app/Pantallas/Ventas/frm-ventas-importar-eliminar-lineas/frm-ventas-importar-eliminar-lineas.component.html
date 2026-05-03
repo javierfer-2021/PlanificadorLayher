@@ -1,1 +1,48 @@
-<p>frm-ventas-importar-eliminar-lineas works!</p>
+<div class="container" #container (window:resize)="onResize($event)" style="overflow-y: auto; height: 100%;">
+    <div #pantalla>
+
+        <!-- Titulo -->
+        <!-- <div class="row px-1 py-2 titulo">
+            <div class="col pt-1 px-1">
+                <div class="fs-11 fs-sm-16 fs-md-16 fs-lg-16 fs-xl-16"> {{traducir('frm-compra-importar-eliminar-linea.lblTitulo', 'Seleccionar y Eliminar multiples lineas')}} </div>
+            </div>             
+        </div>   -->
+
+        <!-- Boton Elimianar -->
+        <div class="row px-1 pt-1">                      
+            <div class="col-9 px-1"></div>
+            <div class="col-3 px-1"><app-cmp-boton-icono-hrz [btnIconoHrz]="btnIconoLimpiar"></app-cmp-boton-icono-hrz></div>
+        </div>
+
+        <!-- grid lineas venta cargadas del CSVs/ERP -->    
+        <div class="row px-2 pt-1">
+            <div class="col pt-1 px-1">    
+                <app-cmp-data-grid id="dg" #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+            </div>
+        </div> 
+
+        <dx-context-menu
+            [dataSource]="itemsMenuArticulos"
+            [width]="200"
+            target="#dg"
+            (onItemClick)="itemMenuArticulosClick($event)">
+        </dx-context-menu>
+
+    </div>
+</div>
+
+<!-- popUp para buscar referencia articulo  -->
+<dx-popup *ngIf="popUpVisibleBuscarArticulo" #popUpBuscarArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="480px" height="180px"
+    [(visible)]="popUpVisibleBuscarArticulo" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-planificador.str_txtPopupUndBuscarArticulo', 'Buscar Artículo')}}"
+    contentTemplate="contentBuscarArticulo">
+    <div *dxTemplate="let data of 'contentBuscarArticulo'">
+        <app-frm-buscar-linea-articulo (cerrarPopUp)="cerrarBuscarLineaArticulo($event)"></app-frm-buscar-linea-articulo>
+    </div>    
+</dx-popup>
+
+<div #btnFooter>
+    <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
+</div>
+

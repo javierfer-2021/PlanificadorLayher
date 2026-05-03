@@ -99,9 +99,16 @@
             <!-- grid lineas venta cargadas del CSVs/ERP -->    
             <div class="row px-2 pt-1">
                 <div class="col pt-1 px-1">    
-                    <app-cmp-data-grid #dg [dgConfig]="dgConfigLineas"></app-cmp-data-grid>
+                    <app-cmp-data-grid id="dg" #dg [dgConfig]="dgConfigLineas" (onContentReady_DataGrid)="onContentReady_DataGrid($event)"></app-cmp-data-grid>
                 </div>
             </div>  
+
+            <dx-context-menu
+                [dataSource]="itemsMenuArticulos"
+                [width]="200"
+                target="#dg"
+                (onItemClick)="itemMenuArticulosClick($event)">
+            </dx-context-menu>
 
         </div>
 
@@ -116,7 +123,7 @@
 <dx-popup *ngIf="popUpVisibleEditarLinea" #popUpEditarLinea (window:resize)="onResize($event)" [dragEnabled]="false" modal="true" height="335px" width="980px"
     [fullScreen]="false" 
     [(visible)]="popUpVisibleEditarLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
-    title="{{traducir('frm-compra-detalles.str_txtPopupEditarLinea', 'Editar Línea Entrada')}}"
+    title="{{traducir('frm-compra-importar.title_PopupEditarLinea', 'Editar Línea Entrada')}}"
     contentTemplate="contentEditarLinea">
     <div *dxTemplate="let data of 'contentEditarLinea'">
         <app-frm-compra-lineas [linea]="lineaSeleccionada" (cerrarPopUp)="cerrarEditarLinea($event)"></app-frm-compra-lineas>
@@ -131,6 +138,28 @@
     contentTemplate="contentAyuda">
     <div *dxTemplate="let data of 'contentAyuda'">
         <app-frm-ayuda-pantalla [nombrePantalla]="'frm-compra-importar'" (cerrarPopUp)="cerrarAyuda($event)"></app-frm-ayuda-pantalla>
+    </div>    
+</dx-popup>
+
+<!-- popUp para eliminar multiples lineas -->
+<dx-popup *ngIf="popUpVisibleEliminarMultiplesLineas" #popUpEliminarMultiplesLineas (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="100%" height="100%"
+    [(visible)]="popUpVisibleEliminarMultiplesLineas" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-compra-importar.title_PopupEliminarMultiplesLineas', 'Seleccionar y Eliminar Multiples Lineas')}}"
+    contentTemplate="contentEliminarMultiplesLineas">
+    <div *dxTemplate="let data of 'contentEliminarMultiplesLineas'">
+        <app-frm-compra-importar-eliminar-lineas [_Arraylineas]="arrayLineasEntrada" (cerrarPopUp)="cerrarEliminarMultiplesLineas($event)"></app-frm-compra-importar-eliminar-lineas>
+    </div>    
+</dx-popup>
+
+<!-- popUp para buscar referencia articulo  -->
+<dx-popup *ngIf="popUpVisibleBuscarArticulo" #popUpBuscarArticulos (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="480px" height="180px"
+    [(visible)]="popUpVisibleBuscarArticulo" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false"
+    title="{{traducir('frm-compra-importar.title_PopupUndBuscarArticulo', 'Buscar Artículo')}}" 
+    contentTemplate="contentBuscarArticulo">
+    <div *dxTemplate="let data of 'contentBuscarArticulo'">
+        <app-frm-buscar-linea-articulo (cerrarPopUp)="cerrarBuscarLineaArticulo($event)"></app-frm-buscar-linea-articulo>
     </div>    
 </dx-popup>
 

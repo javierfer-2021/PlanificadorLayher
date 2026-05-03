@@ -209,6 +209,7 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
 
     // redimensionar grid, popUp
+    this.dg.mostrarFilaSumaryTotal('IdLinea','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Total Lineas: '),'count');    
     setTimeout(() => {
       this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima));
     }, 200);    

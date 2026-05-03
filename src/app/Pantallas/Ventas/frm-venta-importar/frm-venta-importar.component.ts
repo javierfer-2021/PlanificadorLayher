@@ -142,6 +142,8 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   ];
   dgConfigLineas: DataGridConfig = new DataGridConfig(null, this.cols, 400, '' );
 
+  ConfigGrid:boolean = true;  // control ejecutar codigo en ebento onContentReady
+
   //popUp Editar Lineas
   @ViewChild('popUpEditarLinea', { static: false }) popUpEditarLinea: DxPopupComponent;
   popUpVisibleEditarLinea:boolean = false;
@@ -151,6 +153,18 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   //popUp Ayuda Pantalla
   @ViewChild('popUpAyuda', { static: false }) popUpAyuda: DxPopupComponent;
   popUpVisibleAyuda:boolean = false;
+
+  //popUp Elimninar multiples lineas - pre importacion
+  @ViewChild('popUpEliminarMultiplesLineas', { static: false }) popUpEliminarMultiplesLineas: DxPopupComponent;
+  popUpVisibleEliminarMultiplesLineas:boolean = false;
+
+  //popUp Buscar Articulo en lineas
+  @ViewChild('popUpBuscarArticulos', { static: false }) popUpBuscarArticulos: DxPopupComponent;
+  popUpVisibleBuscarArticulo:boolean = false;  
+
+  //menus asociado al grid articulos a importar
+  itemsMenuArticulos: any;  
+
 
   //#endregion
 
@@ -165,6 +179,10 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   { 
     // Asignar localizacion ESPAÑA
     locale('es');
+    // menu grid lineas articulos
+    this.itemsMenuArticulos= [{ text: 'Eliminar Multiples Lineas' },
+                              { text: 'Buscar Refernecia ...' },                              
+    ];     
   }
 
   ngOnInit(): void {
@@ -250,7 +268,8 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     );
   }  
 
-  async obtenerDatosVentaERP(){
+  async obtenerDatosVentaERP() : Promise<void> {
+    /*
     //alert('Cargar fichero lineas');
     if(this.WSDatos_Validando) return;
     if(Utilidades.isEmpty(this.str_txtContrato)) return;
@@ -287,6 +306,45 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
         Utilidades.compError(error, this.router,'frm-venta-importar');
       }
     );
+    */
+    if (this.WSDatos_Validando) return;
+    if (Utilidades.isEmpty(this.str_txtContrato)) return;
+  
+    this.WSDatos_Validando = true;
+  
+    try {
+      const observable = await this.planificadorService
+        .cargarSalida_from_ERP(this.str_txtContrato);
+  
+      const datos = await observable.toPromise(); 
+  
+      if (Utilidades.DatosWSCorrectos(datos)) {
+
+        this.contratoValido = true;
+        this.color_txtContrato = ConfiGlobal.colorValido;          
+        this.str_txtTipoDocumento = this._salida.NombreTipoDocumento;
+        this.aviso = (this._salida.Aviso != '');
+        this.strAviso = this._salida.Aviso;
+        this.requerirFechaFin = (this._salida.IdTipoDocumento == 20);
+
+        this._salida = datos.datos.Cabecera[0];
+  
+        this.arrayLineasSalida = datos.datos.Lineas;
+        this.arrayLineasSalida.forEach(l => l.Modificada = false);
+  
+        this.dgConfigLineas.dataSource = this.arrayLineasSalida;
+        this.dgConfigLineas.actualizarConfig(true,false,'standard',true,false);
+  
+        this.asignarValoresDefecto();
+      } else {
+        Utilidades.MostrarError(datos.nError);
+      }
+    } catch (error) {
+      Utilidades.compError(error, this.router, 'frm-compra-importar');
+    } finally {
+      this.WSDatos_Validando = false;
+      this.ConfigGrid = true;
+    }   
   }  
 
   async importarOferta(){
@@ -556,6 +614,90 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     this.popUpVisibleAyuda = false;
   }
     
+
+  /* actualizacion & mejora 01/05/2026 */
+  //#region -- menu lineas articulos a importar
+  async itemMenuArticulosClick(e) {
+    switch (e.itemIndex) {     
+      case 0: 
+        //alert('Eliminar multiples lineas');
+        this.abrirEliminarMultiplesineas();
+      break;
+      case 1: 
+        //alert('Buscar articulo');
+        this.abrirBuscarLineaArticulo();
+      break;
+      default: break;
+    }
+  }
+
+  abrirEliminarMultiplesineas(){
+    this.popUpVisibleEliminarMultiplesLineas = true;
+  }
+
+  cerrarEliminarMultiplesLineas(lineas){
+    if (lineas!=null) {
+      // actualizamos array de lineas
+      this.arrayLineasSalida = lineas;
+      this.dgConfigLineas = new DataGridConfig(this.arrayLineasSalida, this.cols, this.dgConfigLineas.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+      this.dgConfigLineas.actualizarConfig(true,false,'standard',true,false);     
+      // config extra
+      this.ConfigGrid = true;
+    }
+    this.popUpVisibleEliminarMultiplesLineas = false;
+  }
+
+  abrirBuscarLineaArticulo(){
+    this.popUpVisibleBuscarArticulo = true;
+  }
+
+  cerrarBuscarLineaArticulo(CodArticulo){
+    if (CodArticulo!=null) {
+      this.buscarYSeleccionar(CodArticulo)
+    }
+    this.popUpVisibleBuscarArticulo = false;
+  }
+
+  buscarYSeleccionar(valor: any) {
+      const grid = this.dg.DataGrid.instance;
+    
+      /* busqueda por campo clave */
+      // const dataSource = grid.getDataSource();
+      // const items = dataSource.items();
+    
+      // const fila = items.find(x => x.IdArticulo === valor);
+    
+      // if (fila) {
+      //   grid.selectRows([fila.IdArticulo], false); // id = keyExpr
+      //   grid.navigateToRow(fila.IdArticulo);
+      // } else {
+      //   Utilidades.ShowDialogError('Codigo Artículo No Encontrado');
+      // }
+  
+      /* busqueda por indice | - fiable pero no esta definido keyExpr="id" en el dx-data-grid */
+      const items = grid.getDataSource().items();  
+      const index = items.findIndex(x => x.IdArticulo === valor);
+    
+      if (index !== -1) {
+        grid.selectRowsByIndexes([index]);
+        grid.option("focusedRowIndex", index);
+      } else {
+        Utilidades.ShowDialogError('Codigo Artículo No Encontrado');
+      }
+    }
+
+  //#endregion
+
+  onContentReady_DataGrid(e) {
+    if (this.ConfigGrid) {
+      this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-compra-importar.TotalRegistros','Artículos: '),'count');  
+      this.dg.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigLineas.alturaMaxima)); 
+      this.ConfigGrid = false; 
+    }
+  }  
+
+
+
 }
 
 
