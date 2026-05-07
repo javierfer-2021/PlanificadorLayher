@@ -25,8 +25,8 @@ export class CmpDataGridComponent implements OnInit {
   @Output() onContextMenuPreparing_DataGrid = new EventEmitter<any>();
   @Output() onCellPrepared_DataGrid = new EventEmitter<any>();
   //gestion scroll
-  //@Output() onScroll_DataGrid = new EventEmitter<any>();
-
+  @Output() onScroll_DataGrid = new EventEmitter<any>();
+  
   @ViewChild('DataGrid', { static: false }) DataGrid: DxDataGridComponent;
 
   filtro: any;

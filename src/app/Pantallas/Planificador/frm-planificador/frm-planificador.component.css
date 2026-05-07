@@ -11,7 +11,12 @@
     color: black;
 }
 
-
+.dx-datagrid-rowsview .dx-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
 /* 
 ::ng-deep .dx-header-row .grisClaro {
     background-color: #f2f2f2;

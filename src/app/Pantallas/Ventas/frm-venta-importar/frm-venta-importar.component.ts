@@ -320,14 +320,13 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   
       if (Utilidades.DatosWSCorrectos(datos)) {
 
+        this._salida = datos.datos.Cabecera[0];
         this.contratoValido = true;
         this.color_txtContrato = ConfiGlobal.colorValido;          
         this.str_txtTipoDocumento = this._salida.NombreTipoDocumento;
         this.aviso = (this._salida.Aviso != '');
         this.strAviso = this._salida.Aviso;
         this.requerirFechaFin = (this._salida.IdTipoDocumento == 20);
-
-        this._salida = datos.datos.Cabecera[0];
   
         this.arrayLineasSalida = datos.datos.Lineas;
         this.arrayLineasSalida.forEach(l => l.Modificada = false);
@@ -523,8 +522,9 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
   //#region - Edicion lineas de importacion
   
   btnEditarLineaSalida(data:any){    
-    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-    this.lineaSeleccionada = this.dg.objSeleccionado();
+    // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    // this.lineaSeleccionada = this.dg.objSeleccionado();
+    this.lineaSeleccionada = data.data;
     this.lineaSeleccionadaIndex = this.arrayLineasSalida.findIndex(e => e==this.lineaSeleccionada);
     //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;    
@@ -559,8 +559,9 @@ export class FrmVentaImportarComponent implements OnInit, AfterViewInit, AfterCo
     let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-venta-importar.dlgEliminarLineaMensaje','La línea seleccionada será eliminada y NO IMPORTADA al planificador.<br>¿Seguro que desea continuar?'), 
                                                                this.traducir('frm-venta-importar.dlgEliminarLineaTitulo', 'Eliminar Línea'));
     if (confirmar) {
-      this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-      let index:number = this.arrayLineasSalida.findIndex(e => e==this.dg.objSeleccionado());     
+      // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+      // let index:number = this.arrayLineasSalida.findIndex(e => e==this.dg.objSeleccionado());     
+      let index:number = this.arrayLineasSalida.findIndex(e => e==data.data);     
       this.arrayLineasSalida.splice(index,1);
       //this.arrayLineasSalida.splice(index,1);
     }

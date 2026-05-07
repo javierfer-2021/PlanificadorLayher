@@ -35,6 +35,23 @@
     </div>
 </div>
 
+
+<!-- popUp ver calculo stock  -->
+<!-- *ngIf="popUpVisibleCalculoStock" -->
+<dx-popup *ngIf="popUpVisibleCalculoStock" #popUpCalculoStock (window:resize)="onResize($event)" [dragEnabled]="false"  modal="true"
+    [fullScreen]="false" width="820px" height="640px"
+    [(visible)]="popUpVisibleCalculoStock" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
+    title="{{traducir('frm-planificador.str_txtPopupUndCalculoStock', 'Calculo Stock Disponible')}}"
+    [animation]="null"
+    contentTemplate="contentCalculoStock">
+    <div *dxTemplate="let data of 'contentCalculoStock'">
+        <app-frm-mostrar-calculo-stock 
+            [_salida]="_stockSalida" [_articulo]="_stockArticulo" [_simulacion]="false" [_titulo]="_stockTitulo"
+            (cerrarPopUp)="cerrarCalculoStockDisponible($event)">
+        </app-frm-mostrar-calculo-stock>
+    </div>    
+</dx-popup>
+
 <div #btnFooter>
     <app-cmp-botones-pantallas [botones]="btnAciones"></app-cmp-botones-pantallas>
 </div>

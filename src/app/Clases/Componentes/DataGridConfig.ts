@@ -81,4 +81,5 @@ export class DataGridConfig {
     filterRowVisible: boolean = false;
     editable: boolean = false;
     mostrarTotales: boolean = false;
+    keyExpresion: string = "";
   }

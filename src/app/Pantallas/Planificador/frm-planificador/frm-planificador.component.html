@@ -131,7 +131,7 @@
                             (onContentReady_DataGrid)="onContentReady_DataGridArticulos()" 
                             (onFocusedRowChanged_DataGrid)="onFocusedRowChanged_DataGridArticulos($event)"
                             (onRowPrepared_DataGrid)="onRowPrepared_DataGridArticulos($event)"
-                            (onScroll)="onScrollArticulos($event)">
+                            (onScroll)="onScroll_DataGridArticulos($event)">>
                         </app-cmp-data-grid>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                     (onCellDoubleClick_DataGrid)="onCellDblClick_DataGridUnidades($event)"
                     (onContextMenuPreparing_DataGrid)="onContextMenuPreparing_DataGridUnidades($event)"
                     (onCellPrepared_DataGrid)="onCellPrepared_DataGridUnidades($event)"
-                    (onScroll)="onScrollUnidades($event)">
+                    (onScroll)="onScroll_DataGridUnidades($event)">
                 </app-cmp-data-grid>
             </div>
 
@@ -184,9 +184,10 @@
     [fullScreen]="false" 
     [(visible)]="popUpVisibleArticulos" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-articulos-buscar.str_txtPopupArticulos', 'Selección Articulo')}}"
+    [animation]="null"
     contentTemplate="contentSeleccionarArticulo">
     <div *dxTemplate="let data of 'contentSeleccionarArticulo'">
-        <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" [solicitarUnidades]=true (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
+        <app-frm-articulos-buscar [idAlmacen]="oOfertaSeleccionada.IdAlmacen" [salida]="_salida" [solicitarUnidades]=true (cerrarPopUp)="cerrarSeleccionarArticulo($event)"></app-frm-articulos-buscar>
     </div>    
 </dx-popup>
 
@@ -195,6 +196,7 @@
     [showCloseButton]="true" [closeOnOutsideClick]="false" 
     [showTitle]="true" title="{{traducir('frm-articulos-buscar.str_txtPopupObservaciones', 'Observaciones')}}"
     [(visible)]="popUpVisibleObservaciones"
+    [animation]="null"
     contentTemplate="contentObservaciones">
     <div *dxTemplate="let data of 'contentObservaciones'">
         CONTRATO: {{str_contrato}}
@@ -208,6 +210,7 @@
     [fullScreen]="false" width="800px" height="440px"
     [(visible)]="popUpVisibleEditarUndLinea" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-planificador.str_txtPopupUndEditarUndLineas', 'Modificar Und. Asignadas')}}"
+    [animation]="null"
     contentTemplate="contentUnidadesLineas">
     <div *dxTemplate="let data of 'contentUnidadesLineas'">
         <app-frm-planificador-und [lineaArticulo]="_modLineaArticulo" (cerrarPopUp)="cerrarEditarUnidadesArticulo($event)"></app-frm-planificador-und>
@@ -220,6 +223,7 @@
     [fullScreen]="false" width="820px" height="640px"
     [(visible)]="popUpVisibleCalculoStock" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-planificador.str_txtPopupUndCalculoStock', 'Calculo Stock Disponible')}}"
+    [animation]="null"
     contentTemplate="contentCalculoStock">
     <div *dxTemplate="let data of 'contentCalculoStock'">
         <app-frm-mostrar-calculo-stock 
@@ -234,6 +238,7 @@
     [fullScreen]="false" width="480px" height="180px"
     [(visible)]="popUpVisibleBuscarArticulo" [showTitle]="true" [showCloseButton]="true" [closeOnOutsideClick]="false" 
     title="{{traducir('frm-planificador.str_txtPopupUndBuscarArticulo', 'Buscar Artículo')}}"
+    [animation]="null"
     contentTemplate="contentBuscarArticulo">
     <div *dxTemplate="let data of 'contentBuscarArticulo'">
         <app-frm-buscar-linea-articulo (cerrarPopUp)="cerrarBuscarLineaArticulo($event)"></app-frm-buscar-linea-articulo>

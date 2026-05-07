@@ -394,8 +394,9 @@ export class FrmVentaDetallesComponent implements OnInit, AfterViewInit {
 
 
   btnEditarLineaSalida(data:any){  
-    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-    this.lineaSeleccionada = this.dg.objSeleccionado();
+    // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    // this.lineaSeleccionada = this.dg.objSeleccionado();
+    this.lineaSeleccionada = data.data;
     this.lineaSeleccionadaIndex = this.arrayLineasSalida.findIndex(e => e==this.lineaSeleccionada);
     //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;           

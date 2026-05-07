@@ -227,10 +227,6 @@ export class FrmCompraImportarComponent implements OnInit {
     setTimeout(() => { this.txtContrato.instance.focus(); }, 300);       
   }
 
-  ngAfterContentChecked(): void {   
-    // eliminar error debug ... expression has changed after it was checked.
-    this.cdref.detectChanges();    
-  }
 
   onResize(event) {
     Utilidades.BtnFooterUpdate(this.pantalla,this.container,this.btnFooter,this.btnAciones,this.renderer);
@@ -344,13 +340,12 @@ export class FrmCompraImportarComponent implements OnInit {
   
       if (Utilidades.DatosWSCorrectos(datos)) {
         
+        this._entrada = datos.datos.Cabecera[0];
         this.contratoValido = true;
         this.color_txtContrato = ConfiGlobal.colorValido;          
         this.str_txtTipoDocumento = this._entrada.NombreTipoDocumento;
         this.aviso = (this._entrada.Aviso != '');
         this.requerirFechaConfirmacion = false;  //(this._entrada.IdTipoDocumento == 20);
-
-        this._entrada = datos.datos.Cabecera[0];
   
         this.arrayLineasEntrada = datos.datos.Lineas;
         this.arrayLineasEntrada.forEach(l => l.Modificada = false);
@@ -520,10 +515,11 @@ export class FrmCompraImportarComponent implements OnInit {
   //#region - Edicion lineas de importacion
   
   btnEditarLineaEntrada(data:any){    
-    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-    this.lineaSeleccionada = this.dg.objSeleccionado();
-    this.lineaSeleccionadaIndex = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);
-    
+    // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    // this.lineaSeleccionada = this.dg.objSeleccionado();
+    // this.lineaSeleccionadaIndex = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);
+    this.lineaSeleccionada = data.data;
+    this.lineaSeleccionadaIndex = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);    
     //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;
   }  
@@ -549,18 +545,23 @@ export class FrmCompraImportarComponent implements OnInit {
     let confirmar = <boolean>await Utilidades.ShowDialogString(this.traducir('frm-compra-importar.dlgEliminarLineaMensaje','La línea seleccionada será eliminada y NO IMPORTADA al planificador.<br>¿Seguro que desea continuar?'), 
                                                                this.traducir('frm-compra-importar.dlgEliminarLineaTitulo', 'Eliminar Línea'));
     if (confirmar) {
-      this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-      let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());     
+      // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+      //let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());      
+      this.lineaSeleccionada=data.data;
+      let index:number = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);     
       this.arrayLineasEntrada.splice(index,1);
       //this.arrayLineasEntrada.splice(data.dataIndex,1);
     }
   }
 
   btnDuplicarLineaEntrada(data:any){    
-    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-    let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());
+    // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    // let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());
+    this.lineaSeleccionada=data.data;
+    let index:number = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);
     let newLinea:EntradaLinea = new EntradaLinea();
-    newLinea = Object.assign({},this.dg.objSeleccionado()); 
+    //newLinea = Object.assign({},this.dg.objSeleccionado()); 
+    newLinea = Object.assign({},this.lineaSeleccionada); 
     newLinea.CantidadPedida = 0;
     this.arrayLineasEntrada.splice(index+1,0,newLinea);   
   }

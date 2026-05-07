@@ -445,8 +445,9 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   }
 
   btnEditarLineaEntrada(data:any){    
-    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-    this.lineaSeleccionada = this.dg.objSeleccionado();
+    //this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    //this.lineaSeleccionada = this.dg.objSeleccionado();
+    this.lineaSeleccionada = data.data;
     this.lineaSeleccionadaIndex = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);
     //this.lineaSeleccionada.Modificada = false;     
     this.popUpVisibleEditarLinea = true;    
@@ -470,14 +471,22 @@ export class FrmCompraDetallesComponent implements OnInit,AfterViewInit {
   }
 
   btnDuplicarLineaEntrada(data:any){    
-    this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
-    let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());
+    // this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+    // let index:number = this.arrayLineasEntrada.findIndex(e => e==this.dg.objSeleccionado());
+    // let newLinea:EntradaLinea = new EntradaLinea();
+    // newLinea = Object.assign({},this.dg.objSeleccionado()); 
+    // newLinea.CantidadPedida = 0;    
+    // newLinea.Insertada = true;
+    // newLinea.Modificada = true;
+    // this.arrayLineasEntrada.splice(index+1,0,newLinea);   
+    this.lineaSeleccionada = data.data;
+    let index:number = this.arrayLineasEntrada.findIndex(e => e==this.lineaSeleccionada);
     let newLinea:EntradaLinea = new EntradaLinea();
-    newLinea = Object.assign({},this.dg.objSeleccionado()); 
+    newLinea = Object.assign({},this.lineaSeleccionada); 
     newLinea.CantidadPedida = 0;    
     newLinea.Insertada = true;
     newLinea.Modificada = true;
-    this.arrayLineasEntrada.splice(index+1,0,newLinea);   
+    this.arrayLineasEntrada.splice(index+1,0,newLinea);      
   }  
   
   onFechaPrevistaValueChanged(e){

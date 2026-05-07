@@ -1,4 +1,5 @@
 //** PANTALLA QUE BUSCA Y MUESTRA ARTICULOS Y STOCK POR ALMACEN */
+
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, Input, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
@@ -14,10 +15,11 @@ import { CmdSelectBoxComponent } from 'src/app/Componentes/cmp-select-box/cmd-se
 import { DataSelectBoxConfig } from '../../../Clases/Componentes/DataSelectBoxConfig';
 import { Utilidades } from '../../../Utilidades/Utilidades';
 import { ArticuloStock } from '../../../Clases/Articulo';
+import { Salida } from '../../../Clases/Salida';
 import { PlanificadorService } from '../../../Servicios/PlanificadorService/planificador.service';
 import { locale } from 'devextreme/localization';
 import { Almacen } from 'src/app/Clases/Maestros';
-import { DxNumberBoxComponent } from 'devextreme-angular';
+import { DxNumberBoxComponent, DxPopupComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-frm-articulos-buscar',
@@ -33,6 +35,7 @@ export class FrmArticulosBuscarComponent implements OnInit {
   
   @Input() idAlmacen: number;                                             // parametro de entrada (almacen) 
   @Input() solicitarUnidades: boolean=true;
+  @Input() salida: Salida = null;
   @Output() cerrarPopUp : EventEmitter<any> = new EventEmitter<any>();    // retorno de la pantalla
 
   @ViewChild('container') container: ElementRef;
@@ -58,6 +61,24 @@ export class FrmArticulosBuscarComponent implements OnInit {
   arrayStockArticulos: Array<ArticuloStock>;
   cols: Array<ColumnDataGrid> = [
     {
+      dataField: '',
+      caption: '',
+      visible: false,
+      type: "buttons",
+      width: 40,
+      //alignment: "center",
+      fixed: true,
+      fixedPosition: "right",
+      buttons: [ 
+        { icon: "preferences",
+          hint: "Calcular Stock Disponible",
+          onClick: (e) => { 
+            this.btnCalcularStockDisponible(e.row); 
+          }
+        },
+      ]
+    },     
+    {
       dataField: 'IdArticulo',
       caption: this.traducir('frm-articulos-buscar.colIdArticulo','Articulo'),
       visible: true,
@@ -79,7 +100,7 @@ export class FrmArticulosBuscarComponent implements OnInit {
     },
     {
       dataField: 'Unidades',
-      caption: this.traducir('frm-articulos-buscar.colUnidades','Unidades'),
+      caption: this.traducir('frm-articulos-buscar.colUnidades','Stock Inicial'),
       visible: true,
     },
     {
@@ -101,6 +122,14 @@ export class FrmArticulosBuscarComponent implements OnInit {
   dgConfig: DataGridConfig = new DataGridConfig(null, this.cols, 100, '' );
   selectedRowsData = [];
 
+  //popUp Ver calculo stock disponible
+  @ViewChild('popUpCalculoStock', { static: false }) popUpCalculoStock: DxPopupComponent;
+  popUpVisibleCalculoStock:boolean = false;
+  _stockSalida:number;
+  _stockArticulo:string;
+  _stockTitulo:string;
+  
+  
   // combo filtro almacenes
   almacenes: Array<Almacen> = ConfiGlobal.arrayAlmacenesFiltrosBusqueda;
   sbConfig: DataSelectBoxConfig = new DataSelectBoxConfig(this.almacenes,'NombreAlmacen','IdAlmacen','','Seleccionar Almacen',false);
@@ -127,8 +156,8 @@ export class FrmArticulosBuscarComponent implements OnInit {
   ngAfterViewInit(): void {
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     // configuracion extra del grid -> mostrar fila total registros
+    this.dg.DataGrid.instance.columnOption(0, "visible", this.salida != null);
     this.dg.mostrarFilaSumaryTotal('IdArticulo','IdArticulo',this.traducir('frm-articulos-buscar.TotalRegistros','Total Registros: '),'count');
-
     // redimensionar grid, popUp
     setTimeout(() => {
       this.dg.panelBusqueda(true);
@@ -147,10 +176,6 @@ export class FrmArticulosBuscarComponent implements OnInit {
     this.cdref.detectChanges();    
   }
 
-  ngAfterContentChecked(): void {   
-    // eliminar error debug ... expression has changed after it was checked.
-    this.cdref.detectChanges();    
-  }
 
   onResize(event) {
     Utilidades.BtnFooterUpdate(this.pantalla,this.container,this.btnFooter,this.btnAciones,this.renderer);
@@ -186,7 +211,8 @@ export class FrmArticulosBuscarComponent implements OnInit {
           this.loadIndicatorVisible = true;
           // asignar valores devuletos
           this.arrayStockArticulos = datos.datos;
-          this.dgConfig = new DataGridConfig(this.arrayStockArticulos, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          //this.dgConfig = new DataGridConfig(this.arrayStockArticulos, this.cols, this.dgConfig.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
+          this.dgConfig.dataSource = this.arrayStockArticulos;
           if (this.arrayStockArticulos.length>50) { this.dgConfig.actualizarConfig(true,false, 'virtual',true,true);}
           else { this.dgConfig.actualizarConfig(true,false, 'standard',true,true); }
           this.loadIndicatorVisible = false;
@@ -245,5 +271,48 @@ export class FrmArticulosBuscarComponent implements OnInit {
   onValueChanged_ComboAlmacen(){
     this.cargarStock(this.sbAlmacenes.SelectBox.value);
   }
+
+  // act. 04/05/2026 - nueva funcion calculo stock disponible a fecha dada
+  // btnCalcularStockDisponible(data:any){  
+  //   alert(data.NombreArticulo);
+  //   this.dg.DataGrid.instance.selectRowsByIndexes(data.dataIndex);
+  //   // this.lineaSeleccionada = this.dg.objSeleccionado();
+  //   // this.lineaSeleccionadaIndex = this.arrayLineasSalida.findIndex(e => e==this.lineaSeleccionada);
+  //   // //this.lineaSeleccionada.Modificada = false;     
+  //   // this.popUpVisibleEditarLinea = true;           
+  // }
+
+  btnCalcularStockDisponible(e) {
+    //alert('calcular stock');
+    if (e.data) {
+
+      const rowData = e.data;
+    
+      this._stockSalida = this.salida.IdSalida;
+      this._stockArticulo = rowData.IdArticulo;
+    
+      this._stockTitulo =
+        'CONTRATO: ' + this.salida.Contrato +
+        ' (id.: ' + this.salida.IdSalida + ') ' +
+        ' | F.Inicio: ' + this.obtenerFecha(this.salida.FechaInicio.toString()) +
+        '\n' +
+        'ARTICULO: ' + rowData.IdArticulo + ' - ' + rowData.NombreArticulo;
+    
+      this.popUpVisibleCalculoStock = true;
+    }
+  }
+
+  obtenerFecha(fecha:string):string {    
+    if ( (Utilidades.isEmpty(fecha)) || (fecha.substring(0,4) == '1900') || (fecha.substring(0,4) == '1001') || (fecha.substring(0,4) == '1')) {
+      return '-'
+    } else {
+      let strFecha = fecha.substring(8,10) +'-' + fecha.substring(5,7) + '-' + fecha.substring(0,4);
+      return strFecha;
+    }    
+  }
+
+  cerrarCalculoStockDisponible(e) {
+    this.popUpVisibleCalculoStock = false;
+  }  
 
 }

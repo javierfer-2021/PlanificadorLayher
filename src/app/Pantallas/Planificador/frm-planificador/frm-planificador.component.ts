@@ -22,7 +22,7 @@ import { Articulo } from 'src/app/Clases/Maestros';
   templateUrl: './frm-planificador.component.html',
   styleUrls: ['./frm-planificador.component.css']
 })
-export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterContentChecked {
+export class FrmPlanificadorComponent implements OnInit, AfterViewInit {
 
 //#region - cte y var de la pantalla  
   altoBtnFooter = '45px';
@@ -76,7 +76,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     { dataField: 'StockInicial',
       caption: 'Stock I.',
       visible: true,
-      width: 80,
+      width: 70,
     },      
     { dataField: 'CantidadDisponible', caption: 'Cantidad Disponible', cssClass: 'blanco', visible: false },
     { dataField: 'CantidadPedida', caption: 'Cantidad Pedida', visible: false },
@@ -88,11 +88,11 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     { dataField: 'Insertada', caption: 'Insertada', visible: false },    
     { dataField: 'Observaciones', caption: 'Observaciones', visible: false },    
   ]
-  dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 100, '');
+  dgConfigArticulos: DataGridConfig = new DataGridConfig(null, this.colsArts, 300, '');
   
   // grid articulos Contratos Planificados & Unidades
   colsUnidades: Array<ColumnDataGrid> = [];
-  dgConfigUnidades: DataGridConfig = new DataGridConfig(null, this.colsUnidades, 100, '');
+  dgConfigUnidades: DataGridConfig = new DataGridConfig(null, this.colsUnidades, 300, '');
 
   WSDatos_Validando: boolean = false;
   WSDatos_Valido: boolean = false;
@@ -177,6 +177,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     Utilidades.BtnFooterUpdate(this.pantalla, this.container, this.btnFooter, this.btnAciones, this.renderer);
     
     // Actualizar altura de los grids
+    this.dgArticulos.DataGrid.instance.option('width', '100%');
     this.dgArticulos.setModoOrdenarColumna('none');  // eliminar opcion de ordenación en columna titulo -- bug reordenar und. en salidas afectadas
     this.dgArticulos.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigArticulos.alturaMaxima) - 240);
     this.dgUnidades.actualizarAltura(Utilidades.ActualizarAlturaGrid(this.pantalla, this.container, this.btnFooter,this.dgConfigUnidades.alturaMaxima) );   
@@ -186,10 +187,6 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     this.cdref.detectChanges();      
   }
 
-  ngAfterContentChecked(): void {
-    // eliminar error debug ... expression has changed after it was checked.
-    this.cdref.detectChanges();   
-  }
 
   onResize(event) {
     this.alturaDiv = '0px';    
@@ -259,7 +256,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
           // Se configura el grid de artículos
           this.dgConfigArticulos = new DataGridConfig(this.arrayArts, this.colsArts, this.dgConfigArticulos.alturaMaxima, ConfiGlobal.lbl_NoHayDatos);
-          this.dgConfigArticulos.actualizarConfig(true,false,'standard');         
+          this.dgConfigArticulos.actualizarConfig(false,false,'standard');         
           
           // Se configura el grid de las unidades
           let nroCol: number = 0;
@@ -817,6 +814,7 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
     // if (!e.itemData.items) { 
     //   alert('Opcion '+e.itemData.text+' del contrato'+ this.dgUnidades.objSeleccionado().Contrato); 
     // }
+    
     if ((e.row.rowType=='data') /*&& (this.arrayCabeceras[Math.floor(e.columnIndex/3)].Planificar) && ((e.columnIndex % 3) == 1) && (e.row.values[e.columnIndex-1]>0)*/ ) {
       this._stockSalida = this.arrayCabeceras[Math.floor(e.columnIndex/3)].IdSalida;
       this._stockArticulo = this.arrayArts[e.rowIndex].IdArticulo;
@@ -829,6 +827,25 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
       //alert('ver stock -> idSalida:'+this._modLineaArticulo.IdSalida+' -- idArticulo:'+this._modLineaArticulo.IdArticulo)
       this.popUpVisibleCalculoStock = true;
      }
+
+    // if (e.data) {
+
+    //   const cabecera = this.arrayCabeceras[Math.floor(e.columnIndex / 3)];
+    //   const rowData = e.data;
+    
+    //   this._stockSalida = cabecera.IdSalida;
+    //   this._stockArticulo = rowData.IdArticulo;
+    
+    //   this._stockTitulo =
+    //     'CONTRATO: ' + cabecera.Contrato +
+    //     ' (id.: ' + cabecera.IdSalida + ') ' +
+    //     ' | F.Inicio: ' + this.obtenerFecha(cabecera.FechaInicio.toString()) +
+    //     '\n' +
+    //     'ARTICULO: ' + rowData.IdArticulo + ' - ' + rowData.NombreArticulo;
+    
+    //   this.popUpVisibleCalculoStock = true;
+    // }    
+
   }
 
   cerrarCalculoStockDisponible(e) {
@@ -1147,14 +1164,14 @@ export class FrmPlanificadorComponent implements OnInit, AfterViewInit, AfterCon
 
   //#endregion
 
+  onScroll_DataGridArticulos(e) {
+    this.dgArticulos.DataGrid.instance.getScrollable().scrollTo({ top: e.scrollOffset.top });
+  }
 
-  onScrollArticulos(e) {
+  onScroll_DataGridUnidades(e) {
     this.dgUnidades.DataGrid.instance.getScrollable().scrollTo({ top: e.scrollOffset.top });
   }
   
-  onScrollUnidades(e) {
-    this.dgArticulos.DataGrid.instance.getScrollable().scrollTo({ top: e.scrollOffset.top });
-  }
 
 }
 
