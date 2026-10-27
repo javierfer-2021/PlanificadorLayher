@@ -343,6 +343,7 @@ export class FrmMostrarCalculoStockComponent implements OnInit, AfterViewInit {
 
   calcularTotalStockDisponible() {
     this._totalStock = this.arrayDatos.reduce((acc, el) => acc + el.UNIDADES, 0);
+    if (this._totalStock<0) { this._totalStock = 0 }
   }
 
   salir() {
